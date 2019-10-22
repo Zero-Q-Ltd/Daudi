@@ -1,0 +1,276 @@
+<section class="container-fluid sixty-top">
+  <mat-card>
+    <mat-card-content>
+      <mat-accordion>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <span *ngIf="currentdepotconfig" class="expansion-depot">
+                <i class="material-icons color-blue">local_gas_station</i>
+                {{currentdepotconfig.Name}}</span>
+              <span class="expansion-title">PRICE COMPARISON</span>
+            </mat-panel-title>
+            <!-- <mat-panel-description>
+            All depots and their respective prices.
+            </mat-panel-description> -->
+          </mat-expansion-panel-header>
+          <div>
+            <div>
+              <mat-form-field appearance="legacy">
+                <input (keyup)="applyFilter($event.target.value)" matInput
+                       placeholder="Filtering All depots and their respective prices">
+              </mat-form-field>
+            </div>
+            <div>
+              <mat-table [dataSource]="depotsdataSource" matSort>
+                <ng-container matColumnDef="depot">
+                  <mat-header-cell *matHeaderCellDef class="order-title1" mat-sort-header>Depot</mat-header-cell>
+                  <mat-cell *matCellDef="let depot"> {{depot.Name}}</mat-cell>
+                </ng-container>
+                <div *ngFor='let pricetype of  fueltypesArray'>
+                  <ng-container matColumnDef="{{pricetype}}_price">
+                    <mat-header-cell *matHeaderCellDef class="" mat-sort-header>
+                      <i [matTooltipPosition]="position1" class="material-icons rangi-{{pricetype}}"
+                         matTooltip="{{pricetype | uppercase}} Price">attach_money</i>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let depot"
+                              class="color-{{pricetype}}">{{depot.currentpriceconfig ? depot.currentpriceconfig[pricetype]?.price : 0}}
+                    </mat-cell>
+                  </ng-container>
+
+                  <ng-container matColumnDef="{{pricetype}}_avgprice">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>
+                      <i [matTooltipPosition]="position1" class="material-icons rangi-{{pricetype}}"
+                         matTooltip="{{pricetype | uppercase}} Avg Price">compare_arrows</i>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let depot" class="color-{{pricetype}}"> {{depot[pricetype]}}
+                    </mat-cell>
+                  </ng-container>
+                </div>
+                <mat-header-row *matHeaderRowDef="priceColumns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: priceColumns;">
+                </mat-row>
+              </mat-table>
+            </div>
+          </div>
+        </mat-expansion-panel>
+      </mat-accordion>
+      <br>
+      <div class="container-fluid">
+        <form [formGroup]="contactform">
+          <div fxLayout fxLayout.xs="column" fxLayoutAlign="center" fxLayoutGap="10px" fxLayoutGap.xs="0">
+            <div fxFlex>
+
+              <mat-form-field class="full-width">
+                <input [formControl]="companyControl" [matAutocomplete]="auto" aria-label="Company Name" matInput
+                       placeholder="Company name" type="text">
+                <mat-hint *ngIf="companyInfo.newcompany">
+                  <strong>A NEW COMPANY BY THIS NAME WILL BE CREATED</strong>
+                </mat-hint>
+                <mat-icon matPrefix> account_balance</mat-icon>
+                <span matPrefix> &nbsp; </span>
+                <mat-autocomplete #auto="matAutocomplete">
+                  <mat-option (onSelectionChange)="companyselect(option)"
+                              *ngFor="let option of filteredCompanies | async"
+                              [value]="option.name">
+                    {{option.name}}
+                  </mat-option>
+                </mat-autocomplete>
+                <mat-spinner *ngIf='loadingcompanies' [diameter]="19" matSuffix></mat-spinner>
+              </mat-form-field>
+            </div>
+            <div fxFlex>
+              <mat-form-field class="full-width">
+                <input formControlName="nameControl" matInput name="contactName"
+                       placeholder="Contact Name" style="text-transform:uppercase;">
+                <mat-icon matPrefix>perm_identity</mat-icon>
+                <span matPrefix> &nbsp; </span>
+                <mat-error>
+                  Please enter a
+                  <strong>valid</strong> contact name (At least 4 letters)
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div fxFlex>
+              <mat-form-field class="full-width">
+                <input formControlName="phoneControl" matInput maxlength="9" minlength="9"
+                       name="companyPhone"
+                       placeholder="Phone number" type="tel">
+                <mat-icon matPrefix>phone</mat-icon>
+                <span matPrefix> &nbsp; +254 &nbsp;</span>
+                <mat-error>
+                  Please enter a
+                  <strong>valid</strong> telephone number
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div fxFlex>
+              <mat-form-field class="full-width">
+                <input #orderCompanyEmail formControlName="emailControl" matInput placeholder="Company Email"
+                       type="email">
+                <mat-icon matPrefix>email</mat-icon>
+                <span matPrefix> &nbsp; </span>
+                <mat-error>
+                  Valid Company Email
+                  <strong>required</strong>
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div fxFlex>
+              <mat-form-field class="full-width">
+                <!--  #kraPin (input)="kraPin.value=$event.target.value.toUpperCase()" -->
+                <input #kraControl formControlName="kraControl" matInput
+                       placeholder="KRA PIN" style="text-transform:uppercase;" type="text">
+                <mat-icon matPrefix>payment</mat-icon>
+                <span matPrefix> &nbsp; P &nbsp;</span>
+                <mat-error>
+                  KRA PIN
+                  <strong>required</strong>
+                </mat-error>
+
+              </mat-form-field>
+            </div>
+          </div>
+        </form>
+        <br>
+        <form [formGroup]="orderform">
+          <div class="table-responsive">
+            <table class="table table-borderless mat-elevation-z2">
+              <thead class="thead-light vat-title1">
+              <th>Quantity</th>
+              <th>Selling Price</th>
+              <th class="vat-title">Price <b style="color: red"> EXC VAT </b></th>
+              <th class="vat-title">VAT Exempt</th>
+              <th class="vat-title">Vatable</th>
+              <th class="vat-title">VAT</th>
+              <th class="vat-title">Total <b style="color: red"> EXC VAT </b></th>
+              <th class="vat-title">Line Total</th>
+              </thead>
+              <tbody>
+              <tr *ngFor='let pricetype of  fueltypesArray'>
+                <td>
+                  <mat-form-field class="full-width">
+                    <input formControlName="{{pricetype}}qtyControl" matInput
+                           name="{{pricetype | uppercase}}Qty"
+                           placeholder="{{pricetype | uppercase}} Quantity">
+                    <mat-icon [matTooltipPosition]="position"
+                              class="nav-icon nav-dot material-icons color-{{pricetype}}"
+                              matPrefix
+                              matTooltip="{{pricetype}}">local_gas_station
+                    </mat-icon>
+                    <mat-error>Min 1000 for at least one fuel</mat-error>
+                    <span matPrefix> &nbsp; </span>
+                  </mat-form-field>
+                </td>
+                <td>
+                  <mat-form-field class="full-width">
+                    <input [formControl]="orderform.controls[pricetype]"
+                           matInput
+                           name="{{pricetype}}Sp"
+                           placeholder="{{pricetype}} Selling Price (min: {{currentdepotconfig.minpriceconfig[pricetype].price | number : '1.0-2'}})">
+                    <mat-error *ngIf="orderform.controls[pricetype]?.invalid">Min allowed price is
+                      {{currentdepotconfig.minpriceconfig[pricetype].price
+                            | number : '1.0-2'}}
+                    </mat-error>
+                    <!-- <mat-hint class="text-danger" align="start">
+                    <i>Requested price: {{temporder.discountRequest.pms}}</i>
+                  </mat-hint> -->
+                  </mat-form-field>
+                </td>
+                <td class="vat-title">
+                  <span
+                    class="label label-{{pricetype}}">{{temporder.fuel[pricetype].priceconfig.nonTaxprice }}</span>
+                </td>
+                <td class="vat-title">
+                  <span
+                    class="label label-{{pricetype}}">{{currentdepotconfig.taxconfig[pricetype].nonTax }}</span>
+                </td>
+
+                <td class="vat-title">
+                  <span
+                    class="label label-{{pricetype}}">{{temporder.fuel[pricetype].priceconfig.taxablePrice }}</span>
+                </td>
+                <td class="vat-title">
+                  <span
+                    class="label label-{{pricetype}}">{{temporder.fuel[pricetype].priceconfig.taxAmnt }}</span>
+                </td>
+                <td class="vat-title">
+                  <span
+                    class="label label-{{pricetype}}">{{temporder.fuel[pricetype].priceconfig.nonTaxtotal }}</span>
+                </td>
+                <td class="vat-title">
+                  <span
+                    class="label label-{{pricetype}}">{{temporder.fuel[pricetype].priceconfig.total }}</span>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="5">
+                  <strong>Total:</strong>
+                </td>
+                <td class="order-title">
+                  {{temporder.fuel.pms.priceconfig.taxAmnt + temporder.fuel.ago.priceconfig.taxAmnt +
+                temporder.fuel.ik.priceconfig.taxAmnt | number : '1.2-2'}}
+                </td>
+                <td class="order-title">
+                  {{temporder.fuel.pms.priceconfig.nonTaxtotal + temporder.fuel.ago.priceconfig.nonTaxtotal +
+                temporder.fuel.ik.priceconfig.nonTaxtotal | number : '1.2-2'}}
+                </td>
+                <td class="order-title">
+                  {{temporder.fuel.pms.priceconfig.total + temporder.fuel.ago.priceconfig.total +
+                temporder.fuel.ik.priceconfig.total | number : '1.2-2'}}
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Totals Row -->
+          <div class="" fxLayout fxLayout.xs="column" fxLayoutAlign="center" fxLayoutGap="10px" fxLayoutGap.xs="0">
+            <div fxFlex>
+              <p>{{determinediscount()}}
+                Excluding 8% VAT</p>
+            </div>
+            <div fxFlex>
+              <label class="custom-control custom-checkbox pull-right">
+                <!--Avoid setting this change to the surrounding formcontrol-->
+                <mat-slide-toggle [(ngModel)]="temporder.notifications.allowsms" [ngModelOptions]="{standalone: true}">
+                  Allow SMS &nbsp;
+                </mat-slide-toggle>
+                <mat-slide-toggle [(ngModel)]="temporder.notifications.allowemail"
+                                  [ngModelOptions]="{standalone: true}">Allow EMAIL
+                </mat-slide-toggle>
+              </label>
+            </div>
+            <div class="fuel-totals" fxFlex>
+              <span>
+                <strong>Total Amount :Ksh {{ temporder.fuel.pms.priceconfig.total +
+                temporder.fuel.ago.priceconfig.total + temporder.fuel.ik.priceconfig.total | number : '1.2-2'}}</strong>
+              </span>
+            </div>
+          </div>
+          <br>
+          <div class="" fxLayout fxLayout.xs="column" fxLayoutAlign="center" fxLayoutGap="10px" fxLayoutGap.xs="0">
+            <button class="btn-default1" mat-raised-button matTooltip="Orders processsing in the background">
+              << {{queuedorders.length}}
+            </button>
+            <div fxFlex>&nbsp;</div>
+            <div fxFlex>&nbsp;</div>
+            <div fxFlex>
+              <div class="btn-group" role="group" style="width: 100%;">
+
+                <button (click)="checkOrder(true)" [disabled]=" orderform.invalid || contactform.invalid"
+                        class="btn-default"
+                        mat-flat-button>SAVE ONLY
+                </button>&nbsp;&nbsp;
+                <button (click)="checkOrder(false)" [disabled]=" orderform.invalid || contactform.invalid"
+                        class="btn-default"
+                        mat-button>SAVE AND NEW
+                </button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</section>

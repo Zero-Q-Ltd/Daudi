@@ -1,0 +1,20 @@
+@import "../../.././orders-table/orders-table.component";
+
+.btn-pms {
+  background-color: $mk-pms;
+  color: $mk-white;
+}
+
+.btn-ik {
+  background-color: $mk-ik;
+  color: $mk-white;
+}
+
+.btn-ago {
+  background-color: $mk-ago;
+  //color: $mk-white;
+}
+
+.mat-header-cell {
+  text-transform: uppercase;
+}

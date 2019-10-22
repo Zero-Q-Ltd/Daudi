@@ -1,0 +1,216 @@
+@import "../admin";
+
+.container-fluid {
+  padding-top: 60px;
+}
+
+.ot-header {
+  min-height: 64px;
+  padding: 8px 24px 0;
+}
+
+.mat-form-field {
+  font-size: 14px;
+  width: 100%;
+}
+
+.mat-header-cell {
+  color: $mk-primary;
+  font-weight: bold;
+}
+
+table {
+  width: 100%;
+}
+
+thead {
+  //color: $mk-primary;
+}
+
+
+tr.detail-row {
+  height: 0;
+}
+
+tr.element-row:not(.expanded-row):hover {
+  background: $mk-white;
+}
+
+.frozentruck {
+  background: #fcddde;
+}
+
+tr.element-row:not(.expanded-row):active {
+  background: $mk-white;
+}
+
+.element-row td {
+  border-bottom-width: 0;
+}
+
+.element-detail {
+  overflow: hidden;
+  display: flex;
+}
+
+.color-pms {
+  color: $mk-pms;
+}
+
+.color-ago {
+  color: $mk-ago;
+}
+
+.color-ik {
+  color: $mk-ik;
+}
+
+.color-primary {
+  color: $mk-primary;
+}
+
+.color-success {
+  color: $mk-success;
+}
+
+.color-default {
+  color: $mk-default;
+}
+
+.color-danger {
+  color: $mk-danger;
+}
+
+mat-card {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+mat-card-header {
+  display: inline;
+}
+
+.truck-details {
+  padding-right: 20px;
+  font-size: 15px;
+}
+
+.truck-details-color {
+  //color: $mk-primary;
+  font-weight: bold;
+}
+
+.katikati {
+  left: 50%;
+}
+
+.full-div {
+  width: 100%;
+  text-align: center;
+}
+
+.order-stage {
+  //font-weight: bold;
+  padding-right: 20px;
+}
+
+.batch-table {
+  font-weight: bold;
+  padding: 10px;
+}
+
+.mat-expansion-panel {
+  margin-left: -25px;
+  margin-right: -25px;
+}
+
+.mat-card {
+  padding-bottom: 0px;
+}
+
+.expanded-pane {
+  color: $mk-default;
+  font-weight: bold;
+}
+
+.save-icon {
+  padding-top: 15px;
+  padding-left: 20px;
+}
+
+mat-panel-title {
+  color: $mk-primary;
+}
+
+.ago-mid {
+  border-right: 1.5px solid rgba(0, 0, 0, 0.1);
+  border-left: 1.5px solid rgba(0, 0, 0, 0.1);
+}
+
+.accuracy-style {
+  height: 25px;
+}
+
+// We need to use ::ng-deep to overcome view encapsulation
+::ng-deep {
+  .custom-slider .ng5-slider .ng5-slider-bar {
+    //background: #ffe4d1;
+    height: 2px;
+  }
+
+  .custom-slider .ng5-slider .ng5-slider-selection {
+    background: $mk-primary;
+  }
+
+  .custom-slider .ng5-slider .ng5-slider-pointer {
+    width: 8px;
+    height: 16px;
+    top: auto; /* to remove the default positioning */
+    bottom: 0;
+    background-color: #333;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+  }
+
+  .custom-slider .ng5-slider .ng5-slider-pointer:after {
+    display: none;
+  }
+
+  .custom-slider .ng5-slider .ng5-slider-bubble {
+    bottom: 14px;
+  }
+
+  .custom-slider .ng5-slider .ng5-slider-limit {
+    font-weight: bold;
+    color: $mk-primary;
+  }
+
+  .custom-slider .ng5-slider .ng5-slider-tick {
+    width: 1px;
+    height: 10px;
+    margin-left: 4px;
+    border-radius: 0;
+    background: #ffe4d1;
+    top: -1px;
+  }
+
+  .custom-slider .ng5-slider .ng5-slider-tick.ng5-slider-selected {
+    background: $mk-primary;
+  }
+}
+
+/deep/ .mat-sort-header-button {
+  text-transform: uppercase;
+}
+
+.btn-outline-primary {
+  border-color: $mk-qb;
+  color: $mk-qb;
+}
+
+.btn-outline-primary:focus {
+  border-color: $mk-qb;
+  color: $mk-white;
+  box-shadow: 0 0 0 2px rgba($mk-qb, 0.5);
+}
+

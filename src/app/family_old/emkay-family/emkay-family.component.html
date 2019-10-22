@@ -1,0 +1,35 @@
+<nav class="navbar navbar-toggleable-md navbar-inverse fixed-top container nav-bg">
+  <button aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"
+          class="navbar-toggler navbar-toggler-right" data-target="#navbarSupportedContent" data-toggle="collapse"
+          type="button">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <a [routerLink]="['/']" class="navbar-brand">
+    <img alt="" class="rounded" height="30" src="assets/images/emkay-family.png" width="30">
+  </a>
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <div class="navbar-nav mr-auto">
+      <div class="btn-group" role="group"></div>
+    </div>
+    <div class="form-inline my-2 my-lg-0">
+      <div class="btn-group" role="group">
+        <button [routerLink]="['/family_old-discount']" class="btn btn-outline-primary" type="button"><i
+          aria-hidden="true" class="fa fa-tags color-yellow"></i> Order
+        </button>
+        <button [routerLink]="['/family_old-history']" class="btn btn-outline-primary" type="button"><i
+          aria-hidden="true" class="fa fa-history color-yellow"></i> History
+        </button>
+        <button [routerLink]="['/family_old-profile']" class="btn btn-outline-primary" type="button"><i
+          aria-hidden="true" class="fa fa-address-book-o color-yellow"></i> Profile
+        </button>
+        <button [routerLink]="['/family_old-members']" class="btn btn-outline-primary" type="button"><i
+          aria-hidden="true" class="fa fa-users color-yellow"></i> Members
+        </button>
+        <button (click)="logout()" class="btn btn-outline-primary" type="button"><i aria-hidden="true"
+                                                                                    class="fa fa-sign-out color-yellow"></i>
+          Exit
+        </button>
+      </div>
+    </div>
+  </div>
+</nav>

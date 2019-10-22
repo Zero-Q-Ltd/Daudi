@@ -1,0 +1,14 @@
+<h2 matDialogTitle>Type the depot name to confirm</h2>
+<mat-dialog-content align="center">
+  <mat-form-field class="example-full-width">
+    <input [(ngModel)]="typedname" matInput placeholder=" Depot Name " value="">
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions align="center">
+  <button color="warn" mat-button matDialogClose>Cancel</button>
+  <!-- Can optionally provide a result for the closing dialog. -->
+  <button [disabled]="depotname.toLocaleLowerCase() !==typedname.toLocaleLowerCase()" [matDialogClose]="true"
+          color="primary" mat-button>
+    Confirm
+  </button>
+</mat-dialog-actions>

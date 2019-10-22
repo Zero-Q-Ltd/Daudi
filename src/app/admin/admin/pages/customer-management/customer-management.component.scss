@@ -1,0 +1,25 @@
+@import "../../../orders-table/orders-table.component";
+
+.half-width {
+  width: 150px;
+}
+
+.kra-save {
+  color: $mk-qb;
+}
+
+.kra-save:hover {
+  color: $mk-success;
+}
+
+.mat-header-cell {
+  text-transform: uppercase;
+}
+
+.selected-p {
+  padding-top: 15px;
+}
+
+.add-icon {
+  margin-top: 10px;
+}

@@ -1,0 +1,74 @@
+@import "../../../admin";
+
+.chat-header {
+  background-color: $mk-primary;
+  color: $mk-white;
+  // padding-top: 20px;
+  // padding-bottom: 5px;
+}
+
+.chat-header-title {
+  font-size: 20px;
+  font-weight: 400;
+}
+
+.chat-title {
+  font-size: 20px;
+  font-weight: 400;
+  color: $mk-primary;
+}
+
+.chat-time {
+  color: $mk-primary;
+}
+
+.chat-border {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.chat-msg {
+  text-align: right;
+}
+
+.chat-user {
+  background-color: rgba($mk-primary, 0.5);
+  color: white;
+}
+
+.chat-bg {
+  background-image: url("../../../../../assets/images/emkay-chat.png");
+  background-position: center center;
+  background-repeat: no-repeat;
+  // background-size: cover;
+  min-height: 100%;
+}
+
+.chat-img {
+  width: 50px;
+  height: 50px;
+  vertical-align: middle;
+}
+
+.chat-height {
+  height: 450px;
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+
+.btn-blue {
+  display: block;
+  left: 0;
+  top: 0;
+  width: 100%;
+  background-color: $mk-primary;
+  color: $mk-white;
+  font-weight: bold;
+  // border-radius: .0;
+}
+
+.badge {
+  // background-color: $mk-primary;
+  font-size: 16px;
+  font-weight: 400;
+  padding: 0.15em 0.2em;
+}

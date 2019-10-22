@@ -1,0 +1,200 @@
+<div class="home-body">
+  <emkay-family></emkay-family>
+  <div class="container">
+    <div class="home-header">
+      <img alt="Emkay Logo" class="img-responsive" src="../../assets/images/home-header.png">
+    </div>
+    <br>
+    <mat-card class="blue-bg">
+      <mat-card-content>
+        <form #f="ngForm">
+          <legend>Contact Details</legend>
+          <br>
+          <div class="row">
+            <div class="col-md-4">
+              <!-- <mat-form-field class="full-width">
+                      <input exampledata="text" placeholder="Company Name" aria-label="Number"  matInput [formControl]="myControl" [matAutocomplete]="auto"
+                        [(ngModel)]="companies.companyName" minlength="2" name="companyName">
+                      <mat-icon matPrefix> account_balance</mat-icon>
+              <span matPrefix> &nbsp; </span>
+                      <mat-autocomplete #auto="matAutocomplete">
+                        <mat-option *ngFor="let option of filteredOptions | async" [value]="option" (click)="getCompanyDetails(option)" >
+                          {{ option }}
+                        </mat-option>
+                      </mat-autocomplete>
+                    </mat-form-field> -->
+              <mat-form-field class="full-width">
+                <input #CompanyName="ngModel" #companyName (input)="companyName.value=$event.target.value.toUpperCase()"
+                       [(ngModel)]="companies.companyName" matInput
+                       minlength="2" name="companyName"
+                       placeholder="Company Name" required>
+                <mat-icon matPrefix> account_balance</mat-icon>
+                <span matPrefix> &nbsp; </span>
+                <mat-error *ngIf="CompanyName.errors?.required && CompanyName.touched">
+                  Company name <strong>required</strong>
+                </mat-error>
+                <mat-error *ngIf="CompanyName.errors?.minlength && CompanyName.touched">
+                  Please enter a <strong>valid</strong> company name
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-4">
+              <mat-form-field class="full-width">
+                <input #orderCompanyEmail="ngModel" [(ngModel)]="companies.companyEmail" matInput name="companyEmail"
+                       pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"
+                       placeholder="Company Email" required type="email">
+                <mat-icon matPrefix>email</mat-icon>
+                <span matPrefix> &nbsp; </span>
+                <mat-error *ngIf="orderCompanyEmail.errors?.required && orderCompanyEmail.touched">
+                  Company Email <strong>required</strong>
+                </mat-error>
+                <mat-error *ngIf="orderCompanyEmail.errors && orderCompanyEmail.errors.pattern">
+                  Valid Company Email <strong>required</strong>
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-4">
+              <mat-form-field class="full-width">
+                <input #kraPin="ngModel" [(ngModel)]="companies.kraPin" [textMask]="{mask: mask}" matInput name="kraPin"
+                       placeholder="KRA PIN"
+                       required style="text-transform:uppercase;" type="text">
+                <mat-icon matPrefix>payment</mat-icon>
+                <span matPrefix> &nbsp; P &nbsp;</span>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">
+              <mat-form-field class="full-width">
+                <!--<input matInput required placeholder="Contact Name" name="contactName"  [(ngModel)]="family.contactName" >
+        <mat-icon matPrefix>perm_identity</mat-icon>
+        <span matPrefix> &nbsp; </span>-->
+                <input #ContactName="ngModel" #contactName (input)="contactName.value=$event.target.value.toUpperCase()"
+                       [(ngModel)]="companies.contactName" matInput minlength="2"
+                       name="contactName"
+                       placeholder="Contact Name" required>
+                <mat-icon matPrefix>perm_identity</mat-icon>
+                <span matPrefix> &nbsp; </span>
+                <mat-error *ngIf="ContactName.errors?.required && ContactName.touched">
+                  Name <strong>required</strong>
+                </mat-error>
+                <mat-error *ngIf="ContactName.errors?.minlength && ContactName.touched">
+                  Please enter a <strong>valid</strong> contact name
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-4">
+              <mat-form-field class="full-width">
+                <!--<input matInput required placeholder="Phone number" exampledata="tel"  [(ngModel)]="family.phoneNumber" >
+        <mat-icon matPrefix>phone </mat-icon>
+        <span matPrefix> &nbsp; +254 &nbsp;</span>-->
+                <input #orderCompanyPhone="ngModel" [(ngModel)]="companies.companyPhone" matInput maxlength="9"
+                       minlength="9" name="phoneNumber"
+                       placeholder="Phone number" required
+                       type="tel">
+                <mat-icon matPrefix>phone</mat-icon>
+                <span matPrefix> &nbsp; +254 &nbsp;</span>
+                <mat-error *ngIf="orderCompanyPhone.errors?.required && orderCompanyPhone.touched">
+                  Telephone Number <strong>required</strong>
+                </mat-error>
+                <mat-error *ngIf="orderCompanyPhone.errors?.minlength && orderCompanyPhone.touched">
+                  Please enter a <strong>valid</strong> telephone number
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-4">
+              <button (click)="update(f)" *ngIf="!newUser" [disabled]="isMember" [hidden]="loadButton"
+                      class="btn btn-primary btn-block" type="button">UPDATE CONTACTS
+              </button>
+              <button (click)="save(f)" *ngIf="newUser" [hidden]="loadButton" class="btn btn-primary btn-block"
+                      type="button">ADD CONTACTS
+              </button>
+            </div>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+    <br><br>
+    <mat-card class="product-bg">
+      <mat-card-content>
+        <legend>Delivery Details</legend>
+        <br>
+        <!-- <div class="row">
+            <div class="col-md-3">
+                <mat-form-field class="full-width">
+                    <mat-select placeholder="County"  [(ngModel)]="companies.county" name="county" (ngModelChange)="getSubCounty(companies.county)">
+                        <mat-option *ngFor="let county of counties" [value]="county.value">
+                            {{ county.viewValue }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="col-md-3">
+                <mat-form-field class="full-width">
+                    <mat-select placeholder="Sub County" [(ngModel)]="companies.subcounty" name="subCounty">
+                        <mat-option *ngFor="let subCounty of subCounties" [value]="subCounty.value" >
+                            {{ subCounty.viewValue }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="col-md-3">
+                <mat-form-field class="full-width">
+                    <input matInput required placeholder="Town" name="town" [(ngModel)]="companies.town" >
+                </mat-form-field>
+            </div>
+            <div class="col-md-3">
+                <button exampledata="button" (click)="updateProfile(companies)" class="btn btn-primary btn-block" [disabled]="isMember">UPDATE LOCATION</button>
+            </div>
+        </div> -->
+        <!-- <form class="example-form">
+            <mat-form-field class="example-full-width">
+              <input exampledata="text" placeholder="Pick one" aria-label="Number" matInput [formControl]="myControl" [matAutocomplete]="auto">
+              <mat-autocomplete #auto="matAutocomplete">
+                <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+                  {{ option }}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+          </form> -->
+      </mat-card-content>
+    </mat-card>
+    <br> <br>
+    <mat-card *ngIf="isAdmin" class="product-bg">
+      <mat-card-content>
+        <legend>Add Users</legend>
+        <br>
+        <div class="row">
+          <div class="col-md-8">
+            <mat-form-field class="full-width">
+              <input #orderCompanyEmail="ngModel" [(ngModel)]="newFamily.email" matInput name="family"
+                     pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"
+                     placeholder="Family Member Email (gmail)" required type="email">
+              <mat-icon matPrefix>email</mat-icon>
+              <span matPrefix> &nbsp; </span>
+              <mat-error *ngIf="orderCompanyEmail.errors?.required && orderCompanyEmail.touched">
+                Company Email <strong>required</strong>
+              </mat-error>
+              <mat-error *ngIf="orderCompanyEmail.errors && orderCompanyEmail.errors.pattern">
+                Valid Company Email <strong>required</strong>
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div class="col-md-4">
+            <button (click)="addFamily(newFamily)" class="btn btn-primary btn-block" type="button">ADD USER</button>
+          </div>
+        </div>
+        <!-- <form class="example-form">
+            <mat-form-field class="example-full-width">
+              <input exampledata="text" placeholder="Pick one" aria-label="Number" matInput [formControl]="myControl" [matAutocomplete]="auto">
+              <mat-autocomplete #auto="matAutocomplete">
+                <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+                  {{ option }}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+          </form> -->
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

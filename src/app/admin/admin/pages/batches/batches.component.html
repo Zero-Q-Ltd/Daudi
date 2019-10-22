@@ -1,0 +1,90 @@
+<mat-tab-group>
+  <mat-tab *ngFor='let fueltype of fueltypesArray'>
+    <ng-template mat-tab-label>
+      <button class="btn btn-{{fueltype}}"> {{fueltype | uppercase}} : {{availablefuel[fueltype]}}</button>
+    </ng-template>
+    <mat-card>
+      <mat-card-content>
+        <div class="loading-container">
+          <div *ngIf="loading[fueltype]" class="loading-shade">
+            <mat-spinner></mat-spinner>
+          </div>
+          <div class="ot-header">
+            <mat-form-field appearance="legacy">
+              <input (keyup)="filterbatches(fueltype, $event.target.value)" matInput placeholder="Filter">
+              <button (click)='syncdb()' *ngIf='!creatingsync' mat-icon-button matSuffix type="button">
+              <span class="nav-icon nav-dot material-icons kra-save" matTooltip="Update">
+                autorenew
+              </span>
+              </button>
+              <mat-spinner *ngIf='creatingsync' [diameter]="19" matSuffix></mat-spinner>
+            </mat-form-field>
+          </div>
+          <table [dataSource]="datasource[fueltype]" mat-table style="width: 100%">
+
+            <ng-container matColumnDef="id">
+              <th *matHeaderCellDef mat-header-cell> Batch ID</th>
+              <td *matCellDef="let batch" mat-cell> {{batch.Id}}</td>
+
+            </ng-container>
+
+            <ng-container matColumnDef="date">
+              <th *matHeaderCellDef mat-header-cell> Date</th>
+              <td *matCellDef="let batch" mat-cell> {{batch.date?.toDate() | date: 'dd/MM/yyyy, h:mm a'}}</td>
+            </ng-container>
+
+            <!-- Item Column -->
+
+            <ng-container matColumnDef="batch">
+              <th *matHeaderCellDef mat-header-cell> Batch #</th>
+              <td *matCellDef="let batch" mat-cell> {{batch.batch}}</td>
+            </ng-container>
+
+            <!-- Cost Column -->
+            <ng-container matColumnDef="totalqty">
+              <th *matHeaderCellDef mat-header-cell> Total Batch Qty</th>
+              <td *matCellDef="let batch" mat-cell>{{batch.qty}}</td>
+            </ng-container>
+
+            <!-- Cost Column -->
+            <ng-container matColumnDef="accumulated">
+              <th *matHeaderCellDef mat-header-cell>Total Accumulated Qty</th>
+              <td *matCellDef="let batch" mat-cell>{{batch.accumulated.total}}</td>
+            </ng-container>
+            <!-- Cost Column -->
+            <ng-container matColumnDef="usableaccumulated">
+              <th *matHeaderCellDef mat-header-cell>Usable Accumulated Qty</th>
+              <td *matCellDef="let batch" mat-cell>{{batch.accumulated.usable}}</td>
+            </ng-container>
+            <!-- Cost Column -->
+            <ng-container matColumnDef="loadedqty">
+              <th *matHeaderCellDef mat-header-cell> Loaded Qty</th>
+              <td *matCellDef="let batch" mat-cell> {{batch.loadedqty}}</td>
+            </ng-container>
+            <!-- Cost Column -->
+            <ng-container matColumnDef="availableqty">
+              <th *matHeaderCellDef mat-header-cell> Available Qty</th>
+              <td *matCellDef="let batch" mat-cell>{{batch.qty + batch.accumulated.usable - batch.loadedqty}}</td>
+            </ng-container>
+            <!-- Cost Column -->
+            <ng-container matColumnDef="status">
+              <th *matHeaderCellDef mat-header-cell> Batch Status</th>
+              <td *matCellDef="let batch ;let i = index" mat-cell>
+                <button *ngIf="batch.status === 1" class="btn btn-outline-success btn-sm">
+                  ACTIVE
+                </button>
+                <button *ngIf="batch.status === 0" class="btn btn-outline-danger btn-sm">
+                  INACTIVE
+                </button>
+              </td>
+            </ng-container>
+
+            <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
+            <tr *matRowDef="let row; columns: displayedColumns;" mat-row></tr>
+          </table>
+          <mat-paginator [pageSizeOptions]="[5, 10, 20]" [pageSize]="5" showFirstLastButtons></mat-paginator>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </mat-tab>
+</mat-tab-group>

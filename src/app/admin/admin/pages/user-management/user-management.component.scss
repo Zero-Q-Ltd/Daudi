@@ -1,0 +1,30 @@
+@import "../../../orders-table/orders-table.component";
+
+.half-width {
+  width: 150px;
+}
+
+.mat-header-cell {
+  text-transform: uppercase;
+}
+
+.element-detail {
+  overflow: hidden;
+  display: flex;
+}
+
+.element-row td {
+  border-bottom-width: 0;
+}
+
+tr.detail-row {
+  height: 0;
+}
+
+.full-div {
+  padding-bottom: 25px;
+}
+
+.mat-header-cell {
+  text-transform: uppercase;
+}

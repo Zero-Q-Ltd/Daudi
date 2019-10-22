@@ -1,0 +1,74 @@
+{
+  "_from": "node-quickbooks",
+  "_id": "node-quickbooks@2.0.24",
+  "_inBundle": false,
+  "_integrity": "sha512-QxhjItMgl8+wRADQ6+8sDOW406BOGTzx473wkSiW65KjZtjQWpgV0Y7gRauLBwndr3ktATHZ2pInM6096Ultsw==",
+  "_location": "/node-quickbooks",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "node-quickbooks",
+    "name": "node-quickbooks",
+    "escapedName": "node-quickbooks",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/node-quickbooks/-/node-quickbooks-2.0.24.tgz",
+  "_shasum": "539ff6119fc671482f3880b63badf56a1755a36f",
+  "_spec": "node-quickbooks",
+  "_where": "/home/kisinga/emkaynowBeta/functions",
+  "author": {
+    "name": "Michael Cohen"
+  },
+  "bugs": {
+    "url": "https://github.com/mcohen01/node-quickbooks/issues"
+  },
+  "bundleDependencies": false,
+  "dependencies": {
+    "bluebird": "3.3.4",
+    "jxon": "^2.0.0-beta.5",
+    "moment": "^2.18.1",
+    "querystring": "0.2.0",
+    "request": "2.83.0",
+    "request-debug": "0.2.0",
+    "underscore": "1.6.0",
+    "util": "0.10.3",
+    "uuid": "^3.1.0"
+  },
+  "deprecated": false,
+  "description": "node.js client for Intuit's IPP QuickBooks V3 API.",
+  "devDependencies": {
+    "async": "0.9.0",
+    "bluebird": "2.9.25",
+    "expect": "0.1.1",
+    "mocha": "2.2.5",
+    "ramda": "0.17.1"
+  },
+  "directories": {
+    "example": "example",
+    "test": "test"
+  },
+  "homepage": "https://github.com/mcohen01/node-quickbooks",
+  "keywords": [
+    "Intuit",
+    "QuickBooks",
+    "IPP"
+  ],
+  "license": "ISC",
+  "main": "index.js",
+  "name": "node-quickbooks",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mcohen01/node-quickbooks.git"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "version": "2.0.24"
+}

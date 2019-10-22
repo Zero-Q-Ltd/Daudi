@@ -1,0 +1,58 @@
+<div class="home-body">
+  <emkay-family></emkay-family>
+  <div class="container">
+    <div class="home-header">
+      <img alt="Emkay Logo" class="img-responsive" src="../../assets/images/home-header.png">
+    </div>
+    <br>
+    <mat-card class="blue-bg">
+      <mat-card-content>
+        <div class="table-responsive">
+          <table class="table table-stripped product-bg">
+            <thead class="thead-primary price-bg">
+            <tr>
+              <th>Contact</th>
+              <th>Time</th>
+              <th>Status</th>
+              <th>
+                <mat-icon [matTooltipPosition]="position" class="nav-icon nav-dot material-icons color-black" matPrefix
+                          matTooltip="PMS">fiber_manual_record
+                </mat-icon>
+              </th>
+              <th>
+                <mat-icon [matTooltipPosition]="position" class="nav-icon nav-dot material-icons color-warning"
+                          matPrefix
+                          matTooltip="AGO">fiber_manual_record
+                </mat-icon>
+              </th>
+              <th>
+                <mat-icon [matTooltipPosition]="position" class="nav-icon nav-dot material-icons color-success"
+                          matPrefix
+                          matTooltip="IK">fiber_manual_record
+                </mat-icon>
+              </th>
+              <th>Total</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let hist of history">
+              <td>{{hist.createdByUser}}</td>
+              <td>{{hist.createdTime}}</td>
+              <td *ngIf="hist.stage==1">Recieved</td>
+              <td *ngIf="hist.stage==2">Invoiced</td>
+              <td *ngIf="hist.stage==3">Paid</td>
+              <td *ngIf="hist.stage==4">Received</td>
+              <td *ngIf="hist.stage==5">Completed</td>
+              <td>{{hist.pmsQty}}</td>
+              <td>{{hist.agoQty}}</td>
+              <td>{{hist.ikQty}}</td>
+              <td>{{hist.totalAmount}}</td>
+            </tr>
+
+            </tbody>
+          </table>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

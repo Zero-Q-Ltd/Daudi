@@ -1,0 +1,31 @@
+.btn-primary {
+  background-color: $mk-grey;
+  border-color: $mk-grey;
+}
+
+.btn-primary:active,
+.btn-primary.active,
+.btn-primary:hover,
+.btn-primary:hover:after,
+.btn-primary:visited,
+.btn-primary:focus {
+  background-color: $mk-default;
+  border-color: $mk-default;
+  color: $mk-white;
+}
+
+.btn-outline-primary {
+  color: $mk-default;
+  border-color: $mk-default;
+}
+
+.btn-outline-active:hover,
+.btn-outline-primary.active,
+.btn-outline-primary:hover,
+.btn-outline-primary:hover:after,
+.btn-outline-primary:visited,
+.btn-outline-primary:focus {
+  color: $mk-white;
+  border-color: $mk-default;
+  background: $mk-default;
+}

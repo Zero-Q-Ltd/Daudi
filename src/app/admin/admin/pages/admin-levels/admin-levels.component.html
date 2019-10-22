@@ -1,0 +1,143 @@
+<div class="container-fluid">
+  <br>
+  <form [formGroup]="newadminform">
+    <div fxLayout fxLayout.xs="column" fxLayoutAlign="center" fxLayoutGap="10px" fxLayoutGap.xs="0">
+      <div fxFlex>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Type Level</mat-label>
+          <input matInput required [formControl]="newadminform.get('level')">
+        </mat-form-field>
+      </div>
+      <div fxFlex>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Admin Type Name</mat-label>
+          <input matInput required [formControl]="newadminform.get('name')">
+        </mat-form-field>
+      </div>
+
+      <div fxFlex>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Type Description</mat-label>
+          <textarea matInput required [formControl]="newadminform.get('description')"></textarea>
+        </mat-form-field>
+      </div>
+    </div>
+    <div formArrayName="levels" *ngFor="let level of newadminform.get('levels')['controls']; let i = index;">
+      <div [formGroupName]="i" fxLayout fxLayout.xs="column" fxLayoutAlign="center" fxLayoutGap="10px"
+        fxLayoutGap.xs="0">
+        <div fxFlex>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Level Name</mat-label>
+            <input matInput formControlName="name" required>
+          </mat-form-field>
+        </div>
+        <div fxFlex>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Level Description</mat-label>
+            <input matInput formControlName="description" required>
+          </mat-form-field>
+        </div>
+        <div fxFlex>
+          <div class="al-button-row">
+            <button mat-fab (click)="addLevelsform()">
+              <mat-icon>library_add</mat-icon>
+            </button>
+            <button mat-fab (click)="removeLevelsform(i)" color="warn">
+              <mat-icon>remove_circle_outline</mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+  <!--<button style="width: 100%;" mat-raised-button color="primary" (click)="saveadminType()">SAVE</button>-->
+  <div fxLayout fxLayout.xs="column" fxLayoutAlign="center" fxLayoutGap="10px" fxLayoutGap.xs="0">
+    <div fxFlex="66.6%">
+      <button style="width: 100%;" mat-raised-button color="primary" (click)="saveadminType()">
+        SAVE
+      </button>
+    </div>
+    <div fxFlex></div>
+    <!--<div fxFlex></div>-->
+  </div>
+  <br>
+  <mat-accordion>
+    <mat-expansion-panel *ngFor="let admintype of tempcompany.adminTypes ; let i = index">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          {{tempcompany.adminTypes[i].name}}
+        </mat-panel-title>
+        <mat-panel-description>
+          {{tempcompany.adminTypes[i].description}}
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <div fxLayout fxLayout.xs="column" fxLayoutAlign="center" fxLayoutGap="10px" fxLayoutGap.xs="0">
+        <div fxFlex>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Type Name</mat-label>
+            <input matInput [(ngModel)]="tempcompany.adminTypes[i].name" required>
+            <mat-icon class="secondary-text" matSuffix>
+              monetization_on
+            </mat-icon>
+          </mat-form-field>
+        </div>
+        <!-- <div fxFlex>
+          <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Type Level</mat-label>
+              <input matInput required [formControl]="newadminform.get('level')">
+            </mat-form-field>
+        </div> -->
+        <div fxFlex>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Description</mat-label>
+            <textarea matInput [(ngModel)]="tempcompany.adminTypes[i].description" required></textarea>
+            <mat-icon class="secondary-text" matSuffix>
+              monetization_on
+            </mat-icon>
+          </mat-form-field>
+        </div>
+      </div>
+      <p>Levels</p>
+      <div *ngFor="let adminlevel of tempcompany.adminTypes[i].levels; let j = index">
+        <div fxLayout fxLayout.xs="column" fxLayoutAlign="center" fxLayoutGap="10px" fxLayoutGap.xs="0">
+          <div fxFlex>
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Level ID</mat-label>
+              <input matInput [value]="j" required disabled>
+            </mat-form-field>
+          </div>
+          <div fxFlex>
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Level Name</mat-label>
+              <input matInput [(ngModel)]="adminlevel.name" required>
+            </mat-form-field>
+          </div>
+          <div fxFlex>
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Level Description</mat-label>
+              <input matInput [(ngModel)]="adminlevel.description" required>
+            </mat-form-field>
+          </div>
+          <div fxFlex="8%">
+            <div class="al-button-row">
+              <button mat-mini-fab (click)="addLevelsdirect(i)">
+                <mat-icon>library_add</mat-icon>
+              </button>
+              <button mat-mini-fab (click)="removeLevelsirect(i, j)" color="warn">
+                <mat-icon>remove_circle_outline</mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button mat-raised-button color="danger" (click)="deleteTypedirect(i)">
+        DELETE
+      </button>
+      <button mat-raised-button color="primary" (click)="savecompany()">
+        SAVE
+      </button>
+    </mat-expansion-panel>
+
+  </mat-accordion>
+</div>
+<br>

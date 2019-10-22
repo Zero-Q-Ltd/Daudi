@@ -1,0 +1,39 @@
+<p>
+  <!-- <strong>Current Delivery areas must be within 50km from major depots</strong> -->
+  <br>
+  <!-- <agm-map [latitude]="lat" [longitude]="lng" [zoom]="zoom" [disableDefaultUI]="false" [zoomControl]="false" (mapClick)="mapClicked($event)">
+
+    <agm-marker *ngIf="clickedlocation.location" [latitude]="clickedlocation.location._lat" [longitude]="clickedlocation.location._long" [markerDraggable]="false" (dragEnd)="markerDragEnd(m, $event)">
+      <agm-info-window>
+      <strong>You have selected </strong>
+    </agm-info-window>
+    </agm-marker>
+    <agm-circle *ngFor="let m of points; let i = index" [clickable]='false' [latitude]="m.location._lat" [longitude]="m.location._long"
+      [radius]="50000" [fillColor]="'red'" [circleDraggable]="false" [editable]="false">
+
+    </agm-circle>
+
+  </agm-map> -->
+</p>
+
+<div class="form-group">
+  <input #search [formControl]="searchControl" autocapitalize="off" autocorrect="off" class="form-control"
+         placeholder="Search for location"
+         spellcheck="off" type="text">
+  <!-- <input placeholder="Search for location" autocorrect="off" autocapitalize="off" spellcheck="off" exampledata="text" class="form-control"
+    #search [formControl]="searchControl" [matAutocomplete]="maplocation">
+  <mat-autocomplete #maplocation="matAutocomplete">
+    <mat-option *ngFor="let option of options" [value]="option">
+      {{ option }}
+    </mat-option>
+  </mat-autocomplete> -->
+</div>
+<br>
+<br>
+<agm-map [latitude]="latitude" [longitude]="longitude" [scrollwheel]="false" [zoom]="zoom">
+  <agm-marker [latitude]="latitude" [longitude]="longitude" [markerDraggable]="draggable"></agm-marker>
+</agm-map>
+<mat-dialog-actions align="center">
+  <button color="warn" mat-button matDialogClose>Cancel</button>
+  <button [matDialogClose]="clickedlocation" color="primary" mat-button>Confirm</button>
+</mat-dialog-actions>
