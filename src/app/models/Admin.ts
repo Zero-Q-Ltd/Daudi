@@ -72,43 +72,37 @@ export const emptyadmin: Admin = {
   config: {
     viewsandbox: false,
     level: null,
-    approvedby: inituser,
-    depotid: null,
+    approvedby: { ...inituser },
+    app: {
+      depotid: null
+    },
+    fcm: {
+      settings: {
+        payment: null,
+        truck: null
+      },
+      tokens: {
+        apk: null,
+        web: null
+      }
+    },
     type: null,
   },
-  data: {
-    email: null,
-    uid: null,
-    photoURL: null,
-    name: null
-  },
+
   status: {
     online: false,
     time: null
   },
-  profiledata: {
-    gender: null,
+  profile: {
     address: null,
-    dob: null,
     bio: null,
-    phone: null
-  },
-  fcmtokens: {
-    web: null,
-    apk: null
-  },
-  settings: {
-    fcm: {
-      truck: {
-        live: false,
-        sandbox: false
-      },
-      payment: {
-        live: false,
-        sandbox: false
-      }
-
-    }
+    dob: null,
+    email: null,
+    gender: null,
+    name: null,
+    phone: null,
+    photoURL: null,
+    uid: null
   }
 
 };

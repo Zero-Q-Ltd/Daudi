@@ -1,8 +1,8 @@
 import * as firebase from "firebase";
 
-export interface Batch_ {
+export interface Batch {
 
-  Amount: number,
+  Amount: number;
   date: firebase.firestore.Timestamp | Date;
   batch: string;
   depot: {
@@ -14,15 +14,15 @@ export interface Batch_ {
   accumulated: {
     total: number,
     usable: number
-  },
+  };
   loadedqty: number;
   runningcost: number;
   price: number;
-  Id: string,
-  status: number //1 for active, 0 for inactive
+  Id: string;
+  status: number; // 1 for active, 0 for inactive
 }
 
-export const emptybatches: Batch_ = {
+export const emptybatches: Batch = {
   Id: null,
   type: null,
   Amount: null,

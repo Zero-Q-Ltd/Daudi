@@ -9,18 +9,8 @@ export interface CompanyConfig {
     id: string;
     description: string;
     status: boolean;
-    contactperson: {
-        name: string,
-        phone: string,
-        email: string,
-        position: string,
-        address: string
-    };
-    contactDetails: {
-        phone: string,
-        email: string,
-        address: string
-    };
+    contactperson: Array<ContactPerson>;
+
     fuelconfig: {
         [key in fuelTypes]: string
     };
@@ -43,20 +33,22 @@ const KisingaMetadata: Metadata = {
         date: new Date("Aug 29, 2019")
     }
 };
+
+interface ContactPerson {
+    name: string;
+    phone: string;
+    email: string;
+    position: string;
+    address: string;
+}
 export const emptycompanydata: CompanyConfig = {
-    contactperson: {
-        email: null,
-        name: null,
-        phone: null,
-        position: null,
-        address: null
-    },
+    contactperson: [],
     logourl: null,
     status: null,
-    contactDetails: {
-        email: null,
-        phone: null,
-        address: null
+    fuelconfig: {
+        ago: null,
+        ik: null,
+        pms: null
     },
     /**
      * make default location Somewhere in nbi

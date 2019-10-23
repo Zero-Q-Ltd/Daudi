@@ -1,25 +1,25 @@
 import * as firebase from "firebase";
 
 export interface SMS {
-  Id: string,
+  Id: string;
   type: {
     origin: "custom" | "system" | "bulk",
     reason: "ordermoved" | "truckmoved" | string
-  },
+  };
   company: {
     QbId: string,
     name: string,
     Id: string,
     phone: string,
     contactname: string
-  },
-  msg: string,
-  greeting: string,
-  timestamp: firebase.firestore.Timestamp,
+  };
+  msg: string;
+  greeting: string;
+  timestamp: firebase.firestore.Timestamp;
   status: {
     sent: boolean,
     delivered: boolean
-  },
+  };
 }
 
 export const emptysms: SMS = {

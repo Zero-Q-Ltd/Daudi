@@ -1,6 +1,6 @@
 import { fuelTypes, User } from "./universal";
 import { CustomerContact } from "./Customer";
-import { Truck, Batch } from "./Truck";
+import { Truck, Batch, emptytruck } from "./Truck";
 
 export interface Order {
   Id: string; // used to temporarily store the key, used later for looping
@@ -156,7 +156,7 @@ export const emptyorder: Order = {
     krapin: null
   },
   QbId: null,
-  InvoiceId: null,
+  truck: { ...emptytruck },
   notifications: {
     sms: null,
     email: null
@@ -169,12 +169,12 @@ export const emptyorder: Order = {
   stage: null,
   loaded: null,
   stagedata: {
-    1: initstages,
-    2: initstages,
-    3: initstages,
-    4: initstages,
-    5: initstages,
-    6: initstages
+    1: { ...initstages },
+    2: { ...initstages },
+    3: { ...initstages },
+    4: { ...initstages },
+    5: { ...initstages },
+    6: { ...initstages }
   },
   discount: {
     approved: null,

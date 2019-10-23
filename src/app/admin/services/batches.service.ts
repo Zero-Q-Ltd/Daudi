@@ -1,11 +1,11 @@
-import {Injectable} from "@angular/core";
-import {fueltypesArray} from "../../models/Fueltypes";
-import {Batch_, emptybatches} from "../../models/Batch";
-import {BehaviorSubject} from "rxjs";
-import {AngularFirestore} from "@angular/fire/firestore";
-import {DepotsService} from "./depots.service";
-import {fuelTypes} from "../../models/universal";
-import {Depot} from "../../models/Depot";
+import { Injectable } from "@angular/core";
+import { fueltypesArray } from "../../models/Fueltypes";
+import { Batch, emptybatches } from "../../models/Batch";
+import { BehaviorSubject } from "rxjs";
+import { AngularFirestore } from "@angular/fire/firestore";
+import { DepotsService } from "./depots.service";
+import { fuelTypes } from "../../models/universal";
+import { Depot } from "../../models/Depot";
 
 @Injectable({
   providedIn: "root"
@@ -14,14 +14,14 @@ export class BatchesService {
   fetchingbatches = new BehaviorSubject(true);
   activedepot: Depot;
   depotbatches: {
-    pms: BehaviorSubject<Array<Batch_>>,
-    ago: BehaviorSubject<Array<Batch_>>,
-    ik: BehaviorSubject<Array<Batch_>>,
+    pms: BehaviorSubject<Array<Batch>>,
+    ago: BehaviorSubject<Array<Batch>>,
+    ik: BehaviorSubject<Array<Batch>>,
   } = {
-    pms: new BehaviorSubject([]),
-    ago: new BehaviorSubject([]),
-    ik: new BehaviorSubject([])
-  };
+      pms: new BehaviorSubject([]),
+      ago: new BehaviorSubject([]),
+      ik: new BehaviorSubject([])
+    };
   /**
    * this keeps a local copy of all the subscriptions within this service
    */
@@ -51,7 +51,7 @@ export class BatchesService {
           this.depotbatches[fueltype].next(snapshot.docs.map(doc => {
             const value = Object.assign({}, emptybatches, doc.data());
             value.Id = doc.id;
-            return value as Batch_;
+            return value as Batch;
           }));
         });
       this.subscriptions.set(`${fueltype}batch`, subscriprion);

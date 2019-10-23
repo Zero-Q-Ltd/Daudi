@@ -3,7 +3,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material";
 import { NotificationService } from "../../shared/services/notification.service";
 import * as moment from "moment";
 import { AngularFirestore } from "@angular/fire/firestore";
-import { Batch_ } from "../../models/Batch";
+import { Batch } from "../../models/Batch";
 import { emptytruck, Truck } from "../../models/Truck";
 import { fuelTypes } from "../../models/universal";
 import { emptyorder, Order } from "../../models/Order";
@@ -37,9 +37,9 @@ interface batchContent {
 
 export class BatchesSelectorComponent implements OnInit, OnDestroy {
   depotbatches: {
-    pms: Array<Batch_>,
-    ago: Array<Batch_>,
-    ik: Array<Batch_>
+    pms: Array<Batch>,
+    ago: Array<Batch>,
+    ik: Array<Batch>
   } = {
       pms: [],
       ago: [],
@@ -48,9 +48,9 @@ export class BatchesSelectorComponent implements OnInit, OnDestroy {
   truck: Truck = Object.assign({}, emptytruck);
   displayedColumns: string[] = ["id", "batch", "totalqty", "accumulated", "loadedqty", "availableqty", "drawnqty", "remainingqty", "status"];
   batches: {
-    pms: Array<Batch_>
-    ago: Array<Batch_>
-    ik: Array<Batch_>
+    pms: Array<Batch>
+    ago: Array<Batch>
+    ik: Array<Batch>
   } = {
       pms: [],
       ago: [],
@@ -143,7 +143,7 @@ export class BatchesSelectorComponent implements OnInit, OnDestroy {
     private trucksservice: TrucksService,
     private ordersservice: OrdersService) {
     fueltypesArray.forEach((fueltype: fuelTypes) => {
-      this.batchesservice.depotbatches[fueltype].pipe(takeUntil(this.comopnentDestroyed)).subscribe((batches: Array<Batch_>) => {
+      this.batchesservice.depotbatches[fueltype].pipe(takeUntil(this.comopnentDestroyed)).subscribe((batches: Array<Batch>) => {
         // console.log(batches);
         this.depotbatches[fueltype] = batches;
         this.batches[fueltype] = batches;
@@ -240,7 +240,7 @@ export class BatchesSelectorComponent implements OnInit, OnDestroy {
            */
           const assignedamount = this.getTotalAvailable(0, fueltype);
 
-          this.depotbatches[fueltype].forEach((batch: Batch_, index) => {
+          this.depotbatches[fueltype].forEach((batch: Batch, index) => {
             /**
              * Check if there is fuel to rollover
              */
