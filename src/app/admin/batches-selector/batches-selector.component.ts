@@ -4,7 +4,7 @@ import { NotificationService } from "../../shared/services/notification.service"
 import * as moment from "moment";
 import { AngularFirestore } from "@angular/fire/firestore";
 import { Batch_ } from "../../models/Batch";
-import { emptytruck, Truck_ } from "../../models/Truck";
+import { emptytruck, Truck } from "../../models/Truck";
 import { fuelTypes } from "../../models/universal";
 import { emptyorder, Order } from "../../models/Order";
 import { AdminsService } from "../services/admins.service";
@@ -45,7 +45,7 @@ export class BatchesSelectorComponent implements OnInit, OnDestroy {
       ago: [],
       ik: []
     };
-  truck: Truck_ = Object.assign({}, emptytruck);
+  truck: Truck = Object.assign({}, emptytruck);
   displayedColumns: string[] = ["id", "batch", "totalqty", "accumulated", "loadedqty", "availableqty", "drawnqty", "remainingqty", "status"];
   batches: {
     pms: Array<Batch_>
@@ -156,7 +156,7 @@ export class BatchesSelectorComponent implements OnInit, OnDestroy {
     const subscription = this.trucksservice.getTruck(truckid)
       .onSnapshot(trucksnapshot => {
         if (trucksnapshot.exists) {
-          this.truck = Object.assign({}, trucksnapshot.data()) as Truck_;
+          this.truck = Object.assign({}, trucksnapshot.data()) as Truck;
           this.truck.Id = trucksnapshot.id;
           const ordersubscription = this.ordersservice.getorder(this.truck.orderdata.OrderID)
             .onSnapshot(ordersnapshot => {

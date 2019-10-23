@@ -1,4 +1,6 @@
-import {fuelTypes, User} from "./universal";
+import { fuelTypes, User } from "./universal";
+import { CustomerContact } from "./Customer";
+import { Truck, Batch } from "./Truck";
 
 export interface Order {
   Id: string; // used to temporarily store the key, used later for looping
@@ -6,30 +8,19 @@ export interface Order {
     name: string,
     Id: string,
     phone: string,
-    contact: {
-      email: string,
-      name: string,
-      phone: string
-    },
+    contact: Array<CustomerContact>;
     krapin: string,
     QbId: string,
-    email: string | null
   };
   QbId: string;
-  InvoiceId: string;
   stage: number;
   origin: string;
-
   notifications: {
-    allowsms: boolean,
-    allowemail: boolean
+    sms: boolean,
+    email: boolean
   };
   config: {
-    depot: {
-      name: string,
-      Id: string,
-    },
-    companyid: string,
+    depotId: string,
     sandbox: boolean,
   };
   error?: {
@@ -42,7 +33,7 @@ export interface Order {
   /**
    *@Deprecated, In Daudi 3 the truck Id is exactly the same as the order Id since its a 1:1 r/ship
    */
-  truck?: Array<string>;
+  truck: Truck;
   loaded: boolean;
   fuel: {
     [key in fuelTypes]: fuelconfig
@@ -71,6 +62,7 @@ export interface fuelconfig {
   QbId: string;
   qty: number;
   priceconfig: priceconfig;
+  batches: Array<Batch>;
 }
 
 const initorderfuel = {
@@ -156,11 +148,7 @@ export interface priceconfig {
 export const emptyorder: Order = {
   Id: null,
   company: {
-    contact: {
-      email: null,
-      name: null,
-      phone: null
-    },
+    contact: [],
     phone: null,
     name: null,
     Id: null,
@@ -170,15 +158,11 @@ export const emptyorder: Order = {
   QbId: null,
   InvoiceId: null,
   notifications: {
-    allowsms: null,
-    allowemail: null
+    sms: null,
+    email: null
   },
   config: {
-    depot: {
-      name: null,
-      Id: null
-    },
-    companyid: null,
+    depotId: null,
     sandbox: null
   },
   origin: null,
@@ -218,7 +202,8 @@ export const emptyorder: Order = {
         taxableAmnt: 0,
         taxQbId: null
       },
-      QbId: null
+      QbId: null,
+      batches: []
     },
     ago: {
       qty: 0,
@@ -236,7 +221,8 @@ export const emptyorder: Order = {
         taxableAmnt: 0,
         taxQbId: null
       },
-      QbId: null
+      QbId: null,
+      batches: []
     },
     ik: {
       qty: 0,
@@ -252,9 +238,10 @@ export const emptyorder: Order = {
         nonTaxtotal: 0,
         taxablePrice: 0,
         taxableAmnt: 0,
-        taxQbId: null
+        taxQbId: null,
       },
-      QbId: null
+      QbId: null,
+      batches: []
     }
   }
 };

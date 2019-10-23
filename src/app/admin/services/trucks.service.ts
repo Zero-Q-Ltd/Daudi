@@ -1,10 +1,10 @@
-import {Injectable} from "@angular/core";
+import { Injectable } from "@angular/core";
 import * as moment from "moment";
-import {emptytruck, Truck_, truckqueryStagesarray, truckStages} from "../../models/Truck";
-import {BehaviorSubject} from "rxjs";
-import {AngularFirestore} from "@angular/fire/firestore";
-import {DepotsService} from "./depots.service";
-import {Depot} from "../../models/Depot";
+import { emptytruck, Truck, truckqueryStagesarray, truckStages } from "../../models/Truck";
+import { BehaviorSubject } from "rxjs";
+import { AngularFirestore } from "@angular/fire/firestore";
+import { DepotsService } from "./depots.service";
+import { Depot } from "../../models/Depot";
 
 @Injectable({
   providedIn: "root"
@@ -13,14 +13,14 @@ export class TrucksService {
   loadingtrucks = new BehaviorSubject(true);
 
   trucks: {
-    [key in truckStages]: BehaviorSubject<Array<Truck_>>
+    [key in truckStages]: BehaviorSubject<Array<Truck>>
   } = {
-    0: new BehaviorSubject<Array<Truck_>>([]),
-    1: new BehaviorSubject<Array<Truck_>>([]),
-    2: new BehaviorSubject<Array<Truck_>>([]),
-    3: new BehaviorSubject<Array<Truck_>>([]),
-    4: new BehaviorSubject<Array<Truck_>>([])
-  };
+      0: new BehaviorSubject<Array<Truck>>([]),
+      1: new BehaviorSubject<Array<Truck>>([]),
+      2: new BehaviorSubject<Array<Truck>>([]),
+      3: new BehaviorSubject<Array<Truck>>([]),
+      4: new BehaviorSubject<Array<Truck>>([])
+    };
   /**
    * this keeps a local copy of all the subscriptions within this service
    */
@@ -93,7 +93,7 @@ export class TrucksService {
           this.trucks[stage].next(snapshot.docs.map(doc => {
             const value = doc.data();
             value.Id = doc.id;
-            return value as Truck_;
+            return value as Truck;
           }));
         }, err => {
           console.log(`Encountered error: ${err}`);
@@ -124,7 +124,7 @@ export class TrucksService {
         this.trucks[4].next(snapshot.docs.map(doc => {
           const value = Object.assign({}, emptytruck, doc.data());
           value.Id = doc.id;
-          return value as Truck_;
+          return value as Truck;
         }));
       }, err => {
         console.log(`Encountered error: ${err}`);

@@ -4,7 +4,7 @@ import * as moment from "moment";
 import { ActivatedRoute } from "@angular/router";
 import { animate, sequence, state, style, transition, trigger } from "@angular/animations";
 import { SendMsgComponent } from "../send-msg/send-msg.component";
-import { emptytruck, Truck_ } from "../../models/Truck";
+import { emptytruck, Truck } from "../../models/Truck";
 import { SMS } from "../../models/sms";
 import { firestore } from "firebase";
 import { ExcelService } from "../services/excel-service.service";
@@ -46,7 +46,7 @@ export class TrucksTableComponent implements OnInit {
   stage: number;
 
 
-  trucksdataSource = new MatTableDataSource<Truck_>();
+  trucksdataSource = new MatTableDataSource<Truck>();
 
   truckcolumns = ["truckId", "time", "Print Status", "Phone", "orderCompanyName", "driverName", "driverId", "truckReg", "pmsQty", "agoQty", "ikQty"];
 
@@ -75,7 +75,7 @@ export class TrucksTableComponent implements OnInit {
       .pipe(switchMap((paramdata: { stage: number }) => {
         return this.truckservice.trucks[paramdata.stage].pipe(takeUntil(this.comopnentDestroyed));
       }))
-      .subscribe((stagetrucks: Array<Truck_>) => {
+      .subscribe((stagetrucks: Array<Truck>) => {
         this.trucksdataSource.data = stagetrucks;
       });
   }
@@ -105,7 +105,7 @@ export class TrucksTableComponent implements OnInit {
     this.trucksdataSource.filter = filterValue;
   }
 
-  sendSMS(clickedtruck: Truck_) {
+  sendSMS(clickedtruck: Truck) {
     const sms: SMS = {
       Id: null,
       company: clickedtruck.company,

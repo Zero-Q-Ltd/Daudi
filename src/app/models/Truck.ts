@@ -1,4 +1,4 @@
-import {fuelTypes, inituser, User} from "./universal";
+import { fuelTypes, inituser, User } from "./universal";
 import * as firebase from "firebase";
 
 const initbatch = {
@@ -18,57 +18,28 @@ interface Expiries {
   timestamp: firebase.firestore.Timestamp | Date;
 }
 
-interface Batch {
+export interface Batch {
   Name: string;
   Id: string;
   qty: number;
   observed: number;
 }
 
-export interface Truck_ {
+export interface Truck {
   stage: number;
   Id: string;
-  orderdata: {
-    QbID: string,
-    OrderID: string,
-  };
-  truckId: string;
-  company: {
-    QbId: string,
-    name: string,
-    Id: string,
-    phone: string,
-    contactname: string,
-  };
-  /**
-   * @description important for Cloud functions
-   */
-  config: {
-    depot: {
-      name: string,
-      Id: string,
-    },
-    companyid: string,
-    sandbox: boolean,
-  };
+
   frozen: boolean;
-  notifications: {
-    allowsms: boolean,
-    allowemail: boolean
+
+  driverdetail: {
+    name: string,
+    id: string
   };
-  drivername: string;
-  driverid: string;
-  numberplate: string;
+  truckdetail: {
+    numberplate: string;
+  };
   isPrinted: boolean;
-  fuel: {
-    [key in fuelTypes]: {
-      qty: number,
-      batches: {
-        0: Batch,
-        1: Batch
-      }
-    }
-  };
+
   stagedata: {
 
     0: {
@@ -112,59 +83,19 @@ export interface Truck_ {
   compartments: Array<Compartment>;
 }
 
-export const emptytruck: Truck_ = {
+export const emptytruck: Truck = {
   stage: null,
   Id: null,
-  orderdata: {
-    OrderID: null,
-    QbID: null
-  },
-  truckId: null,
-  company: {
-    QbId: null,
-    name: null,
-    Id: null,
-    phone: null,
-    contactname: null
-  },
-  notifications: {
-    allowsms: null,
-    allowemail: null
-  },
-  drivername: null,
-  driverid: null,
-  numberplate: null,
+
   isPrinted: false,
-  config: {
-    depot: {
-      name: null,
-      Id: null
-    },
-    companyid: null,
-    sandbox: null
-  },
+
   frozen: false,
-  fuel: {
-    pms: {
-      qty: null,
-      batches: {
-        0: initbatch,
-        1: initbatch
-      }
-    },
-    ago: {
-      qty: null,
-      batches: {
-        0: initbatch,
-        1: initbatch
-      }
-    }, ik: {
-      qty: null,
-      batches: {
-        0: initbatch,
-        1: initbatch
-      }
-    }
+  driverdetail: {
+    id: null,
+    name: null,
+  },
+  truckdetail: {
+    numberplate: null
   },
   stagedata: {
     0: {
@@ -197,10 +128,10 @@ export const emptytruck: Truck_ = {
     }
   },
   compartments: [
-    {fueltype: null, qty: 0}, {fueltype: null, qty: 0},
-    {fueltype: null, qty: 0}, {fueltype: null, qty: 0},
-    {fueltype: null, qty: 0}, {fueltype: null, qty: 0},
-    {fueltype: null, qty: 0}]
+    { fueltype: null, qty: 0 }, { fueltype: null, qty: 0 },
+    { fueltype: null, qty: 0 }, { fueltype: null, qty: 0 },
+    { fueltype: null, qty: 0 }, { fueltype: null, qty: 0 },
+    { fueltype: null, qty: 0 }]
 };
 
 export type truckStages = "0" | "1" | "2" | "3" | "4";

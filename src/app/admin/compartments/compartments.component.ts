@@ -4,7 +4,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material"; // added dial
 import { NotificationService } from "../../shared/services/notification.service";
 import { FormControl, Validators } from "@angular/forms";
 import { Order } from "../../models/Order";
-import { emptytruck, Truck_ } from "../../models/Truck";
+import { emptytruck, Truck } from "../../models/Truck";
 import { AdminsService } from "../services/admins.service";
 import { fueltypesArray } from "../../models/Fueltypes";
 import { OrdersService } from "../services/orders.service";
@@ -20,7 +20,7 @@ export class CompartmentsComponent implements OnInit, OnDestroy {
   position = "left";
   position2 = "above";
   saving = false;
-  truck: Truck_ = Object.assign({}, emptytruck);
+  truck: Truck = Object.assign({}, emptytruck);
   mask = [/^[kK]+$/i, /^[a-zA-Z]+$/i, /^[a-zA-Z]+$/i, " ", /\d/, /\d/, /\d/, /^[a-zA-Z]+$/i];
   fueltypesArray = fueltypesArray;
   nameControl: FormControl = new FormControl("", [Validators.required]);

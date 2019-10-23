@@ -2,7 +2,7 @@ import * as moment from "moment";
 import {olddata} from "./oldordersdata";
 import {Order, Truck} from "../../models/Global";
 import {Order} from "../../models/Order";
-import {Truck_} from "../../models/Truck"; // import our interface
+import {Truck} from "../../models/Truck"; // import our interface
 const allorders = [];
 
 export function syncdb(firestore) {
@@ -197,7 +197,7 @@ export function syncdb(firestore) {
                 }
               };
               // var pmsids = originaltruck.pmsBatch.split('-')
-              let changedtruck: Truck_ = {
+              let changedtruck: Truck = {
                 stage: 4,
                 truckId: originaltruck.truckId ? originaltruck.truckId : null,
                 numberplate: originaltruck.truckReg ? originaltruck.truckReg : null,

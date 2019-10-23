@@ -87,15 +87,15 @@ export class CreateOrderComponent implements OnInit, AfterViewInit, OnDestroy {
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
 
   constructor(private router: Router,
-              private notificationService: NotificationService,
-              private dialog: MatDialog,
-              private route: ActivatedRoute,
-              private adminservice: AdminsService,
-              private depotservice: DepotsService,
-              private companieservice: CustomerService,
-              private orderservice: OrdersService,
-              private priceservice: PricesService,
-              private functions: AngularFireFunctions) {
+    private notificationService: NotificationService,
+    private dialog: MatDialog,
+    private route: ActivatedRoute,
+    private adminservice: AdminsService,
+    private depotservice: DepotsService,
+    private companieservice: CustomerService,
+    private orderservice: OrdersService,
+    private priceservice: PricesService,
+    private functions: AngularFireFunctions) {
 
 
     this.route.params.pipe(takeUntil(this.comopnentDestroyed)).subscribe((paramdata: { orderid: string }) => {
@@ -271,8 +271,8 @@ export class CreateOrderComponent implements OnInit, AfterViewInit, OnDestroy {
   initordersform() {
     if (!this.discApproval) {
       this.temporder.notifications = {
-        allowsms: !this.currentdepotconfig.sandbox,
-        allowemail: !this.currentdepotconfig.sandbox
+        sms: !this.currentdepotconfig.sandbox,
+        email: !this.currentdepotconfig.sandbox
       };
 
       fueltypesArray.forEach((fueltype) => {
@@ -420,7 +420,7 @@ export class CreateOrderComponent implements OnInit, AfterViewInit, OnDestroy {
         name: this.currentdepotconfig.Name,
         Id: this.currentdepotconfig.Id
       },
-      companyid: this.currentdepotconfig.companyId,
+      companyId: this.currentdepotconfig.companyId,
       sandbox: this.currentdepotconfig.sandbox
     };
     if (this.companyInfo.newcompany) {

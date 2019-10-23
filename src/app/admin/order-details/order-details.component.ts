@@ -3,7 +3,7 @@ import { Component, Input, OnDestroy, OnInit } from "@angular/core";
 import { MatDialog } from "@angular/material"; // added dialog data receive
 import { NotificationService } from "../../shared/services/notification.service";
 import { AngularFirestore } from "@angular/fire/firestore";
-import { Truck_ } from "../../models/Truck";
+import { Truck } from "../../models/Truck";
 import { Order } from "../../models/Order";
 import { TrucksService } from "../services/trucks.service";
 import { ReplaySubject } from "rxjs";
@@ -19,7 +19,7 @@ export class OrderDetailsComponent implements OnInit, OnDestroy {
   position1 = "left";
   position2 = "above";
 
-  truck: Truck_;
+  truck: Truck;
   displayedColumns = ["Id", "Company", "Contact", "Time", "Phone", "PMS", "AGO", "IK", "Total", "Action", "Status"];
   @Input() order: Order;
 
@@ -37,7 +37,7 @@ export class OrderDetailsComponent implements OnInit, OnDestroy {
       return;
     }
     const subscription = this.truckservice.getTruck(this.order.Id).onSnapshot(truckdata => {
-      this.truck = truckdata.data() as Truck_;
+      this.truck = truckdata.data() as Truck;
     });
     this.subscriptions.set(`statsrange`, subscription);
 

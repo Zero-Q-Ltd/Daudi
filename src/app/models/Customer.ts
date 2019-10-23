@@ -3,36 +3,34 @@ import * as firebase from "firebase";
 
 
 export interface Customer {
-  Active: boolean,
-  name: string,
+  Active: boolean;
+  name: string;
   /**
    * The primary contact shall be in pos 0
    */
-  contact: {
-    name: string,
-    phone: string,
-    email: string
-  }
-  QbId: string,
-  sandbox: boolean,
-  Id: string,
-  location: firebase.firestore.GeoPoint,
-  krapin: string,
+  contact: Array<CustomerContact>;
+  QbId: string;
+  sandbox: boolean;
+  Id: string;
+  location: firebase.firestore.GeoPoint;
+  krapin: string;
   kraverified: {
-    status: Boolean
+    status: boolean
     user: User,
-  },
-  companyId: string
-  balance: number
+  };
+  companyId: string;
+  balance: number;
+}
+
+export interface CustomerContact {
+  name: string;
+  phone: string;
+  email: string;
 }
 
 export const emptycompany: Customer = {
   Active: null,
-  contact: {
-    email: null,
-    phone: null,
-    name: null
-  },
+  contact: [],
   companyId: null,
   Id: null,
   name: null,

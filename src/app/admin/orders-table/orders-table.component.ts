@@ -6,7 +6,7 @@ import { ActivatedRoute } from "@angular/router";
 import { NotificationService } from "../../shared/services/notification.service";
 import { AngularFirestore } from "@angular/fire/firestore";
 import { animate, sequence, state, style, transition, trigger } from "@angular/animations";
-import { Truck_ } from "../../models/Truck";
+import { Truck } from "../../models/Truck";
 import { Order } from "../../models/Order";
 import { SMS } from "../../models/sms";
 import { firestore } from "firebase";
@@ -57,7 +57,7 @@ export class OrdersTableComponent implements OnInit, OnDestroy {
   stage = 0;
   ordercolumns = ["Id", "Company", "Contact", "Time", "User", "Phone", "PMS", "AGO", "IK", "Total", "Action", "Status"];
   loadingtruck = true;
-  clickedtruck: Truck_;
+  clickedtruck: Truck;
   expandedElement = null;
 
   loadingordders = true;
@@ -267,7 +267,7 @@ export class OrdersTableComponent implements OnInit, OnDestroy {
       disableClose: true
 
     });
-    trucksdialog.afterClosed().subscribe((result: { order: Order, truck: Truck_ }) => {
+    trucksdialog.afterClosed().subscribe((result: { order: Order, truck: Truck }) => {
       if (!result) {
         return;
       }
