@@ -1,46 +1,51 @@
 import { inituser, User } from "./universal";
 
-export interface Admin_ {
-  Active: boolean,
+export interface Admin {
+  Active: boolean;
   qbconfig: {
     companyid: string,
     QbId: string,
     sandbox: boolean
-  }
-  Id: string,
+  };
+  Id: string;
   config: {
     level: string,
     viewsandbox: boolean,
-    depotid: string,
+    app: {
+      depotid: string,
+    },
+    fcm: {
+      tokens: {
+        web: string,
+        apk: string
+      };
+      settings: {
+        truck: {
+          live: boolean,
+          sandbox: boolean
+        },
+        payment: {
+          live: boolean,
+          sandbox: boolean
+        }
+      },
+    };
     approvedby: User
     /**
      * This keeps a reference to the id of the user type
      */
     type: number,
-  },
-  data: {
+  };
+  status: {
+    online: boolean,
+    time: Date
+  };
+
+  profile: {
     email: string,
     uid: string,
     photoURL: string,
     name: string,
-  },
-  status: {
-    online: boolean,
-    time: Date
-  },
-  settings: {
-    fcm: {
-      trueck: {
-        live: boolean,
-        sandbox: boolean
-      },
-      payment: {
-        live: boolean,
-        sandbox: boolean
-      },
-    },
-  }
-  profiledata: {
     address: {
       Id: string,
       Line1: string,
@@ -52,14 +57,11 @@ export interface Admin_ {
     dob: string,
     bio: string,
     phone: string,
-  },
-  fcmtokens: {
-    web: string,
-    apk: string
   };
+
 }
 
-export const emptyadmin: Admin_ = {
+export const emptyadmin: Admin = {
   Active: null,
   qbconfig: {
     companyid: null,
@@ -97,7 +99,7 @@ export const emptyadmin: Admin_ = {
   },
   settings: {
     fcm: {
-      trueck: {
+      truck: {
         live: false,
         sandbox: false
       },

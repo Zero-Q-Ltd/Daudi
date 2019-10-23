@@ -4,7 +4,7 @@ import { MatDialog } from "@angular/material";
 import { CompanyService } from "../../../services/company.service";
 import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
-import { CompanyData, emptycompanydata } from "../../../../models/CompayData";
+import { CompanyConfig, emptycompanydata } from "../../../../models/CompayConfig";
 import { FormArray, FormControl, FormGroup, FormBuilder } from "ngx-strongly-typed-forms";
 
 import { NotificationService } from "../../../../shared/services/notification.service";
@@ -29,8 +29,8 @@ export class CompanyComponent implements OnInit, OnDestroy {
   defaultlat = -1.3373943;
   defaultlng = 36.7208522;
   zoom = 15;
-  tempcompany: CompanyData = { ...emptycompanydata };
-  originalCompany: CompanyData = { ...emptycompanydata };
+  tempcompany: CompanyConfig = { ...emptycompanydata };
+  originalCompany: CompanyConfig = { ...emptycompanydata };
   // paymentchannels: Array<PaymentChannel> = [];
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
 
@@ -61,7 +61,7 @@ export class CompanyComponent implements OnInit, OnDestroy {
   }
   initvalues(): void {
     this.companyservice.companydata.pipe(takeUntil(this.comopnentDestroyed)).subscribe(co => {
-      console.log(co)
+      console.log(co);
       this.originalCompany = co;
       this.tempcompany = Object.assign({}, co);
     });

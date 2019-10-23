@@ -1,14 +1,14 @@
-import { Injectable } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/firestore';
-import { AdminsService } from './admins.service';
-import { BehaviorSubject } from 'rxjs';
-import { CompanyData, emptycompanydata } from '../../models/CompayData';
+import { Injectable } from "@angular/core";
+import { AngularFirestore } from "@angular/fire/firestore";
+import { AdminsService } from "./admins.service";
+import { BehaviorSubject } from "rxjs";
+import { CompanyConfig, emptycompanydata } from "../../models/CompayConfig";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root"
 })
 export class CompanyService {
-  companydata: BehaviorSubject<CompanyData> = new BehaviorSubject<CompanyData>({ ...emptycompanydata });
+  companydata: BehaviorSubject<CompanyConfig> = new BehaviorSubject<CompanyConfig>({ ...emptycompanydata });
 
   constructor(private db: AngularFirestore, private adminservice: AdminsService) {
     adminservice.observableuserdata
@@ -28,9 +28,9 @@ export class CompanyService {
         this.companydata.next(Object.assign({}, { ...emptycompanydata }, { id: companydata.id }, companydata.data()));
       });
   }
-  savecompany(data: CompanyData) {
+  savecompany(data: CompanyConfig) {
     return this.db.firestore.collection("companies")
       .doc("default")
-      .set(data)
+      .set(data);
   }
 }

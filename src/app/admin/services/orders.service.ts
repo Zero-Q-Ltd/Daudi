@@ -1,11 +1,11 @@
 import { Injectable } from "@angular/core";
-import { Order_, orderqueryStagesarray, orderStages } from "../../models/Order";
+import { Order, orderqueryStagesarray, orderStages } from "../../models/Order";
 import { firestore } from "firebase";
 import * as moment from "moment";
 import { BehaviorSubject } from "rxjs";
 import { AngularFirestore } from "@angular/fire/firestore";
 import { DepotsService } from "./depots.service";
-import { Depot_ } from "../../models/Depot";
+import { Depot } from "../../models/Depot";
 import { ColNode } from "../../models/ColNode";
 import { MatTreeNestedDataSource } from "@angular/material";
 import { AngularFireFunctions } from "@angular/fire/functions";
@@ -15,16 +15,16 @@ import { AngularFireFunctions } from "@angular/fire/functions";
 })
 export class OrdersService {
   loadingorders = new BehaviorSubject(true);
-  activedepot: Depot_;
+  activedepot: Depot;
   orders: {
-    [key in orderStages]: BehaviorSubject<Array<Order_>>
+    [key in orderStages]: BehaviorSubject<Array<Order>>
   } = {
-      1: new BehaviorSubject<Array<Order_>>([]),
-      2: new BehaviorSubject<Array<Order_>>([]),
-      3: new BehaviorSubject<Array<Order_>>([]),
-      4: new BehaviorSubject<Array<Order_>>([]),
-      5: new BehaviorSubject<Array<Order_>>([]),
-      6: new BehaviorSubject<Array<Order_>>([])
+      1: new BehaviorSubject<Array<Order>>([]),
+      2: new BehaviorSubject<Array<Order>>([]),
+      3: new BehaviorSubject<Array<Order>>([]),
+      4: new BehaviorSubject<Array<Order>>([]),
+      5: new BehaviorSubject<Array<Order>>([]),
+      6: new BehaviorSubject<Array<Order>>([])
     };
   queuedorders = new BehaviorSubject([]);
 
@@ -34,8 +34,8 @@ export class OrdersService {
   subscriptions: Map<string, any> = new Map<string, any>();
 
   constructor(private db: AngularFirestore,
-    private depotsservice: DepotsService,
-    private functions: AngularFireFunctions) {
+              private depotsservice: DepotsService,
+              private functions: AngularFireFunctions) {
     this.depotsservice.activedepot.subscribe(depot => {
       this.unsubscribeAll();
       this.activedepot = depot;
@@ -43,7 +43,7 @@ export class OrdersService {
     });
   }
 
-  createorder(order: Order_): Promise<any> {
+  createorder(order: Order): Promise<any> {
     order.Id = this.db.createId();
     /**
      * add a counter for the number of pending orders in the queue
@@ -207,7 +207,7 @@ export class OrdersService {
   /**
    * Fetches all orders and trucks Relevant to the header
    */
-  getpipeline(activedepot: Depot_) {
+  getpipeline(activedepot: Depot) {
     if (!activedepot.Id) {
       return;
     }
@@ -246,7 +246,7 @@ export class OrdersService {
           }
           this.loadingorders.next(false);
           this.orders[stage].next(snapshot.docs.filter(doc => {
-            const value = doc.data() as Order_;
+            const value = doc.data() as Order;
             value.Id = doc.id;
             if (value.stage == 6 && (value.stagedata["1"].user.time instanceof firestore.Timestamp) && value.stagedata["1"].user.time.toDate() < moment().subtract(2, "w").toDate()) {
               doc.ref.delete();
@@ -255,7 +255,7 @@ export class OrdersService {
               return true;
             }
           }).map(doc => {
-            const value = doc.data() as Order_;
+            const value = doc.data() as Order;
             value.Id = doc.id;
 
             return value;
@@ -289,7 +289,7 @@ export class OrdersService {
         this.orders["5"].next(snapshot.docs.map(doc => {
           const value = doc.data();
           value.Id = doc.id;
-          return value as Order_;
+          return value as Order;
         }));
       }, err => {
         console.log(`Encountered error: ${err}`);

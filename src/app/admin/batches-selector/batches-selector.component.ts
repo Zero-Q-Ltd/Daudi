@@ -1,20 +1,20 @@
-import {Component, Inject, OnDestroy, OnInit} from "@angular/core";
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
-import {NotificationService} from "../../shared/services/notification.service";
+import { Component, Inject, OnDestroy, OnInit } from "@angular/core";
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material";
+import { NotificationService } from "../../shared/services/notification.service";
 import * as moment from "moment";
-import {AngularFirestore} from "@angular/fire/firestore";
-import {Batch_} from "../../models/Batch";
-import {emptytruck, Truck_} from "../../models/Truck";
-import {fuelTypes} from "../../models/universal";
-import {emptyorder, Order_} from "../../models/Order";
-import {AdminsService} from "../services/admins.service";
-import {fueltypesArray} from "../../models/Fueltypes";
-import {DepotsService} from "../services/depots.service";
-import {BatchesService} from "../services/batches.service";
-import {TrucksService} from "../services/trucks.service";
-import {OrdersService} from "../services/orders.service";
-import {ReplaySubject} from "rxjs";
-import {takeUntil} from "rxjs/operators";
+import { AngularFirestore } from "@angular/fire/firestore";
+import { Batch_ } from "../../models/Batch";
+import { emptytruck, Truck_ } from "../../models/Truck";
+import { fuelTypes } from "../../models/universal";
+import { emptyorder, Order } from "../../models/Order";
+import { AdminsService } from "../services/admins.service";
+import { fueltypesArray } from "../../models/Fueltypes";
+import { DepotsService } from "../services/depots.service";
+import { BatchesService } from "../services/batches.service";
+import { TrucksService } from "../services/trucks.service";
+import { OrdersService } from "../services/orders.service";
+import { ReplaySubject } from "rxjs";
+import { takeUntil } from "rxjs/operators";
 
 interface batchContent {
   id: string;
@@ -41,10 +41,10 @@ export class BatchesSelectorComponent implements OnInit, OnDestroy {
     ago: Array<Batch_>,
     ik: Array<Batch_>
   } = {
-    pms: [],
-    ago: [],
-    ik: []
-  };
+      pms: [],
+      ago: [],
+      ik: []
+    };
   truck: Truck_ = Object.assign({}, emptytruck);
   displayedColumns: string[] = ["id", "batch", "totalqty", "accumulated", "loadedqty", "availableqty", "drawnqty", "remainingqty", "status"];
   batches: {
@@ -52,78 +52,78 @@ export class BatchesSelectorComponent implements OnInit, OnDestroy {
     ago: Array<Batch_>
     ik: Array<Batch_>
   } = {
-    pms: [],
-    ago: [],
-    ik: []
-  };
+      pms: [],
+      ago: [],
+      ik: []
+    };
   drawnbatch: {
     [key in fuelTypes]: {
       batch0: batchContent,
       batch1: batchContent
     }
   } = {
-    pms: {
-      batch0: {
-        id: null,
-        qtydrawn: 0,
-        name: null,
-        totalqty: 0,
-        resultstatus: null,
-        remainqty: 0
+      pms: {
+        batch0: {
+          id: null,
+          qtydrawn: 0,
+          name: null,
+          totalqty: 0,
+          resultstatus: null,
+          remainqty: 0
+        },
+        batch1: {
+          id: null,
+          qtydrawn: 0,
+          name: null,
+          totalqty: 0,
+          resultstatus: null,
+          remainqty: 0
+        }
       },
-      batch1: {
-        id: null,
-        qtydrawn: 0,
-        name: null,
-        totalqty: 0,
-        resultstatus: null,
-        remainqty: 0
-      }
-    },
-    ago: {
-      batch0: {
-        id: null,
-        qtydrawn: 0,
-        name: null,
-        totalqty: 0,
-        resultstatus: null,
-        remainqty: 0
+      ago: {
+        batch0: {
+          id: null,
+          qtydrawn: 0,
+          name: null,
+          totalqty: 0,
+          resultstatus: null,
+          remainqty: 0
+        },
+        batch1: {
+          id: null,
+          qtydrawn: 0,
+          name: null,
+          totalqty: 0,
+          resultstatus: null,
+          remainqty: 0
+        }
       },
-      batch1: {
-        id: null,
-        qtydrawn: 0,
-        name: null,
-        totalqty: 0,
-        resultstatus: null,
-        remainqty: 0
+      ik: {
+        batch0: {
+          id: null,
+          qtydrawn: 0,
+          name: null,
+          totalqty: 0,
+          resultstatus: null,
+          remainqty: 0
+        },
+        batch1: {
+          id: null,
+          qtydrawn: 0,
+          name: null,
+          totalqty: 0,
+          resultstatus: null,
+          remainqty: 0
+        }
       }
-    },
-    ik: {
-      batch0: {
-        id: null,
-        qtydrawn: 0,
-        name: null,
-        totalqty: 0,
-        resultstatus: null,
-        remainqty: 0
-      },
-      batch1: {
-        id: null,
-        qtydrawn: 0,
-        name: null,
-        totalqty: 0,
-        resultstatus: null,
-        remainqty: 0
-      }
-    }
-  };
+    };
   fuelerror = {
     pms: false,
     ago: false,
     ik: false
   };
   saving = false;
-  order: Order_ = Object.assign({}, emptyorder);
+  order: Order = Object.assign({}, emptyorder);
   donecalculating = false;
   fueltypesArray = fueltypesArray;
   fetchingbatches: boolean;
@@ -134,14 +134,14 @@ export class BatchesSelectorComponent implements OnInit, OnDestroy {
   subscriptions: Map<string, any> = new Map<string, any>();
 
   constructor(public dialogRef: MatDialogRef<BatchesSelectorComponent>,
-              @Inject(MAT_DIALOG_DATA) private truckid: string,
-              private notification: NotificationService,
-              private db: AngularFirestore,
-              private adminservice: AdminsService,
-              private depotsservice: DepotsService,
-              private batchesservice: BatchesService,
-              private trucksservice: TrucksService,
-              private ordersservice: OrdersService) {
+    @Inject(MAT_DIALOG_DATA) private truckid: string,
+    private notification: NotificationService,
+    private db: AngularFirestore,
+    private adminservice: AdminsService,
+    private depotsservice: DepotsService,
+    private batchesservice: BatchesService,
+    private trucksservice: TrucksService,
+    private ordersservice: OrdersService) {
     fueltypesArray.forEach((fueltype: fuelTypes) => {
       this.batchesservice.depotbatches[fueltype].pipe(takeUntil(this.comopnentDestroyed)).subscribe((batches: Array<Batch_>) => {
         // console.log(batches);
@@ -161,7 +161,7 @@ export class BatchesSelectorComponent implements OnInit, OnDestroy {
           const ordersubscription = this.ordersservice.getorder(this.truck.orderdata.OrderID)
             .onSnapshot(ordersnapshot => {
               if (trucksnapshot.exists) {
-                this.order = Object.assign({}, ordersnapshot.data()) as Order_;
+                this.order = Object.assign({}, ordersnapshot.data()) as Order;
                 this.order.Id = ordersnapshot.id;
               } else {
                 this.order = Object.assign({}, emptyorder);
@@ -238,7 +238,7 @@ export class BatchesSelectorComponent implements OnInit, OnDestroy {
           /**
            * The value that should e deducted as a result of assigning the first batch number
            */
-          let assignedamount = this.getTotalAvailable(0, fueltype);
+          const assignedamount = this.getTotalAvailable(0, fueltype);
 
           this.depotbatches[fueltype].forEach((batch: Batch_, index) => {
             /**
@@ -265,7 +265,7 @@ export class BatchesSelectorComponent implements OnInit, OnDestroy {
                    * If all the batches are not enough it will remain true
                    */
                   this.fuelerror[fueltype] = false;
-                  let qtydrawn = this.truck.fuel[fueltype].qty - assignedamount;
+                  const qtydrawn = this.truck.fuel[fueltype].qty - assignedamount;
                   batch1 = {
                     id: batch.Id,
                     qtydrawn,
@@ -365,7 +365,7 @@ export class BatchesSelectorComponent implements OnInit, OnDestroy {
      */
     if (!this.fuelerror.pms && !this.fuelerror.ago && !this.fuelerror.ik) {
       const data = {
-        expiry: [{time: "00:45:00", timestamp: moment().add(45, "minutes").toDate()}]
+        expiry: [{ time: "00:45:00", timestamp: moment().add(45, "minutes").toDate() }]
       };
       this.order.stage = 4;
       this.order.stagedata["4"] = {} as any;

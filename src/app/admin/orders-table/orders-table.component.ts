@@ -7,7 +7,7 @@ import { NotificationService } from "../../shared/services/notification.service"
 import { AngularFirestore } from "@angular/fire/firestore";
 import { animate, sequence, state, style, transition, trigger } from "@angular/animations";
 import { Truck_ } from "../../models/Truck";
-import { Order_ } from "../../models/Order";
+import { Order } from "../../models/Order";
 import { SMS } from "../../models/sms";
 import { firestore } from "firebase";
 import { ReasonComponent } from "../reason/reason.component";
@@ -53,7 +53,7 @@ export class OrdersTableComponent implements OnInit, OnDestroy {
   position1 = "before";
   position2 = "after";
   position3 = "below";
-  ordersdataSource = new MatTableDataSource<Order_>();
+  ordersdataSource = new MatTableDataSource<Order>();
   stage = 0;
   ordercolumns = ["Id", "Company", "Contact", "Time", "User", "Phone", "PMS", "AGO", "IK", "Total", "Action", "Status"];
   loadingtruck = true;
@@ -86,7 +86,7 @@ export class OrdersTableComponent implements OnInit, OnDestroy {
         }
         return orderservice.orders[paramdata.stage].pipe(takeUntil(this.comopnentDestroyed));
       }))
-      .subscribe((stageorders: Array<Order_>) => {
+      .subscribe((stageorders: Array<Order>) => {
         this.ordersdataSource.data = stageorders;
       });
     this.componentcommunication.truckDeleted.pipe(takeUntil(this.comopnentDestroyed)).subscribe(value => {
@@ -125,7 +125,7 @@ export class OrdersTableComponent implements OnInit, OnDestroy {
   }
 
 
-  sendSMS(clickedOrder: Order_) {
+  sendSMS(clickedOrder: Order) {
     const sms: SMS = {
       Id: null,
       company: {
@@ -154,7 +154,7 @@ export class OrdersTableComponent implements OnInit, OnDestroy {
     });
   }
 
-  clickedorder(order: Order_) {
+  clickedorder(order: Order) {
     /**
      * do not expand the clicked order
      */
@@ -176,7 +176,7 @@ export class OrdersTableComponent implements OnInit, OnDestroy {
         const customerorders = snapshot.docs.map(doc => {
           const value = doc.data();
           value.Id = doc.id;
-          return value as Order_;
+          return value as Order;
         });
         if (customerorders.length > 0) {
           if (!this.stage) {
@@ -205,9 +205,9 @@ export class OrdersTableComponent implements OnInit, OnDestroy {
 
   /**
    *
-   * @param {Order_} order
+   * @param {Order} order
    */
-  deleteorder(order: Order_) {
+  deleteorder(order: Order) {
     const dialogRef = this.dialog.open(ReasonComponent,
       {
         role: "dialog"
@@ -242,7 +242,7 @@ export class OrdersTableComponent implements OnInit, OnDestroy {
    *
    * @param order
    */
-  restoreOrder(order: Order_) {
+  restoreOrder(order: Order) {
     order.stage = 1;
     order.stagedata["6"].user = {
       time: null,
@@ -267,7 +267,7 @@ export class OrdersTableComponent implements OnInit, OnDestroy {
       disableClose: true
 
     });
-    trucksdialog.afterClosed().subscribe((result: { order: Order_, truck: Truck_ }) => {
+    trucksdialog.afterClosed().subscribe((result: { order: Order, truck: Truck_ }) => {
       if (!result) {
         return;
       }

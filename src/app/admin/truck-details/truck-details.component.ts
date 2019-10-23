@@ -1,6 +1,6 @@
 import { Component, EventEmitter, OnDestroy, OnInit } from "@angular/core";
 import { emptytruck, Truck_ } from "../../models/Truck";
-import { Order_ } from "../../models/Order";
+import { Order } from "../../models/Order";
 import { TrucksService } from "../services/trucks.service";
 import * as moment from "moment";
 import { ConfirmDialogComponent } from "../confirm-dialog/confirm-dialog.component";
@@ -23,7 +23,7 @@ import { firestore } from "firebase";
   styleUrls: ["./truck-details.component.scss"]
 })
 export class TruckDetailsComponent implements OnInit, OnDestroy {
-  order: Order_;
+  order: Order;
   clickedtruck: Truck_ = { ...emptytruck };
   loadingtruck = false;
   position = "above";

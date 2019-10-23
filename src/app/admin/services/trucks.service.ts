@@ -4,7 +4,7 @@ import {emptytruck, Truck_, truckqueryStagesarray, truckStages} from "../../mode
 import {BehaviorSubject} from "rxjs";
 import {AngularFirestore} from "@angular/fire/firestore";
 import {DepotsService} from "./depots.service";
-import {Depot_} from "../../models/Depot";
+import {Depot} from "../../models/Depot";
 
 @Injectable({
   providedIn: "root"
@@ -55,7 +55,7 @@ export class TrucksService {
    * Fetches all orders and trucks Relevant to the header
    *
    */
-  getpipeline(depot: Depot_) {
+  getpipeline(depot: Depot) {
     if (!depot.Id) {
       return;
     }
@@ -70,7 +70,7 @@ export class TrucksService {
 
     // fetch trucks
     truckqueryStagesarray.forEach(stage => {
-      let subscription = this.db.firestore.collection("depots").doc(this.depotsservice.activedepot.value.Id).collection("trucks")
+      const subscription = this.db.firestore.collection("depots").doc(this.depotsservice.activedepot.value.Id).collection("trucks")
         .where("stage", "==", Number(stage))
         .orderBy("stagedata.1.user.time", "desc")
         .onSnapshot(snapshot => {
@@ -106,7 +106,7 @@ export class TrucksService {
     /**
      * Fetch completed trucks
      */
-    let stage4subscription = this.db.firestore.collection("depots").doc(this.depotsservice.activedepot.value.Id).collection("trucks")
+    const stage4subscription = this.db.firestore.collection("depots").doc(this.depotsservice.activedepot.value.Id).collection("trucks")
       .where("stage", "==", 4)
       .where("stagedata.4.user.time", ">=", startofweek)
       .orderBy("stagedata.4.user.time", "desc")

@@ -1,7 +1,7 @@
 import {fuelTypes, User} from "./universal";
 
-export interface Order_ {
-  Id: string, //used to temporarily store the key, used later for looping
+export interface Order {
+  Id: string; // used to temporarily store the key, used later for looping
   company: {
     name: string,
     Id: string,
@@ -13,16 +13,13 @@ export interface Order_ {
     },
     krapin: string,
     QbId: string,
-    email?: string
+    email: string | null
   };
-  QbId: string,
-  InvoiceId: string,
-  stage: number,
-  origin: string,
-  /**
-   * @deprecated use QbID or Id instead
-   */
-  orderId: number,
+  QbId: string;
+  InvoiceId: string;
+  stage: number;
+  origin: string;
+
   notifications: {
     allowsms: boolean,
     allowemail: boolean
@@ -68,11 +65,13 @@ export interface Order_ {
   };
 }
 
-export type fuelconfig = {
-  QbId: string,
-  qty: number,
-  priceconfig: priceconfig
-};
+
+
+export interface fuelconfig {
+  QbId: string;
+  qty: number;
+  priceconfig: priceconfig;
+}
 
 const initorderfuel = {
   qty: 0,
@@ -102,59 +101,59 @@ const initstages = {
   }
 };
 
-export type priceconfig = {
+export interface priceconfig {
   /**
    * @description the total price of the fuel/l, inclusive of VAT
    */
-  price: number,
+  price: number;
   /**
    * @description the amount/l without tax
    */
-  nonTaxprice: number,
+  nonTaxprice: number;
   /**
    * @description the amount/l that is not taxed, provided by the Gov
    */
-  nonTax: number,
+  nonTax: number;
   /**
    * @description the price set as the day's selling price used for discount calculation
    */
-  retailprice: number,
+  retailprice: number;
   /**
    * @description the minSp as of writing the order, connected to the buying of the most recent batch number
    */
-  minsp: number,
+  minsp: number;
   /**
    * @description the total amount of money that the order will cost in KES
    */
-  total: number,
+  total: number;
   /**
    * @description Amount of tax in the order in KES
    */
-  taxAmnt: number,
+  taxAmnt: number;
   /**
    * @description Worth of the order without tax
    */
-  nonTaxtotal: number,
+  nonTaxtotal: number;
   /**
    * @description calculation of price minus nonTax
    */
-  taxablePrice: number,
+  taxablePrice: number;
   /**
    * @description total amount on which tax is calculated on
    */
-  taxableAmnt: number,
+  taxableAmnt: number;
   /**
    * @description calculation of the price minus retailprice used in calculating the amount of discount
    * +ve for upmark and -ve for discount
    */
-  difference: number,
+  difference: number;
   /**
    * @description QuickbooksId of the tax Object, used for referencing for accounting
    */
-  taxQbId: string
-};
+  taxQbId: string;
+}
 
-export const emptyorder: Order_ = {
+export const emptyorder: Order = {
   Id: null,
   company: {
     contact: {
@@ -182,7 +181,6 @@ export const emptyorder: Order_ = {
     companyid: null,
     sandbox: null
   },
-  orderId: null,
   origin: null,
   stage: null,
   loaded: null,
@@ -260,7 +258,7 @@ export const emptyorder: Order_ = {
     }
   }
 };
-export type orderStages = "1" | "2" | "3" | "4" | "5" | "6"
+export type orderStages = "1" | "2" | "3" | "4" | "5" | "6";
 export let orderStagesarray = ["1", "2", "3", "4", "5", "6"];
 export let orderqueryStagesarray = ["1", "2", "3", "4", "6"];
 

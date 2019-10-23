@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from "@angular/core";
 import { MatDialog } from "@angular/material";
 import { BatchTrucksComponent } from "../batch-trucks/batch-trucks.component";
 import { FormControl, Validators } from "@angular/forms";
-import { Depot_ } from "../../models/Depot";
+import { Depot } from "../../models/Depot";
 import { AdminsService } from "../services/admins.service";
 import { DepotsService } from "../services/depots.service";
 import { ReplaySubject } from "rxjs";
@@ -21,12 +21,12 @@ export class AdminComponent implements OnInit, OnDestroy {
   position = "above";
   phoneControl: FormControl = new FormControl({ value: "" }, [Validators.required, Validators.maxLength(8), Validators.minLength(8)]);
 
-  alldepots: Array<Depot_>;
+  alldepots: Array<Depot>;
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
 
   constructor(private adminservice: AdminsService,
-    private dialog: MatDialog,
-    private depotsservice: DepotsService) {
+              private dialog: MatDialog,
+              private depotsservice: DepotsService) {
 
     this.depotsservice.alldepots.pipe(takeUntil(this.comopnentDestroyed)).subscribe(depots => {
       this.alldepots = depots;
@@ -59,8 +59,8 @@ export class AdminComponent implements OnInit, OnDestroy {
     const dialogRef = this.dialog.open(BatchTrucksComponent, {
       role: "dialog",
       data: {
-        batchkey: batchkey,
-        batchdId: batchdId
+        batchkey,
+        batchdId
       },
       height: "auto"
       // width: '100%%',

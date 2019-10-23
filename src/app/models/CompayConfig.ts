@@ -1,8 +1,8 @@
-import { AdminType } from './AdminType';
-import { Metadata, emptymetadata, Meta } from './universal';
+import { AdminType } from "./AdminType";
+import { Metadata, emptymetadata, Meta, fuelTypes } from "./universal";
 import * as firebase from "firebase";
 
-export interface CompanyData {
+export interface CompanyConfig {
     location: firebase.firestore.GeoPoint;
     name: string;
     userid: string;
@@ -20,6 +20,9 @@ export interface CompanyData {
         phone: string,
         email: string,
         address: string
+    };
+    fuelconfig: {
+        [key in fuelTypes]: string
     };
     logourl: string;
     metadata: Metadata;
@@ -39,8 +42,8 @@ const KisingaMetadata: Metadata = {
         adminId: "oSGSG2uCQJd3SqpZf6TXObrbDo73",
         date: new Date("Aug 29, 2019")
     }
-}
-export const emptycompanydata: CompanyData = {
+};
+export const emptycompanydata: CompanyConfig = {
     contactperson: {
         email: null,
         name: null,

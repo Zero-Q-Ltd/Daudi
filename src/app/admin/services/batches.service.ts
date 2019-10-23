@@ -5,14 +5,14 @@ import {BehaviorSubject} from "rxjs";
 import {AngularFirestore} from "@angular/fire/firestore";
 import {DepotsService} from "./depots.service";
 import {fuelTypes} from "../../models/universal";
-import {Depot_} from "../../models/Depot";
+import {Depot} from "../../models/Depot";
 
 @Injectable({
   providedIn: "root"
 })
 export class BatchesService {
   fetchingbatches = new BehaviorSubject(true);
-  activedepot: Depot_;
+  activedepot: Depot;
   depotbatches: {
     pms: BehaviorSubject<Array<Batch_>>,
     ago: BehaviorSubject<Array<Batch_>>,
@@ -41,7 +41,7 @@ export class BatchesService {
       if (!this.depotsservice.activedepot.value.Id) {
         return;
       }
-      let subscriprion = this.db.firestore.collection("depots").doc(this.depotsservice.activedepot.value.Id).collection("batches")
+      const subscriprion = this.db.firestore.collection("depots").doc(this.depotsservice.activedepot.value.Id).collection("batches")
         .orderBy("date", "asc")
         .where("status", "==", 1)
         .where("type", "==", fueltype)
@@ -49,7 +49,7 @@ export class BatchesService {
           this.fetchingbatches.next(false);
           // if(!snapshot.empty) console.log(snapshot.docs[0].data())
           this.depotbatches[fueltype].next(snapshot.docs.map(doc => {
-            let value = Object.assign({}, emptybatches, doc.data());
+            const value = Object.assign({}, emptybatches, doc.data());
             value.Id = doc.id;
             return value as Batch_;
           }));

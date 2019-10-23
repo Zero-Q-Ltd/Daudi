@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, ViewChild, HostListener } from "@angular/core";
-import { Admin_, emptyadmin } from "../../../../models/Admin";
+import { Admin, emptyadmin } from "../../../../models/Admin";
 import { MatDialog, MatPaginator, MatSnackBar, MatSort, MatTableDataSource } from "@angular/material";
 import * as moment from "moment";
 import { NotificationService } from "../../../../shared/services/notification.service";
@@ -9,12 +9,12 @@ import { animate, sequence, state, style, transition, trigger } from "@angular/a
 import { FormControl, Validators } from "@angular/forms";
 import { AdminsService } from "../../../services/admins.service";
 import { DepotsService } from "../../../services/depots.service";
-import { Depot_ } from "../../../../models/Depot";
+import { Depot } from "../../../../models/Depot";
 import { AngularFireFunctions } from "@angular/fire/functions";
 import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
-import { CompanyData, emptycompanydata } from "../../../../models/CompayData";
-import { CompanyService } from '../../../services/company.service';
+import { CompanyConfig, emptycompanydata } from "../../../../models/CompayConfig";
+import { CompanyService } from "../../../services/company.service";
 
 @Component({
   selector: "user-management",
@@ -40,18 +40,18 @@ import { CompanyService } from '../../../services/company.service';
 
 export class UserManagementComponent implements OnInit, OnDestroy {
 
-  usersdatasource = new MatTableDataSource<Admin_>();
+  usersdatasource = new MatTableDataSource<Admin>();
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   creatingsync = false;
   displayedColumns: string[] = ["photo", "QbId", "name", "email", "phone", "type", "level", "sandbox", "depot", "status", "action"];
-  activeuser: Admin_ = emptyadmin;
+  activeuser: Admin = emptyadmin;
   loadingadmins = true;
   saving = false;
-  alldepots: Array<Depot_>;
-  expandedEAdmin: Admin_;
+  alldepots: Array<Depot>;
+  expandedEAdmin: Admin;
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
-  originalCompany: CompanyData = { ...emptycompanydata };
+  originalCompany: CompanyConfig = { ...emptycompanydata };
 
 
   constructor(
@@ -73,7 +73,7 @@ export class UserManagementComponent implements OnInit, OnDestroy {
           this.usersdatasource.data = snapshot.docs.map(doc => {
             const value = Object.assign({}, emptyadmin, doc.data());
             value.Id = doc.id;
-            return value as Admin_;
+            return value as Admin;
           });
         });
         this.companyservice.companydata.pipe(takeUntil(this.comopnentDestroyed)).subscribe(co => {
@@ -86,8 +86,8 @@ export class UserManagementComponent implements OnInit, OnDestroy {
     });
 
   }
-  @HostListener('document:keydown.escape', ['$event']) onKeydownHandler(event: KeyboardEvent) {
-    this.expandedEAdmin = null
+  @HostListener("document:keydown.escape", ["$event"]) onKeydownHandler(event: KeyboardEvent) {
+    this.expandedEAdmin = null;
   }
   ngOnDestroy(): void {
     this.comopnentDestroyed.next(true);

@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { MatDialog } from "@angular/material";
-import { Depot_, emptydepot } from "../../../../models/Depot";
+import { Depot, emptydepot } from "../../../../models/Depot";
 import { NotificationService } from "../../../../shared/services/notification.service";
 import { AdminsService } from "../../../services/admins.service";
 import { DepotsService } from "../../../services/depots.service";
@@ -10,7 +10,7 @@ import { MapsComponent } from "../../../maps/maps.component";
 import { AngularFireFunctions } from "@angular/fire/functions";
 import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
-import { CompanyData, emptycompanydata } from "../../../../models/CompayData";
+import { CompanyConfig, emptycompanydata } from "../../../../models/CompayConfig";
 import { CompanyService } from "../../../services/company.service";
 
 @Component({
@@ -19,8 +19,8 @@ import { CompanyService } from "../../../services/company.service";
   styleUrls: ["./depot-management.component.scss"]
 })
 export class DepotManagementComponent implements OnInit, OnDestroy {
-  activedepot: Depot_;
-  alldepots: Array<Depot_>;
+  activedepot: Depot;
+  alldepots: Array<Depot>;
   // initial center position for the map
   // 0.401358, 37.906007
   lat = 0;
@@ -28,7 +28,7 @@ export class DepotManagementComponent implements OnInit, OnDestroy {
   zoom = 7;
   creatingsync = false;
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
-  company: CompanyData = { ...emptycompanydata };
+  company: CompanyConfig = { ...emptycompanydata };
   constructor(private notification: NotificationService,
     private dialog: MatDialog,
     private adminservice: AdminsService,

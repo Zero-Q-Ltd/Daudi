@@ -1,50 +1,50 @@
 import * as moment from "moment";
 import {olddata} from "./oldordersdata";
 import {Order, Truck} from "../../models/Global";
-import {Order_} from "../../models/Order";
-import {Truck_} from "../../models/Truck"; //import our interface
-let allorders = [];
+import {Order} from "../../models/Order";
+import {Truck_} from "../../models/Truck"; // import our interface
+const allorders = [];
 
 export function syncdb(firestore) {
-  for (var i = 0; i <= 380; i++) {
-    var tempdate = moment().subtract(i, "days");
+  for (let i = 0; i <= 380; i++) {
+    let tempdate = moment().subtract(i, "days");
     // console.log(moment(tempdate).format('w'))
-    //I have to start in the opposite direction because of the way data is displayed on the axis
+    // I have to start in the opposite direction because of the way data is displayed on the axis
     // this.daysofweek[13 - i] = `${moment(tempdate).format('dddd').substring(0, 3)}-${moment(tempdate).format('D')}`
     // console.log(olddata[moment(tempdate).format('YYYY')][(Number(moment(tempdate).format('M')) - 1)][Number(moment(tempdate).format('D'))-1])
     // console.log(olddata)
     // console.log(moment(tempdate).format('YYYY'),(Number(moment(tempdate).format('M')) - 1),moment(tempdate).format('D'))
     if (olddata[moment(tempdate).format("YYYY")][(Number(moment(tempdate).format("M")) - 1)] && olddata[moment(tempdate).format("YYYY")][(Number(moment(tempdate).format("M")) - 1)][moment(tempdate).format("D")]) {
-      let datedata = olddata[moment(tempdate).format("YYYY")][(Number(moment(tempdate).format("M")) - 1)][moment(tempdate).format("D")]["orders"];
+      const datedata = olddata[moment(tempdate).format("YYYY")][(Number(moment(tempdate).format("M")) - 1)][moment(tempdate).format("D")].orders;
       // console.log(datedata)
-      for (var key in datedata) {
+      for (let key in datedata) {
         // console.log(datedata[key])
         if (datedata[key]) {
           allorders[key] = datedata[key];
           // console.log(originalorder)
           // console.log(changedorder)
-          var orderdate = datedata[key].createdTime;
-          for (var subkey in datedata[key].trucks) {
+          let orderdate = datedata[key].createdTime;
+          for (let subkey in datedata[key].trucks) {
             // console.log(key)
             // console.log(subkey)
             let truckdata;
             if (olddata[moment(orderdate).format("YYYY")]
               [Number(moment(orderdate).format("M")) - 1]
-              [moment(orderdate).format("D")]["trucks"]) {
+              [moment(orderdate).format("D")].trucks) {
               console.log("Something");
-              truckdata = olddata[moment(orderdate).format("YYYY")][Number(moment(orderdate).format("M")) - 1][moment(orderdate).format("D")]["trucks"][subkey];
+              truckdata = olddata[moment(orderdate).format("YYYY")][Number(moment(orderdate).format("M")) - 1][moment(orderdate).format("D")].trucks[subkey];
             } else {
               console.log("empty");
               truckdata = null;
             }
 
-            var originaltruck: Truck = truckdata;
-            var originalorder: Order = allorders[key];
+            let originaltruck: Truck = truckdata;
+            let originalorder: Order = allorders[key];
             // console.log(datedata[originaltruck.orderRef])
             if (truckdata) {
               console.log("were in");
 
-              var changedorder: Order_ = {
+              let changedorder: Order = {
                 QbId: null,
                 InvoiceId: originalorder.so ? originalorder.so : null,
                 Id: originaltruck.orderRef ? originaltruck.orderRef : null,
@@ -82,7 +82,7 @@ export function syncdb(firestore) {
                     QbId: null,
                     qty: originalorder.pmsQty,
                     priceconfig: {
-                      price: originalorder.discountApproved ? originalorder.discountApproved["pms"] : originalorder.pmsSp,
+                      price: originalorder.discountApproved ? originalorder.discountApproved.pms : originalorder.pmsSp,
                       retailprice: originalorder.pmsRp ? originalorder.pmsRp : 0,
                       nonTax: 0,
                       difference: 0,
@@ -101,7 +101,7 @@ export function syncdb(firestore) {
                     QbId: null,
                     qty: originalorder.agoQty,
                     priceconfig: {
-                      price: originalorder.discountApproved ? originalorder.discountApproved["ago"] : originalorder.agoSp,
+                      price: originalorder.discountApproved ? originalorder.discountApproved.ago : originalorder.agoSp,
                       retailprice: originalorder.agoRp ? originalorder.agoRp : 0,
                       nonTax: 0,
                       difference: 0,
@@ -119,7 +119,7 @@ export function syncdb(firestore) {
                     QbId: null,
                     qty: originalorder.ikQty,
                     priceconfig: {
-                      price: originalorder.discountApproved ? originalorder.discountApproved["ik"] : originalorder.ikSp,
+                      price: originalorder.discountApproved ? originalorder.discountApproved.ik : originalorder.ikSp,
                       retailprice: originalorder.ikRp ? originalorder.ikRp : 0,
                       nonTax: 0,
                       difference: 0,
@@ -146,9 +146,9 @@ export function syncdb(firestore) {
                     data: null
                   },
                   request: {
-                    pms: originalorder.discountApproved ? originalorder.discountApproved["pms"] : originalorder.pmsSp,
-                    ago: originalorder.discountApproved ? originalorder.discountApproved["ago"] : originalorder.agoSp,
-                    ik: originalorder.discountApproved ? originalorder.discountApproved["ik"] : originalorder.ikSp
+                    pms: originalorder.discountApproved ? originalorder.discountApproved.pms : originalorder.pmsSp,
+                    ago: originalorder.discountApproved ? originalorder.discountApproved.ago : originalorder.agoSp,
+                    ik: originalorder.discountApproved ? originalorder.discountApproved.ik : originalorder.ikSp
                   }
                 },
                 stagedata: {
@@ -197,7 +197,7 @@ export function syncdb(firestore) {
                 }
               };
               // var pmsids = originaltruck.pmsBatch.split('-')
-              var changedtruck: Truck_ = {
+              let changedtruck: Truck_ = {
                 stage: 4,
                 truckId: originaltruck.truckId ? originaltruck.truckId : null,
                 numberplate: originaltruck.truckReg ? originaltruck.truckReg : null,

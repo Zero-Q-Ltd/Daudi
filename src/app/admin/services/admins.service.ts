@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { AngularFirestore } from "@angular/fire/firestore";
-import { Admin_, emptyadmin } from "../../models/Admin";
+import { Admin, emptyadmin } from "../../models/Admin";
 import { BehaviorSubject, ReplaySubject } from "rxjs";
 import { AngularFireAuth } from "@angular/fire/auth";
 import * as moment from "moment";
@@ -13,8 +13,8 @@ import { AngularFireDatabase } from "@angular/fire/database";
   providedIn: "root"
 })
 export class AdminsService {
-  userdata: Admin_ = Object.assign({}, emptyadmin);
-  observableuserdata = new ReplaySubject<Admin_>(1);
+  userdata: Admin = Object.assign({}, emptyadmin);
+  observableuserdata = new ReplaySubject<Admin>(1);
   connectionStatus: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   authroken: BehaviorSubject<string> = new BehaviorSubject<string>("");
 
@@ -28,11 +28,11 @@ export class AdminsService {
         /**
          * Keep the online status active
          */
-        let userStatusDatabaseRef = this.rtdb.database.ref("/admins/" + afAuth.auth.currentUser.uid);
-        let isOfflineForDatabase = {
+        const userStatusDatabaseRef = this.rtdb.database.ref("/admins/" + afAuth.auth.currentUser.uid);
+        const isOfflineForDatabase = {
           online: false
         };
-        let isOnlineForDatabase = {
+        const isOnlineForDatabase = {
           online: true
         };
         this.rtdb.database.ref(".info/connected").on("value", result => {
@@ -91,7 +91,7 @@ export class AdminsService {
 
   getuser(user, unsub?: boolean) {
     // console.log(user);
-    let unsubscribe = this.db.firestore.collection("admins").doc(user.uid)
+    const unsubscribe = this.db.firestore.collection("admins").doc(user.uid)
       .onSnapshot(userdata => {
         if (userdata.exists) {
 

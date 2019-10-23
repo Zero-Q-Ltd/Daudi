@@ -1,12 +1,12 @@
 // import { BatchSelectorComponent } from './../batch-selector/batch-selector.component';
-import {Component, Input, OnDestroy, OnInit} from "@angular/core";
-import {MatDialog} from "@angular/material"; //added dialog data receive
-import {NotificationService} from "../../shared/services/notification.service";
-import {AngularFirestore} from "@angular/fire/firestore";
-import {Truck_} from "../../models/Truck";
-import {Order_} from "../../models/Order";
-import {TrucksService} from "../services/trucks.service";
-import {ReplaySubject} from "rxjs";
+import { Component, Input, OnDestroy, OnInit } from "@angular/core";
+import { MatDialog } from "@angular/material"; // added dialog data receive
+import { NotificationService } from "../../shared/services/notification.service";
+import { AngularFirestore } from "@angular/fire/firestore";
+import { Truck_ } from "../../models/Truck";
+import { Order } from "../../models/Order";
+import { TrucksService } from "../services/trucks.service";
+import { ReplaySubject } from "rxjs";
 
 @Component({
   selector: "order-details",
@@ -21,7 +21,7 @@ export class OrderDetailsComponent implements OnInit, OnDestroy {
 
   truck: Truck_;
   displayedColumns = ["Id", "Company", "Contact", "Time", "Phone", "PMS", "AGO", "IK", "Total", "Action", "Status"];
-  @Input() order: Order_;
+  @Input() order: Order;
 
   /**
    * this keeps a local copy of all the subscriptions within this service
@@ -30,13 +30,13 @@ export class OrderDetailsComponent implements OnInit, OnDestroy {
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
 
   constructor(private dialog: MatDialog,
-              private db: AngularFirestore,
-              private truckservice: TrucksService,
-              private notificationService: NotificationService) {
+    private db: AngularFirestore,
+    private truckservice: TrucksService,
+    private notificationService: NotificationService) {
     if (!this.order) {
       return;
     }
-    let subscription = this.truckservice.getTruck(this.order.Id).onSnapshot(truckdata => {
+    const subscription = this.truckservice.getTruck(this.order.Id).onSnapshot(truckdata => {
       this.truck = truckdata.data() as Truck_;
     });
     this.subscriptions.set(`statsrange`, subscription);

@@ -1,6 +1,6 @@
 import {Injectable} from "@angular/core";
 import {AngularFirestore} from "@angular/fire/firestore";
-import {Depot_, emptydepot} from "../../models/Depot";
+import {Depot, emptydepot} from "../../models/Depot";
 import {AdminsService} from "./admins.service";
 import {BehaviorSubject} from "rxjs";
 import {distinctUntilChanged} from "rxjs/operators";
@@ -9,12 +9,12 @@ import {distinctUntilChanged} from "rxjs/operators";
   providedIn: "root"
 })
 export class DepotsService {
-  alldepots: BehaviorSubject<Array<Depot_>> = new BehaviorSubject([]);
+  alldepots: BehaviorSubject<Array<Depot>> = new BehaviorSubject([]);
 
   /**
    * Be careful when subscribing to this value because it will always emit a value
    */
-  activedepot: BehaviorSubject<Depot_> = new BehaviorSubject<Depot_>(emptydepot);
+  activedepot: BehaviorSubject<Depot> = new BehaviorSubject<Depot>(emptydepot);
 
   /**
    * this keeps a local copy of all the subscriptions within this service
@@ -47,17 +47,17 @@ export class DepotsService {
     if (!this.adminservice.userdata.config.viewsandbox) {
       depotquery = depotquery.where("sandbox", "==", this.adminservice.userdata.config.viewsandbox);
     }
-    let subscriprion = depotquery.onSnapshot(snapshot => {
-      let tempdepot: Depot_ = Object.assign({}, emptydepot, snapshot.docs[0].data());
+    const subscriprion = depotquery.onSnapshot(snapshot => {
+      const tempdepot: Depot = Object.assign({}, emptydepot, snapshot.docs[0].data());
       tempdepot.Id = snapshot.docs[0].id;
       /**
        * only change the activedepot if the object has just been initialized
        */
 
-      let alldepots = snapshot.docs.map(doc => {
-        let value = Object.assign({}, emptydepot, doc.data());
+      const alldepots = snapshot.docs.map(doc => {
+        const value = Object.assign({}, emptydepot, doc.data());
         value.Id = doc.id;
-        return value as Depot_;
+        return value as Depot;
       });
       if (alldepots.find(depot => depot.Id === this.activedepot.value.Id)) {
         this.changeactivedepot(alldepots.find(depot => depot.Id === this.activedepot.value.Id));
@@ -78,9 +78,9 @@ export class DepotsService {
 
   /**
    *
-   * @param {Depot_} depot
+   * @param {Depot} depot
    */
-  changeactivedepot(depot: Depot_) {
+  changeactivedepot(depot: Depot) {
     if (JSON.stringify(depot) !== JSON.stringify(this.activedepot.value)) {
       console.log("changing");
       this.activedepot.next(depot);

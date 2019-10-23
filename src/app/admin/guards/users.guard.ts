@@ -2,7 +2,7 @@ import { map, take } from "rxjs/operators";
 import { Injectable } from "@angular/core";
 import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from "@angular/router";
 import { Observable } from "rxjs";
-import { Admin_ } from "../../models/Admin";
+import { Admin } from "../../models/Admin";
 import { NotificationService } from "../../shared/services/notification.service";
 import { AdminsService } from "../services/admins.service";
 import { DepotsService } from "../services/depots.service"; // get our service
@@ -16,7 +16,7 @@ export class UsersGuard implements CanActivate {
   canActivate(next: ActivatedRouteSnapshot, activated: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
     return this.adminservice.observableuserdata.pipe(
       take(1),
-      map((userdata: Admin_) => {
+      map((userdata: Admin) => {
         console.log(next, activated);
         if (userdata) {
           if (activated.url !== "/app/dashboard" && this.depotserviice.activedepot.value.Id) {
