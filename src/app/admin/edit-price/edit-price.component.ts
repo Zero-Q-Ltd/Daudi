@@ -6,13 +6,13 @@ import { NotificationService } from "../../shared/services/notification.service"
 import { ConfirmDialogComponent } from "../confirm-dialog/confirm-dialog.component";
 import { fuelTypes } from "../../models/universal";
 import { Price } from "../../models/Price";
-import { Depot_, emptydepot } from "../../models/Depot";
+import { Depot, emptydepot } from "../../models/Depot";
 import { emptytaxconfig, taxconfig } from "../../models/Taxconfig";
 import { AdminsService } from "../services/admins.service";
 import { PricesService } from "../services/prices.service";
 import { DepotsService } from "../services/depots.service";
 import { fueltypesArray } from "../../models/Fueltypes";
-import { Admin_, emptyadmin } from "../../models/Admin";
+import { Admin, emptyadmin } from "../../models/Admin";
 import { AvgPrice } from "../../models/AvgPrice";
 import { Omc } from "../../models/Omc";
 import { OmcService } from "../services/omc.service";
@@ -49,7 +49,7 @@ export class EditPriceComponent implements OnInit, OnDestroy {
         prices: []
       }
     };
-  activedepot: Depot_ = Object.assign({}, emptydepot);
+  activedepot: Depot = Object.assign({}, emptydepot);
   taxexempt: taxconfig = emptytaxconfig;
   spPricesform: FormGroup = new FormGroup({
     pms: new FormControl("", []),
@@ -69,10 +69,10 @@ export class EditPriceComponent implements OnInit, OnDestroy {
   });
   fueltypesArray = fueltypesArray;
 
-  saving: boolean = false;
-  depotsdataSource = new MatTableDataSource<Depot_>();
+  saving = false;
+  depotsdataSource = new MatTableDataSource<Depot>();
   priceColumns = ["depot", "pms_price", "pms_avgprice", "ago_price", "ago_avgprice", "ik_price", "ik_avgprice"];
-  userdata: Admin_ = Object.assign({}, { ...emptyadmin });
+  userdata: Admin = Object.assign({}, { ...emptyadmin });
   omcs: Array<Omc> = [];
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
   selectedOMC: Omc;
@@ -96,9 +96,9 @@ export class EditPriceComponent implements OnInit, OnDestroy {
 
     this.depotservice.activedepot.pipe(takeUntil(this.comopnentDestroyed)).subscribe(depot => {
       this.activedepot = depot;
-      this.spPricesform.controls["pms"].setValidators(Validators.compose([Validators.min(this.activedepot.minpriceconfig.pms.price)]));
-      this.spPricesform.controls["ago"].setValidators(Validators.compose([Validators.min(this.activedepot.minpriceconfig.ago.price)]));
-      this.spPricesform.controls["ik"].setValidators(Validators.compose([Validators.min(this.activedepot.minpriceconfig.ik.price)]));
+      this.spPricesform.controls.pms.setValidators(Validators.compose([Validators.min(this.activedepot.minpriceconfig.pms.price)]));
+      this.spPricesform.controls.ago.setValidators(Validators.compose([Validators.min(this.activedepot.minpriceconfig.ago.price)]));
+      this.spPricesform.controls.ik.setValidators(Validators.compose([Validators.min(this.activedepot.minpriceconfig.ik.price)]));
       /**
        * Olny fetch the avg prices after the active depot has been asigned, hence ignore the first value initializes in the Replaysubject
        */
@@ -139,15 +139,15 @@ export class EditPriceComponent implements OnInit, OnDestroy {
 
     if (this.spPricesform.controls[fueltype].valid) {
       this.saving = true;
-      let dialogRef = this.dialog.open(ConfirmDialogComponent,
+      const dialogRef = this.dialog.open(ConfirmDialogComponent,
         {
           role: "dialog",
           data: `Are you sure you want to set ${this.spPricesform.controls[fueltype].value} as the current ${fueltype} price in ${this.activedepot.Name}?`
         });
       dialogRef.afterClosed().pipe(takeUntil(this.comopnentDestroyed)).subscribe(result => {
         if (result) {
-          let batchaction = this.db.firestore.batch();
-          let tempprice: Price = {
+          const batchaction = this.db.firestore.batch();
+          const tempprice: Price = {
             user: this.adminservice.createuserobject(),
             price: this.spPricesform.controls[fueltype].value,
             fueltytype: fueltype,
@@ -190,8 +190,8 @@ export class EditPriceComponent implements OnInit, OnDestroy {
     } else {
       if (this.avgpricesform.controls[fueltype].valid) {
 
-        let batchaction = this.db.firestore.batch();
-        let tempprice: AvgPrice = {
+        const batchaction = this.db.firestore.batch();
+        const tempprice: AvgPrice = {
           user: this.adminservice.createuserobject(),
           price: this.avgpricesform.controls[fueltype].value,
           fueltytype: fueltype,

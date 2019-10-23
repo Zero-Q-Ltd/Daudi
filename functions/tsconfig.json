@@ -2,12 +2,14 @@
   "compilerOptions": {
     "module": "commonjs",
     "noImplicitReturns": true,
-    "noUnusedLocals": false,
+    "noUnusedLocals": true,
     "outDir": "lib",
     "sourceMap": true,
-    "strict": false,
+    "strict": true,
     "target": "es2017"
   },
   "compileOnSave": true,
-  "include": ["src"]
+  "include": [
+    "src"
+  ]
 }

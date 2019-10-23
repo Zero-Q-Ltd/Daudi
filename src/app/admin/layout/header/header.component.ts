@@ -1,12 +1,12 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { APPCONFIG } from "../../config";
 import { Router } from "@angular/router";
-//interfaces
+// interfaces
 import { AngularFireAuth } from "@angular/fire/auth";
-import { Depot_, emptydepot } from "../../../models/Depot";
+import { Depot, emptydepot } from "../../../models/Depot";
 import { AdminsService } from "../../services/admins.service";
 import { DepotsService } from "../../services/depots.service";
-import { Admin_, emptyadmin } from "../../../models/Admin";
+import { Admin, emptyadmin } from "../../../models/Admin";
 import { fueltypesArray } from "../../../models/Fueltypes";
 import { OrdersService } from "../../services/orders.service";
 import { orderStagesarray } from "../../../models/Order";
@@ -32,15 +32,15 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
   public AppConfig: any;
   isLoggedIn: boolean;
   loggedInUser: string;
-  hide: boolean = true;
-  firstload: boolean = true;
+  hide = true;
+  firstload = true;
   // fuelprices: FuelPrices = {};
 
   adminLevel: number = null;
-  activedepot: Depot_ = Object.assign({}, emptydepot);
-  currentuser: Admin_ = { ...emptyadmin };
+  activedepot: Depot = Object.assign({}, emptydepot);
+  currentuser: Admin = { ...emptyadmin };
   connectionStatus: boolean;
-  alldepots: Array<Depot_>;
+  alldepots: Array<Depot>;
   orderscount = {
     1: 0,
     2: 0,
@@ -86,10 +86,10 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
     private adminservice: AdminsService,
     private depotservice: DepotsService,
     private priceservice: PricesService) {
-    this.depotservice.activedepot.pipe(takeUntil(this.comopnentDestroyed)).subscribe((depot: Depot_) => {
+    this.depotservice.activedepot.pipe(takeUntil(this.comopnentDestroyed)).subscribe((depot: Depot) => {
       this.activedepot = depot;
     });
-    this.depotservice.alldepots.pipe(takeUntil(this.comopnentDestroyed)).subscribe((alldepots: Array<Depot_>) => {
+    this.depotservice.alldepots.pipe(takeUntil(this.comopnentDestroyed)).subscribe((alldepots: Array<Depot>) => {
       this.alldepots = alldepots;
     });
     orderStagesarray.forEach(stage => {
@@ -114,7 +114,7 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
     });
   }
 
-  changeactivedepot(depot: Depot_) {
+  changeactivedepot(depot: Depot) {
     this.depotservice.changeactivedepot(depot);
   }
 

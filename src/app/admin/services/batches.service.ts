@@ -1,27 +1,27 @@
-import {Injectable} from "@angular/core";
-import {fueltypesArray} from "../../models/Fueltypes";
-import {Batch_, emptybatches} from "../../models/Batch";
-import {BehaviorSubject} from "rxjs";
-import {AngularFirestore} from "@angular/fire/firestore";
-import {DepotsService} from "./depots.service";
-import {fuelTypes} from "../../models/universal";
-import {Depot_} from "../../models/Depot";
+import { Injectable } from "@angular/core";
+import { fueltypesArray } from "../../models/Fueltypes";
+import { Batch, emptybatches } from "../../models/Batch";
+import { BehaviorSubject } from "rxjs";
+import { AngularFirestore } from "@angular/fire/firestore";
+import { DepotsService } from "./depots.service";
+import { fuelTypes } from "../../models/universal";
+import { Depot } from "../../models/Depot";
 
 @Injectable({
   providedIn: "root"
 })
 export class BatchesService {
   fetchingbatches = new BehaviorSubject(true);
-  activedepot: Depot_;
+  activedepot: Depot;
   depotbatches: {
-    pms: BehaviorSubject<Array<Batch_>>,
-    ago: BehaviorSubject<Array<Batch_>>,
-    ik: BehaviorSubject<Array<Batch_>>,
+    pms: BehaviorSubject<Array<Batch>>,
+    ago: BehaviorSubject<Array<Batch>>,
+    ik: BehaviorSubject<Array<Batch>>,
   } = {
-    pms: new BehaviorSubject([]),
-    ago: new BehaviorSubject([]),
-    ik: new BehaviorSubject([])
-  };
+      pms: new BehaviorSubject([]),
+      ago: new BehaviorSubject([]),
+      ik: new BehaviorSubject([])
+    };
   /**
    * this keeps a local copy of all the subscriptions within this service
    */
@@ -41,7 +41,7 @@ export class BatchesService {
       if (!this.depotsservice.activedepot.value.Id) {
         return;
       }
-      let subscriprion = this.db.firestore.collection("depots").doc(this.depotsservice.activedepot.value.Id).collection("batches")
+      const subscriprion = this.db.firestore.collection("depots").doc(this.depotsservice.activedepot.value.Id).collection("batches")
         .orderBy("date", "asc")
         .where("status", "==", 1)
         .where("type", "==", fueltype)
@@ -49,9 +49,9 @@ export class BatchesService {
           this.fetchingbatches.next(false);
           // if(!snapshot.empty) console.log(snapshot.docs[0].data())
           this.depotbatches[fueltype].next(snapshot.docs.map(doc => {
-            let value = Object.assign({}, emptybatches, doc.data());
+            const value = Object.assign({}, emptybatches, doc.data());
             value.Id = doc.id;
-            return value as Batch_;
+            return value as Batch;
           }));
         });
       this.subscriptions.set(`${fueltype}batch`, subscriprion);

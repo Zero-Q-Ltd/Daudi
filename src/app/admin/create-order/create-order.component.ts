@@ -7,8 +7,8 @@ import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { MapsComponent } from "../maps/maps.component";
 import { NotificationService } from "../../shared/services/notification.service";
 import { Customer, emptycompany } from "../../models/Customer";
-import { emptyorder, Order_ } from "../../models/Order";
-import { Depot_, emptydepot } from "../../models/Depot";
+import { emptyorder, Order } from "../../models/Order";
+import { Depot, emptydepot } from "../../models/Depot";
 import { AdminsService } from "../services/admins.service";
 import { fueltypesArray } from "../../models/Fueltypes";
 import { DepotsService } from "../services/depots.service";
@@ -30,9 +30,9 @@ export class CreateOrderComponent implements OnInit, AfterViewInit, OnDestroy {
   position = "before";
   position1 = "above";
   // for KRA mask
-  temporder: Order_ = Object.assign({}, emptyorder);
+  temporder: Order = Object.assign({}, emptyorder);
   discApproval = false;
-  depotsdataSource = new MatTableDataSource<Depot_>();
+  depotsdataSource = new MatTableDataSource<Depot>();
   priceColumns = ["depot", "pms_price", "pms_avgprice", "ago_price", "ago_avgprice", "ik_price", "ik_avgprice"];
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
@@ -76,7 +76,7 @@ export class CreateOrderComponent implements OnInit, AfterViewInit, OnDestroy {
   fueltypesArray = fueltypesArray;
   filteredCompanies: Observable<Customer[]>;
   companyControl = new FormControl();
-  currentdepotconfig: Depot_ = { ...emptydepot };
+  currentdepotconfig: Depot = { ...emptydepot };
   loadingcompanies = false;
   queuedorders = [];
 
@@ -101,7 +101,7 @@ export class CreateOrderComponent implements OnInit, AfterViewInit, OnDestroy {
     this.route.params.pipe(takeUntil(this.comopnentDestroyed)).subscribe((paramdata: { orderid: string }) => {
       if (!paramdata.orderid) {
         console.log("Not discount approval");
-        this.depotservice.activedepot.pipe(takeUntil(this.comopnentDestroyed)).subscribe((value: Depot_) => {
+        this.depotservice.activedepot.pipe(takeUntil(this.comopnentDestroyed)).subscribe((value: Depot) => {
           if (!value.Id) {
             return;
           }
@@ -114,8 +114,8 @@ export class CreateOrderComponent implements OnInit, AfterViewInit, OnDestroy {
         });
       } else {
         this.discApproval = true;
-        let subscription = this.orderservice.getorder(paramdata.orderid).onSnapshot(ordersnapshot => {
-          this.temporder = ordersnapshot.data() as Order_;
+        const subscription = this.orderservice.getorder(paramdata.orderid).onSnapshot(ordersnapshot => {
+          this.temporder = ordersnapshot.data() as Order;
           if (this.temporder.stage !== 1) {
             this.notificationService.notify({
               alert_type: "warning",
@@ -125,7 +125,7 @@ export class CreateOrderComponent implements OnInit, AfterViewInit, OnDestroy {
             });
             return;
           }
-          this.depotservice.activedepot.pipe(takeUntil(this.comopnentDestroyed)).subscribe((value: Depot_) => {
+          this.depotservice.activedepot.pipe(takeUntil(this.comopnentDestroyed)).subscribe((value: Depot) => {
             if (!value.Id) {
               return;
             }
@@ -177,7 +177,7 @@ export class CreateOrderComponent implements OnInit, AfterViewInit, OnDestroy {
         this.temporder.fuel[fueltype].priceconfig.price = Number(value[fueltype]);
         this.temporder.fuel[fueltype].priceconfig.retailprice = this.tempsellingprices[fueltype];
         this.temporder.fuel[fueltype].priceconfig.minsp = this.currentdepotconfig.minpriceconfig[fueltype].price;
-        let decimamlResolution = value[`${fueltype}qtyControl`] >= 10000 ? 4 : 3;
+        const decimamlResolution = value[`${fueltype}qtyControl`] >= 10000 ? 4 : 3;
         const calculatedpirces = this.deriveprice(this.temporder.fuel[fueltype].priceconfig.price, fueltype as fuelTypes, decimamlResolution);
         this.temporder.fuel[fueltype].priceconfig.taxablePrice = calculatedpirces.taxablePrice;
         this.temporder.fuel[fueltype].priceconfig.nonTaxprice = calculatedpirces.pricewithoutvat;
@@ -271,8 +271,8 @@ export class CreateOrderComponent implements OnInit, AfterViewInit, OnDestroy {
   initordersform() {
     if (!this.discApproval) {
       this.temporder.notifications = {
-        allowsms: !this.currentdepotconfig.sandbox,
-        allowemail: !this.currentdepotconfig.sandbox
+        sms: !this.currentdepotconfig.sandbox,
+        email: !this.currentdepotconfig.sandbox
       };
 
       fueltypesArray.forEach((fueltype) => {
@@ -364,7 +364,7 @@ export class CreateOrderComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Check if an order is being approved
      */
-    let dialogRef = this.dialog.open(ConfirmDepotComponent,
+    const dialogRef = this.dialog.open(ConfirmDepotComponent,
       {
         role: "dialog",
         data: this.currentdepotconfig.Name
@@ -420,7 +420,7 @@ export class CreateOrderComponent implements OnInit, AfterViewInit, OnDestroy {
         name: this.currentdepotconfig.Name,
         Id: this.currentdepotconfig.Id
       },
-      companyid: this.currentdepotconfig.companyId,
+      companyId: this.currentdepotconfig.companyId,
       sandbox: this.currentdepotconfig.sandbox
     };
     if (this.companyInfo.newcompany) {

@@ -1,12 +1,12 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { fuelTypes } from "../../models/universal";
 import { Price } from "../../models/Price";
-import { Depot_, emptydepot } from "../../models/Depot";
+import { Depot, emptydepot } from "../../models/Depot";
 import { emptytaxconfig, taxconfig } from "../../models/Taxconfig";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { fueltypesArray } from "../../models/Fueltypes";
 import { MatDialog } from "@angular/material";
-import { Admin_, emptyadmin } from "../../models/Admin";
+import { Admin, emptyadmin } from "../../models/Admin";
 import { AngularFirestore } from "@angular/fire/firestore";
 import { DepotsService } from "../services/depots.service";
 import { NotificationService } from "../../shared/services/notification.service";
@@ -45,7 +45,7 @@ export class PricingComponent implements OnInit, OnDestroy {
         prices: []
       }
     };
-  activedepot: Depot_ = Object.assign({}, emptydepot);
+  activedepot: Depot = Object.assign({}, emptydepot);
   taxexempt: taxconfig = emptytaxconfig;
   spPricesform: FormGroup = new FormGroup({
     pms: new FormControl("", []),
@@ -65,11 +65,11 @@ export class PricingComponent implements OnInit, OnDestroy {
   });
   fueltypesArray = fueltypesArray;
 
-  saving: boolean = false;
+  saving = false;
   priceColumns = ["depot", "pms_price", "pms_avgprice", "ago_price", "ago_avgprice", "ik_price", "ik_avgprice"];
-  userdata: Admin_ = Object.assign({}, emptyadmin);
+  userdata: Admin = Object.assign({}, emptyadmin);
   connectionStatus: boolean;
-  alldepots: Array<Depot_>;
+  alldepots: Array<Depot>;
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
 
   constructor(private dialog: MatDialog,
@@ -84,9 +84,9 @@ export class PricingComponent implements OnInit, OnDestroy {
     });
     this.depotservice.activedepot.pipe(takeUntil(this.comopnentDestroyed)).subscribe(depot => {
       this.activedepot = depot;
-      this.spPricesform.controls["pms"].setValidators(Validators.compose([Validators.min(this.activedepot.minpriceconfig.pms.price)]));
-      this.spPricesform.controls["ago"].setValidators(Validators.compose([Validators.min(this.activedepot.minpriceconfig.ago.price)]));
-      this.spPricesform.controls["ik"].setValidators(Validators.compose([Validators.min(this.activedepot.minpriceconfig.ik.price)]));
+      this.spPricesform.controls.pms.setValidators(Validators.compose([Validators.min(this.activedepot.minpriceconfig.pms.price)]));
+      this.spPricesform.controls.ago.setValidators(Validators.compose([Validators.min(this.activedepot.minpriceconfig.ago.price)]));
+      this.spPricesform.controls.ik.setValidators(Validators.compose([Validators.min(this.activedepot.minpriceconfig.ik.price)]));
       /**
        * Olny fetch the avg prices after the active depot has been asigned, hence ignore the first value initializes in the Replaysubject
        */
@@ -105,7 +105,7 @@ export class PricingComponent implements OnInit, OnDestroy {
         });
       });
     });
-    this.depotservice.alldepots.pipe(takeUntil(this.comopnentDestroyed)).subscribe((alldepots: Array<Depot_>) => {
+    this.depotservice.alldepots.pipe(takeUntil(this.comopnentDestroyed)).subscribe((alldepots: Array<Depot>) => {
       this.alldepots = alldepots;
     });
   }
@@ -113,7 +113,7 @@ export class PricingComponent implements OnInit, OnDestroy {
   ngOnInit() {
   }
 
-  changeactivedepot(depot: Depot_) {
+  changeactivedepot(depot: Depot) {
     this.depotservice.changeactivedepot(depot);
   }
 
@@ -121,15 +121,15 @@ export class PricingComponent implements OnInit, OnDestroy {
 
     if (this.spPricesform.controls[fueltype].valid) {
       this.saving = true;
-      let dialogRef = this.dialog.open(ConfirmDialogComponent,
+      const dialogRef = this.dialog.open(ConfirmDialogComponent,
         {
           role: "dialog",
           data: `Are you sure you want to set ${this.spPricesform.controls[fueltype].value} as the current ${fueltype} price in ${this.activedepot.Name}?`
         });
       dialogRef.afterClosed().pipe(takeUntil(this.comopnentDestroyed)).subscribe(result => {
         if (result) {
-          let batchaction = this.db.firestore.batch();
-          let tempprice: Price = {
+          const batchaction = this.db.firestore.batch();
+          const tempprice: Price = {
             user: this.adminservice.createuserobject(),
             price: this.spPricesform.controls[fueltype].value,
             fueltytype: fueltype,
@@ -169,8 +169,8 @@ export class PricingComponent implements OnInit, OnDestroy {
     this.saving = true;
     console.log(this.avgpricesform.value);
     if (this.avgpricesform.controls[fueltype].valid) {
-      let batchaction = this.db.firestore.batch();
-      let tempprice: Price = {
+      const batchaction = this.db.firestore.batch();
+      const tempprice: Price = {
         user: this.adminservice.createuserobject(),
         price: this.avgpricesform.controls[fueltype].value,
         fueltytype: fueltype,

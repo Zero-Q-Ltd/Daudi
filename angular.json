@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "emkay-beta": {
+    "daudi": {
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
@@ -39,11 +39,9 @@
               "src/styles/theme.scss",
               "src/styles/ui.scss",
               "src/vendors/loader.css",
-              "src/vendors/material-design-icons/iconfont/material-icons.css",
+              "src/vendors/material-design-icons/iconfont/material-icons.css"
             ],
-            "scripts": [
-              "node_modules/jquery/dist/jquery.min.js"
-            ],
+            "scripts": ["node_modules/jquery/dist/jquery.min.js"],
             "es5BrowserSupport": true
           },
           "configurations": {
@@ -76,18 +74,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "emkay-beta:build"
+            "browserTarget": "daudi:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "emkay-beta:build:production"
+              "browserTarget": "daudi:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "emkay-beta:build"
+            "browserTarget": "daudi:build"
           }
         },
         "test": {
@@ -110,28 +108,19 @@
               "src/vendors/material-design-icons/iconfont/material-icons.css"
             ],
             "scripts": [],
-            "assets": [
-              "src/assets",
-              "src/vendors",
-              "src/favicon.ico"
-            ]
+            "assets": ["src/assets", "src/vendors", "src/favicon.ico"]
           }
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": [
-              "src/tsconfig.app.json",
-              "src/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "tsConfig": ["src/tsconfig.app.json", "src/tsconfig.spec.json"],
+            "exclude": ["**/node_modules/**"]
           }
         }
       }
     },
-    "emkay-beta-e2e": {
+    "daudi-e2e": {
       "root": "e2e/",
       "projectType": "application",
       "prefix": "",
@@ -140,11 +129,11 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "emkay-beta:serve"
+            "devServerTarget": "daudi:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "emkay-beta:serve:production"
+              "devServerTarget": "daudi:serve:production"
             }
           }
         },
@@ -152,13 +141,11 @@
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": "e2e/tsconfig.e2e.json",
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         }
       }
     }
   },
-  "defaultProject": "emkay-beta"
+  "defaultProject": "daudi"
 }

@@ -1,13 +1,13 @@
-import {Injectable} from "@angular/core";
-import {AngularFirestore} from "@angular/fire/firestore";
-import {Depot_} from "../../models/Depot";
-import {DepotsService} from "./depots.service";
+import { Injectable } from "@angular/core";
+import { AngularFirestore } from "@angular/fire/firestore";
+import { Depot } from "../../models/Depot";
+import { DepotsService } from "./depots.service";
 
 @Injectable({
   providedIn: "root"
 })
 export class StatsService {
-  activedepot: Depot_;
+  activedepot: Depot;
 
   constructor(private db: AngularFirestore, depotservice: DepotsService) {
     depotservice.activedepot.subscribe(depot => {

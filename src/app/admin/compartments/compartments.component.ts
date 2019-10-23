@@ -1,15 +1,15 @@
-import {OrderDetailsComponent} from "../order-details/order-details.component";
-import {Component, Inject, OnDestroy, OnInit} from "@angular/core";
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material"; // added dialog data
-import {NotificationService} from "../../shared/services/notification.service";
-import {FormControl, Validators} from "@angular/forms";
-import {Order_} from "../../models/Order";
-import {emptytruck, Truck_} from "../../models/Truck";
-import {AdminsService} from "../services/admins.service";
-import {fueltypesArray} from "../../models/Fueltypes";
-import {OrdersService} from "../services/orders.service";
-import {DepotsService} from "../services/depots.service";
-import {ReplaySubject} from "rxjs";
+import { OrderDetailsComponent } from "../order-details/order-details.component";
+import { Component, Inject, OnDestroy, OnInit } from "@angular/core";
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material"; // added dialog data
+import { NotificationService } from "../../shared/services/notification.service";
+import { FormControl, Validators } from "@angular/forms";
+import { Order } from "../../models/Order";
+import { emptytruck, Truck } from "../../models/Truck";
+import { AdminsService } from "../services/admins.service";
+import { fueltypesArray } from "../../models/Fueltypes";
+import { OrdersService } from "../services/orders.service";
+import { DepotsService } from "../services/depots.service";
+import { ReplaySubject } from "rxjs";
 
 @Component({
   selector: "compartments",
@@ -20,7 +20,7 @@ export class CompartmentsComponent implements OnInit, OnDestroy {
   position = "left";
   position2 = "above";
   saving = false;
-  truck: Truck_ = Object.assign({}, emptytruck);
+  truck: Truck = Object.assign({}, emptytruck);
   mask = [/^[kK]+$/i, /^[a-zA-Z]+$/i, /^[a-zA-Z]+$/i, " ", /\d/, /\d/, /\d/, /^[a-zA-Z]+$/i];
   fueltypesArray = fueltypesArray;
   nameControl: FormControl = new FormControl("", [Validators.required]);
@@ -35,12 +35,12 @@ export class CompartmentsComponent implements OnInit, OnDestroy {
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
 
   // added to constructor to inject the data
-  constructor(@Inject(MAT_DIALOG_DATA) public order: Order_,
-              private notification: NotificationService,
-              private orderservice: OrdersService,
-              private depotservice: DepotsService,
-              private dialogRef: MatDialogRef<OrderDetailsComponent>,
-              private adminservice: AdminsService) {
+  constructor(@Inject(MAT_DIALOG_DATA) public order: Order,
+    private notification: NotificationService,
+    private orderservice: OrdersService,
+    private depotservice: DepotsService,
+    private dialogRef: MatDialogRef<OrderDetailsComponent>,
+    private adminservice: AdminsService) {
 
   }
 
@@ -128,7 +128,7 @@ export class CompartmentsComponent implements OnInit, OnDestroy {
       };
       this.truck.Id = this.order.Id;
       this.order.loaded = true;
-      return this.dialogRef.close({order: this.order, truck: this.truck});
+      return this.dialogRef.close({ order: this.order, truck: this.truck });
     }
   }
 

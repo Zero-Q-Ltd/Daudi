@@ -4,9 +4,9 @@ import { truckStagesarray } from "../../../../models/Truck";
 import { OrdersService } from "../../../services/orders.service";
 import { TrucksService } from "../../../services/trucks.service";
 import { ReplaySubject } from "rxjs";
-import { takeUntil } from "rxjs/operators"; //get our service
-import { DepotsService } from '../../../services/depots.service';
-import { Depot_, emptydepot } from '../../../../models/Depot';
+import { takeUntil } from "rxjs/operators"; // get our service
+import { DepotsService } from "../../../services/depots.service";
+import { Depot, emptydepot } from "../../../../models/Depot";
 
 @Component({
   selector: "my-app-sidenav-menu",
@@ -30,33 +30,33 @@ export class AppSidenavMenuComponent implements OnDestroy {
     4: 0
   };
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
-  alldepots: Array<Depot_>;
-  activedepot: Depot_ = Object.assign({}, emptydepot);
+  alldepots: Array<Depot>;
+  activedepot: Depot = Object.assign({}, emptydepot);
 
   constructor(private orderservice: OrdersService,
-    private depotservice: DepotsService,
-    private truckservice: TrucksService) {
+              private depotservice: DepotsService,
+              private truckservice: TrucksService) {
     orderStagesarray.forEach(stage => {
       this.orderservice.orders[stage].pipe(takeUntil(this.comopnentDestroyed)).subscribe(orders => this.orderscount[stage] = orders.length);
     });
     truckStagesarray.forEach(stage => {
       this.truckservice.trucks[stage].pipe(takeUntil(this.comopnentDestroyed)).subscribe(trucks => this.truckscount[stage] = trucks.length);
     });
-    this.depotservice.alldepots.pipe(takeUntil(this.comopnentDestroyed)).subscribe((alldepots: Array<Depot_>) => {
+    this.depotservice.alldepots.pipe(takeUntil(this.comopnentDestroyed)).subscribe((alldepots: Array<Depot>) => {
       this.alldepots = alldepots;
     });
-    this.depotservice.activedepot.pipe(takeUntil(this.comopnentDestroyed)).subscribe((depot: Depot_) => {
+    this.depotservice.activedepot.pipe(takeUntil(this.comopnentDestroyed)).subscribe((depot: Depot) => {
       this.activedepot = depot;
-    }); 
+    });
   }
 
   ngOnDestroy(): void {
     this.comopnentDestroyed.next(true);
     this.comopnentDestroyed.complete();
   }
-  changeactivedepot(depot: Depot_) {
+  changeactivedepot(depot: Depot) {
     this.depotservice.changeactivedepot(depot);
-    
+
   }
 
 }

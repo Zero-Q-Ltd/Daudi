@@ -2,7 +2,7 @@ import {Injectable} from "@angular/core";
 import {fuelTypes} from "../../models/universal";
 import * as moment from "moment";
 import {AngularFirestore} from "@angular/fire/firestore";
-import {Depot_} from "../../models/Depot";
+import {Depot} from "../../models/Depot";
 import {DepotsService} from "./depots.service";
 import {BehaviorSubject} from "rxjs";
 import {fueltypesArray} from "../../models/Fueltypes";
@@ -12,7 +12,7 @@ import {Price} from "../../models/Price";
   providedIn: "root"
 })
 export class PricesService {
-  activedepot: Depot_;
+  activedepot: Depot;
 
   avgprices: {
     [key in fuelTypes]: {
@@ -48,7 +48,7 @@ export class PricesService {
       if (depot.Id) {
         this.unsubscribeAll();
         fueltypesArray.forEach(fueltyp => {
-          let subscriprion = this.getavgprices(fueltyp as any)
+          const subscriprion = this.getavgprices(fueltyp as any)
             .onSnapshot(avgarray => {
               /**
                * calculate the average whenever there is a change in the data

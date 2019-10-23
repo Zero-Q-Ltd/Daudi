@@ -1,25 +1,18 @@
-import { AdminType } from './AdminType';
-import { Metadata, emptymetadata, Meta } from './universal';
+import { AdminType } from "./AdminType";
+import { Metadata, emptymetadata, Meta, fuelTypes } from "./universal";
 import * as firebase from "firebase";
 
-export interface CompanyData {
+export interface CompanyConfig {
     location: firebase.firestore.GeoPoint;
     name: string;
     userid: string;
     id: string;
     description: string;
     status: boolean;
-    contactperson: {
-        name: string,
-        phone: string,
-        email: string,
-        position: string,
-        address: string
-    };
-    contactDetails: {
-        phone: string,
-        email: string,
-        address: string
+    contactperson: Array<ContactPerson>;
+
+    fuelconfig: {
+        [key in fuelTypes]: string
     };
     logourl: string;
     metadata: Metadata;
@@ -39,21 +32,23 @@ const KisingaMetadata: Metadata = {
         adminId: "oSGSG2uCQJd3SqpZf6TXObrbDo73",
         date: new Date("Aug 29, 2019")
     }
+};
+
+interface ContactPerson {
+    name: string;
+    phone: string;
+    email: string;
+    position: string;
+    address: string;
 }
-export const emptycompanydata: CompanyData = {
-    contactperson: {
-        email: null,
-        name: null,
-        phone: null,
-        position: null,
-        address: null
-    },
+export const emptycompanydata: CompanyConfig = {
+    contactperson: [],
     logourl: null,
     status: null,
-    contactDetails: {
-        email: null,
-        phone: null,
-        address: null
+    fuelconfig: {
+        ago: null,
+        ik: null,
+        pms: null
     },
     /**
      * make default location Somewhere in nbi

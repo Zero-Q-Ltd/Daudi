@@ -1,46 +1,45 @@
-import {ApplicationRef, NgModule} from "@angular/core";
-import {BrowserModule} from "@angular/platform-browser";
-import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
-import {MyMaterialModule} from "./material.module"; // MaterialModule
+import { ApplicationRef, NgModule } from "@angular/core";
+import { BrowserModule } from "@angular/platform-browser";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { MyMaterialModule } from "./material.module"; // MaterialModule
 // angular fire imports
-import {AngularFirestoreModule} from "@angular/fire/firestore";
-import {AngularFireAuth, AngularFireAuthModule} from "@angular/fire/auth";
-import {AngularFireDatabase} from "@angular/fire/database";
-import {AngularFireFunctionsModule} from "@angular/fire/functions";
-import {AngularFireMessagingModule} from "@angular/fire/messaging";
-import {AngularFireModule} from "@angular/fire";
+import { AngularFirestoreModule } from "@angular/fire/firestore";
+import { AngularFireAuth, AngularFireAuthModule } from "@angular/fire/auth";
+import { AngularFireDatabase } from "@angular/fire/database";
+import { AngularFireFunctionsModule } from "@angular/fire/functions";
+import { AngularFireMessagingModule } from "@angular/fire/messaging";
+import { AngularFireModule } from "@angular/fire";
 
-import {AuthGuard} from "./guards/auth.guard"; // auth guards
-import {AppRoutingModule} from "./app-routing.module";
-import {AppComponent} from "./app.component";
+import { AuthGuard } from "./guards/auth.guard"; // auth guards
+import { AppRoutingModule } from "./app-routing.module";
+import { AppComponent } from "./app.component";
 
-import {PageNotFoundComponent} from "./page-not-found/page-not-found.component";
+import { PageNotFoundComponent } from "./page-not-found/page-not-found.component";
 // hmr
-import {createNewHosts, removeNgStyles} from "@angularclass/hmr";
-import {FlexLayoutModule} from "@angular/flex-layout";
+import { createNewHosts, removeNgStyles } from "@angularclass/hmr";
+import { FlexLayoutModule } from "@angular/flex-layout";
 // table
-import {TextMaskModule} from "angular2-text-mask"; // for input mask
-import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
-import {PipeModuleModule} from "./pipe-module/pipe-module.module";
+import { TextMaskModule } from "angular2-text-mask"; // for input mask
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
+import { PipeModuleModule } from "./pipe-module/pipe-module.module";
 
-import {NotificationComponent} from "./shared/notification/notification.component";
+import { NotificationComponent } from "./shared/notification/notification.component";
 // import { AgmCoreModule } from '@agm/core';
 // Custom Error handler and Logging Service
 // import { ErrorHandler } from '@angular/core';
 // import { MyErrorHandler } from './my-error-handler';
 // Components
 
-
-export const newConfig = {
-  apiKey: "AIzaSyD73FGSNb0x-4dXOTksPjtl4RwowhzYqSs",
-  authDomain: "emkaybeta.firebaseapp.com",
-  databaseURL: "https://emkaybeta.firebaseio.com",
-  projectId: "emkaybeta",
-  storageBucket: "emkaybeta.appspot.com",
-  messagingSenderId: "684188079317",
-  appId: "1:684188079317:web:f8a24ed259ac3c68",
-  measurementId: "G-J82ZR6XHC3"
+const firebaseConfig = {
+  apiKey: "AIzaSyD6abjtAtMf2kK7YEtgpyKqT_EPkHqjYXo",
+  authDomain: "daudi-4.firebaseapp.com",
+  databaseURL: "https://daudi-4.firebaseio.com",
+  projectId: "daudi-4",
+  storageBucket: "daudi-4.appspot.com",
+  messagingSenderId: "999511162358",
+  appId: "1:999511162358:web:dc46119fc258dca9ec9bd7",
+  measurementId: "G-TSVMB3SPF8"
 };
 
 @NgModule({
@@ -55,7 +54,7 @@ export const newConfig = {
     MyMaterialModule,
     // Sub modules
     MatProgressSpinnerModule,
-    AngularFireModule.initializeApp(newConfig, "EmkayNow"),
+    AngularFireModule.initializeApp(firebaseConfig, "EmkayNow"),
     AngularFirestoreModule,
     AngularFireMessagingModule,
     AngularFirestoreModule.enablePersistence(),
