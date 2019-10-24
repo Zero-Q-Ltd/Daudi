@@ -3,7 +3,7 @@ import { Admin, emptyadmin } from "../../../../models/Admin";
 import { MatDialog, MatPaginator, MatSnackBar, MatSort, MatTableDataSource } from "@angular/material";
 import * as moment from "moment";
 import { NotificationService } from "../../../../shared/services/notification.service";
-import { syncrequest } from "../../../../models/Sync";
+import { SyncRequest } from "../../../../models/Sync";
 import { firestore } from "firebase";
 import { animate, sequence, state, style, transition, trigger } from "@angular/animations";
 import { FormControl, Validators } from "@angular/forms";
@@ -13,7 +13,7 @@ import { Depot } from "../../../../models/Depot";
 import { AngularFireFunctions } from "@angular/fire/functions";
 import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
-import { CompanyConfig, emptycompanydata } from "../../../../models/Config";
+import { OMC, emptyomc } from "../../../../models/Config";
 import { ConfigService } from "../../../services/core/config.service";
 
 @Component({
@@ -51,7 +51,7 @@ export class UserManagementComponent implements OnInit, OnDestroy {
   alldepots: Array<Depot>;
   expandedEAdmin: Admin;
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
-  originalCompany: CompanyConfig = { ...emptycompanydata };
+  originalCompany: OMC = { ...emptyomc };
 
 
   constructor(
@@ -62,6 +62,7 @@ export class UserManagementComponent implements OnInit, OnDestroy {
     private dialog: MatDialog,
     private notification: NotificationService,
     private adminsService: AdminsService,
+    private config: ConfigService,
     private depotservice: DepotsService) {
     this.depotservice.activedepot.pipe(takeUntil(this.comopnentDestroyed)).subscribe(depotvata => {
       if (depotvata.Id) {
@@ -110,8 +111,8 @@ export class UserManagementComponent implements OnInit, OnDestroy {
   syncdb() {
     this.creatingsync = true;
 
-    const syncobject: syncrequest = {
-      companyid: this.depotservice.activedepot.value.companyId,
+    const syncobject: SyncRequest = {
+      companyid: this.config.companydata.value.qbconfig.companyid,
       time: firestore.Timestamp.now(),
       synctype: ["Employee"]
     };

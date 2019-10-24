@@ -1,16 +1,17 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
 import { fueltypesArray } from "../../../../models/Fueltypes";
 import { MatPaginator, MatTableDataSource } from "@angular/material";
-import { Batch, emptybatches } from "../../../../models/Batch";
+import { Entry, emptybatches } from "../../../../models/Entry";
 import { fuelTypes } from "../../../../models/universal";
 import { DepotsService } from "../../../services/core/depots.service";
 import { BatchesService } from "../../../services/batches.service";
-import { syncrequest } from "../../../../models/Sync";
+import { SyncRequest } from "../../../../models/Sync";
 import { firestore } from "firebase";
 import { NotificationService } from "../../../../shared/services/notification.service";
 import { AngularFireFunctions } from "@angular/fire/functions";
 import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
+import { ConfigService } from "../../../services/core/config.service";
 
 @Component({
   selector: "app-batches",
@@ -20,9 +21,9 @@ import { takeUntil } from "rxjs/operators";
 export class BatchesComponent implements OnInit {
   fueltypesArray = fueltypesArray;
   datasource = {
-    pms: new MatTableDataSource<Batch>(),
-    ago: new MatTableDataSource<Batch>(),
-    ik: new MatTableDataSource<Batch>()
+    pms: new MatTableDataSource<Entry>(),
+    ago: new MatTableDataSource<Entry>(),
+    ik: new MatTableDataSource<Entry>()
   };
   creatingsync = false;
   @ViewChild(MatPaginator, { static: true }) pmspaginator: MatPaginator;
@@ -59,6 +60,7 @@ export class BatchesComponent implements OnInit {
     private notification: NotificationService,
     private functions: AngularFireFunctions,
     private batcheservice: BatchesService,
+    private config: ConfigService,
     private batchesservice: BatchesService) {
     depotsservice.activedepot.pipe(takeUntil(this.comopnentDestroyed)).subscribe(depotvata => {
       this.loading = {
@@ -76,7 +78,7 @@ export class BatchesComponent implements OnInit {
             .onSnapshot(snapshot => {
               this.loading[fueltype] = false;
               this.datasource[fueltype].data = snapshot.docs.map(batch => {
-                const value: Batch = Object.assign({}, emptybatches, batch.data());
+                const value: Entry = Object.assign({}, emptybatches, batch.data());
                 value.Id = batch.id;
                 return value;
               });
@@ -89,7 +91,7 @@ export class BatchesComponent implements OnInit {
            */
           this.batcheservice.depotbatches[fueltype]
             .pipe(takeUntil(this.comopnentDestroyed))
-            .subscribe((batches: Array<Batch>) => {
+            .subscribe((batches: Array<Entry>) => {
               /**
                * Reset the values every time batches change
                */
@@ -116,8 +118,8 @@ export class BatchesComponent implements OnInit {
 
   syncdb() {
     this.creatingsync = true;
-    const syncobject: syncrequest = {
-      companyid: this.depotsservice.activedepot.value.companyId,
+    const syncobject: SyncRequest = {
+      companyid: this.config.companydata.value.qbconfig.companyid,
       time: firestore.Timestamp.now(),
       synctype: ["BillPayment"]
     };
@@ -133,7 +135,7 @@ export class BatchesComponent implements OnInit {
 
   }
 
-  getTotalAvailable(batch: Batch) {
+  getTotalAvailable(batch: Entry) {
     const totalqty = batch.qty;
     const loadedqty = batch.loadedqty;
     const accumulated = batch.accumulated;

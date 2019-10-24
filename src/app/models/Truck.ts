@@ -15,7 +15,6 @@ interface Compartment {
 
 interface Expiry {
   timeCreated: firebase.firestore.Timestamp;
-  duration: string;
   expiry: firebase.firestore.Timestamp;
 }
 
@@ -41,7 +40,7 @@ export interface Truck {
     numberplate: string;
   };
   /**
-   * This design is so as to allow complex queries on the map, as opposed to the limitations of an array
+   * This design allows complex queries on the map, as opposed to the limitations of an array
    */
   stagedata: {
     [key in truckStages]: StageData

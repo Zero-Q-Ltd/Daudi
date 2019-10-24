@@ -2,13 +2,14 @@ import { inituser, User } from "./universal";
 
 export interface Admin {
   Active: boolean;
-  qbconfig: {
-    companyid: string,
-    QbId: string,
-    sandbox: boolean
-  };
   Id: string;
   config: {
+    qbo: {
+      companyid: string,
+      QbId: string,
+      sandbox: boolean
+    }
+    omcid: string,
     level: string,
     app: {
       depotid: string,
@@ -18,7 +19,7 @@ export interface Admin {
         web: string,
         apk: string
       };
-      settings: {
+      subscriptions: {
         truck: {
           live: boolean,
           sandbox: boolean
@@ -62,20 +63,21 @@ export interface Admin {
 
 export const emptyadmin: Admin = {
   Active: null,
-  qbconfig: {
-    companyid: null,
-    QbId: null,
-    sandbox: null
-  },
   Id: null,
   config: {
+    omcid: null,
     level: null,
+    qbo: {
+      companyid: null,
+      QbId: null,
+      sandbox: null
+    },
     approvedby: { ...inituser },
     app: {
       depotid: null
     },
     fcm: {
-      settings: {
+      subscriptions: {
         payment: null,
         truck: null
       },

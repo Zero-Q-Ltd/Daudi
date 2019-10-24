@@ -1,9 +1,9 @@
 import { Component, Inject, OnDestroy, OnInit } from "@angular/core";
 import * as moment from "moment";
 import { MAT_DIALOG_DATA, MatDialog } from "@angular/material"; // added dialog data receive
-import { Truck } from "../../models/Global"; // get our interface
 import { OrderDetailsComponent } from "../order-details/order-details.component";
 import { ReplaySubject } from "rxjs";
+import { Truck } from "../../models/Truck";
 
 @Component({
   selector: "batch-trucks",

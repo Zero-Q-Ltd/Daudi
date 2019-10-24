@@ -4,7 +4,7 @@ import { CompanyMembersComponent } from "../company-members/company-members.comp
 import { SendMsgComponent } from "../../../send-msg/send-msg.component";
 import { firestore } from "firebase";
 import { Customer } from "../../../../models/Customer";
-import { syncrequest } from "../../../../models/Sync";
+import { SyncRequest } from "../../../../models/Sync";
 import { SMS } from "../../../../models/sms";
 import { NotificationService } from "../../../../shared/services/notification.service";
 import { SelectionModel } from "@angular/cdk/collections";
@@ -105,15 +105,15 @@ export class CustomerManagementComponent implements OnInit, OnDestroy {
   submitcompanies() {
     if (!this.purpose || this.purpose === "SMS") {
       const sms: Array<SMS> = this.selection.selected.map(company => {
-        return {
+        const sms: SMS = {
           Id: null,
           company: {
             QbId: company.QbId,
-            contactname: company.contact[0].name,
             Id: company.Id,
             name: company.name,
-            phone: company.contact[0].phone
+            krapin: company.krapin
           },
+          phone: company.contact[0].phone,
           type: {
             reason: null,
             origin: "custom" as "custom"
@@ -126,6 +126,7 @@ export class CustomerManagementComponent implements OnInit, OnDestroy {
           },
           timestamp: firestore.Timestamp.now()
         };
+        return sms;
       });
       this.dialog.open(SendMsgComponent, {
         role: "dialog",
@@ -149,8 +150,8 @@ export class CustomerManagementComponent implements OnInit, OnDestroy {
   syncdb() {
     this.creatingsync = true;
 
-    const syncobject: syncrequest = {
-      companyid: this.depot.activedepot.value.this.config.companydata.value.qbo,
+    const syncobject: SyncRequest = {
+      companyid: this.config.companydata.value.qbconfig.companyid,
       time: firestore.Timestamp.now(),
       synctype: ["Customer"]
     };

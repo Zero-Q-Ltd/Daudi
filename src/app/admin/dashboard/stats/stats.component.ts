@@ -1,6 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from "@angular/core";
 import * as moment from "moment";
-import { Depots } from "../../../models/Global";
 import { CalendarRangesComponent } from "../calendar-ranges/calendar-ranges.component";
 import { EChartOption } from "echarts";
 import { FuelBoundstats } from "../charts/charts.config";
@@ -13,7 +12,7 @@ import { BatchesService } from "../../services/batches.service";
 import { StatsService } from "../../services/stats.service";
 import { PricesService } from "../../services/prices.service";
 import { fueltypesArray } from "../../../models/Fueltypes";
-import { Batch } from "../../../models/Batch";
+import { Entry } from "../../../models/Entry";
 import { Price } from "../../../models/Price";
 import { calculateMA } from "../charts/generalCalc";
 import { fuelgauge } from "../charts/qty";
@@ -32,7 +31,6 @@ export class StatsComponent implements OnInit, OnDestroy {
 
   @Input() depotResolution: "All" | "CurrentDepot";
   date = moment();
-  depots: Depots;
   fuelgauge = {
     pms: fuelgauge.pms,
     ago: fuelgauge.ago,
@@ -83,11 +81,11 @@ export class StatsComponent implements OnInit, OnDestroy {
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
 
   constructor(private router: Router,
-              public snackBar: MatSnackBar,
-              private depotservice: DepotsService,
-              private batcheservice: BatchesService,
-              private statservice: StatsService,
-              private priceservice: PricesService) {
+    public snackBar: MatSnackBar,
+    private depotservice: DepotsService,
+    private batcheservice: BatchesService,
+    private statservice: StatsService,
+    private priceservice: PricesService) {
     this.depotservice.activedepot.pipe(takeUntil(this.comopnentDestroyed)).subscribe(depot => {
       this.dateControl.valueChanges.pipe(takeUntil(this.comopnentDestroyed)).subscribe(value => {
         const a = moment(value.begin);
@@ -110,7 +108,7 @@ export class StatsComponent implements OnInit, OnDestroy {
          */
         this.dateControl.reset({ begin: new Date(moment().subtract(1, "M").startOf("day").toDate()), end: new Date() });
         fueltypesArray.forEach(fueltype => {
-          this.batcheservice.depotbatches[fueltype].pipe(takeUntil(this.comopnentDestroyed)).subscribe((batches: Array<Batch>) => {
+          this.batcheservice.depotbatches[fueltype].pipe(takeUntil(this.comopnentDestroyed)).subscribe((batches: Array<Entry>) => {
             /**
              * Reset the values every time the batches change
              */
@@ -152,7 +150,7 @@ export class StatsComponent implements OnInit, OnDestroy {
     return localvar;
   }
 
-  getTotalAvailable(batch: Batch) {
+  getTotalAvailable(batch: Entry) {
     const totalqty = batch.qty;
     const loadedqty = batch.loadedqty;
     const accumulated = batch.accumulated;

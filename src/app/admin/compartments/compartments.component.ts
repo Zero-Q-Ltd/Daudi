@@ -1,5 +1,5 @@
 import { OrderDetailsComponent } from "../order-details/order-details.component";
-import { Component, Inject, OnDestroy, OnInit } from "@angular/core";
+import { Component, Inject, OnDestroy, OnInit, Input } from "@angular/core";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material"; // added dialog data
 import { NotificationService } from "../../shared/services/notification.service";
 import { FormControl, Validators } from "@angular/forms";
@@ -20,7 +20,7 @@ export class CompartmentsComponent implements OnInit, OnDestroy {
   position = "left";
   position2 = "above";
   saving = false;
-  truck: Truck = Object.assign({}, emptytruck);
+  @Input() order: Order;
   mask = [/^[kK]+$/i, /^[a-zA-Z]+$/i, /^[a-zA-Z]+$/i, " ", /\d/, /\d/, /\d/, /^[a-zA-Z]+$/i];
   fueltypesArray = fueltypesArray;
   nameControl: FormControl = new FormControl("", [Validators.required]);
@@ -35,7 +35,7 @@ export class CompartmentsComponent implements OnInit, OnDestroy {
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
 
   // added to constructor to inject the data
-  constructor(@Inject(MAT_DIALOG_DATA) public order: Order,
+  constructor(
     private notification: NotificationService,
     private orderservice: OrdersService,
     private depotservice: DepotsService,
@@ -61,13 +61,13 @@ export class CompartmentsComponent implements OnInit, OnDestroy {
   }
 
   setfueltype(index: number, fueltype) {
-    this.truck.compartments[index].fueltype = fueltype;
+    this.order.truck.compartments[index].fueltype = fueltype;
     fueltypesArray.forEach(type => {
       this.order.fuel[type].qty = 0;
     });
-    this.truck.compartments.forEach((compartment, _) => {
+    this.order.truck.compartments.forEach((compartment, _) => {
       if (compartment.fueltype != null) {
-        this.truck.fuel[compartment.fueltype].qty += compartment.qty;
+        this.order.fuel[compartment.fueltype].qty += compartment.qty;
       }
     });
   }
@@ -76,7 +76,7 @@ export class CompartmentsComponent implements OnInit, OnDestroy {
     // if(this.nameControl.valid && this.IdControl.valid && this.plateControl.valid){
     let errorcheck = false;
     fueltypesArray.forEach(fueltype => {
-      if (Number(this.order.fuel[fueltype].qty) !== Number(this.truck.fuel[fueltype].qty)) {
+      if (Number(this.order.fuel[fueltype].qty) !== Number(this.order.fuel[fueltype].qty)) {
         errorcheck = true;
         this.notification.notify({
           alert_type: "error",
@@ -87,7 +87,7 @@ export class CompartmentsComponent implements OnInit, OnDestroy {
         });
       }
     });
-    if (!this.truck.drivername || this.truck.drivername.length < 4) {
+    if (!this.order.truck.driverdetail.name || this.order.truck.driverdetail.name.length < 4) {
       this.notification.notify({
         alert_type: "error",
         duration: 2000,
@@ -100,40 +100,23 @@ export class CompartmentsComponent implements OnInit, OnDestroy {
     if (errorcheck) {
       return false;
     } else {
-      this.truck.orderdata = {
-        QbID: this.order.QbId,
-        OrderID: this.order.Id
-      };
-      this.truck.stagedata[0].user = this.adminservice.createuserobject();
-      this.truck.numberplate = this.truck.numberplate ? this.truck.numberplate.toUpperCase() : null;
-      this.truck.drivername = this.truck.drivername ? this.truck.drivername.toUpperCase() : null;
 
-      this.truck.notifications = this.order.notifications;
-      this.truck.stage = 0;
-      this.truck.isPrinted = false;
-      this.truck.company = {
-        QbId: this.order.company.QbId,
-        contactname: this.order.company.contact.name,
-        Id: this.order.company.Id,
-        name: this.order.company.name,
-        phone: this.order.company.contact.phone
-      };
-      this.truck.config = {
-        depot: {
-          name: this.depotservice.activedepot.value.Name,
-          Id: this.depotservice.activedepot.value.Id
-        },
-        companyid: this.depotservice.activedepot.value.companyId,
-        sandbox: this.depotservice.activedepot.value.sandbox
-      };
-      this.truck.Id = this.order.Id;
+      this.order.truck.stagedata[0].user = this.adminservice.createuserobject();
+      // this.order.truck.numberplate = this.order.truck.numberplate ? this.order.truck.numberplate.toUpperCase() : null;
+      // this.order.truck.drivername = this.order.truck.drivername ? this.order.truck.drivername.toUpperCase() : null;
+
+      // this.order.truck.notifications = this.order.notifications;
+      this.order.truck.stage = 0;
+      // this.order.truck.isPrinted = false;
+
+      this.order.truck.Id = this.order.Id;
       this.order.loaded = true;
-      return this.dialogRef.close({ order: this.order, truck: this.truck });
+      return this.dialogRef.close({ order: this.order, truck: this.order.truck });
     }
   }
 
   reset() {
-    this.truck.compartments.forEach((compartment, index) => {
+    this.order.truck.compartments.forEach((compartment, index) => {
       compartment.fueltype = null;
       compartment.qty = 0;
     });

@@ -10,9 +10,9 @@ export interface SMS {
     QbId: string,
     name: string,
     Id: string,
-    phone: string,
-    contactname: string
+    krapin: string
   };
+  phone: string;
   msg: string;
   greeting: string;
   timestamp: firebase.firestore.Timestamp;
@@ -32,9 +32,9 @@ export const emptysms: SMS = {
     QbId: null,
     name: null,
     Id: null,
-    phone: null,
-    contactname: null
+    krapin: null
   },
+  phone: null,
   msg: null,
   greeting: null,
   timestamp: new firebase.firestore.Timestamp(0, 0),

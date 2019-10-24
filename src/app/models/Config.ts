@@ -2,7 +2,8 @@ import { AdminType } from "./AdminType";
 import { Metadata, emptymetadata, Meta, fuelTypes } from "./universal";
 import { firestore } from "firebase";
 
-export interface CompanyConfig {
+export interface OMC {
+    license: string;
     location: firebase.firestore.GeoPoint;
     name: string;
     userid: string;
@@ -41,7 +42,23 @@ interface ContactPerson {
     position: string;
     address: string;
 }
-export const emptycompanydata: CompanyConfig = {
+export const emptyqbo: QBOconfig = {
+    companyid: 0,
+    clientid: "",
+    clientSecret: "",
+    webhooksverifier: "",
+    issandbox: true,
+    authconfig: {
+        previousDCT: firestore.Timestamp.fromDate(new Date()),
+        accessToken: "",
+        refreshtoken: "",
+        accesstokenExpiry: firestore.Timestamp.fromDate(new Date()),
+        refreshtokenExpiry: firestore.Timestamp.fromDate(new Date()),
+        time: firestore.Timestamp.fromDate(new Date())
+    }
+};
+export const emptyomc: OMC = {
+    license: null,
     contactperson: [],
     logourl: null,
     status: null,
@@ -50,10 +67,7 @@ export const emptycompanydata: CompanyConfig = {
         ik: null,
         pms: null
     },
-    qbo: {
-        live: { ...emptyqbo },
-        sandbox: { ...emptyqbo }
-    },
+    qbconfig: { ...emptyqbo },
 
     /**
      * make default location Somewhere in nbi
@@ -101,18 +115,4 @@ export interface QBOconfig {
     };
 }
 
-export const emptyqbo: QBOconfig = {
-    companyid: 0,
-    clientid: "",
-    clientSecret: "",
-    webhooksverifier: "",
-    issandbox: true,
-    authconfig: {
-        previousDCT: firestore.Timestamp.fromDate(new Date()),
-        accessToken: "",
-        refreshtoken: "",
-        accesstokenExpiry: firestore.Timestamp.fromDate(new Date()),
-        refreshtokenExpiry: firestore.Timestamp.fromDate(new Date()),
-        time: firestore.Timestamp.fromDate(new Date())
-    }
-};
+

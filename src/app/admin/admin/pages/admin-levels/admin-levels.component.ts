@@ -4,7 +4,7 @@ import { MatDialog } from "@angular/material";
 import { ConfigService } from "../../../services/core/config.service";
 import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
-import { CompanyConfig, emptycompanydata } from "../../../../models/Config";
+import { OMC, emptyomc } from "../../../../models/Config";
 import { FormArray, FormControl, FormGroup, FormBuilder } from "ngx-strongly-typed-forms";
 
 import { NotificationService } from "../../../../shared/services/notification.service";
@@ -24,8 +24,8 @@ import { ConfirmDialogComponent } from "../../../confirm-dialog/confirm-dialog.c
 export class AdminLevelsComponent implements OnInit, OnDestroy {
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
   newadminform: FormGroup<NewAdminType>;
-  originalCompany: CompanyConfig = { ...emptycompanydata };
-  tempcompany: CompanyConfig = { ...emptycompanydata };
+  originalCompany: OMC = { ...emptyomc };
+  tempcompany: OMC = { ...emptyomc };
 
   constructor(private companyservice: ConfigService,
     private formBuilder: FormBuilder,

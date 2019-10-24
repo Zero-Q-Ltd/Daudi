@@ -13,6 +13,7 @@ import { DepotsService } from "../services/core/depots.service";
 import { ReplaySubject } from "rxjs";
 import { switchMap, takeUntil } from "rxjs/operators";
 import { OrdersService as OrderService } from "../services/orders.service";
+import { Order } from "src/app/models/Order";
 
 @Component({
   selector: "trucks-table",
@@ -104,10 +105,10 @@ export class TrucksTableComponent implements OnInit {
     this.trucksdataSource.filter = filterValue;
   }
 
-  sendSMS(clickedtruck: Truck) {
+  sendSMS(clickedOrder: Order) {
     const sms: SMS = {
       Id: null,
-      company: clickedtruck.company,
+      company: clickedOrder.company,
       type: {
         reason: null,
         origin: "custom"
