@@ -6,7 +6,7 @@ import { Admin } from "../../models/Admin";
 import { NotificationService } from "../../shared/services/notification.service";
 import { FCM } from "../../models/FCM";
 import { distinctUntilChanged } from "rxjs/operators";
-import { AdminsService } from "./admins.service";
+import { AdminsService } from "./core/admins.service";
 
 @Injectable({
   providedIn: "root"

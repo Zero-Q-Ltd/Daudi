@@ -1,9 +1,9 @@
 import { Injectable } from "@angular/core";
 import { fueltypesArray } from "../../models/Fueltypes";
-import { Batch, emptybatches } from "../../models/Batch";
+import { Entry, emptybatches } from "../../models/Entry";
 import { BehaviorSubject } from "rxjs";
 import { AngularFirestore } from "@angular/fire/firestore";
-import { DepotsService } from "./depots.service";
+import { DepotsService } from "./core/depots.service";
 import { fuelTypes } from "../../models/universal";
 import { Depot } from "../../models/Depot";
 
@@ -14,9 +14,9 @@ export class BatchesService {
   fetchingbatches = new BehaviorSubject(true);
   activedepot: Depot;
   depotbatches: {
-    pms: BehaviorSubject<Array<Batch>>,
-    ago: BehaviorSubject<Array<Batch>>,
-    ik: BehaviorSubject<Array<Batch>>,
+    pms: BehaviorSubject<Array<Entry>>,
+    ago: BehaviorSubject<Array<Entry>>,
+    ik: BehaviorSubject<Array<Entry>>,
   } = {
       pms: new BehaviorSubject([]),
       ago: new BehaviorSubject([]),
@@ -51,7 +51,7 @@ export class BatchesService {
           this.depotbatches[fueltype].next(snapshot.docs.map(doc => {
             const value = Object.assign({}, emptybatches, doc.data());
             value.Id = doc.id;
-            return value as Batch;
+            return value as Entry;
           }));
         });
       this.subscriptions.set(`${fueltype}batch`, subscriprion);

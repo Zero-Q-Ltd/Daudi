@@ -4,7 +4,6 @@ import { FormControl } from "@angular/forms";
 import { NestedTreeControl } from "@angular/cdk/tree";
 import { emptyorder } from "../../models/Order";
 import { emptytruck } from "../../models/Truck";
-import { ColNode } from "../../models/ColNode";
 import { ReplaySubject } from "rxjs";
 
 
@@ -20,44 +19,21 @@ export class ArchiveComponent implements OnInit, OnDestroy {
   maxDate = new Date();
 
   date = new FormControl(new Date());
-  searchinit: boolean = false;
+  searchinit = false;
 
   dataobject = {};
-  treeControl = new NestedTreeControl<ColNode>(node => node.children);
-  treedataSource = new MatTreeNestedDataSource<ColNode>();
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
 
-  constructor(private dialog: MatDialog,
+  constructor(
+    private dialog: MatDialog,
     private snackBar: MatSnackBar) {
     this.changedatamodel(0);
   }
 
   initvalues() {
-    this.treedataSource.data = this.buildObjectTree(this.dataobject, 0);
   }
 
-  buildObjectTree(obj: { [key: string]: any }, level: number): ColNode[] {
-    if (!obj || typeof obj !== "object") {
-      return [];
-    } else {
-      return Object.keys(obj).reduce<ColNode[]>((accumulator, key) => {
-        const value = obj[key];
-        const node = new ColNode();
-        node.nodename = key;
-        node.selected = false;
-        if (value != null) {
-          if (typeof value === "object") {
-            node.children = this.buildObjectTree(value, level + 1);
-          } else {
-            node.searchvalue = value;
-          }
-        }
-        return accumulator.concat(node);
-      }, []);
-    }
-  }
 
-  hasChild = (_: number, node: ColNode) => !!node.children && node.children.length > 0;
 
   ngOnInit() {
   }
@@ -85,15 +61,7 @@ export class ArchiveComponent implements OnInit, OnDestroy {
   }
 
   search() {
-    console.log(this.treeControl);
-    console.log(this.treedataSource);
 
-    this.searchinit = false;
-
-    setTimeout(() => {
-      this.searchinit = true;
-      return;
-    }, 700);
   }
 
 }

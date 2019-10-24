@@ -2,16 +2,16 @@ import { Component, OnDestroy, OnInit } from "@angular/core";
 import { MatDialog } from "@angular/material";
 import { Depot, emptydepot } from "../../../../models/Depot";
 import { NotificationService } from "../../../../shared/services/notification.service";
-import { AdminsService } from "../../../services/admins.service";
-import { DepotsService } from "../../../services/depots.service";
-import { syncrequest } from "../../../../models/Sync";
+import { AdminsService } from "../../../services/core/admins.service";
+import { DepotsService } from "../../../services/core/depots.service";
+import { SyncRequest } from "../../../../models/Sync";
 import { firestore } from "firebase";
 import { MapsComponent } from "../../../maps/maps.component";
 import { AngularFireFunctions } from "@angular/fire/functions";
 import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
-import { CompanyConfig, emptycompanydata } from "../../../../models/CompayConfig";
-import { CompanyService } from "../../../services/company.service";
+import { OMC, emptyomc } from "../../../../models/Config";
+import { ConfigService } from "../../../services/core/config.service";
 
 @Component({
   selector: "depot-management",
@@ -28,12 +28,14 @@ export class DepotManagementComponent implements OnInit, OnDestroy {
   zoom = 7;
   creatingsync = false;
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
-  company: CompanyConfig = { ...emptycompanydata };
-  constructor(private notification: NotificationService,
+  company: OMC = { ...emptyomc };
+  constructor(
+    private notification: NotificationService,
     private dialog: MatDialog,
     private adminservice: AdminsService,
     private depotservice: DepotsService,
-    private companyservice: CompanyService,
+    private companyservice: ConfigService,
+    private config: ConfigService,
     private functions: AngularFireFunctions) {
     this.depotservice.activedepot.pipe(takeUntil(this.comopnentDestroyed)).subscribe(depot => {
       this.activedepot = depot;
@@ -75,8 +77,8 @@ export class DepotManagementComponent implements OnInit, OnDestroy {
     }
 
     this.creatingsync = true;
-    const syncobject: syncrequest = {
-      companyid: this.activedepot.companyId,
+    const syncobject: SyncRequest = {
+      companyid: this.config.companydata.value.qbconfig.companyid,
       time: firestore.Timestamp.now(),
       synctype: ["Item"]
     };

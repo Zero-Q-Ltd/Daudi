@@ -1,10 +1,10 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
 import { CommunicationService } from "../../communication.service";
 import { MatDialog } from "@angular/material";
-import { CompanyService } from "../../../services/company.service";
+import { ConfigService } from "../../../services/core/config.service";
 import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
-import { CompanyConfig, emptycompanydata } from "../../../../models/CompayConfig";
+import { OMC, emptyomc } from "../../../../models/Config";
 import { FormArray, FormControl, FormGroup, FormBuilder } from "ngx-strongly-typed-forms";
 
 import { NotificationService } from "../../../../shared/services/notification.service";
@@ -13,7 +13,7 @@ import { NewAdminType, AdminType } from "../../../../models/AdminType";
 import { Validators } from "@angular/forms";
 import { AdminLevel } from "../../../../models/AdminLevel";
 import { Metadata, Meta } from "../../../../models/universal";
-import { AdminsService } from "../../../services/admins.service";
+import { AdminsService } from "../../../services/core/admins.service";
 import { ConfirmDialogComponent } from "../../../confirm-dialog/confirm-dialog.component";
 @Component({
   selector: "app-company",
@@ -29,8 +29,8 @@ export class CompanyComponent implements OnInit, OnDestroy {
   defaultlat = -1.3373943;
   defaultlng = 36.7208522;
   zoom = 15;
-  tempcompany: CompanyConfig = { ...emptycompanydata };
-  originalCompany: CompanyConfig = { ...emptycompanydata };
+  tempcompany: OMC = { ...emptyomc };
+  originalCompany: OMC = { ...emptyomc };
   // paymentchannels: Array<PaymentChannel> = [];
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
 
@@ -39,7 +39,7 @@ export class CompanyComponent implements OnInit, OnDestroy {
     private notificationservice: NotificationService,
     private adminService: AdminsService,
     private communicatioservice: CommunicationService,
-    private companyservice: CompanyService,
+    private companyservice: ConfigService,
     private _matDialog: MatDialog) {
 
     /**

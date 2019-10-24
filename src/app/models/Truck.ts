@@ -13,9 +13,9 @@ interface Compartment {
   qty: number;
 }
 
-interface Expiries {
-  time: string;
-  timestamp: firebase.firestore.Timestamp | Date;
+interface Expiry {
+  timeCreated: firebase.firestore.Timestamp;
+  expiry: firebase.firestore.Timestamp;
 }
 
 export interface Batch {
@@ -30,110 +30,58 @@ export interface Truck {
   Id: string;
 
   frozen: boolean;
-
+  compartmentCount: number;
   driverdetail: {
     name: string,
-    id: string
+    id: string,
+    phone: string
   };
   truckdetail: {
     numberplate: string;
   };
-  isPrinted: boolean;
-
+  /**
+   * This design allows complex queries on the map, as opposed to the limitations of an array
+   */
   stagedata: {
-
-    0: {
-      user: User,
-      data: {},
-    },
-    1: {
-      user: User,
-      data: {
-        expiry: Array<Expiries>
-      },
-    },
-    2: {
-      user: User,
-      data: {
-        expiry: Array<Expiries>
-        // Inside here we store the expiry time vs the approximated time
-        // I.e
-        /*
-         1164666616 : 45,
-         1516815165 : 15
-        */
-      },
-    },
-    3: {
-      user: User,
-      data: {
-        expiry: Array<Expiries>
-      },
-    },
-    4: {
-      user: User,
-      data: {
-        seals: {
-          range: string,
-          broken: Array<string>
-        }
-      },
-    },
+    [key in truckStages]: StageData
   };
   compartments: Array<Compartment>;
+}
+export interface StageData {
+  user: User;
+  /**
+   * This data only exists for stages that have print functionality
+   */
+  print?: {
+    status: boolean,
+    timestamp: firebase.firestore.Timestamp | Date;
+  };
+  expiry: Array<Expiry>;
+  /**
+   * only the last stage has seals
+   */
+  seals?: {
+    range: string,
+    broken: Array<string>
+  };
 }
 
 export const emptytruck: Truck = {
   stage: null,
   Id: null,
-
-  isPrinted: false,
-
+  compartmentCount: null,
   frozen: false,
   driverdetail: {
     id: null,
     name: null,
+    phone: null
   },
   truckdetail: {
     numberplate: null
   },
-  stagedata: {
-    0: {
-      data: {
-        expiry: []
-      },
-      user: inituser
-    },
-    1: {
-      data: {
-        expiry: []
-      },
-      user: inituser
-    },
-    2: {
-      data: {
-        expiry: []
-      },
-      user: inituser
-    },
-    3: {
-      data: {
-        expiry: []
-      },
-      user: inituser
-    },
-    4: {
-      data: null,
-      user: inituser
-    }
-  },
-  compartments: [
-    { fueltype: null, qty: 0 }, { fueltype: null, qty: 0 },
-    { fueltype: null, qty: 0 }, { fueltype: null, qty: 0 },
-    { fueltype: null, qty: 0 }, { fueltype: null, qty: 0 },
-    { fueltype: null, qty: 0 }]
+  stagedata: null,
+  compartments: []
 };
 
-export type truckStages = "0" | "1" | "2" | "3" | "4";
-export let truckStagesarray = ["0", "1", "2", "3", "4"];
-export let truckqueryStagesarray = ["1", "2", "3"];
+export type truckStages = "0" | "1" | "2" | "3" | "4" | "5";
+export let truckStagesarray = ["0", "1", "2", "3", "4", "5"];

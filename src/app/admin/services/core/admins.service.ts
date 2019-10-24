@@ -1,10 +1,10 @@
 import { Injectable } from "@angular/core";
 import { AngularFirestore } from "@angular/fire/firestore";
-import { Admin, emptyadmin } from "../../models/Admin";
+import { Admin, emptyadmin } from "../../../models/Admin";
 import { BehaviorSubject, ReplaySubject } from "rxjs";
 import { AngularFireAuth } from "@angular/fire/auth";
 import * as moment from "moment";
-import { User } from "../../models/universal";
+import { User } from "../../../models/universal";
 import { firestore } from "firebase";
 import { Router } from "@angular/router";
 import { AngularFireDatabase } from "@angular/fire/database";
@@ -79,8 +79,8 @@ export class AdminsService {
    */
   createuserobject(): User {
     return {
-      name: this.userdata.data.name,
-      uid: this.userdata.data.uid,
+      name: this.userdata.profile.name,
+      uid: this.userdata.profile.uid,
       time: firestore.Timestamp.now()
     };
   }
@@ -108,7 +108,6 @@ export class AdminsService {
           // this.msg.requestPermission(tempdata);
           // this.msg.receiveMessage();
         } else {
-          this.checkinvite(user);
           this.observableuserdata.next(null);
         }
 
@@ -120,22 +119,7 @@ export class AdminsService {
     }
   }
 
-  /**
-   * Checks whether a user has a pending invite
-   * @param user
-   */
-  checkinvite(user) {
-    this.db.firestore.collection("userinvites")
-      .where("email", "==", user.email)
-      .limit(1)
-      .get().then(snapshot => {
-        snapshot.forEach(docdata => {
-          this.db.collection(`users`).doc(user.uid).set(docdata.data());
-        });
-      }, error => {
-        console.log("Error verifying invite");
-      });
-  }
+
 
   unsubscribeAll() {
     this.getuser(null);

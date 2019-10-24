@@ -4,14 +4,13 @@ import { Router } from "@angular/router";
 // interfaces
 import { AngularFireAuth } from "@angular/fire/auth";
 import { Depot, emptydepot } from "../../../models/Depot";
-import { AdminsService } from "../../services/admins.service";
-import { DepotsService } from "../../services/depots.service";
+import { AdminsService } from "../../services/core/admins.service";
+import { DepotsService } from "../../services/core/depots.service";
 import { Admin, emptyadmin } from "../../../models/Admin";
 import { fueltypesArray } from "../../../models/Fueltypes";
 import { OrdersService } from "../../services/orders.service";
 import { orderStagesarray } from "../../../models/Order";
 import { truckStagesarray } from "../../../models/Truck";
-import { TrucksService } from "../../services/trucks.service";
 import { PricesService } from "../../services/prices.service";
 import { fuelTypes } from "../../../models/universal";
 import { Price } from "../../../models/Price";
@@ -82,7 +81,6 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
   constructor(private router: Router,
     private afAuth: AngularFireAuth,
     private orderservice: OrdersService,
-    private truckservice: TrucksService,
     private adminservice: AdminsService,
     private depotservice: DepotsService,
     private priceservice: PricesService) {
@@ -96,7 +94,7 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
       this.orderservice.orders[stage].pipe(takeUntil(this.comopnentDestroyed)).subscribe(orders => this.orderscount[stage] = orders.length);
     });
     truckStagesarray.forEach(stage => {
-      this.truckservice.trucks[stage].pipe(takeUntil(this.comopnentDestroyed)).subscribe(trucks => this.truckscount[stage] = trucks.length);
+      // this.truckservice.trucks[stage].pipe(takeUntil(this.comopnentDestroyed)).subscribe(trucks => this.truckscount[stage] = trucks.length);
     });
     this.adminservice.observableuserdata.pipe(takeUntil(this.comopnentDestroyed)).subscribe(admin => {
       this.currentuser = admin;

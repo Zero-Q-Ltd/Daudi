@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { AngularFirestore } from "@angular/fire/firestore";
 import { Depot } from "../../models/Depot";
-import { DepotsService } from "./depots.service";
+import { DepotsService } from "./core/depots.service";
 
 @Injectable({
   providedIn: "root"

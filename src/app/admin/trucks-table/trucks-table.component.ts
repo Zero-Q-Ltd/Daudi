@@ -9,11 +9,11 @@ import { SMS } from "../../models/sms";
 import { firestore } from "firebase";
 import { ExcelService } from "../services/excel-service.service";
 import { ColumnsCustomizerComponent } from "../columns-customizer/columns-customizer.component";
-import { TrucksService } from "../services/trucks.service";
-import { ColNode } from "../../models/ColNode";
-import { DepotsService } from "../services/depots.service";
+import { DepotsService } from "../services/core/depots.service";
 import { ReplaySubject } from "rxjs";
 import { switchMap, takeUntil } from "rxjs/operators";
+import { OrdersService as OrderService } from "../services/orders.service";
+import { Order } from "src/app/models/Order";
 
 @Component({
   selector: "trucks-table",
@@ -56,28 +56,28 @@ export class TrucksTableComponent implements OnInit {
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
-  @Input() queryparams: MatTreeNestedDataSource<ColNode>;
 
-  constructor(private dialog: MatDialog,
+  constructor(
+    private dialog: MatDialog,
     private route: ActivatedRoute,
     private excelService: ExcelService,
-    private truckservice: TrucksService,
+    private orderService: OrderService,
     private depotservice: DepotsService) {
 
     /**
      * propagate changes when depot changes
      */
-    this.truckservice.loadingtrucks.pipe(takeUntil(this.comopnentDestroyed)).subscribe(value => {
+    this.orderService.loadingorders.pipe(takeUntil(this.comopnentDestroyed)).subscribe(value => {
       this.loadingtrucks = value;
     });
 
-    this.route.params.pipe(takeUntil(this.comopnentDestroyed))
-      .pipe(switchMap((paramdata: { stage: number }) => {
-        return this.truckservice.trucks[paramdata.stage].pipe(takeUntil(this.comopnentDestroyed));
-      }))
-      .subscribe((stagetrucks: Array<Truck>) => {
-        this.trucksdataSource.data = stagetrucks;
-      });
+    // this.route.params.pipe(takeUntil(this.comopnentDestroyed))
+    //   .pipe(switchMap((paramdata: { stage: number }) => {
+    // return this.truckservice.trucks[paramdata.stage].pipe(takeUntil(this.comopnentDestroyed));
+    //   }))
+    //   .subscribe((stagetrucks: Array<Truck>) => {
+    //     this.trucksdataSource.data = stagetrucks;
+    //   });
   }
 
   ngOnDestroy(): void {
@@ -105,10 +105,10 @@ export class TrucksTableComponent implements OnInit {
     this.trucksdataSource.filter = filterValue;
   }
 
-  sendSMS(clickedtruck: Truck) {
+  sendSMS(clickedOrder: Order) {
     const sms: SMS = {
       Id: null,
-      company: clickedtruck.company,
+      company: clickedOrder.company,
       type: {
         reason: null,
         origin: "custom"

@@ -30,15 +30,13 @@ export interface Order {
     timestamp: Date,
     errorDetail: string
   };
-  /**
-   *@Deprecated, In Daudi 3 the truck Id is exactly the same as the order Id since its a 1:1 r/ship
-   */
+
   truck: Truck;
   loaded: boolean;
   fuel: {
-    [key in fuelTypes]: fuelconfig
+    [key in fuelTypes]: Fuelconfig
   };
-  discount: {
+  discount?: {
     approved: {
       approved: boolean,
       user: User,
@@ -58,7 +56,7 @@ export interface Order {
 
 
 
-export interface fuelconfig {
+export interface Fuelconfig {
   QbId: string;
   qty: number;
   priceconfig: priceconfig;
@@ -70,6 +68,7 @@ const initorderfuel = {
   priceconfig: {
     price: 0,
     nonTax: 0,
+    nonTaxprice: 0,
     retailprice: 0,
     minsp: 0,
     total: 0,
@@ -77,11 +76,11 @@ const initorderfuel = {
     taxAmnt: 0,
     nonTaxtotal: 0,
     taxablePrice: 0,
-    taxTotal: 0,
     taxableAmnt: 0,
     taxQbId: null
   },
-  QbId: null
+  QbId: null,
+  batches: []
 };
 
 const initstages = {
@@ -176,73 +175,12 @@ export const emptyorder: Order = {
     5: { ...initstages },
     6: { ...initstages }
   },
-  discount: {
-    approved: null,
-    request: {
-      pms: null,
-      ago: null,
-      ik: null
-    }
-  },
+
 
   fuel: {
-    pms: {
-      qty: 0,
-      priceconfig: {
-        price: 0,
-        nonTax: 0,
-        nonTaxprice: 0,
-        retailprice: 0,
-        minsp: 0,
-        total: 0,
-        difference: 0,
-        taxAmnt: 0,
-        nonTaxtotal: 0,
-        taxablePrice: 0,
-        taxableAmnt: 0,
-        taxQbId: null
-      },
-      QbId: null,
-      batches: []
-    },
-    ago: {
-      qty: 0,
-      priceconfig: {
-        price: 0,
-        nonTax: 0,
-        nonTaxprice: 0,
-        retailprice: 0,
-        minsp: 0,
-        total: 0,
-        difference: 0,
-        taxAmnt: 0,
-        nonTaxtotal: 0,
-        taxablePrice: 0,
-        taxableAmnt: 0,
-        taxQbId: null
-      },
-      QbId: null,
-      batches: []
-    },
-    ik: {
-      qty: 0,
-      priceconfig: {
-        price: 0,
-        nonTax: 0,
-        nonTaxprice: 0,
-        retailprice: 0,
-        minsp: 0,
-        total: 0,
-        difference: 0,
-        taxAmnt: 0,
-        nonTaxtotal: 0,
-        taxablePrice: 0,
-        taxableAmnt: 0,
-        taxQbId: null,
-      },
-      QbId: null,
-      batches: []
-    }
+    pms: { ...initorderfuel },
+    ago: { ...initorderfuel },
+    ik: { ...initorderfuel }
   }
 };
 export type orderStages = "1" | "2" | "3" | "4" | "5" | "6";

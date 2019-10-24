@@ -18,7 +18,6 @@ import { AdminComponent } from "./admin/admin.component";
 
 import { ConfirmDialogComponent } from "./confirm-dialog/confirm-dialog.component";
 // MAT Fixer
-import { AdminChatComponent } from "./admin/pages/admin-chat/admin-chat.component";
 import { BatchTrucksComponent } from "./batch-trucks/batch-trucks.component";
 import { CompanyMembersComponent } from "./admin/pages/company-members/company-members.component";
 
@@ -80,24 +79,23 @@ import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { Ng5SliderModule } from "ng5-slider";
 import { MatChipsModule } from "@angular/material/chips";
 import { FcmService } from "./services/fcm.service";
-import { AdminsService } from "./services/admins.service";
+import { AdminsService } from "./services/core/admins.service";
 import { OrdersService } from "./services/orders.service";
-import { TrucksService } from "./services/trucks.service";
 import { PricesService } from "./services/prices.service";
 import { PricingComponent } from "./pricing/pricing.component";
 import { OmcService } from "./services/omc.service";
 import { OmcManagementComponent } from "./admin/pages/omc-management/omc-management.component";
 import { BatchesComponent } from "./admin/pages/batches/batches.component";
-import { NgxEchartsModule } from 'ngx-echarts';
+import { NgxEchartsModule } from "ngx-echarts";
 import { SatDatepickerModule, SatNativeDateModule } from "saturn-datepicker";
-import { CalendarRangesComponent } from './dashboard/calendar-ranges/calendar-ranges.component';
-import { ConfirmDepotComponent } from './create-order/confirm-depot/confirm-depot.component';
-import { StatsComponent } from './dashboard/stats/stats.component';
-import { UserLevelsComponent } from './admin/pages/user-levels/user-levels.component';
-import { CompanyComponent } from './admin/pages/company/company.component';
-import { AdminRolesComponent } from './admin/pages/admin-roles/admin-roles.component';
-import { AdminLevelsComponent } from './admin/pages/admin-levels/admin-levels.component';
-import { CreateComponent } from './admin/pages/payments/create/create.component';
+import { CalendarRangesComponent } from "./dashboard/calendar-ranges/calendar-ranges.component";
+import { ConfirmDepotComponent } from "./create-order/confirm-depot/confirm-depot.component";
+import { StatsComponent } from "./dashboard/stats/stats.component";
+import { UserLevelsComponent } from "./admin/pages/user-levels/user-levels.component";
+import { CompanyComponent } from "./admin/pages/company/company.component";
+import { AdminRolesComponent } from "./admin/pages/admin-roles/admin-roles.component";
+import { AdminLevelsComponent } from "./admin/pages/admin-levels/admin-levels.component";
+import { CreateComponent } from "./admin/pages/payments/create/create.component";
 
 @NgModule({
 
@@ -156,7 +154,6 @@ import { CreateComponent } from './admin/pages/payments/create/create.component'
     PreloaderDirective,
 
     AppFooterComponent,
-    AdminChatComponent,
     FamilyChatComponent,
     SupportChatComponent,
     PrivateChatComponent,
@@ -173,7 +170,6 @@ import { CreateComponent } from './admin/pages/payments/create/create.component'
     AdminComponent,
     ConfirmDialogComponent,
     ArchiveComponent,
-    AdminChatComponent,
     BatchTrucksComponent,
     UserManagementComponent,
     SendMsgComponent,
@@ -204,7 +200,6 @@ import { CreateComponent } from './admin/pages/payments/create/create.component'
     LayoutService,
     AdminsService,
     OrdersService,
-    TrucksService,
     PricesService,
     FcmService],
   entryComponents: [ConfirmDialogComponent,

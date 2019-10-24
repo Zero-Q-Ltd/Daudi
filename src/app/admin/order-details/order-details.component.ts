@@ -5,7 +5,6 @@ import { NotificationService } from "../../shared/services/notification.service"
 import { AngularFirestore } from "@angular/fire/firestore";
 import { Truck } from "../../models/Truck";
 import { Order } from "../../models/Order";
-import { TrucksService } from "../services/trucks.service";
 import { ReplaySubject } from "rxjs";
 
 @Component({
@@ -19,9 +18,8 @@ export class OrderDetailsComponent implements OnInit, OnDestroy {
   position1 = "left";
   position2 = "above";
 
-  truck: Truck;
   displayedColumns = ["Id", "Company", "Contact", "Time", "Phone", "PMS", "AGO", "IK", "Total", "Action", "Status"];
-  @Input() order: Order;
+  @Input() truck: Truck;
 
   /**
    * this keeps a local copy of all the subscriptions within this service
@@ -31,15 +29,11 @@ export class OrderDetailsComponent implements OnInit, OnDestroy {
 
   constructor(private dialog: MatDialog,
     private db: AngularFirestore,
-    private truckservice: TrucksService,
     private notificationService: NotificationService) {
-    if (!this.order) {
+    if (!this.truck) {
       return;
     }
-    const subscription = this.truckservice.getTruck(this.order.Id).onSnapshot(truckdata => {
-      this.truck = truckdata.data() as Truck;
-    });
-    this.subscriptions.set(`statsrange`, subscription);
+
 
   }
 
@@ -56,6 +50,6 @@ export class OrderDetailsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    console.log(this.order);
+    console.log(this.truck);
   }
 }

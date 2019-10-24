@@ -2,8 +2,8 @@ import {Injectable} from "@angular/core";
 import {Omc} from "../../models/Omc";
 import {AngularFirestore} from "@angular/fire/firestore";
 import {BehaviorSubject} from "rxjs";
-import {DepotsService} from "./depots.service";
-import {take} from 'rxjs/operators';
+import {DepotsService} from "./core/depots.service";
+import {take} from "rxjs/operators";
 
 @Injectable({
   providedIn: "root"
@@ -46,7 +46,7 @@ export class OmcService {
   }
 
   getomcs() {
-    let subscriprion = this.db.firestore.collection("omc")
+    const subscriprion = this.db.firestore.collection("omc")
       .orderBy("name", "asc")
       .onSnapshot(snapshot => {
         this.omcs.next(snapshot.docs.map(value => {

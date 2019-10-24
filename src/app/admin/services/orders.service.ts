@@ -4,7 +4,7 @@ import { firestore } from "firebase";
 import * as moment from "moment";
 import { BehaviorSubject } from "rxjs";
 import { AngularFirestore } from "@angular/fire/firestore";
-import { DepotsService } from "./depots.service";
+import { DepotsService } from "./core/depots.service";
 import { Depot } from "../../models/Depot";
 import { ColNode } from "../../models/ColNode";
 import { MatTreeNestedDataSource } from "@angular/material";
@@ -34,8 +34,8 @@ export class OrdersService {
   subscriptions: Map<string, any> = new Map<string, any>();
 
   constructor(private db: AngularFirestore,
-              private depotsservice: DepotsService,
-              private functions: AngularFireFunctions) {
+    private depotsservice: DepotsService,
+    private functions: AngularFireFunctions) {
     this.depotsservice.activedepot.subscribe(depot => {
       this.unsubscribeAll();
       this.activedepot = depot;
@@ -80,8 +80,8 @@ export class OrdersService {
     });
   }
 
-  updateorder(orderid: string) {
-    return this.db.firestore.collection("depots").doc(this.activedepot.Id).collection(`orders`).doc(orderid);
+  updateorder(orderid: string, order: Order) {
+    return this.db.firestore.collection("depots").doc(this.activedepot.Id).collection(`orders`).doc(orderid).update(order);
   }
 
   getorder(orderid: string) {

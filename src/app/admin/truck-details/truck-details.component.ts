@@ -1,14 +1,13 @@
 import { Component, EventEmitter, OnDestroy, OnInit } from "@angular/core";
 import { emptytruck, Truck } from "../../models/Truck";
 import { Order } from "../../models/Order";
-import { TrucksService } from "../services/trucks.service";
 import * as moment from "moment";
 import { ConfirmDialogComponent } from "../confirm-dialog/confirm-dialog.component";
 import { Options } from "ng5-slider";
 import { NotificationService } from "../../shared/services/notification.service";
 import { BatchesSelectorComponent } from "../batches-selector/batches-selector.component";
 import { OrdersService } from "../services/orders.service";
-import { AdminsService } from "../services/admins.service";
+import { AdminsService } from "../services/core/admins.service";
 import { ComponentCommunicationService } from "../services/component-communication.service";
 import { MatDialog } from "@angular/material";
 import { AngularFirestore } from "@angular/fire/firestore";
@@ -100,8 +99,8 @@ export class TruckDetailsComponent implements OnInit, OnDestroy {
   subscriptions: Map<string, any> = new Map<string, any>();
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
 
-  constructor(public db: AngularFirestore,
-    private truckservice: TrucksService,
+  constructor(
+    public db: AngularFirestore,
     private notification: NotificationService,
     private orderservice: OrdersService,
     private adminservice: AdminsService,
@@ -180,14 +179,14 @@ export class TruckDetailsComponent implements OnInit, OnDestroy {
       });
     dialogRef.afterClosed().pipe(takeUntil(this.comopnentDestroyed)).subscribe(result => {
       if (result) {
-        this.truckservice.updatetruck(truck.Id).update(truck).then(value => {
-          this.notification.notify({
-            body: "Saved",
-            alert_type: "success",
-            title: "Success",
-            duration: 2000
-          });
-        });
+        // this.truckservice.updatetruck(truck.Id).update(truck).then(value => {
+        //   this.notification.notify({
+        //     body: "Saved",
+        //     alert_type: "success",
+        //     title: "Success",
+        //     duration: 2000
+        //   });
+        // });
       }
     });
   }
@@ -252,22 +251,22 @@ export class TruckDetailsComponent implements OnInit, OnDestroy {
         this.componentcommunication.truckDeleted.next(true);
         this.order.loaded = false;
         const batchaction = this.db.firestore.batch();
-        batchaction.update(this.orderservice.updateorder(this.clickedtruck.Id), this.order);
-        batchaction.delete(this.truckservice.updatetruck(this.clickedtruck.Id));
-        batchaction.commit().then(result => {
-          /**
-           * unsubscribe after truck is deleted
-           */
-          this.subscriptions.get(`truck`)();
-          this.componentcommunication.clickedorder.next(null);
+        // batchaction.update(this.orderservice.updateorder(this.clickedtruck.Id), this.order);
+        // batchaction.delete(this.truckservice.updatetruck(this.clickedtruck.Id));
+        // batchaction.commit().then(result => {
+        //   /**
+        //    * unsubscribe after truck is deleted
+        //    */
+        //   this.subscriptions.get(`truck`)();
+        //   this.componentcommunication.clickedorder.next(null);
 
-          this.notification.notify({
-            body: "Truck deleted",
-            title: "Deleted",
-            alert_type: "warning",
-            duration: 2000
-          });
-        });
+        //   this.notification.notify({
+        //     body: "Truck deleted",
+        //     title: "Deleted",
+        //     alert_type: "warning",
+        //     duration: 2000
+        //   });
+        // });
       }
 
     });
@@ -287,21 +286,23 @@ export class TruckDetailsComponent implements OnInit, OnDestroy {
     dialogRef.afterClosed().pipe(takeUntil(this.comopnentDestroyed)).subscribe(result => {
       if (result) {
         truck.stagedata[1].user = this.adminservice.createuserobject();
-        truck.stagedata[1].data.expiry = [{ time: "00:45:00", timestamp: moment().add(45, "minutes").toDate() }];
-        truck.stagedata[2].data.expiry = [];
-        truck.stagedata[3].data.expiry = [];
-        truck.isPrinted = false;
-        // @ts-ignore
-        truck.isprinted = false;
+        truck.stagedata[1].expiry = [
+          {
+            duration: "00:45:00",
+            timeCreated: firestore.Timestamp.now(),
+            expiry: firestore.Timestamp.fromDate(moment().add(45, "minutes").toDate())
+          }];
+        truck.stagedata[2].expiry = [];
+        truck.stagedata[3].expiry = [];
         truck.stage = 1;
-        this.truckservice.updatetruck(truck.Id).update(truck).then(value => {
-          this.notification.notify({
-            body: "Truck reset",
-            alert_type: "success",
-            title: "Success",
-            duration: 2000
-          });
-        });
+        // this.truckservice.updatetruck(truck.Id).update(truck).then(value => {
+        //   this.notification.notify({
+        //     body: "Truck reset",
+        //     alert_type: "success",
+        //     title: "Success",
+        //     duration: 2000
+        //   });
+        // });
       }
     });
   }

@@ -13,10 +13,8 @@ import { firestore } from "firebase";
 import { ReasonComponent } from "../reason/reason.component";
 import { ExcelService } from "../services/excel-service.service";
 import { ColumnsCustomizerComponent } from "../columns-customizer/columns-customizer.component";
-import { AdminsService } from "../services/admins.service";
+import { AdminsService } from "../services/core/admins.service";
 import { OrdersService } from "../services/orders.service";
-import { TrucksService } from "../services/trucks.service";
-import { ColNode } from "../../models/ColNode";
 import { ComponentCommunicationService } from "../services/component-communication.service";
 import { switchMap, takeUntil } from "rxjs/operators";
 import { ReplaySubject } from "rxjs";
@@ -48,7 +46,6 @@ const EXCEL_EXTENSION = ".xlsx";
 
 export class OrdersTableComponent implements OnInit, OnDestroy {
 
-  @Input() queryparams: MatTreeNestedDataSource<ColNode>;
   position = "above";
   position1 = "before";
   position2 = "after";
@@ -65,14 +62,14 @@ export class OrdersTableComponent implements OnInit, OnDestroy {
   @ViewChild(MatSort, { static: false }) sort: MatSort;
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
 
-  constructor(private route: ActivatedRoute,
+  constructor(
+    private route: ActivatedRoute,
     private dialog: MatDialog,
     private db: AngularFirestore,
     private notification: NotificationService,
     private excelService: ExcelService,
     private adminservice: AdminsService,
     private orderservice: OrdersService,
-    private truckservice: TrucksService,
     private componentcommunication: ComponentCommunicationService) {
 
     this.orderservice.loadingorders.subscribe(value => {
@@ -81,7 +78,7 @@ export class OrdersTableComponent implements OnInit, OnDestroy {
 
     this.route.params.pipe(takeUntil(this.comopnentDestroyed))
       .pipe(switchMap((paramdata: { stage: number }) => {
-        if (paramdata.stage == 4) {
+        if (paramdata.stage === 4) {
           this.ordercolumns.splice(4, 0, "Time Approved");
         }
         return orderservice.orders[paramdata.stage].pipe(takeUntil(this.comopnentDestroyed));
@@ -130,7 +127,7 @@ export class OrdersTableComponent implements OnInit, OnDestroy {
       Id: null,
       company: {
         QbId: clickedOrder.company.QbId,
-        contactname: clickedOrder.company.contact.name,
+        contactname: clickedOrder.company.contact[0].name,
         Id: clickedOrder.company.Id,
         name: clickedOrder.company.name,
         phone: clickedOrder.company.phone
@@ -171,22 +168,7 @@ export class OrdersTableComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    if (this.queryparams) {
-      this.orderservice.querybuild(this.queryparams).get().then((snapshot) => {
-        const customerorders = snapshot.docs.map(doc => {
-          const value = doc.data();
-          value.Id = doc.id;
-          return value as Order;
-        });
-        if (customerorders.length > 0) {
-          if (!this.stage) {
-            this.ordersdataSource.data = customerorders;
-          }
-        } else {
-          this.ordersdataSource.data = customerorders;
-        }
-      });
-    }
+
   }
 
   ngAfterViewInit() {
@@ -219,7 +201,7 @@ export class OrdersTableComponent implements OnInit, OnDestroy {
         order.stagedata["6"].user = this.adminservice.createuserobject();
         order.stagedata["6"].data = { reason: result };
 
-        this.orderservice.updateorder(order.Id).update(order).then(result => {
+        this.orderservice.updateorder(order.Id, order).then(result => {
           this.notification.notify({
             body: `Order # ${order.QbId} Deleted. It will be permanently deleted after 1 week`,
             title: "Deleted",
@@ -249,7 +231,7 @@ export class OrdersTableComponent implements OnInit, OnDestroy {
       uid: null,
       name: null
     };
-    this.orderservice.updateorder(order.Id).update(order).then(result => {
+    this.orderservice.updateorder(order.Id, order).then(result => {
       this.notification.notify({
         body: `Order # ${order.QbId} Restored`,
         alert_type: "success",
@@ -272,16 +254,16 @@ export class OrdersTableComponent implements OnInit, OnDestroy {
         return;
       }
       const batchaction = this.db.firestore.batch();
-      batchaction.set(this.truckservice.createTruck(result.truck.Id), result.truck);
-      batchaction.update(this.orderservice.updateorder(result.order.Id), result.order);
-      batchaction.commit().then(result => {
-        this.notification.notify({
-          body: "Truck created",
-          alert_type: "success",
-          title: "Success",
-          duration: 2000
-        });
-      });
+      // batchaction.set(this.truckservice.createTruck(result.truck.Id), result.truck);
+      // batchaction.update(this.orderservice.updateorder(result.order.Id), result.order);
+      // batchaction.commit().then(result => {
+      //   this.notification.notify({
+      //     body: "Truck created",
+      //     alert_type: "success",
+      //     title: "Success",
+      //     duration: 2000
+      //   });
+      // });
     });
 
   }

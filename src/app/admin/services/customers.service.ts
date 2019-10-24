@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Customer } from "../../models/Customer";
 import { AngularFirestore } from "@angular/fire/firestore";
-import { DepotsService } from "./depots.service";
+import { DepotsService } from "./core/depots.service";
 import { BehaviorSubject, Observable } from "rxjs";
 import { AngularFireFunctions } from "@angular/fire/functions";
 import { distinctUntilKeyChanged } from "rxjs/operators";
@@ -12,7 +12,7 @@ import { distinctUntilKeyChanged } from "rxjs/operators";
 export class CustomerService {
   allcompanies: BehaviorSubject<Array<Customer>> = new BehaviorSubject<Array<Customer>>([]);
   loadingcompanies: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
-  depotAttachedCompany: string = "";
+  depotAttachedCompany = "";
 
   /**
    * this keeps a local copy of all the subscriptions within this service
@@ -21,8 +21,8 @@ export class CustomerService {
 
 
   constructor(private db: AngularFirestore,
-    private depotsservice: DepotsService,
-    private functions: AngularFireFunctions) {
+              private depotsservice: DepotsService,
+              private functions: AngularFireFunctions) {
     this.depotsservice.activedepot.pipe(distinctUntilKeyChanged("companyId")).subscribe(depot => {
       if (depot.Id) {
         this.depotAttachedCompany = depot.companyId;
@@ -50,7 +50,7 @@ export class CustomerService {
 
   getallcompanies() {
     this.loadingcompanies.next(true);
-    let subscriprion = this.db.firestore.collection("companies")
+    const subscriprion = this.db.firestore.collection("companies")
       .where("sandbox", "==", this.depotsservice.activedepot.value.sandbox)
       .onSnapshot(snapshot => {
         this.allcompanies.next(snapshot.docs.map(value => {
@@ -75,7 +75,7 @@ export class CustomerService {
    */
   verifykra(krapin: string) {
     return this.db.firestore.collection("companies")
-      .where('krapin', "==", krapin);
+      .where("krapin", "==", krapin);
   }
 
   querycompanies(companyname: string, maxstring: string) {
