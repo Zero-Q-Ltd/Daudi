@@ -13,7 +13,7 @@ import { firestore } from "firebase";
 import { ReasonComponent } from "../reason/reason.component";
 import { ExcelService } from "../services/excel-service.service";
 import { ColumnsCustomizerComponent } from "../columns-customizer/columns-customizer.component";
-import { AdminsService } from "../services/admins.service";
+import { AdminsService } from "../services/core/admins.service";
 import { OrdersService } from "../services/orders.service";
 import { TrucksService } from "../services/trucks.service";
 import { ColNode } from "../../models/ColNode";

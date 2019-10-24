@@ -3,8 +3,8 @@ import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
 import { Admin } from "../../models/Admin";
-import { DepotsService } from "../services/depots.service";
-import { AdminsService } from "../services/admins.service";
+import { DepotsService } from "../services/core/depots.service";
+import { AdminsService } from "../services/core/admins.service";
 import { NotificationService } from "../../shared/services/notification.service";
 
 @Injectable({

@@ -5,10 +5,10 @@ import { NotificationService } from "../../shared/services/notification.service"
 import { FormControl, Validators } from "@angular/forms";
 import { Order } from "../../models/Order";
 import { emptytruck, Truck } from "../../models/Truck";
-import { AdminsService } from "../services/admins.service";
+import { AdminsService } from "../services/core/admins.service";
 import { fueltypesArray } from "../../models/Fueltypes";
 import { OrdersService } from "../services/orders.service";
-import { DepotsService } from "../services/depots.service";
+import { DepotsService } from "../services/core/depots.service";
 import { ReplaySubject } from "rxjs";
 
 @Component({
@@ -36,11 +36,11 @@ export class CompartmentsComponent implements OnInit, OnDestroy {
 
   // added to constructor to inject the data
   constructor(@Inject(MAT_DIALOG_DATA) public order: Order,
-    private notification: NotificationService,
-    private orderservice: OrdersService,
-    private depotservice: DepotsService,
-    private dialogRef: MatDialogRef<OrderDetailsComponent>,
-    private adminservice: AdminsService) {
+              private notification: NotificationService,
+              private orderservice: OrdersService,
+              private depotservice: DepotsService,
+              private dialogRef: MatDialogRef<OrderDetailsComponent>,
+              private adminservice: AdminsService) {
 
   }
 

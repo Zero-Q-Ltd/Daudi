@@ -4,7 +4,7 @@ import { firestore } from "firebase";
 import * as moment from "moment";
 import { BehaviorSubject } from "rxjs";
 import { AngularFirestore } from "@angular/fire/firestore";
-import { DepotsService } from "./depots.service";
+import { DepotsService } from "./core/depots.service";
 import { Depot } from "../../models/Depot";
 import { ColNode } from "../../models/ColNode";
 import { MatTreeNestedDataSource } from "@angular/material";

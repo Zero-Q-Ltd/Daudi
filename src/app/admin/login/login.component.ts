@@ -3,7 +3,7 @@ import { Router } from "@angular/router";
 import { AngularFireAuth } from "@angular/fire/auth";
 import * as firebase from "firebase";
 import { NotificationService } from "../../shared/services/notification.service";
-import { AdminsService } from "../services/admins.service";
+import { AdminsService } from "../services/core/admins.service";
 import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 

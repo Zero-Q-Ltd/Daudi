@@ -8,7 +8,7 @@ import { Options } from "ng5-slider";
 import { NotificationService } from "../../shared/services/notification.service";
 import { BatchesSelectorComponent } from "../batches-selector/batches-selector.component";
 import { OrdersService } from "../services/orders.service";
-import { AdminsService } from "../services/admins.service";
+import { AdminsService } from "../services/core/admins.service";
 import { ComponentCommunicationService } from "../services/component-communication.service";
 import { MatDialog } from "@angular/material";
 import { AngularFirestore } from "@angular/fire/firestore";

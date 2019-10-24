@@ -1,6 +1,6 @@
 import {Injectable} from "@angular/core";
 import {AngularFirestore} from "@angular/fire/firestore";
-import {DepotsService} from "./depots.service";
+import {DepotsService} from "./core/depots.service";
 import {BehaviorSubject} from "rxjs";
 import {ipnmodel} from "../../models/universal";
 import {distinctUntilKeyChanged} from "rxjs/operators";
@@ -36,7 +36,7 @@ export class PaymentsService {
   }
 
   getunprocessedpayments(): void {
-    let subscription = this.db.firestore.collection(this.sandoox ? this.sandboxdbstring : this.proddbstring)
+    const subscription = this.db.firestore.collection(this.sandoox ? this.sandboxdbstring : this.proddbstring)
       .where("daudiFields.status", "==", 0)
       .onSnapshot(snapshot => {
         this.unprocessedpayments.next(snapshot.docs.map(value => value.data() as ipnmodel));

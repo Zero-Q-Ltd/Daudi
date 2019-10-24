@@ -3,7 +3,7 @@ import { fueltypesArray } from "../../models/Fueltypes";
 import { Batch, emptybatches } from "../../models/Batch";
 import { BehaviorSubject } from "rxjs";
 import { AngularFirestore } from "@angular/fire/firestore";
-import { DepotsService } from "./depots.service";
+import { DepotsService } from "./core/depots.service";
 import { fuelTypes } from "../../models/universal";
 import { Depot } from "../../models/Depot";
 

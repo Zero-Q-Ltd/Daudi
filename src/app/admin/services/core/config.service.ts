@@ -2,12 +2,12 @@ import { Injectable } from "@angular/core";
 import { AngularFirestore } from "@angular/fire/firestore";
 import { AdminsService } from "./admins.service";
 import { BehaviorSubject } from "rxjs";
-import { CompanyConfig, emptycompanydata } from "../../models/CompayConfig";
+import { CompanyConfig, emptycompanydata } from "../../../models/Config";
 
 @Injectable({
   providedIn: "root"
 })
-export class CompanyService {
+export class ConfigService {
   companydata: BehaviorSubject<CompanyConfig> = new BehaviorSubject<CompanyConfig>({ ...emptycompanydata });
 
   constructor(private db: AngularFirestore, private adminservice: AdminsService) {

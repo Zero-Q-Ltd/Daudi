@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import { AngularFireFunctions } from "@angular/fire/functions";
 import { ipnmodel } from "../../../../models/universal";
-import { AdminsService } from "../../../services/admins.service";
+import { AdminsService } from "../../../services/core/admins.service";
 import { NotificationService } from "../../../../shared/services/notification.service";
 import { MatDialog, MatPaginator, MatSort, MatTableDataSource } from "@angular/material";
 import { PaymentsService } from "../../../services/payments.service";

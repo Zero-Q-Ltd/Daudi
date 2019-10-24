@@ -8,7 +8,7 @@ import { emptystat, Stat } from "../../../models/Stats";
 import { FormControl } from "@angular/forms";
 import { Router } from "@angular/router";
 import { MatSnackBar } from "@angular/material";
-import { DepotsService } from "../../services/depots.service";
+import { DepotsService } from "../../services/core/depots.service";
 import { BatchesService } from "../../services/batches.service";
 import { StatsService } from "../../services/stats.service";
 import { PricesService } from "../../services/prices.service";
@@ -83,11 +83,11 @@ export class StatsComponent implements OnInit, OnDestroy {
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
 
   constructor(private router: Router,
-    public snackBar: MatSnackBar,
-    private depotservice: DepotsService,
-    private batcheservice: BatchesService,
-    private statservice: StatsService,
-    private priceservice: PricesService) {
+              public snackBar: MatSnackBar,
+              private depotservice: DepotsService,
+              private batcheservice: BatchesService,
+              private statservice: StatsService,
+              private priceservice: PricesService) {
     this.depotservice.activedepot.pipe(takeUntil(this.comopnentDestroyed)).subscribe(depot => {
       this.dateControl.valueChanges.pipe(takeUntil(this.comopnentDestroyed)).subscribe(value => {
         const a = moment(value.begin);

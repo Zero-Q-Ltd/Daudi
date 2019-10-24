@@ -5,7 +5,7 @@ import { OrdersService } from "../../../services/orders.service";
 import { TrucksService } from "../../../services/trucks.service";
 import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators"; // get our service
-import { DepotsService } from "../../../services/depots.service";
+import { DepotsService } from "../../../services/core/depots.service";
 import { Depot, emptydepot } from "../../../../models/Depot";
 
 @Component({

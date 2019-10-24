@@ -33,61 +33,39 @@ export interface Truck {
 
   driverdetail: {
     name: string,
-    id: string
+    id: string,
+    phone: string
   };
   truckdetail: {
     numberplate: string;
   };
-  isPrinted: boolean;
 
-  stagedata: {
-
-    0: {
-      user: User,
-      data: {},
-    },
-    1: {
-      user: User,
-      data: {
-        expiry: Array<Expiries>
-      },
-    },
-    2: {
-      user: User,
-      data: {
-        expiry: Array<Expiries>
-        // Inside here we store the expiry time vs the approximated time
-        // I.e
-        /*
-         1164666616 : 45,
-         1516815165 : 15
-        */
-      },
-    },
-    3: {
-      user: User,
-      data: {
-        expiry: Array<Expiries>
-      },
-    },
-    4: {
-      user: User,
-      data: {
-        seals: {
-          range: string,
-          broken: Array<string>
-        }
-      },
-    },
-  };
+  stagedata: Array<StageData>;
   compartments: Array<Compartment>;
+}
+export interface StageData {
+  user: User;
+  /**
+   * This data only exists for stages that have print functionality
+   */
+  print?: {
+    status: boolean,
+    timestamp: firebase.firestore.Timestamp | Date;
+  };
+  expiry: Array<Expiries>;
+  /**
+   * only the last stage has seals
+   */
+  seals?: {
+    range: string,
+    broken: Array<string>
+  };
 }
 
 export const emptytruck: Truck = {
   stage: null,
   Id: null,
 
-  isPrinted: false,
 
   frozen: false,
   driverdetail: {
@@ -97,36 +75,7 @@ export const emptytruck: Truck = {
   truckdetail: {
     numberplate: null
   },
-  stagedata: {
-    0: {
-      data: {
-        expiry: []
-      },
-      user: inituser
-    },
-    1: {
-      data: {
-        expiry: []
-      },
-      user: inituser
-    },
-    2: {
-      data: {
-        expiry: []
-      },
-      user: inituser
-    },
-    3: {
-      data: {
-        expiry: []
-      },
-      user: inituser
-    },
-    4: {
-      data: null,
-      user: inituser
-    }
-  },
+  stagedata: [],
   compartments: [
     { fueltype: null, qty: 0 }, { fueltype: null, qty: 0 },
     { fueltype: null, qty: 0 }, { fueltype: null, qty: 0 },

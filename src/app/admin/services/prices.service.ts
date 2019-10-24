@@ -1,12 +1,12 @@
-import {Injectable} from "@angular/core";
-import {fuelTypes} from "../../models/universal";
+import { Injectable } from "@angular/core";
+import { fuelTypes } from "../../models/universal";
 import * as moment from "moment";
-import {AngularFirestore} from "@angular/fire/firestore";
-import {Depot} from "../../models/Depot";
-import {DepotsService} from "./depots.service";
-import {BehaviorSubject} from "rxjs";
-import {fueltypesArray} from "../../models/Fueltypes";
-import {Price} from "../../models/Price";
+import { AngularFirestore } from "@angular/fire/firestore";
+import { Depot } from "../../models/Depot";
+import { DepotsService } from "./core/depots.service";
+import { BehaviorSubject } from "rxjs";
+import { fueltypesArray } from "../../models/Fueltypes";
+import { Price } from "../../models/Price";
 
 @Injectable({
   providedIn: "root"
@@ -21,22 +21,22 @@ export class PricesService {
       prices: BehaviorSubject<Array<Price>>
     }
   } = {
-    pms: {
-      total: new BehaviorSubject<number>(0),
-      avg: new BehaviorSubject<number>(0),
-      prices: new BehaviorSubject<Array<Price>>([])
-    },
-    ago: {
-      total: new BehaviorSubject<number>(0),
-      avg: new BehaviorSubject<number>(0),
-      prices: new BehaviorSubject<Array<Price>>([])
-    },
-    ik: {
-      total: new BehaviorSubject<number>(0),
-      avg: new BehaviorSubject<number>(0),
-      prices: new BehaviorSubject<Array<Price>>([])
-    }
-  };
+      pms: {
+        total: new BehaviorSubject<number>(0),
+        avg: new BehaviorSubject<number>(0),
+        prices: new BehaviorSubject<Array<Price>>([])
+      },
+      ago: {
+        total: new BehaviorSubject<number>(0),
+        avg: new BehaviorSubject<number>(0),
+        prices: new BehaviorSubject<Array<Price>>([])
+      },
+      ik: {
+        total: new BehaviorSubject<number>(0),
+        avg: new BehaviorSubject<number>(0),
+        prices: new BehaviorSubject<Array<Price>>([])
+      }
+    };
   /**
    * this keeps a local copy of all the subscriptions within this service
    */

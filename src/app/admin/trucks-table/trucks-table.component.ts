@@ -11,7 +11,7 @@ import { ExcelService } from "../services/excel-service.service";
 import { ColumnsCustomizerComponent } from "../columns-customizer/columns-customizer.component";
 import { TrucksService } from "../services/trucks.service";
 import { ColNode } from "../../models/ColNode";
-import { DepotsService } from "../services/depots.service";
+import { DepotsService } from "../services/core/depots.service";
 import { ReplaySubject } from "rxjs";
 import { switchMap, takeUntil } from "rxjs/operators";
 
@@ -59,10 +59,10 @@ export class TrucksTableComponent implements OnInit {
   @Input() queryparams: MatTreeNestedDataSource<ColNode>;
 
   constructor(private dialog: MatDialog,
-    private route: ActivatedRoute,
-    private excelService: ExcelService,
-    private truckservice: TrucksService,
-    private depotservice: DepotsService) {
+              private route: ActivatedRoute,
+              private excelService: ExcelService,
+              private truckservice: TrucksService,
+              private depotservice: DepotsService) {
 
     /**
      * propagate changes when depot changes

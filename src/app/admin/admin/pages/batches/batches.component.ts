@@ -3,7 +3,7 @@ import { fueltypesArray } from "../../../../models/Fueltypes";
 import { MatPaginator, MatTableDataSource } from "@angular/material";
 import { Batch, emptybatches } from "../../../../models/Batch";
 import { fuelTypes } from "../../../../models/universal";
-import { DepotsService } from "../../../services/depots.service";
+import { DepotsService } from "../../../services/core/depots.service";
 import { BatchesService } from "../../../services/batches.service";
 import { syncrequest } from "../../../../models/Sync";
 import { firestore } from "firebase";

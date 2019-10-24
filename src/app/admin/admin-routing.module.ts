@@ -12,7 +12,6 @@ import { TruckDetailsComponent } from "./truck-details/truck-details.component";
 import { PageNotFoundComponent } from "./page-not-found/page-not-found.component";
 import { DashboardComponent } from "./dashboard/dashboard.component";
 import { ArchiveComponent } from "./archive/archive.component";
-import { AdminChatComponent } from "./admin/pages/admin-chat/admin-chat.component";
 import { LoginComponent } from "./login/login.component";
 import { LayoutComponent } from "./layout/layout.component";
 import { UsersGuard } from "./guards/users.guard";
@@ -111,15 +110,7 @@ const routes: Routes = [
         },
         component: ArchiveComponent
       },
-      {
-        path: "admin-chat",
-        data: {
-          description: "Internal Admin Chat page",
-          configurable: true,
-
-        },
-        component: AdminChatComponent
-      }]
+    ]
   },
   {
     path: "login",

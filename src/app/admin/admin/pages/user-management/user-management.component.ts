@@ -7,14 +7,14 @@ import { syncrequest } from "../../../../models/Sync";
 import { firestore } from "firebase";
 import { animate, sequence, state, style, transition, trigger } from "@angular/animations";
 import { FormControl, Validators } from "@angular/forms";
-import { AdminsService } from "../../../services/admins.service";
-import { DepotsService } from "../../../services/depots.service";
+import { AdminsService } from "../../../services/core/admins.service";
+import { DepotsService } from "../../../services/core/depots.service";
 import { Depot } from "../../../../models/Depot";
 import { AngularFireFunctions } from "@angular/fire/functions";
 import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
-import { CompanyConfig, emptycompanydata } from "../../../../models/CompayConfig";
-import { CompanyService } from "../../../services/company.service";
+import { CompanyConfig, emptycompanydata } from "../../../../models/Config";
+import { ConfigService } from "../../../services/core/config.service";
 
 @Component({
   selector: "user-management",
@@ -55,7 +55,7 @@ export class UserManagementComponent implements OnInit, OnDestroy {
 
 
   constructor(
-    private companyservice: CompanyService,
+    private companyservice: ConfigService,
     private adminservice: AdminsService,
     private functions: AngularFireFunctions,
     private snackBar: MatSnackBar,

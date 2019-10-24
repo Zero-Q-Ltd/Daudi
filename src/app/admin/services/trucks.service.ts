@@ -3,7 +3,7 @@ import * as moment from "moment";
 import { emptytruck, Truck, truckqueryStagesarray, truckStages } from "../../models/Truck";
 import { BehaviorSubject } from "rxjs";
 import { AngularFirestore } from "@angular/fire/firestore";
-import { DepotsService } from "./depots.service";
+import { DepotsService } from "./core/depots.service";
 import { Depot } from "../../models/Depot";
 
 @Injectable({

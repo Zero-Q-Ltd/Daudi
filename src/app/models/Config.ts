@@ -1,6 +1,6 @@
 import { AdminType } from "./AdminType";
 import { Metadata, emptymetadata, Meta, fuelTypes } from "./universal";
-import * as firebase from "firebase";
+import { firestore } from "firebase";
 
 export interface CompanyConfig {
     location: firebase.firestore.GeoPoint;
@@ -10,7 +10,10 @@ export interface CompanyConfig {
     description: string;
     status: boolean;
     contactperson: Array<ContactPerson>;
-
+    qbo: {
+        live: QBOconfig,
+        sandbox: QBOconfig
+    };
     fuelconfig: {
         [key in fuelTypes]: string
     };
@@ -50,10 +53,15 @@ export const emptycompanydata: CompanyConfig = {
         ik: null,
         pms: null
     },
+    qbo: {
+        live: { ...emptyqbo },
+        sandbox: { ...emptyqbo }
+    },
+
     /**
      * make default location Somewhere in nbi
      */
-    location: new firebase.firestore.GeoPoint(-1.3373943, 36.7208522),
+    location: new firestore.GeoPoint(-1.3373943, 36.7208522),
     name: null,
     id: null,
     userid: null,
@@ -78,3 +86,36 @@ export const emptycompanydata: CompanyConfig = {
     ]
 };
 
+
+export interface QBOconfig {
+    companyid: number;
+    clientid: string;
+    clientSecret: string;
+    webhooksverifier: string;
+    issandbox: boolean;
+    authconfig: {
+        previousDCT: firestore.Timestamp;
+        accessToken: string;
+        refreshtoken: string;
+        accesstokenExpiry: firestore.Timestamp;
+        refreshtokenExpiry: firestore.Timestamp;
+        time: firestore.Timestamp;
+        // add more entities if required
+    };
+}
+
+export const emptyqbo: QBOconfig = {
+    companyid: 0,
+    clientid: "",
+    clientSecret: "",
+    webhooksverifier: "",
+    issandbox: true,
+    authconfig: {
+        previousDCT: firestore.Timestamp.fromDate(new Date()),
+        accessToken: "",
+        refreshtoken: "",
+        accesstokenExpiry: firestore.Timestamp.fromDate(new Date()),
+        refreshtokenExpiry: firestore.Timestamp.fromDate(new Date()),
+        time: firestore.Timestamp.fromDate(new Date())
+    }
+};

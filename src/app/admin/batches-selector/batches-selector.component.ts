@@ -7,9 +7,9 @@ import { Batch } from "../../models/Batch";
 import { emptytruck, Truck } from "../../models/Truck";
 import { fuelTypes } from "../../models/universal";
 import { emptyorder, Order } from "../../models/Order";
-import { AdminsService } from "../services/admins.service";
+import { AdminsService } from "../services/core/admins.service";
 import { fueltypesArray } from "../../models/Fueltypes";
-import { DepotsService } from "../services/depots.service";
+import { DepotsService } from "../services/core/depots.service";
 import { BatchesService } from "../services/batches.service";
 import { TrucksService } from "../services/trucks.service";
 import { OrdersService } from "../services/orders.service";
@@ -134,14 +134,14 @@ export class BatchesSelectorComponent implements OnInit, OnDestroy {
   subscriptions: Map<string, any> = new Map<string, any>();
 
   constructor(public dialogRef: MatDialogRef<BatchesSelectorComponent>,
-    @Inject(MAT_DIALOG_DATA) private truckid: string,
-    private notification: NotificationService,
-    private db: AngularFirestore,
-    private adminservice: AdminsService,
-    private depotsservice: DepotsService,
-    private batchesservice: BatchesService,
-    private trucksservice: TrucksService,
-    private ordersservice: OrdersService) {
+              @Inject(MAT_DIALOG_DATA) private truckid: string,
+              private notification: NotificationService,
+              private db: AngularFirestore,
+              private adminservice: AdminsService,
+              private depotsservice: DepotsService,
+              private batchesservice: BatchesService,
+              private trucksservice: TrucksService,
+              private ordersservice: OrdersService) {
     fueltypesArray.forEach((fueltype: fuelTypes) => {
       this.batchesservice.depotbatches[fueltype].pipe(takeUntil(this.comopnentDestroyed)).subscribe((batches: Array<Batch>) => {
         // console.log(batches);

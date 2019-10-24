@@ -4,8 +4,8 @@ import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from
 import { Observable } from "rxjs";
 import { Admin } from "../../models/Admin";
 import { NotificationService } from "../../shared/services/notification.service";
-import { AdminsService } from "../services/admins.service";
-import { DepotsService } from "../services/depots.service"; // get our service
+import { AdminsService } from "../services/core/admins.service";
+import { DepotsService } from "../services/core/depots.service"; // get our service
 
 @Injectable()
 export class UsersGuard implements CanActivate {

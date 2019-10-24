@@ -8,9 +8,9 @@ import { syncrequest } from "../../../../models/Sync";
 import { SMS } from "../../../../models/sms";
 import { NotificationService } from "../../../../shared/services/notification.service";
 import { SelectionModel } from "@angular/cdk/collections";
-import { AdminsService } from "../../../services/admins.service";
+import { AdminsService } from "../../../services/core/admins.service";
 import { CustomerService } from "../../../services/customers.service";
-import { DepotsService } from "../../../services/depots.service";
+import { DepotsService } from "../../../services/core/depots.service";
 import { AngularFireFunctions } from "@angular/fire/functions";
 import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
@@ -100,15 +100,15 @@ export class CustomerManagementComponent implements OnInit, OnDestroy {
 
   submitcompanies() {
     if (!this.purpose || this.purpose === "SMS") {
-      let sms: Array<SMS> = this.selection.selected.map(company => {
+      const sms: Array<SMS> = this.selection.selected.map(company => {
         return {
           Id: null,
           company: {
             QbId: company.QbId,
-            contactname: company.contact.name,
+            contactname: company.contact[0].name,
             Id: company.Id,
             name: company.name,
-            phone: company.contact.phone
+            phone: company.contact[0].phone
           },
           type: {
             reason: null,
@@ -198,8 +198,8 @@ export class CustomerManagementComponent implements OnInit, OnDestroy {
   }
 
   compileProperties(companyKey) {
-    this.dialogProperties["company"] = companyKey;
-    this.dialogProperties["archive"] = false;
+    this.dialogProperties.company = companyKey;
+    this.dialogProperties.archive = false;
     return this.dialogProperties;
   }
 
