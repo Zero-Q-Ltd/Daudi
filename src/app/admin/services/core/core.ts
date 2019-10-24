@@ -1,0 +1,1 @@
+import * as admin from "./admins.service";

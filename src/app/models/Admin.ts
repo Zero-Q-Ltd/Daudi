@@ -10,7 +10,6 @@ export interface Admin {
   Id: string;
   config: {
     level: string,
-    viewsandbox: boolean,
     app: {
       depotid: string,
     },
@@ -70,7 +69,6 @@ export const emptyadmin: Admin = {
   },
   Id: null,
   config: {
-    viewsandbox: false,
     level: null,
     approvedby: { ...inituser },
     app: {

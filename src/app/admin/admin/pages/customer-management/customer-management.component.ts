@@ -14,6 +14,7 @@ import { DepotsService } from "../../../services/core/depots.service";
 import { AngularFireFunctions } from "@angular/fire/functions";
 import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
+import { ConfigService } from "../../../services/core/config.service";
 
 @Component({
   selector: "customer-management",
@@ -35,15 +36,18 @@ export class CustomerManagementComponent implements OnInit, OnDestroy {
 
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
 
-  constructor(private snackBar: MatSnackBar, private dialog: MatDialog,
-    private depotservice: DepotsService,
+  constructor(
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog,
     private notification: NotificationService,
     private adminservice: AdminsService,
     private customerservice: CustomerService,
     private functions: AngularFireFunctions,
+    private config: ConfigService,
+    private depot: DepotsService,
     @Optional() public dialogRef: MatDialogRef<CustomerManagementComponent>,
     @Optional() @Inject(MAT_DIALOG_DATA) public purpose: "SMS" | "Attach") {
-    depotservice.activedepot.pipe(takeUntil(this.comopnentDestroyed))
+    this.depot.activedepot.pipe(takeUntil(this.comopnentDestroyed))
       .subscribe(depotvata => {
         this.companiesdatasource.data = [];
         this.loadingcompanies = true;
@@ -146,7 +150,7 @@ export class CustomerManagementComponent implements OnInit, OnDestroy {
     this.creatingsync = true;
 
     const syncobject: syncrequest = {
-      companyid: this.depotservice.activedepot.value.companyId,
+      companyid: this.depot.activedepot.value.this.config.companydata.value.qbo,
       time: firestore.Timestamp.now(),
       synctype: ["Customer"]
     };
@@ -195,12 +199,6 @@ export class CustomerManagementComponent implements OnInit, OnDestroy {
     filterValue = filterValue.trim(); // Remove whitespace
     filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
     this.companiesdatasource.filter = filterValue;
-  }
-
-  compileProperties(companyKey) {
-    this.dialogProperties.company = companyKey;
-    this.dialogProperties.archive = false;
-    return this.dialogProperties;
   }
 
   approve(company: Customer) {

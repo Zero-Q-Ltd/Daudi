@@ -10,10 +10,7 @@ export interface CompanyConfig {
     description: string;
     status: boolean;
     contactperson: Array<ContactPerson>;
-    qbo: {
-        live: QBOconfig,
-        sandbox: QBOconfig
-    };
+    qbconfig: QBOconfig;
     fuelconfig: {
         [key in fuelTypes]: string
     };

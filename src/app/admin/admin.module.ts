@@ -81,7 +81,6 @@ import { MatChipsModule } from "@angular/material/chips";
 import { FcmService } from "./services/fcm.service";
 import { AdminsService } from "./services/core/admins.service";
 import { OrdersService } from "./services/orders.service";
-import { TrucksService } from "./services/trucks.service";
 import { PricesService } from "./services/prices.service";
 import { PricingComponent } from "./pricing/pricing.component";
 import { OmcService } from "./services/omc.service";
@@ -201,7 +200,6 @@ import { CreateComponent } from "./admin/pages/payments/create/create.component"
     LayoutService,
     AdminsService,
     OrdersService,
-    TrucksService,
     PricesService,
     FcmService],
   entryComponents: [ConfirmDialogComponent,

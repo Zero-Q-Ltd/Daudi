@@ -2,7 +2,6 @@ import { Component, OnDestroy } from "@angular/core";
 import { orderStagesarray } from "../../../../models/Order";
 import { truckStagesarray } from "../../../../models/Truck";
 import { OrdersService } from "../../../services/orders.service";
-import { TrucksService } from "../../../services/trucks.service";
 import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators"; // get our service
 import { DepotsService } from "../../../services/core/depots.service";
@@ -34,13 +33,12 @@ export class AppSidenavMenuComponent implements OnDestroy {
   activedepot: Depot = Object.assign({}, emptydepot);
 
   constructor(private orderservice: OrdersService,
-              private depotservice: DepotsService,
-              private truckservice: TrucksService) {
+    private depotservice: DepotsService) {
     orderStagesarray.forEach(stage => {
       this.orderservice.orders[stage].pipe(takeUntil(this.comopnentDestroyed)).subscribe(orders => this.orderscount[stage] = orders.length);
     });
     truckStagesarray.forEach(stage => {
-      this.truckservice.trucks[stage].pipe(takeUntil(this.comopnentDestroyed)).subscribe(trucks => this.truckscount[stage] = trucks.length);
+      // this.truckservice.trucks[stage].pipe(takeUntil(this.comopnentDestroyed)).subscribe(trucks => this.truckscount[stage] = trucks.length);
     });
     this.depotservice.alldepots.pipe(takeUntil(this.comopnentDestroyed)).subscribe((alldepots: Array<Depot>) => {
       this.alldepots = alldepots;

@@ -36,11 +36,11 @@ export class CompartmentsComponent implements OnInit, OnDestroy {
 
   // added to constructor to inject the data
   constructor(@Inject(MAT_DIALOG_DATA) public order: Order,
-              private notification: NotificationService,
-              private orderservice: OrdersService,
-              private depotservice: DepotsService,
-              private dialogRef: MatDialogRef<OrderDetailsComponent>,
-              private adminservice: AdminsService) {
+    private notification: NotificationService,
+    private orderservice: OrdersService,
+    private depotservice: DepotsService,
+    private dialogRef: MatDialogRef<OrderDetailsComponent>,
+    private adminservice: AdminsService) {
 
   }
 
@@ -63,7 +63,7 @@ export class CompartmentsComponent implements OnInit, OnDestroy {
   setfueltype(index: number, fueltype) {
     this.truck.compartments[index].fueltype = fueltype;
     fueltypesArray.forEach(type => {
-      this.truck.fuel[type].qty = 0;
+      this.order.fuel[type].qty = 0;
     });
     this.truck.compartments.forEach((compartment, _) => {
       if (compartment.fueltype != null) {

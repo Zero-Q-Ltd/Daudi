@@ -11,7 +11,6 @@ import { fueltypesArray } from "../../../models/Fueltypes";
 import { OrdersService } from "../../services/orders.service";
 import { orderStagesarray } from "../../../models/Order";
 import { truckStagesarray } from "../../../models/Truck";
-import { TrucksService } from "../../services/trucks.service";
 import { PricesService } from "../../services/prices.service";
 import { fuelTypes } from "../../../models/universal";
 import { Price } from "../../../models/Price";
@@ -80,12 +79,11 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
 
   constructor(private router: Router,
-              private afAuth: AngularFireAuth,
-              private orderservice: OrdersService,
-              private truckservice: TrucksService,
-              private adminservice: AdminsService,
-              private depotservice: DepotsService,
-              private priceservice: PricesService) {
+    private afAuth: AngularFireAuth,
+    private orderservice: OrdersService,
+    private adminservice: AdminsService,
+    private depotservice: DepotsService,
+    private priceservice: PricesService) {
     this.depotservice.activedepot.pipe(takeUntil(this.comopnentDestroyed)).subscribe((depot: Depot) => {
       this.activedepot = depot;
     });
@@ -96,7 +94,7 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
       this.orderservice.orders[stage].pipe(takeUntil(this.comopnentDestroyed)).subscribe(orders => this.orderscount[stage] = orders.length);
     });
     truckStagesarray.forEach(stage => {
-      this.truckservice.trucks[stage].pipe(takeUntil(this.comopnentDestroyed)).subscribe(trucks => this.truckscount[stage] = trucks.length);
+      // this.truckservice.trucks[stage].pipe(takeUntil(this.comopnentDestroyed)).subscribe(trucks => this.truckscount[stage] = trucks.length);
     });
     this.adminservice.observableuserdata.pipe(takeUntil(this.comopnentDestroyed)).subscribe(admin => {
       this.currentuser = admin;

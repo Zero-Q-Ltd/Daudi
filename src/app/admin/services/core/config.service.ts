@@ -14,13 +14,13 @@ export class ConfigService {
     adminservice.observableuserdata
       .subscribe(admin => {
         if (admin) {
-          this.fetchcompany();
+          this.fetchcompany(admin.qbconfig.sandbox);
         }
       });
   }
-  fetchcompany() {
-    this.db.firestore.collection("companies")
-      .doc("default")
+  fetchcompany(sandbox: boolean) {
+    this.db.firestore.collection("config")
+      .doc(sandbox ? "sandbox" : "default")
       .onSnapshot(companydata => {
         if (!companydata.exists) {
           return;

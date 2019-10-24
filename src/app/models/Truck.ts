@@ -13,9 +13,10 @@ interface Compartment {
   qty: number;
 }
 
-interface Expiries {
-  time: string;
-  timestamp: firebase.firestore.Timestamp | Date;
+interface Expiry {
+  timeCreated: firebase.firestore.Timestamp;
+  duration: string;
+  expiry: firebase.firestore.Timestamp;
 }
 
 export interface Batch {
@@ -30,7 +31,7 @@ export interface Truck {
   Id: string;
 
   frozen: boolean;
-
+  compartmentCount: number;
   driverdetail: {
     name: string,
     id: string,
@@ -39,8 +40,12 @@ export interface Truck {
   truckdetail: {
     numberplate: string;
   };
-
-  stagedata: Array<StageData>;
+  /**
+   * This design is so as to allow complex queries on the map, as opposed to the limitations of an array
+   */
+  stagedata: {
+    [key in truckStages]: StageData
+  };
   compartments: Array<Compartment>;
 }
 export interface StageData {
@@ -52,7 +57,7 @@ export interface StageData {
     status: boolean,
     timestamp: firebase.firestore.Timestamp | Date;
   };
-  expiry: Array<Expiries>;
+  expiry: Array<Expiry>;
   /**
    * only the last stage has seals
    */
@@ -65,24 +70,19 @@ export interface StageData {
 export const emptytruck: Truck = {
   stage: null,
   Id: null,
-
-
+  compartmentCount: null,
   frozen: false,
   driverdetail: {
     id: null,
     name: null,
+    phone: null
   },
   truckdetail: {
     numberplate: null
   },
-  stagedata: [],
-  compartments: [
-    { fueltype: null, qty: 0 }, { fueltype: null, qty: 0 },
-    { fueltype: null, qty: 0 }, { fueltype: null, qty: 0 },
-    { fueltype: null, qty: 0 }, { fueltype: null, qty: 0 },
-    { fueltype: null, qty: 0 }]
+  stagedata: null,
+  compartments: []
 };
 
-export type truckStages = "0" | "1" | "2" | "3" | "4";
-export let truckStagesarray = ["0", "1", "2", "3", "4"];
-export let truckqueryStagesarray = ["1", "2", "3"];
+export type truckStages = "0" | "1" | "2" | "3" | "4" | "5";
+export let truckStagesarray = ["0", "1", "2", "3", "4", "5"];
