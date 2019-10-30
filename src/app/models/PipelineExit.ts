@@ -10,12 +10,11 @@ export interface PipelineExit {
 
     Name: string;
     Contact: {
-        phone: null,
-        name: null
+        phone: string,
+        name: string
     };
-
-    currentpriceconfig: {
-        [key in fuelTypes]: DepotPrice
+    hospitality: {
+        amnt: number
     };
     taxconfig: taxconfig;
     sandbox: boolean;

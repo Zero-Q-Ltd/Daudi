@@ -86,16 +86,17 @@ export class CreateOrderComponent implements OnInit, AfterViewInit, OnDestroy {
   subscriptions: Map<string, any> = new Map<string, any>();
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
 
-  constructor(private router: Router,
-              private notificationService: NotificationService,
-              private dialog: MatDialog,
-              private route: ActivatedRoute,
-              private adminservice: AdminsService,
-              private depotservice: DepotsService,
-              private companieservice: CustomerService,
-              private orderservice: OrdersService,
-              private priceservice: PricesService,
-              private functions: AngularFireFunctions) {
+  constructor(
+    private router: Router,
+    private notificationService: NotificationService,
+    private dialog: MatDialog,
+    private route: ActivatedRoute,
+    private adminservice: AdminsService,
+    private depotservice: DepotsService,
+    private companieservice: CustomerService,
+    private orderservice: OrdersService,
+    private priceservice: PricesService,
+    private functions: AngularFireFunctions) {
 
 
     this.route.params.pipe(takeUntil(this.comopnentDestroyed)).subscribe((paramdata: { orderid: string }) => {
@@ -156,13 +157,12 @@ export class CreateOrderComponent implements OnInit, AfterViewInit, OnDestroy {
         QbId: this.companyInfo.companydata.QbId,
         phone: value.phoneControl,
         name: this.companyControl.value,
-        email: value.emailControl,
         Id: null,
-        contact: {
+        contact: [{
           email: value.emailControl,
           name: value.nameControl,
           phone: value.phoneControl
-        },
+        }],
         krapin: value.kraControl
       };
     });
@@ -173,23 +173,23 @@ export class CreateOrderComponent implements OnInit, AfterViewInit, OnDestroy {
         this.orderform.controls.ikqtyControl.setErrors(null);
       }
       fueltypesArray.forEach((fueltype) => {
-        this.temporder.fuel[fueltype].qty = Number(value[fueltype + "qtyControl"]);
-        this.temporder.fuel[fueltype].priceconfig.price = Number(value[fueltype]);
-        this.temporder.fuel[fueltype].priceconfig.retailprice = this.tempsellingprices[fueltype];
-        this.temporder.fuel[fueltype].priceconfig.minsp = this.currentdepotconfig.minpriceconfig[fueltype].price;
-        const decimamlResolution = value[`${fueltype}qtyControl`] >= 10000 ? 4 : 3;
-        const calculatedpirces = this.deriveprice(this.temporder.fuel[fueltype].priceconfig.price, fueltype as fuelTypes, decimamlResolution);
-        this.temporder.fuel[fueltype].priceconfig.taxablePrice = calculatedpirces.taxablePrice;
-        this.temporder.fuel[fueltype].priceconfig.nonTaxprice = calculatedpirces.pricewithoutvat;
+        // this.temporder.fuel[fueltype].qty = Number(value[fueltype + "qtyControl"]);
+        // this.temporder.fuel[fueltype].priceconfig.price = Number(value[fueltype]);
+        // this.temporder.fuel[fueltype].priceconfig.retailprice = this.tempsellingprices[fueltype];
+        // this.temporder.fuel[fueltype].priceconfig.minsp = this.currentdepotconfig.minpriceconfig[fueltype].price;
+        // const decimamlResolution = value[`${fueltype}qtyControl`] >= 10000 ? 4 : 3;
+        // const calculatedpirces = this.deriveprice(this.temporder.fuel[fueltype].priceconfig.price, fueltype as fuelTypes, decimamlResolution);
+        // this.temporder.fuel[fueltype].priceconfig.taxablePrice = calculatedpirces.taxablePrice;
+        // this.temporder.fuel[fueltype].priceconfig.nonTaxprice = calculatedpirces.pricewithoutvat;
 
-        const taxcalculations = this.calculatevatamount(this.temporder.fuel[fueltype].priceconfig.taxablePrice, this.temporder.fuel[fueltype].qty);
-        this.temporder.fuel[fueltype].priceconfig.taxAmnt = taxcalculations.taxamount;
-        this.temporder.fuel[fueltype].priceconfig.taxableAmnt = taxcalculations.taxableamount;
+        // const taxcalculations = this.calculatevatamount(this.temporder.fuel[fueltype].priceconfig.taxablePrice, this.temporder.fuel[fueltype].qty);
+        // this.temporder.fuel[fueltype].priceconfig.taxAmnt = taxcalculations.taxamount;
+        // this.temporder.fuel[fueltype].priceconfig.taxableAmnt = taxcalculations.taxableamount;
 
-        const totalwithouttax = this.totalswithouttax(this.temporder.fuel[fueltype].priceconfig.nonTaxprice, this.temporder.fuel[fueltype].qty);
-        this.temporder.fuel[fueltype].priceconfig.nonTaxtotal = totalwithouttax;
-        this.temporder.fuel[fueltype].priceconfig.total = taxcalculations.taxamount + totalwithouttax;
-        this.temporder.fuel[fueltype].priceconfig.difference = this.calculateupmark(this.temporder.fuel[fueltype].priceconfig.price, this.temporder.fuel[fueltype].priceconfig.retailprice, this.temporder.fuel[fueltype].qty);
+        // const totalwithouttax = this.totalswithouttax(this.temporder.fuel[fueltype].priceconfig.nonTaxprice, this.temporder.fuel[fueltype].qty);
+        // this.temporder.fuel[fueltype].priceconfig.nonTaxtotal = totalwithouttax;
+        // this.temporder.fuel[fueltype].priceconfig.total = taxcalculations.taxamount + totalwithouttax;
+        // this.temporder.fuel[fueltype].priceconfig.difference = this.calculateupmark(this.temporder.fuel[fueltype].priceconfig.price, this.temporder.fuel[fueltype].priceconfig.retailprice, this.temporder.fuel[fueltype].qty);
 
         this.validateandcorrect();
       });
@@ -252,8 +252,8 @@ export class CreateOrderComponent implements OnInit, AfterViewInit, OnDestroy {
   initfuelprices() {
     if (!this.discApproval) {
       fueltypesArray.forEach((fueltype) => {
-        this.temporder.fuel[fueltype].priceconfig.taxQbId = this.currentdepotconfig.taxconfig[fueltype].QbId ? this.currentdepotconfig.taxconfig[fueltype].QbId : null;
-        this.temporder.fuel[fueltype].priceconfig.nonTax = this.currentdepotconfig.taxconfig[fueltype].nonTax ? Number(this.currentdepotconfig.taxconfig[fueltype].nonTax) : null;
+        // this.temporder.fuel[fueltype].priceconfig.taxQbId = this.currentdepotconfig.taxconfig[fueltype].QbId ? this.currentdepotconfig.taxconfig[fueltype].QbId : null;
+        // this.temporder.fuel[fueltype].priceconfig.nonTax = this.currentdepotconfig.taxconfig[fueltype].nonTax ? Number(this.currentdepotconfig.taxconfig[fueltype].nonTax) : null;
         /**
          * force the form to detect a change so that calculations are redone
          */
@@ -269,290 +269,289 @@ export class CreateOrderComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   initordersform() {
-    if (!this.discApproval) {
-      this.temporder.notifications = {
-        sms: !this.currentdepotconfig.sandbox,
-        email: !this.currentdepotconfig.sandbox
-      };
+    // if (!this.discApproval) {
+    //   this.temporder.notifications = {
+    //     sms: !this.currentdepotconfig.sandbox,
+    //     email: !this.currentdepotconfig.sandbox
+    //   };
 
-      fueltypesArray.forEach((fueltype) => {
-        /**
-         * Make sure that the current selling price is lower than the min selling price for that batch
-         */
-        if (this.currentdepotconfig.currentpriceconfig[fueltype].price >= this.currentdepotconfig.minpriceconfig[fueltype].price) {
-          this.tempsellingprices[fueltype] = this.currentdepotconfig.currentpriceconfig[fueltype].price;
-        } else {
-          this.tempsellingprices[fueltype] = this.currentdepotconfig.minpriceconfig[fueltype].price;
-          this.notificationService.notify({
-            alert_type: "notify",
-            duration: 20000,
-            title: "Invalid Prices",
-            body: `The current selling price for ${fueltype} is lower than the Min selling price, hence the Min selling price has been used`
-          });
-        }
-        this.orderform.controls[fueltype].setValue(this.temporder.fuel[fueltype].priceconfig.price = this.tempsellingprices[fueltype]);
-        this.orderform.controls[fueltype].setValidators(Validators.compose([Validators.min(this.currentdepotconfig.minpriceconfig[fueltype].price), Validators.required]));
-      });
-    } else {
-      fueltypesArray.forEach((fueltype) => {
-        this.orderform.controls[fueltype].setValue(this.temporder.fuel[fueltype].priceconfig.price = this.tempsellingprices[fueltype]);
-        this.orderform.controls[fueltype].setValidators(Validators.compose([Validators.min(this.currentdepotconfig.minpriceconfig[fueltype].price), Validators.required]));
-      });
-
-    }
+    //   fueltypesArray.forEach((fueltype) => {
+    //     /**
+    //      * Make sure that the current selling price is lower than the min selling price for that batch
+    //      */
+    //     if (this.currentdepotconfig.currentpriceconfig[fueltype].price >= this.currentdepotconfig.minpriceconfig[fueltype].price) {
+    //       this.tempsellingprices[fueltype] = this.currentdepotconfig.currentpriceconfig[fueltype].price;
+    //     } else {
+    //       this.tempsellingprices[fueltype] = this.currentdepotconfig.minpriceconfig[fueltype].price;
+    //       this.notificationService.notify({
+    //         alert_type: "notify",
+    //         duration: 20000,
+    //         title: "Invalid Prices",
+    //         body: `The current selling price for ${fueltype} is lower than the Min selling price, hence the Min selling price has been used`
+    //       });
+    //     }
+    //     this.orderform.controls[fueltype].setValue(this.temporder.fuel[fueltype].priceconfig.price = this.tempsellingprices[fueltype]);
+    //     this.orderform.controls[fueltype].setValidators(Validators.compose([Validators.min(this.currentdepotconfig.minpriceconfig[fueltype].price), Validators.required]));
+    //   });
+    // } else {
+    //   fueltypesArray.forEach((fueltype) => {
+    //     this.orderform.controls[fueltype].setValue(this.temporder.fuel[fueltype].priceconfig.price = this.tempsellingprices[fueltype]);
+    //     this.orderform.controls[fueltype].setValidators(Validators.compose([Validators.min(this.currentdepotconfig.minpriceconfig[fueltype].price), Validators.required]));
+    //   });
 
   }
 
-  openmaps() {
-    const dialogRef = this.dialog.open(MapsComponent,
-      {
-        data: this.currentdepotconfig
-      });
-    dialogRef.disableClose = true;
-    dialogRef.afterClosed().pipe(takeUntil(this.comopnentDestroyed)).subscribe((result) => {
-      if (result !== false) {
-        console.log(result);
-      }
+}
+
+openmaps(); {
+  const dialogRef = this.dialog.open(MapsComponent,
+    {
+      data: this.currentdepotconfig
     });
-  }
-
-
-  ngOnInit() {
-    this.filteredCompanies = this.companyControl.valueChanges
-      .pipe(
-        startWith(""),
-        map(value => {
-          // this.contactform.reset();
-          return this._filter(value);
-        })
-      );
-  }
-
-  ngAfterViewInit() {
-    this.depotsdataSource.sort = this.sort;
-  }
-
-  applyFilter(filterValue: string) {
-    this.depotsdataSource.filter = filterValue.trim().toLowerCase();
-  }
-
-  /**
-   * Returns true if this KRA pin has not been used
-   */
-  searchkra(krapin: string): Customer | undefined {
-    return this.companieservice.allcompanies.value.filter(value => {
-      return value.krapin === krapin;
-    })[0];
-  }
-
-  determinediscount() {
-    if ((this.temporder.fuel.pms.priceconfig.difference + this.temporder.fuel.ago.priceconfig.difference
-      + this.temporder.fuel.ik.priceconfig.difference) > 0) {
-      return "Upmark " + Number(this.temporder.fuel.pms.priceconfig.difference +
-        this.temporder.fuel.ago.priceconfig.difference + this.temporder.fuel.ik.priceconfig.difference);
-    } else {
-      return "Discount " + Math.abs(Number(this.temporder.fuel.pms.priceconfig.difference +
-        this.temporder.fuel.ago.priceconfig.difference + this.temporder.fuel.ik.priceconfig.difference));
+  dialogRef.disableClose = true;
+  dialogRef.afterClosed().pipe(takeUntil(this.comopnentDestroyed)).subscribe((result) => {
+    if (result !== false) {
+      console.log(result);
     }
-  }
+  });
+}
 
+
+ngOnInit(); {
+  this.filteredCompanies = this.companyControl.valueChanges
+    .pipe(
+      startWith(""),
+      map(value => {
+        // this.contactform.reset();
+        return this._filter(value);
+      })
+    );
+}
+
+ngAfterViewInit(); {
+  this.depotsdataSource.sort = this.sort;
+}
+
+applyFilter(filterValue: string); {
+  this.depotsdataSource.filter = filterValue.trim().toLowerCase();
+}
+
+/**
+ * Returns true if this KRA pin has not been used
+ */
+searchkra(krapin: string);: Customer | undefined; {
+  return this.companieservice.allcompanies.value.filter(value => {
+    return value.krapin === krapin;
+  })[0];
+}
+
+determinediscount(); {
+  if ((this.temporder.fuel.pms.priceconfig.difference + this.temporder.fuel.ago.priceconfig.difference
+    + this.temporder.fuel.ik.priceconfig.difference) > 0) {
+    return "Upmark " + Number(this.temporder.fuel.pms.priceconfig.difference +
+      this.temporder.fuel.ago.priceconfig.difference + this.temporder.fuel.ik.priceconfig.difference);
+  } else {
+    return "Discount " + Math.abs(Number(this.temporder.fuel.pms.priceconfig.difference +
+      this.temporder.fuel.ago.priceconfig.difference + this.temporder.fuel.ik.priceconfig.difference));
+  }
+}
+
+/**
+ *
+ * redirect specifies whether to redirect to the orders page when the order creation is successful
+ */
+checkOrder(redirect: boolean); {
   /**
-   *
-   * redirect specifies whether to redirect to the orders page when the order creation is successful
+   * Check if an order is being approved
    */
-  checkOrder(redirect: boolean) {
-    /**
-     * Check if an order is being approved
-     */
-    const dialogRef = this.dialog.open(ConfirmDepotComponent,
-      {
-        role: "dialog",
-        data: this.currentdepotconfig.Name
-      });
-    dialogRef.afterClosed().pipe(takeUntil(this.comopnentDestroyed)).subscribe(result => {
-      if (result) {
-        if (this.discApproval) {
-          if (this.userAuthenticated()) {
-            this.saveOrder(redirect, 2);
-          } else {
-            this.notificationService.notify({
-              alert_type: "warning",
-              body: "You cannot perform this action",
-              duration: 2000,
-              title: "Not Authenticated"
-            });
-          }
-        } else {
-          /**
-           * Check if there is a discount request
-           * Discount has a -ve value
-           */
-          if (this.temporder.fuel.pms.priceconfig.difference < 0
-            || this.temporder.fuel.ago.priceconfig.difference < 0
-            || this.temporder.fuel.ik.priceconfig.difference < 0) {
-            this.saveOrder(redirect, this.userAuthenticated() ? 2 : 1);
-          } else {
-            this.saveOrder(redirect, 2);
-          }
-        }
-
-      }
+  const dialogRef = this.dialog.open(ConfirmDepotComponent,
+    {
+      role: "dialog",
+      data: this.currentdepotconfig.Name
     });
-  }
-
-  userAuthenticated(): boolean {
-    return Number(this.adminservice.userdata.config.level) < 2;
-  }
-
-  saveOrder(redirect: boolean, stage: number) {
-    this.temporder.stage = stage;
-    this.temporder.origin = "backend";
-    this.temporder.fuel.pms.QbId = this.currentdepotconfig.fuelconfig.pms;
-    this.temporder.fuel.ago.QbId = this.currentdepotconfig.fuelconfig.ago;
-    this.temporder.fuel.ik.QbId = this.currentdepotconfig.fuelconfig.ik;
-    this.temporder.company.krapin = this.temporder.company.krapin.toLocaleUpperCase();
-    this.temporder.stagedata["1"] = {
-      user: this.adminservice.createuserobject(),
-      data: null
-    };
-    this.temporder.config = {
-      depot: {
-        name: this.currentdepotconfig.Name,
-        Id: this.currentdepotconfig.Id
-      },
-      companyId: this.currentdepotconfig.companyId,
-      sandbox: this.currentdepotconfig.sandbox
-    };
-    if (this.companyInfo.newcompany) {
-      // check if KRA pin is unique
-      /**
-       * Todo : USe transaction instead
-       */
-      this.companyInfo.companydata.sandbox = this.currentdepotconfig.sandbox;
-      this.companyInfo.companydata.krapin = this.temporder.company.krapin;
-      if (this.searchkra(this.companyInfo.companydata.krapin)) {
-        /**
-         * This KRA pin has been used
-         */
-        this.krausedmsg(this.companyInfo.companydata.krapin);
-      } else {
-        this.companieservice.createcompany(this.companyInfo.companydata).pipe(takeUntil(this.comopnentDestroyed)).subscribe((newcompany: Customer) => {
+  dialogRef.afterClosed().pipe(takeUntil(this.comopnentDestroyed)).subscribe(result => {
+    if (result) {
+      if (this.discApproval) {
+        if (this.userAuthenticated()) {
+          this.saveOrder(redirect, 2);
+        } else {
           this.notificationService.notify({
+            alert_type: "warning",
+            body: "You cannot perform this action",
             duration: 2000,
-            title: "Synchronising",
-            body: "Waiting For Quickboocks",
-            alert_type: "notify"
+            title: "Not Authenticated"
           });
-          this.companyInfo.companydata = newcompany;
-          this.temporder.company.QbId = newcompany.QbId;
-          this.temporder.company.name = newcompany.name.toUpperCase();
-          this.createorder(redirect);
-        });
+        }
+      } else {
+        /**
+         * Check if there is a discount request
+         * Discount has a -ve value
+         */
+        if (this.temporder.fuel.pms.priceconfig.difference < 0
+          || this.temporder.fuel.ago.priceconfig.difference < 0
+          || this.temporder.fuel.ik.priceconfig.difference < 0) {
+          this.saveOrder(redirect, this.userAuthenticated() ? 2 : 1);
+        } else {
+          this.saveOrder(redirect, 2);
+        }
       }
 
-    } else {
-      console.log("Not new company");
-      console.log(this.temporder);
+    }
+  });
+}
+
+userAuthenticated();: boolean; {
+  return Number(this.adminservice.userdata.config.level) < 2;
+}
+
+saveOrder(redirect: boolean, stage: number); {
+  this.temporder.stage = stage;
+  this.temporder.origin = "backend";
+  // this.temporder.fuel.pms.QbId = this.currentdepotconfig.fuelconfig.pms;
+  // this.temporder.fuel.ago.QbId = this.currentdepotconfig.fuelconfig.ago;
+  // this.temporder.fuel.ik.QbId = this.currentdepotconfig.fuelconfig.ik;
+  // this.temporder.company.krapin = this.temporder.company.krapin.toLocaleUpperCase();
+  // this.temporder.stagedata["1"] = {
+  //   user: this.adminservice.createuserobject(),
+  //   data: null
+  // };
+  // this.temporder.config = {
+  //   depot: {
+  //     name: this.currentdepotconfig.Name,
+  //     Id: this.currentdepotconfig.Id
+  //   },
+  //   companyId: this.currentdepotconfig.companyId,
+  //   sandbox: this.currentdepotconfig.sandbox
+  // };
+  if (this.companyInfo.newcompany) {
+    // check if KRA pin is unique
+    /**
+     * Todo : USe transaction instead
+     */
+    // this.companyInfo.companydata.sandbox = this.currentdepotconfig.sandbox;
+    this.companyInfo.companydata.krapin = this.temporder.company.krapin;
+    if (this.searchkra(this.companyInfo.companydata.krapin)) {
       /**
-       * Conditionally update company if information has changed
+       * This KRA pin has been used
        */
-      if (this.temporder.company.krapin !== this.companyInfo.companydata.krapin || JSON.stringify(this.temporder.company.contact) !== JSON.stringify(this.companyInfo.companydata.contact)) {
+      this.krausedmsg(this.companyInfo.companydata.krapin);
+    } else {
+      this.companieservice.createcompany(this.companyInfo.companydata).pipe(takeUntil(this.comopnentDestroyed)).subscribe((newcompany: Customer) => {
         this.notificationService.notify({
           duration: 2000,
-          title: "Updating",
-          body: "Updating Company Info",
+          title: "Synchronising",
+          body: "Waiting For Quickboocks",
           alert_type: "notify"
         });
+        this.companyInfo.companydata = newcompany;
+        this.temporder.company.QbId = newcompany.QbId;
+        this.temporder.company.name = newcompany.name.toUpperCase();
+        this.createorder(redirect);
+      });
+    }
+
+  } else {
+    console.log("Not new company");
+    console.log(this.temporder);
+    /**
+     * Conditionally update company if information has changed
+     */
+    if (this.temporder.company.krapin !== this.companyInfo.companydata.krapin || JSON.stringify(this.temporder.company.contact) !== JSON.stringify(this.companyInfo.companydata.contact)) {
+      this.notificationService.notify({
+        duration: 2000,
+        title: "Updating",
+        body: "Updating Company Info",
+        alert_type: "notify"
+      });
+      /**
+       * Check if kra pin has been modified and update if so
+       */
+      if (this.temporder.company.krapin !== this.companyInfo.companydata.krapin) {
         /**
-         * Check if kra pin has been modified and update if so
+         * make sure the kra pin is unique
          */
-        if (this.temporder.company.krapin !== this.companyInfo.companydata.krapin) {
+        if (this.searchkra(this.temporder.company.krapin)) {
           /**
-           * make sure the kra pin is unique
+           * this KRA pin has been used
            */
-          if (this.searchkra(this.temporder.company.krapin)) {
-            /**
-             * this KRA pin has been used
-             */
-            this.krausedmsg(this.companyInfo.companydata.krapin);
-          } else {
-            this.updatecompany().then(() => {
-              this.createorder(redirect);
-            });
-          }
+          this.krausedmsg(this.companyInfo.companydata.krapin);
         } else {
           this.updatecompany().then(() => {
             this.createorder(redirect);
           });
         }
       } else {
-        this.createorder(redirect);
+        this.updatecompany().then(() => {
+          this.createorder(redirect);
+        });
       }
-    }
-  }
-
-  companyselect(selectedcompany: Customer) {
-    this.companyInfo.newcompany = false;
-    this.companyInfo.companydata = selectedcompany;
-    this.contactform.controls.kraControl.setValue(selectedcompany.krapin, { emitEvent: false });
-    this.contactform.controls.nameControl.setValue(selectedcompany.contact.name, { emitEvent: false });
-    this.contactform.controls.phoneControl.setValue(selectedcompany.contact.phone, { emitEvent: false });
-    this.contactform.controls.emailControl.setValue(selectedcompany.contact.email, { emitEvent: false });
-    this.temporder.company.QbId = selectedcompany.QbId;
-    this.temporder.company.name = selectedcompany.name;
-    this.temporder.company.krapin = selectedcompany.krapin;
-    this.temporder.company.email = selectedcompany.contact.email;
-    this.temporder.company.phone = selectedcompany.contact.phone;
-    this.temporder.company.contact = selectedcompany.contact;
-  }
-
-  krausedmsg(krapin: string) {
-    const companyused = this.searchkra(krapin);
-    this.notificationService.notify({
-      duration: 2000,
-      title: "Error",
-      body: `This KRA pin is already used by ${companyused.name} Id ${companyused.QbId} `,
-      alert_type: "error"
-    });
-  }
-
-  updatecompany() {
-    return this.companieservice.updatecompany(this.companyInfo.companydata.Id).update(this.temporder.company);
-  }
-
-  createorder(redirect) {
-    this.orderservice.createorder(this.temporder);
-    if (redirect) {
-      /**
-       * navigate away from the page if the user intends fro it
-       */
-      this.router.navigate(["admin/orders-table/1"]);
     } else {
-      /**
-       * reset fields in preparation fro a new order
-       */
-      this.contactform.reset();
-      this.companyControl.reset();
-      this.orderform.reset();
-      /**
-       * re-populate the prices
-       */
-      this.initfuelprices();
-      this.initordersform();
+      this.createorder(redirect);
     }
-    this.notificationService.notify({
-      duration: 2000,
-      title: "Queued",
-      body: "Order will be processed in the background"
-    });
   }
+}
 
-  private _filter(value: string): Customer[] {
-    if (!value) {
-      return;
-    }
-    const filterValue = value.toLowerCase();
+companyselect(selectedcompany: Customer); {
+  this.companyInfo.newcompany = false;
+  this.companyInfo.companydata = selectedcompany;
+  this.contactform.controls.kraControl.setValue(selectedcompany.krapin, { emitEvent: false });
+  this.contactform.controls.nameControl.setValue(selectedcompany.contact[0].name, { emitEvent: false });
+  this.contactform.controls.phoneControl.setValue(selectedcompany.contact[0].phone, { emitEvent: false });
+  this.contactform.controls.emailControl.setValue(selectedcompany.contact[0].email, { emitEvent: false });
+  this.temporder.company.QbId = selectedcompany.QbId;
+  this.temporder.company.name = selectedcompany.name;
+  this.temporder.company.krapin = selectedcompany.krapin;
+  this.temporder.company.phone = selectedcompany.contact[0].phone;
+  this.temporder.company.contact = selectedcompany.contact;
+}
 
-    return this.companieservice.allcompanies.value.filter(option => option.name.toLowerCase().includes(filterValue));
+krausedmsg(krapin: string); {
+  const companyused = this.searchkra(krapin);
+  this.notificationService.notify({
+    duration: 2000,
+    title: "Error",
+    body: `This KRA pin is already used by ${companyused.name} Id ${companyused.QbId} `,
+    alert_type: "error"
+  });
+}
+
+updatecompany(); {
+  return this.companieservice.updatecompany(this.companyInfo.companydata.Id).update(this.temporder.company);
+}
+
+createorder(redirect); {
+  this.orderservice.createorder(this.temporder);
+  if (redirect) {
+    /**
+     * navigate away from the page if the user intends fro it
+     */
+    this.router.navigate(["admin/orders-table/1"]);
+  } else {
+    /**
+     * reset fields in preparation fro a new order
+     */
+    this.contactform.reset();
+    this.companyControl.reset();
+    this.orderform.reset();
+    /**
+     * re-populate the prices
+     */
+    this.initfuelprices();
+    this.initordersform();
   }
+  this.notificationService.notify({
+    duration: 2000,
+    title: "Queued",
+    body: "Order will be processed in the background"
+  });
+}
+
+  private _filter(value: string);: Customer[]; {
+  if (!value) {
+    return;
+  }
+  const filterValue = value.toLowerCase();
+
+  return this.companieservice.allcompanies.value.filter(option => option.name.toLowerCase().includes(filterValue));
+}
 }

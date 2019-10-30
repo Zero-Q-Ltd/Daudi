@@ -38,7 +38,7 @@ export interface Order {
   };
   discount?: {
     approved: {
-      approved: boolean,
+      status: boolean,
       user: User,
       data: {},
     },

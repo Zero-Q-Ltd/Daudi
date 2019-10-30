@@ -15,7 +15,7 @@ export interface Depot {
     name: null
   };
 
-  currentpriceconfig: {
+  price: {
     [key in fuelTypes]: DepotPrice
   };
   Location: firebase.firestore.GeoPoint;
@@ -38,8 +38,7 @@ export const emptydepot: Depot = {
     phone: null,
     name: null
   },
-
-  currentpriceconfig: {
+  price: {
     pms: {
       user: inituser,
       price: null

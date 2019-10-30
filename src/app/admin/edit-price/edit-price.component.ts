@@ -154,8 +154,8 @@ export class EditPriceComponent implements OnInit, OnDestroy {
             Id: null
           };
           batchaction.set(this.priceservice.createprice(), tempprice);
-          this.activedepot.currentpriceconfig[fueltype].price = tempprice.price;
-          this.activedepot.currentpriceconfig[fueltype].user = tempprice.user;
+          this.activedepot.price[fueltype].price = tempprice.price;
+          this.activedepot.price[fueltype].user = tempprice.user;
           batchaction.update(this.depotservice.updatedepot(), this.activedepot);
           batchaction.commit().then(res => {
             this.saving = false;

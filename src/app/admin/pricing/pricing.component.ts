@@ -73,11 +73,11 @@ export class PricingComponent implements OnInit, OnDestroy {
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
 
   constructor(private dialog: MatDialog,
-              private db: AngularFirestore,
-              private depotservice: DepotsService,
-              private notificationService: NotificationService,
-              private adminservice: AdminsService,
-              private priceservice: PricesService) {
+    private db: AngularFirestore,
+    private depotservice: DepotsService,
+    private notificationService: NotificationService,
+    private adminservice: AdminsService,
+    private priceservice: PricesService) {
 
     this.adminservice.connectionStatus.pipe(takeUntil(this.comopnentDestroyed)).subscribe(status => {
       this.connectionStatus = status;
@@ -136,8 +136,8 @@ export class PricingComponent implements OnInit, OnDestroy {
             Id: null
           };
           batchaction.set(this.priceservice.createprice(), tempprice);
-          this.activedepot.currentpriceconfig[fueltype].price = tempprice.price;
-          this.activedepot.currentpriceconfig[fueltype].user = tempprice.user;
+          this.activedepot.price[fueltype].price = tempprice.price;
+          this.activedepot.price[fueltype].user = tempprice.user;
           batchaction.update(this.depotservice.updatedepot(), this.activedepot);
           batchaction.commit().then(res => {
             this.saving = false;

@@ -132,14 +132,13 @@ export class BatchesComponent implements OnInit {
         title: "Success"
       });
     });
-
   }
 
   getTotalAvailable(batch: Entry) {
-    const totalqty = batch.qty;
-    const loadedqty = batch.loadedqty;
-    const accumulated = batch.accumulated;
-    return totalqty - loadedqty + accumulated.usable;
+    const totalqty = batch.qty.total;
+    const totalLoaded = batch.qty.directLoad.total + batch.qty.transfered;
+    const accumulated = batch.qty.directLoad.accumulated;
+    return totalqty - totalLoaded + accumulated.usable;
   }
 
   ngOnInit() {
