@@ -4,8 +4,8 @@ import * as moment from "moment";
 import { ActivatedRoute } from "@angular/router";
 import { animate, sequence, state, style, transition, trigger } from "@angular/animations";
 import { SendMsgComponent } from "../send-msg/send-msg.component";
-import { emptytruck, Truck } from "../../models/Truck";
-import { SMS } from "../../models/sms";
+import { emptytruck, Truck } from "../../models/order/Truck";
+import { SMS } from "../../models/sms/sms";
 import { firestore } from "firebase";
 import { ExcelService } from "../services/excel-service.service";
 import { ColumnsCustomizerComponent } from "../columns-customizer/columns-customizer.component";
@@ -13,7 +13,7 @@ import { DepotsService } from "../services/core/depots.service";
 import { ReplaySubject } from "rxjs";
 import { switchMap, takeUntil } from "rxjs/operators";
 import { OrdersService as OrderService } from "../services/orders.service";
-import { Order } from "src/app/models/Order";
+import { Order } from "src/app/models/order/Order";
 
 @Component({
   selector: "trucks-table",

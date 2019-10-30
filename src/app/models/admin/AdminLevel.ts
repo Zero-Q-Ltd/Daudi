@@ -1,4 +1,4 @@
-import { Metadata } from './universal';
+import { Metadata } from "../universal/Metadata";
 
 export interface AdminLevel {
   name: string;

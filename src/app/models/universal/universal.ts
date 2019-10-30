@@ -1,50 +1,32 @@
-//This is te universal model to be used with cloud firestore
-import { firestore } from "firebase";
-
-export type fuelTypes = "pms" | "ago" | "ik"
+import { Metadata } from "./Metadata";
+import { User } from "./User";
 
 export const inituser = {
   name: null,
   time: null,
   uid: null
 };
-export type User = {
-  uid: string,
-  name: string,
-  time: firestore.Timestamp,
-}
 
-export interface Metadata {
-  /**
-   * Sometimes we may just want to modify the last edited date
-   */
-  created?: Meta;
-  edited: Meta;
-}
 
-export interface Meta {
-  date: Date;
-  adminId: string;
-}
 export const emptymetadata: Metadata = {
   created: null,
   edited: null,
 };
 
 export interface ipnmodel {
-  billNumber: string,
-  billAmount: number,
-  currencyCode: "KES",
-  customerRefNumber: number,
-  bankreference: string,
-  tranParticular: string,
-  paymentMode: string,
-  phonenumber: number,
-  debitaccount: number,
-  debitcustname: string,
-  passwowrd: string,
-  username: string,
-  transactionDate: Date
+  billNumber: string;
+  billAmount: number;
+  currencyCode: "KES";
+  customerRefNumber: number;
+  bankreference: string;
+  tranParticular: string;
+  paymentMode: string;
+  phonenumber: number;
+  debitaccount: number;
+  debitcustname: string;
+  passwowrd: string;
+  username: string;
+  transactionDate: Date;
   daudiFields: {
     companyid: string,
     sandbox: boolean,
@@ -60,46 +42,9 @@ export interface ipnmodel {
     errordetail?: any,
     approvedby?: User,
     bank: "equity" | "kcb",
-  }
+  };
 }
 
-
-export type QbTypes =
-  "Account" |
-  "Attachable" |
-  "Batch" |
-  "Bill" |
-  "BillPayment" |
-  "Budget" |
-  "ChangeDataCapture" |
-  "Class" |
-  "CompanyInfo" |
-  "CreditMemo" |
-  "Customer" |
-  "Department" |
-  "Deposit" |
-  "Employee" |
-  "Estimate" |
-  "Invoice" |
-  "Item" |
-  "JournalEntry" |
-  "Payment" |
-  "PaymentMethod" |
-  "Preferences" |
-  "Purchase" |
-  "PurchaseOrder" |
-  "RefundReceipt" |
-  "Reports" |
-  "SalesReceipt" |
-  "TaxAgency" |
-  "TaxCode" |
-  "TaxRate" |
-  "TaxService" |
-  "Term" |
-  "TimeActivity" |
-  "Transfer" |
-  "Vendor" |
-  "VendorCredit"
 
 export const zmprovinces = [
   {
@@ -155,7 +100,7 @@ export const zmprovinces = [
 ];
 export const kecounties = [
   {
-    id: 30, name: "Baringo", fine: [//Baringo
+    id: 30, name: "Baringo", fine: [// Baringo
       { id: "30-1", name: "Baringo Central" },
       { id: "30-2", name: "Baringo North" },
       { id: "30-3", name: "Baringo South" },
@@ -165,7 +110,7 @@ export const kecounties = [
     ]
   },
   {
-    id: 36, name: "Bomet", fine: [//Bomet
+    id: 36, name: "Bomet", fine: [// Bomet
       { id: "36-1", name: "Baringo Central" },
       { id: "36-2", name: "Baringo East" },
       { id: "36-3", name: "Chepalungu" },
@@ -174,7 +119,7 @@ export const kecounties = [
     ]
   },
   {
-    id: 39, name: "Bungoma", fine: [//Bungoma
+    id: 39, name: "Bungoma", fine: [// Bungoma
       { id: "39-1", name: "Baringo Central" },
       { id: "39-2", name: "Baringo East" },
       { id: "39-3", name: "Chepalungu" },
@@ -184,7 +129,7 @@ export const kecounties = [
   },
   {
     id: 40, name: "Busia", fine: [
-      //Busia
+      // Busia
       { id: "40-1", name: "Budalangi" },
       { id: "40-2", name: "Butula" },
       { id: "40-3", name: "Funyula" },
@@ -195,7 +140,7 @@ export const kecounties = [
     ]
   },
   {
-    id: 28, name: "Elgeyo Marakwet", fine: [ //Elgeyo Marakwet
+    id: 28, name: "Elgeyo Marakwet", fine: [ // Elgeyo Marakwet
       { id: "28-1", name: "Keiyo North" },
       { id: "28-2", name: "Keiyo South" },
       { id: "28-3", name: "Marakwet East" },
@@ -204,7 +149,7 @@ export const kecounties = [
   },
   {
     id: 14, name: "Embu", fine: [
-      //Embu
+      // Embu
       { id: "14-1", name: "Manyatta" },
       { id: "14-2", name: "Mbeere North" },
       { id: "14-3", name: "Mbeere South" },
@@ -213,7 +158,7 @@ export const kecounties = [
   },
   {
     id: 7, name: "Garissa", fine: [
-      //Garissa
+      // Garissa
       { id: "7-1", name: "Dadaab" },
       { id: "7-2", name: "Fafi" },
       { id: "7-3", name: "Garissa Township" },
@@ -225,7 +170,7 @@ export const kecounties = [
   {
     id: 43, name: "Homa Bay", fine: [
 
-      //Homa Bay
+      // Homa Bay
       { id: "43-1", name: "Mbita" },
       { id: "43-2", name: "Ndhiwa" },
       { id: "43-3", name: "HB Town" },
@@ -330,7 +275,7 @@ export const kecounties = [
   },
   {
     id: 45, name: "Kisii", fine: [
-      //Kisii
+      // Kisii
       { id: "45-1", name: "Bobasi" },
       { id: "45-2", name: "Bonchari" },
       { id: "45-3", name: "Bomachoge Borabu" },
@@ -343,7 +288,7 @@ export const kecounties = [
   },
   {
     id: 42, name: "Kisumu", fine: [
-      //Kisumu
+      // Kisumu
       { id: "42-1", name: "Kisumu Central" },
       { id: "42-2", name: "Kisumu East" },
       { id: "42-3", name: "Kisumu West" },
@@ -355,7 +300,7 @@ export const kecounties = [
   },
   {
     id: 15, name: "Kitui", fine: [
-      //Kitui
+      // Kitui
       { id: "15-1", name: "Kitui Central" },
       { id: "15-2", name: "Kitui East" },
       { id: "15-3", name: "Kitui West" },
@@ -369,7 +314,7 @@ export const kecounties = [
   },
   {
     id: 2, name: "Kwale", fine: [
-      //Kwale
+      // Kwale
       { id: "2-1", name: "Kinango" },
       { id: "2-2", name: "Lunga Lunga" },
       { id: "2-3", name: "Matuga" },
@@ -378,7 +323,7 @@ export const kecounties = [
   },
   {
     id: 31, name: "Laikipia", fine: [
-      //Laikipia
+      // Laikipia
       { id: "31-1", name: "Laikipia East" },
       { id: "31-2", name: "Laikipia West" },
       { id: "31-3", name: "Laikipia North" }
@@ -387,14 +332,14 @@ export const kecounties = [
   },
   {
     id: 5, name: "Lamu", fine: [
-      //Lamu
+      // Lamu
       { id: "5-1", name: "Lamu East" },
       { id: "5-2", name: "Lamu West" }
     ]
   },
   {
     id: 16, name: "Machakos", fine: [
-      //Machakos
+      // Machakos
       { id: "16-1", name: "Kangundo" },
       { id: "16-2", name: "Kathiani" },
       { id: "16-3", name: "Machakos Town" },
@@ -407,7 +352,7 @@ export const kecounties = [
   },
   {
     id: 17, name: "Makueni", fine: [
-      //Makueni
+      // Makueni
       { id: "17-1", name: "Kaiti" },
       { id: "17-2", name: "Kibwezi East" },
       { id: "17-3", name: "Kibwezi West" },
@@ -418,7 +363,7 @@ export const kecounties = [
   },
   {
     id: 9, name: "Mandera", fine: [
-      //Mandera
+      // Mandera
       { id: "9-1", name: "Banisa" },
       { id: "9-2", name: "Lafey" },
       { id: "9-3", name: "Mandera East" },
@@ -429,7 +374,7 @@ export const kecounties = [
   },
   {
     id: 10, name: "Marsabit", fine: [
-      //Marsabit
+      // Marsabit
       { id: "10-1", name: "Laisamis" },
       { id: "10-2", name: "Moyale" },
       { id: "10-3", name: "North Horr" },
@@ -438,7 +383,7 @@ export const kecounties = [
   },
   {
     id: 12, name: "Meru", fine: [
-      //Meru
+      // Meru
       { id: "12-1", name: "Buuri" },
       { id: "12-2", name: "Central Imenti" },
       { id: "12-3", name: "Igembe Central" },
@@ -451,7 +396,7 @@ export const kecounties = [
   },
   {
     id: 44, name: "Migori", fine: [
-      //Migori
+      // Migori
       { id: "44-1", name: "Nyatike" },
       { id: "44-2", name: "Migori" },
       { id: "44-3", name: "Rongo" },
@@ -460,7 +405,7 @@ export const kecounties = [
   },
   {
     id: 1, name: "Mombasa", fine: [
-      //Mombasa
+      // Mombasa
       { id: "12-1", name: "Changamwe" },
       { id: "12-2", name: "Kisauni" },
       { id: "12-3", name: "Likoni" },
@@ -469,7 +414,7 @@ export const kecounties = [
   },
   {
     id: 21, name: "Muranga", fine: [
-      //Murang'a
+      // Murang'a
       { id: "21-1", name: "Gatanga" },
       { id: "21-2", name: "Kandara" },
       { id: "21-3", name: "Kangema" },
@@ -481,7 +426,7 @@ export const kecounties = [
   },
   {
     id: 47, name: "Nairobi", fine: [
-      //Nairobi
+      // Nairobi
       { id: "47-1", name: "Westlands" },
       { id: "47-2", name: "Dagoretti North" },
       { id: "47-3", name: "Dagoretti North" },
@@ -504,7 +449,7 @@ export const kecounties = [
   },
   {
     id: 32, name: "Nakuru", fine: [
-      //Nakuru
+      // Nakuru
       { id: "32-1", name: "Naivasha" },
       { id: "32-2", name: "Nakuru Town West" },
       { id: "32-3", name: "Nakuru Town East" },
@@ -520,7 +465,7 @@ export const kecounties = [
   },
   {
     id: 29, name: "Nandi", fine: [
-      //Nandi
+      // Nandi
       { id: "29-1", name: "Mosop" },
       { id: "29-2", name: "Chesumei" },
       { id: "29-3", name: "Aldai" },
@@ -531,7 +476,7 @@ export const kecounties = [
   },
   {
     id: 33, name: "Narok", fine: [
-      //Narok
+      // Narok
       { id: "33-1", name: "Emurua Dikirr" },
       { id: "33-2", name: "Kilgoris" },
       { id: "33-3", name: "Narok North" },
@@ -542,7 +487,7 @@ export const kecounties = [
   },
   {
     id: 46, name: "Nyamira", fine: [
-      //Nyamira
+      // Nyamira
       { id: "46-1", name: "Borabu" },
       { id: "46-2", name: "Manga" },
       { id: "46-3", name: "Masaba North" },
@@ -552,7 +497,7 @@ export const kecounties = [
   },
   {
     id: 18, name: "Nyandarua", fine: [
-      //Nyandarua
+      // Nyandarua
       { id: "18-1", name: "Kinangop" },
       { id: "18-2", name: "Kipipiri" },
       { id: "18-3", name: "Ol Kalou" },
@@ -563,7 +508,7 @@ export const kecounties = [
   {
     id: 19, name: "Nyeri", fine: [
 
-      //Nyeri
+      // Nyeri
       { id: "19-1", name: "Kieni East" },
       { id: "19-2", name: "Kieni West" },
       { id: "19-3", name: "Mathira East" },
@@ -576,7 +521,7 @@ export const kecounties = [
   },
   {
     id: 25, name: "Samburu", fine: [
-      //Samburu
+      // Samburu
       { id: "25-1", name: "Samburu East" },
       { id: "25-2", name: "Samburu West" },
       { id: "25-3", name: "Samburu North" }
@@ -584,7 +529,7 @@ export const kecounties = [
   },
   {
     id: 41, name: "Siaya", fine: [
-      //Siaya
+      // Siaya
       { id: "41-1", name: "Alego" },
       { id: "41-2", name: "Bondo" },
       { id: "41-3", name: "Gem" },
@@ -595,7 +540,7 @@ export const kecounties = [
   },
   {
     id: 6, name: "Taita-Taveta", fine: [
-      //Taita Taveta
+      // Taita Taveta
       { id: "6-1", name: "Mwatate" },
       { id: "6-2", name: "Voi" },
       { id: "6-3", name: "Wundanyi" },
@@ -604,7 +549,7 @@ export const kecounties = [
   },
   {
     id: 4, name: "Tana River", fine: [
-      //Tana River
+      // Tana River
       { id: "4-1", name: "Bura" },
       { id: "4-2", name: "Galole" },
       { id: "4-3", name: "Garsen" }
@@ -612,7 +557,7 @@ export const kecounties = [
   },
   {
     id: 13, name: "Tharaka-Nithi", fine: [
-      //Tharaka Nithi
+      // Tharaka Nithi
       { id: "13-1", name: "Chuka" },
       { id: "13-2", name: "Maara" },
       { id: "13-3", name: "Tharaka" }
@@ -621,7 +566,7 @@ export const kecounties = [
   },
   {
     id: 26, name: "Trans-Nzoia", fine: [
-      //Trans Nzoia
+      // Trans Nzoia
       { id: "26-1", name: "Cherangany" },
       { id: "26-2", name: "Endebess" },
       { id: "26-3", name: "Kiminini" },
@@ -632,7 +577,7 @@ export const kecounties = [
   },
   {
     id: 23, name: "Turkana", fine: [
-      //Turkana
+      // Turkana
       { id: "23-1", name: "Loima" },
       { id: "23-2", name: "Turkana Central" },
       { id: "23-3", name: "Turkana East" },
@@ -643,7 +588,7 @@ export const kecounties = [
   },
   {
     id: 27, name: "Uasin Gishu", fine: [
-      //Uasin Gishu
+      // Uasin Gishu
       { id: "27-1", name: "Soy" },
       { id: "27-2", name: "Turbo" },
       { id: "27-3", name: "Moiben" },
@@ -654,7 +599,7 @@ export const kecounties = [
   },
   {
     id: 38, name: "Vihiga", fine: [
-      //Vihiga
+      // Vihiga
       { id: "38-1", name: "Emuhaya" },
       { id: "38-2", name: "Sabatia" },
       { id: "38-3", name: "Luanda" },
@@ -665,7 +610,7 @@ export const kecounties = [
   },
   {
     id: 8, name: "Wajir", fine: [
-      //Wajir
+      // Wajir
       { id: "8-1", name: "Eldas" },
       { id: "8-2", name: "Wajir East" },
       { id: "8-3", name: "Wajir West" },
@@ -676,7 +621,7 @@ export const kecounties = [
   },
   {
     id: 24, name: "West Pokot", fine: [
-      //West Pokot
+      // West Pokot
       { id: "24-1", name: "Kacheliba" },
       { id: "24-2", name: "Kapenguria" },
       { id: "24-3", name: "Sigor" },

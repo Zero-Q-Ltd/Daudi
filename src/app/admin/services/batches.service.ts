@@ -1,11 +1,11 @@
 import { Injectable } from "@angular/core";
-import { fueltypesArray } from "../../models/Fueltypes";
-import { Entry, emptybatches } from "../../models/Entry";
+import { fueltypesArray } from "../../models/fuel/Types";
+import { Entry, emptybatches } from "../../models/fuel/Entry";
 import { BehaviorSubject } from "rxjs";
 import { AngularFirestore } from "@angular/fire/firestore";
 import { DepotsService } from "./core/depots.service";
-import { fuelTypes } from "../../models/universal";
-import { Depot } from "../../models/Depot";
+import { Types } from "../../models/fuel/fuelTypes";
+import { Depot } from "../../models/depot/Depot";
 
 @Injectable({
   providedIn: "root"
@@ -64,7 +64,7 @@ export class BatchesService {
     });
   }
 
-  getbatches(type: fuelTypes) {
+  getbatches(type: Types) {
 
     return this.db.firestore.collection("depots")
       .doc(this.depotsservice.activedepot.value.Id)

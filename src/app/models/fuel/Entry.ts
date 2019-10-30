@@ -1,5 +1,5 @@
 import * as firebase from "firebase";
-import { fuelTypes } from "./universal";
+import { Types } from "./fuelTypes";
 
 export interface Entry {
 
@@ -29,7 +29,7 @@ export interface Entry {
     transfered: number
 
   };
-  fuelType: fuelTypes;
+  fuelType: Types;
   price: number;
   Id: string;
   active: number; // 1 for active, 0 for inactive

@@ -4,16 +4,16 @@ import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { AngularFirestore } from "@angular/fire/firestore";
 import { NotificationService } from "../../shared/services/notification.service";
 import { ConfirmDialogComponent } from "../confirm-dialog/confirm-dialog.component";
-import { fuelTypes } from "../../models/universal";
-import { Price } from "../../models/Price";
-import { Depot, emptydepot } from "../../models/Depot";
-import { emptytaxconfig, taxconfig } from "../../models/Taxconfig";
+import { Types } from "../../models/fuel/fuelTypes";
+import { Price } from "../../models/depot/Price";
+import { Depot, emptydepot } from "../../models/depot/Depot";
+import { emptytaxconfig, taxconfig } from "../../models/FuelConfig";
 import { AdminsService } from "../services/core/admins.service";
 import { PricesService } from "../services/prices.service";
 import { DepotsService } from "../services/core/depots.service";
-import { fueltypesArray } from "../../models/Fueltypes";
-import { Admin, emptyadmin } from "../../models/Admin";
-import { AvgPrice } from "../../models/AvgPrice";
+import { fueltypesArray } from "../../models/fuel/Types";
+import { Admin, emptyadmin } from "../../models/admin/Admin";
+import { AvgPrice } from "../../models/price/AvgPrice";
 import { Omc } from "../../models/Omc";
 import { OmcService } from "../services/omc.service";
 import { ReplaySubject } from "rxjs";
@@ -31,7 +31,7 @@ export class EditPriceComponent implements OnInit, OnDestroy {
   position3 = "right";
 
   avgprices: {
-    [key in fuelTypes]: {
+    [key in Types]: {
       total: number,
       prices: Array<AvgPrice>
     }

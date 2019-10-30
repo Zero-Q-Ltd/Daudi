@@ -1,5 +1,5 @@
-import { AdminLevel } from './AdminLevel';
-import { Metadata } from './universal';
+import { AdminLevel } from "./AdminLevel";
+import { Metadata } from "../universal/Metadata";
 
 export interface AdminType {
     name: string;

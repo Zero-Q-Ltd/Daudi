@@ -1,4 +1,5 @@
-import { inituser, User } from "./universal";
+import { inituser } from "../universal/universal";
+import { User } from "../universal/User";
 
 export interface Admin {
   Active: boolean;

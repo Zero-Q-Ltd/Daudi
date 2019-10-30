@@ -1,6 +1,6 @@
 import {Injectable} from "@angular/core";
 import {AngularFirestore} from "@angular/fire/firestore";
-import {Depot, emptydepot} from "../../../models/Depot";
+import {Depot, emptydepot} from "../../../models/depot/Depot";
 import {AdminsService} from "./admins.service";
 import {BehaviorSubject} from "rxjs";
 import {distinctUntilChanged} from "rxjs/operators";

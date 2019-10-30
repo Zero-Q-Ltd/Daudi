@@ -1,11 +1,11 @@
 import { Component, OnDestroy } from "@angular/core";
-import { orderStagesarray } from "../../../../models/Order";
-import { truckStagesarray } from "../../../../models/Truck";
+import { orderStagesarray } from "../../../../models/order/Order";
+import { truckStagesarray } from "../../../../models/order/Truck";
 import { OrdersService } from "../../../services/orders.service";
 import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators"; // get our service
 import { DepotsService } from "../../../services/core/depots.service";
-import { Depot, emptydepot } from "../../../../models/Depot";
+import { Depot, emptydepot } from "../../../../models/depot/Depot";
 
 @Component({
   selector: "my-app-sidenav-menu",

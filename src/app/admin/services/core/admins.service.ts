@@ -1,10 +1,10 @@
 import { Injectable } from "@angular/core";
 import { AngularFirestore } from "@angular/fire/firestore";
-import { Admin, emptyadmin } from "../../../models/Admin";
+import { Admin, emptyadmin } from "../../../models/admin/Admin";
 import { BehaviorSubject, ReplaySubject } from "rxjs";
 import { AngularFireAuth } from "@angular/fire/auth";
 import * as moment from "moment";
-import { User } from "../../../models/universal";
+import { User } from "../../../models/universal/User";
 import { firestore } from "firebase";
 import { Router } from "@angular/router";
 import { AngularFireDatabase } from "@angular/fire/database";

@@ -1,16 +1,17 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { MatDialog } from "@angular/material";
-import { Depot, emptydepot } from "../../../../models/Depot";
+import { Depot, emptydepot } from "../../../../models/depot/Depot";
 import { NotificationService } from "../../../../shared/services/notification.service";
 import { AdminsService } from "../../../services/core/admins.service";
 import { DepotsService } from "../../../services/core/depots.service";
-import { SyncRequest } from "../../../../models/Sync";
+import { SyncRequest } from "../../../../models/qbo/sync/Sync";
 import { firestore } from "firebase";
 import { MapsComponent } from "../../../maps/maps.component";
 import { AngularFireFunctions } from "@angular/fire/functions";
 import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
-import { OMC, emptyomc } from "../../../../models/Config";
+import { emptyomc } from "../../../../models/omc/Config";
+import { OMC } from "../../../../models/omc/OMC";
 import { ConfigService } from "../../../services/core/config.service";
 
 @Component({

@@ -2,9 +2,9 @@ import { Injectable } from "@angular/core";
 import { AngularFireMessaging } from "@angular/fire/messaging";
 import { BehaviorSubject } from "rxjs";
 import { AngularFirestore } from "@angular/fire/firestore";
-import { Admin } from "../../models/Admin";
+import { Admin } from "../../models/admin/Admin";
 import { NotificationService } from "../../shared/services/notification.service";
-import { FCM } from "../../models/FCM";
+import { FCM } from "../../models/notification/FCM";
 import { distinctUntilChanged } from "rxjs/operators";
 import { AdminsService } from "./core/admins.service";
 

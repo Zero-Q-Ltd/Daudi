@@ -1,8 +1,8 @@
 import * as moment from "moment";
 import {olddata} from "./oldordersdata";
 import {Order, Truck} from "../../models/Global";
-import {Order} from "../../models/Order";
-import {Truck} from "../../models/Truck"; // import our interface
+import {Order} from "../../models/order/Order";
+import {Truck} from "../../models/order/Truck"; // import our interface
 const allorders = [];
 
 export function syncdb(firestore) {

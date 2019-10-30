@@ -1,14 +1,14 @@
-import {fuelTypes} from "./universal";
+import { Types } from "../fuel/fuelTypes";
 
 export interface Stat {
-  date: any,
-  id: string,
+  date: any;
+  id: string;
   fuelsold?: {
-    [key in fuelTypes]: {
+    [key in Types]: {
       qty: number,
       amount: number,
     }
-  }
+  };
   orders?: {
     discounted?: number
     created?: number,
@@ -18,16 +18,16 @@ export interface Stat {
     exited?: number,
     backend?: number,
     frontend?: number
-  },
+  };
   batches?: {
-    [key in fuelTypes]: {
+    [key in Types]: {
       created: number,
       accumulated: number
     }
-  }
+  };
   customers?: {
     new: number,
-  },
+  };
 
 }
 

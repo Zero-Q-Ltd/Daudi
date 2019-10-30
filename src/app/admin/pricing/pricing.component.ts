@@ -1,12 +1,12 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
-import { fuelTypes } from "../../models/universal";
-import { Price } from "../../models/Price";
-import { Depot, emptydepot } from "../../models/Depot";
-import { emptytaxconfig, taxconfig } from "../../models/Taxconfig";
+import { Types } from "../../models/fuel/fuelTypes";
+import { Price } from "../../models/depot/Price";
+import { Depot, emptydepot } from "../../models/depot/Depot";
+import { emptytaxconfig, taxconfig } from "../../models/FuelConfig";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
-import { fueltypesArray } from "../../models/Fueltypes";
+import { fueltypesArray } from "../../models/fuel/Types";
 import { MatDialog } from "@angular/material";
-import { Admin, emptyadmin } from "../../models/Admin";
+import { Admin, emptyadmin } from "../../models/admin/Admin";
 import { AngularFirestore } from "@angular/fire/firestore";
 import { DepotsService } from "../services/core/depots.service";
 import { NotificationService } from "../../shared/services/notification.service";
@@ -27,7 +27,7 @@ export class PricingComponent implements OnInit, OnDestroy {
   position3 = "right";
 
   avgprices: {
-    [key in fuelTypes]: {
+    [key in Types]: {
       total: number,
       prices: Array<Price>
     }

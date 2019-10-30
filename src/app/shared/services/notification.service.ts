@@ -1,9 +1,9 @@
-import {Injectable} from "@angular/core";
-import {Subject} from "rxjs";
-import {Alert} from "../../models/Alert";
-import {MatSnackBar} from "@angular/material";
-import {Howl} from "howler";
-import {NotificationComponent} from "../notification/notification.component";
+import { Injectable } from "@angular/core";
+import { Subject } from "rxjs";
+import { Alert } from "../../models/notification/Alert";
+import { MatSnackBar } from "@angular/material";
+import { Howl } from "howler";
+import { NotificationComponent } from "../notification/notification.component";
 
 @Injectable({
   providedIn: "root"
@@ -14,7 +14,7 @@ export class NotificationService {
   constructor(public snackBar: MatSnackBar) {
     this.notificationSubject.subscribe((alert: Alert) => {
       if (alert.alert_type) {
-        let config = NotificationService.getsrc(alert);
+        const config = NotificationService.getsrc(alert);
         const sound = new Howl({
           src: [config.soundsrc]
         });
@@ -42,7 +42,7 @@ export class NotificationService {
           icon: "info",
           soundsrc: "../../../assets/sounds/drip.ogg"
         };
-      case "success" :
+      case "success":
         return {
           icon: "done_outline",
           soundsrc: "../../../assets/sounds/drums.ogg"

@@ -1,23 +1,21 @@
 import * as firebase from "firebase";
-import { fuelTypes, inituser, User } from "./universal";
-import { emptytaxconfig, taxconfig } from "./Taxconfig";
+import { inituser } from "../universal/universal";
+import { Types } from "../fuel/fuelTypes";
+import { User } from "../universal/User";
+import { Metadata } from "../universal/Metadata";
 
 export interface Depot {
   Id: string;
-  MetaData: {
-    CreateTime: firebase.firestore.Timestamp | Date,
-    LastUpdatedTime: firebase.firestore.Timestamp | Date
-  };
+
+  MetaData: Metadata;
 
   Name: string;
   Contact: {
-    phone: null,
-    name: null
+    phone: string,
+    name: string
   };
 
-  price: {
-    [key in fuelTypes]: DepotPrice
-  };
+  sandbox: boolean;
   Location: firebase.firestore.GeoPoint;
 }
 
@@ -34,7 +32,7 @@ export const emptydepot: Depot = {
     LastUpdatedTime: new firebase.firestore.Timestamp(0, 0)
   },
   Name: null,
-  Contact: {
+  ContactPerson: {
     phone: null,
     name: null
   },
@@ -52,6 +50,7 @@ export const emptydepot: Depot = {
       price: null
     }
   },
+
   /**
    * make default location Somewhere in nbi
    */

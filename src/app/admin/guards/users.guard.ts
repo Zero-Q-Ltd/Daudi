@@ -2,7 +2,7 @@ import { map, take } from "rxjs/operators";
 import { Injectable } from "@angular/core";
 import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from "@angular/router";
 import { Observable } from "rxjs";
-import { Admin } from "../../models/Admin";
+import { Admin } from "../../models/admin/Admin";
 import { NotificationService } from "../../shared/services/notification.service";
 import { AdminsService } from "../services/core/admins.service";
 import { DepotsService } from "../services/core/depots.service"; // get our service

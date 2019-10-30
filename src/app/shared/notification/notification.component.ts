@@ -1,6 +1,6 @@
-import {Component, Inject, OnInit} from "@angular/core";
-import {MAT_SNACK_BAR_DATA} from "@angular/material";
-import {Alert} from "../../models/Alert";
+import { Component, Inject, OnInit } from "@angular/core";
+import { MAT_SNACK_BAR_DATA } from "@angular/material";
+import { Alert } from "../../models/notification/Alert";
 
 
 @Component({

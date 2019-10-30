@@ -1,6 +1,6 @@
 import { Component, EventEmitter, OnDestroy, OnInit } from "@angular/core";
-import { emptytruck, Truck } from "../../models/Truck";
-import { Order } from "../../models/Order";
+import { emptytruck, Truck } from "../../models/order/Truck";
+import { Order } from "../../models/order/Order";
 import * as moment from "moment";
 import { ConfirmDialogComponent } from "../confirm-dialog/confirm-dialog.component";
 import { Options } from "ng5-slider";

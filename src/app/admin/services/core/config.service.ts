@@ -2,8 +2,9 @@ import { Injectable } from "@angular/core";
 import { AngularFirestore } from "@angular/fire/firestore";
 import { AdminsService } from "./admins.service";
 import { BehaviorSubject } from "rxjs";
-import { OMC, emptyomc } from "src/app/models/Config";
-import { Admin } from "src/app/models/Admin";
+import { emptyomc } from "src/app/models/omc/Config";
+import { OMC } from "src/app/models/omc/OMC";
+import { Admin } from "src/app/models/admin/Admin";
 
 @Injectable({
   providedIn: "root"

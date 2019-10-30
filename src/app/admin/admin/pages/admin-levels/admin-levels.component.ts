@@ -4,15 +4,17 @@ import { MatDialog } from "@angular/material";
 import { ConfigService } from "../../../services/core/config.service";
 import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
-import { OMC, emptyomc } from "../../../../models/Config";
+import { emptyomc } from "../../../../models/omc/Config";
+import { OMC } from "../../../../models/omc/OMC";
 import { FormArray, FormControl, FormGroup, FormBuilder } from "ngx-strongly-typed-forms";
 
 import { NotificationService } from "../../../../shared/services/notification.service";
 import * as firebase from "firebase";
-import { NewAdminType, AdminType } from "../../../../models/AdminType";
+import { NewAdminType, AdminType } from "../../../../models/admin/AdminType";
 import { Validators } from "@angular/forms";
-import { AdminLevel } from "../../../../models/AdminLevel";
-import { Metadata, Meta } from "../../../../models/universal";
+import { AdminLevel } from "../../../../models/admin/AdminLevel";
+import { Meta } from "../../../../models/universal/Meta";
+import { Metadata } from "../../../../models/universal/Metadata";
 import { AdminsService } from "../../../services/core/admins.service";
 import { ConfirmDialogComponent } from "../../../confirm-dialog/confirm-dialog.component";
 

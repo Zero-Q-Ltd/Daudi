@@ -3,7 +3,7 @@ import * as moment from "moment";
 import { CalendarRangesComponent } from "../calendar-ranges/calendar-ranges.component";
 import { EChartOption } from "echarts";
 import { FuelBoundstats } from "../charts/charts.config";
-import { emptystat, Stat } from "../../../models/Stats";
+import { emptystat, Stat } from "../../../models/stats/Stats";
 import { FormControl } from "@angular/forms";
 import { Router } from "@angular/router";
 import { MatSnackBar } from "@angular/material";
@@ -11,9 +11,9 @@ import { DepotsService } from "../../services/core/depots.service";
 import { BatchesService } from "../../services/batches.service";
 import { StatsService } from "../../services/stats.service";
 import { PricesService } from "../../services/prices.service";
-import { fueltypesArray } from "../../../models/Fueltypes";
-import { Entry } from "../../../models/Entry";
-import { Price } from "../../../models/Price";
+import { fueltypesArray } from "../../../models/fuel/Types";
+import { Entry } from "../../../models/fuel/Entry";
+import { Price } from "../../../models/depot/Price";
 import { calculateMA } from "../charts/generalCalc";
 import { fuelgauge } from "../charts/qty";
 import { saleStats } from "../charts/sales";
@@ -81,11 +81,11 @@ export class StatsComponent implements OnInit, OnDestroy {
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
 
   constructor(private router: Router,
-    public snackBar: MatSnackBar,
-    private depotservice: DepotsService,
-    private batcheservice: BatchesService,
-    private statservice: StatsService,
-    private priceservice: PricesService) {
+              public snackBar: MatSnackBar,
+              private depotservice: DepotsService,
+              private batcheservice: BatchesService,
+              private statservice: StatsService,
+              private priceservice: PricesService) {
     this.depotservice.activedepot.pipe(takeUntil(this.comopnentDestroyed)).subscribe(depot => {
       this.dateControl.valueChanges.pipe(takeUntil(this.comopnentDestroyed)).subscribe(value => {
         const a = moment(value.begin);

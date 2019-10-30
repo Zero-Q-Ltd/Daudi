@@ -3,10 +3,10 @@ import { Component, Inject, OnDestroy, OnInit, Input } from "@angular/core";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material"; // added dialog data
 import { NotificationService } from "../../shared/services/notification.service";
 import { FormControl, Validators } from "@angular/forms";
-import { Order } from "../../models/Order";
-import { emptytruck, Truck } from "../../models/Truck";
+import { Order } from "../../models/order/Order";
+import { emptytruck, Truck } from "../../models/order/Truck";
 import { AdminsService } from "../services/core/admins.service";
-import { fueltypesArray } from "../../models/Fueltypes";
+import { fueltypesArray } from "../../models/fuel/Types";
 import { OrdersService } from "../services/orders.service";
 import { DepotsService } from "../services/core/depots.service";
 import { ReplaySubject } from "rxjs";

@@ -3,9 +3,9 @@ import { MAT_DIALOG_DATA, MatDialog, MatDialogRef, MatPaginator, MatSnackBar, Ma
 import { CompanyMembersComponent } from "../company-members/company-members.component";
 import { SendMsgComponent } from "../../../send-msg/send-msg.component";
 import { firestore } from "firebase";
-import { Customer } from "../../../../models/Customer";
-import { SyncRequest } from "../../../../models/Sync";
-import { SMS } from "../../../../models/sms";
+import { Customer } from "../../../../models/customer/Customer";
+import { SyncRequest } from "../../../../models/qbo/sync/Sync";
+import { SMS } from "../../../../models/sms/sms";
 import { NotificationService } from "../../../../shared/services/notification.service";
 import { SelectionModel } from "@angular/cdk/collections";
 import { AdminsService } from "../../../services/core/admins.service";

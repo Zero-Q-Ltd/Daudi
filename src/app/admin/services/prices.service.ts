@@ -1,12 +1,12 @@
 import { Injectable } from "@angular/core";
-import { fuelTypes } from "../../models/universal";
+import { Types } from "../../models/fuel/fuelTypes";
 import * as moment from "moment";
 import { AngularFirestore } from "@angular/fire/firestore";
-import { Depot } from "../../models/Depot";
+import { Depot } from "../../models/depot/Depot";
 import { DepotsService } from "./core/depots.service";
 import { BehaviorSubject } from "rxjs";
-import { fueltypesArray } from "../../models/Fueltypes";
-import { Price } from "../../models/Price";
+import { fueltypesArray } from "../../models/fuel/Types";
+import { Price } from "../../models/depot/Price";
 
 @Injectable({
   providedIn: "root"
@@ -15,7 +15,7 @@ export class PricesService {
   activedepot: Depot;
 
   avgprices: {
-    [key in fuelTypes]: {
+    [key in Types]: {
       total: BehaviorSubject<number>,
       avg: BehaviorSubject<number>,
       prices: BehaviorSubject<Array<Price>>
@@ -85,7 +85,7 @@ export class PricesService {
   }
 
 
-  getavgprices(fueltye: fuelTypes) {
+  getavgprices(fueltye: Types) {
     if (!this.activedepot.Id) {
       return;
     }

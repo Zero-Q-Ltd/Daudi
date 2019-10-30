@@ -1,11 +1,11 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
-import { fueltypesArray } from "../../../../models/Fueltypes";
+import { fueltypesArray } from "../../../../models/fuel/Types";
 import { MatPaginator, MatTableDataSource } from "@angular/material";
-import { Entry, emptybatches } from "../../../../models/Entry";
-import { fuelTypes } from "../../../../models/universal";
+import { Entry, emptybatches } from "../../../../models/fuel/Entry";
+import { Types } from "../../../../models/fuel/fuelTypes";
 import { DepotsService } from "../../../services/core/depots.service";
 import { BatchesService } from "../../../services/batches.service";
-import { SyncRequest } from "../../../../models/Sync";
+import { SyncRequest } from "../../../../models/qbo/sync/Sync";
 import { firestore } from "firebase";
 import { NotificationService } from "../../../../shared/services/notification.service";
 import { AngularFireFunctions } from "@angular/fire/functions";
@@ -70,7 +70,7 @@ export class BatchesComponent implements OnInit {
       };
 
       if (depotvata.Id) {
-        fueltypesArray.forEach((fueltype: fuelTypes) => {
+        fueltypesArray.forEach((fueltype: Types) => {
           /**
            * Create a subscrition for 1000 batches history
            */

@@ -1,5 +1,6 @@
-import { User } from "./universal";
+import { User } from "../universal/User";
 import * as firebase from "firebase";
+import { Contact } from "./Contact";
 
 
 export interface Customer {
@@ -8,7 +9,7 @@ export interface Customer {
   /**
    * The primary contact shall be in pos 0
    */
-  contact: Array<CustomerContact>;
+  contact: Array<Contact>;
   QbId: string;
   sandbox: boolean;
   Id: string;
@@ -22,12 +23,6 @@ export interface Customer {
   balance: number;
 }
 
-export interface CustomerContact {
-  name: string;
-  phone: string;
-  email: string;
-}
-
 export const emptycompany: Customer = {
   Active: null,
   contact: [],
@@ -37,8 +32,8 @@ export const emptycompany: Customer = {
   QbId: null,
   sandbox: null,
   /**
-    * make default location Somewhere in nbi
-    */
+   * make default location Somewhere in nbi
+   */
   location: new firebase.firestore.GeoPoint(-1.3088567, 36.7752539),
   krapin: null,
   kraverified: {

@@ -1,4 +1,4 @@
-import { QbTypes } from "./universal";
+import { QbTypes } from "../QbTypes";
 import * as firebase from "firebase";
 import Timestamp = firebase.firestore.Timestamp;
 

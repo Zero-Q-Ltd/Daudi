@@ -1,24 +1,9 @@
-import { AdminType } from "./AdminType";
-import { Metadata, emptymetadata, Meta, fuelTypes } from "./universal";
+import { emptymetadata } from "../universal/universal";
+import { Meta } from "../universal/Meta";
+import { Metadata } from "../universal/Metadata";
 import { firestore } from "firebase";
-
-export interface OMC {
-    license: string;
-    location: firebase.firestore.GeoPoint;
-    name: string;
-    userid: string;
-    id: string;
-    description: string;
-    status: boolean;
-    contactperson: Array<ContactPerson>;
-    qbconfig: QBOconfig;
-    fuelconfig: {
-        [key in fuelTypes]: string
-    };
-    logourl: string;
-    metadata: Metadata;
-    adminTypes: Array<AdminType>;
-}
+import { OMC } from "./OMC";
+import { QBOconfig } from "./QBOconfig";
 
 /**
  * This is an initialization variable for the undeletable level for System Admins
@@ -35,13 +20,6 @@ const KisingaMetadata: Metadata = {
     }
 };
 
-interface ContactPerson {
-    name: string;
-    phone: string;
-    email: string;
-    position: string;
-    address: string;
-}
 export const emptyqbo: QBOconfig = {
     companyid: 0,
     clientid: "",
@@ -97,22 +75,5 @@ export const emptyomc: OMC = {
     ]
 };
 
-
-export interface QBOconfig {
-    companyid: number;
-    clientid: string;
-    clientSecret: string;
-    webhooksverifier: string;
-    issandbox: boolean;
-    authconfig: {
-        previousDCT: firestore.Timestamp;
-        accessToken: string;
-        refreshtoken: string;
-        accesstokenExpiry: firestore.Timestamp;
-        refreshtokenExpiry: firestore.Timestamp;
-        time: firestore.Timestamp;
-        // add more entities if required
-    };
-}
 
 

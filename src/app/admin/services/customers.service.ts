@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { Customer } from "../../models/Customer";
+import { Customer } from "../../models/customer/Customer";
 import { AngularFirestore } from "@angular/fire/firestore";
 import { DepotsService } from "./core/depots.service";
 import { BehaviorSubject, Observable } from "rxjs";
@@ -21,8 +21,8 @@ export class CustomerService {
 
 
   constructor(private db: AngularFirestore,
-              private depotsservice: DepotsService,
-              private functions: AngularFireFunctions) {
+    private depotsservice: DepotsService,
+    private functions: AngularFireFunctions) {
     this.depotsservice.activedepot.pipe(distinctUntilKeyChanged("companyId")).subscribe(depot => {
       if (depot.Id) {
         this.depotAttachedCompany = depot.companyId;

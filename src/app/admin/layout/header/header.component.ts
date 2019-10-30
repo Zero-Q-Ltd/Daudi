@@ -3,17 +3,17 @@ import { APPCONFIG } from "../../config";
 import { Router } from "@angular/router";
 // interfaces
 import { AngularFireAuth } from "@angular/fire/auth";
-import { Depot, emptydepot } from "../../../models/Depot";
+import { Depot, emptydepot } from "../../../models/depot/Depot";
 import { AdminsService } from "../../services/core/admins.service";
 import { DepotsService } from "../../services/core/depots.service";
-import { Admin, emptyadmin } from "../../../models/Admin";
-import { fueltypesArray } from "../../../models/Fueltypes";
+import { Admin, emptyadmin } from "../../../models/admin/Admin";
+import { fueltypesArray } from "../../../models/fuel/Types";
 import { OrdersService } from "../../services/orders.service";
-import { orderStagesarray } from "../../../models/Order";
-import { truckStagesarray } from "../../../models/Truck";
+import { orderStagesarray } from "../../../models/order/Order";
+import { truckStagesarray } from "../../../models/order/Truck";
 import { PricesService } from "../../services/prices.service";
-import { fuelTypes } from "../../../models/universal";
-import { Price } from "../../../models/Price";
+import { Types } from "../../../models/fuel/fuelTypes";
+import { Price } from "../../../models/depot/Price";
 import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 
@@ -56,7 +56,7 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
   };
 
   avgprices: {
-    [key in fuelTypes]: {
+    [key in Types]: {
       total: number,
       prices: Array<Price>
     }
@@ -79,11 +79,11 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
 
   constructor(private router: Router,
-    private afAuth: AngularFireAuth,
-    private orderservice: OrdersService,
-    private adminservice: AdminsService,
-    private depotservice: DepotsService,
-    private priceservice: PricesService) {
+              private afAuth: AngularFireAuth,
+              private orderservice: OrdersService,
+              private adminservice: AdminsService,
+              private depotservice: DepotsService,
+              private priceservice: PricesService) {
     this.depotservice.activedepot.pipe(takeUntil(this.comopnentDestroyed)).subscribe((depot: Depot) => {
       this.activedepot = depot;
     });

@@ -1,11 +1,12 @@
 import { Injectable } from "@angular/core";
-import { Order, orderqueryStagesarray, orderStages } from "../../models/Order";
+import { Order, orderqueryStagesarray } from "../../models/order/Order";
+import { OrderStages } from "../../models/order/OrderStages";
 import { firestore } from "firebase";
 import * as moment from "moment";
 import { BehaviorSubject } from "rxjs";
 import { AngularFirestore } from "@angular/fire/firestore";
 import { DepotsService } from "./core/depots.service";
-import { Depot } from "../../models/Depot";
+import { Depot } from "../../models/depot/Depot";
 import { ColNode } from "../../models/ColNode";
 import { MatTreeNestedDataSource } from "@angular/material";
 import { AngularFireFunctions } from "@angular/fire/functions";
@@ -17,7 +18,7 @@ export class OrdersService {
   loadingorders = new BehaviorSubject(true);
   activedepot: Depot;
   orders: {
-    [key in orderStages]: BehaviorSubject<Array<Order>>
+    [key in OrderStages]: BehaviorSubject<Array<Order>>
   } = {
       1: new BehaviorSubject<Array<Order>>([]),
       2: new BehaviorSubject<Array<Order>>([]),
