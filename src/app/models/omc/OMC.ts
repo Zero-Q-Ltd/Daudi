@@ -1,5 +1,5 @@
 import { AdminType } from "../admin/AdminType";
-import { Types } from "../fuel/fuelTypes";
+import { fuelTypes } from "../fuel/fuelTypes";
 import { Metadata } from "../universal/Metadata";
 import { ContactPerson } from "./ContactPerson";
 import { QBOconfig } from "./QBOconfig";
@@ -14,7 +14,10 @@ export interface OMC {
     contactperson: Array<ContactPerson>;
     qbconfig: QBOconfig;
     fuelconfig: {
-        [key in Types]: {
+        [key in fuelTypes]: {
+            allocation: {
+                qty: number
+            }
             QbId: number;
             tax: {
                 QbId: number;

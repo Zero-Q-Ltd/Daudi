@@ -1,11 +1,11 @@
-import { Types } from "../fuel/fuelTypes";
+import { fuelTypes } from "../fuel/fuelTypes";
 import { User } from "../universal/User";
 
 export interface Price {
   Id: string;
   price: number;
   user: User;
-  fueltytype: Types;
+  fueltytype: fuelTypes;
 }
 
 export const emptyprice: Price = {
@@ -17,4 +17,4 @@ export const emptyprice: Price = {
     uid: null
   },
   fueltytype: null
-});
+};

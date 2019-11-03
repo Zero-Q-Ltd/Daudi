@@ -1,4 +1,4 @@
-import { Types } from "../fuel/fuelTypes";
+import { fuelTypes } from "../fuel/fuelTypes";
 import { DepotPrice } from "./DepotPrice";
 export interface DepotConfig {
     ContactPerson: {
@@ -6,7 +6,7 @@ export interface DepotConfig {
         name: null;
     };
     price: {
-        [key in Types]: DepotPrice;
+        [key in fuelTypes]: DepotPrice;
     };
     hospitality: {
         amnt: number;

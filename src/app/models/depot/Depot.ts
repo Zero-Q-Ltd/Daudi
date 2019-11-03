@@ -1,58 +1,53 @@
 import * as firebase from "firebase";
-import { inituser } from "../universal/universal";
-import { Types } from "../fuel/fuelTypes";
-import { User } from "../universal/User";
+import { inituser, emptymetadata } from "../universal/universal";
 import { Metadata } from "../universal/Metadata";
+import { DepotCreator } from './DepotCreator';
 
 export interface Depot {
   Id: string;
-
   MetaData: Metadata;
-
   Name: string;
   Contact: {
     phone: string,
     name: string
   };
-
-  sandbox: boolean;
   Location: firebase.firestore.GeoPoint;
-}
+  config: {
+    /**
+     * indicates whether it's part of KPC or not
+     * private depots are NOT part of KPC and require additional config for parent depot
+     */
+    parent: string | null,
+    /**
+     * indicates whether this depot can be seen by all OMC's
+     */
+    externalVisibility: boolean,
 
-
-export interface DepotPrice {
-  price: number;
-  user: User;
+    creator: DepotCreator
+  };
 }
 
 export const emptydepot: Depot = {
   Id: null,
-  MetaData: {
-    CreateTime: new firebase.firestore.Timestamp(0, 0),
-    LastUpdatedTime: new firebase.firestore.Timestamp(0, 0)
-  },
+  MetaData: { ...emptymetadata },
   Name: null,
-  ContactPerson: {
+  Contact: {
     phone: null,
     name: null
   },
-  price: {
-    pms: {
-      user: inituser,
-      price: null
-    },
-    ago: {
-      user: inituser,
-      price: null
-    },
-    ik: {
-      user: inituser,
-      price: null
+  config: {
+    parent: null,
+    externalVisibility: false,
+    creator: {
+      adminId: null,
+      date: firebase.firestore.Timestamp.now(),
+      omcId: null,
     }
   },
-
   /**
    * make default location Somewhere in nbi
    */
   Location: new firebase.firestore.GeoPoint(-1.3088567, 36.7752539)
 };
+
+

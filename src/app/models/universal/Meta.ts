@@ -1,4 +1,7 @@
+import * as firebase from "firebase";
+
+
 export interface Meta {
-    date: Date;
+    date: firebase.firestore.Timestamp;
     adminId: string;
 }

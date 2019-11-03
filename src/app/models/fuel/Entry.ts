@@ -1,5 +1,5 @@
 import * as firebase from "firebase";
-import { Types } from "./fuelTypes";
+import { fuelTypes } from "./fuelTypes";
 
 export interface Entry {
 
@@ -29,7 +29,10 @@ export interface Entry {
     transfered: number
 
   };
-  fuelType: Types;
+  // vessel:{
+
+  // }
+  fuelType: fuelTypes;
   price: number;
   Id: string;
   active: number; // 1 for active, 0 for inactive
@@ -42,6 +45,7 @@ export const emptybatches: Entry = {
   batch: null,
   price: 0,
   qty: {
+    total: 0,
     directLoad: {
       accumulated: {
         total: 0,
