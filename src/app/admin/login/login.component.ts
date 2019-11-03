@@ -3,7 +3,7 @@ import { Router } from "@angular/router";
 import { AngularFireAuth } from "@angular/fire/auth";
 import * as firebase from "firebase";
 import { NotificationService } from "../../shared/services/notification.service";
-import { AdminsService } from "../services/core/admins.service";
+import { AdminService } from "../services/core/admin.service";
 import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 
@@ -15,7 +15,7 @@ import { takeUntil } from "rxjs/operators";
 export class LoginComponent implements OnInit {
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
 
-  constructor(private router: Router, private adminservice: AdminsService, private afAuth: AngularFireAuth, private notification: NotificationService) {
+  constructor(private router: Router, private adminservice: AdminService, private afAuth: AngularFireAuth, private notification: NotificationService) {
     this.adminservice.observableuserdata.pipe(takeUntil(this.comopnentDestroyed)).subscribe(data => {
       console.log(data);
       if (data) {

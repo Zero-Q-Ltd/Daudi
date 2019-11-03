@@ -1,16 +1,16 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { MatDialog } from "@angular/material";
-import { Depot, emptydepot } from "../../../../models/Depot";
+import { Depot, emptydepot } from "../../../../models/depot/Depot";
 import { NotificationService } from "../../../../shared/services/notification.service";
-import { AdminsService } from "../../../services/core/admins.service";
-import { DepotsService } from "../../../services/core/depots.service";
-import { SyncRequest } from "../../../../models/Sync";
+import { AdminService } from "../../../services/core/admin.service";
+import { DepotService } from "../../../services/core/depot.service";
+import { SyncRequest } from "../../../../models/qbo/sync/Sync";
 import { firestore } from "firebase";
 import { MapsComponent } from "../../../maps/maps.component";
 import { AngularFireFunctions } from "@angular/fire/functions";
 import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
-import { OMC, emptyomc } from "../../../../models/Config";
+import { OMC, emptyomc } from "../../../../models/omc/OMC";
 import { ConfigService } from "../../../services/core/config.service";
 
 @Component({
@@ -32,19 +32,19 @@ export class DepotManagementComponent implements OnInit, OnDestroy {
   constructor(
     private notification: NotificationService,
     private dialog: MatDialog,
-    private adminservice: AdminsService,
-    private depotservice: DepotsService,
+    private adminservice: AdminService,
+    private depotservice: DepotService,
     private companyservice: ConfigService,
     private config: ConfigService,
     private functions: AngularFireFunctions) {
     this.depotservice.activedepot.pipe(takeUntil(this.comopnentDestroyed)).subscribe(depot => {
-      this.activedepot = depot;
+      this.activedepot = depot.depot;
     });
     this.depotservice.alldepots.pipe(takeUntil(this.comopnentDestroyed)).subscribe(alldepots => {
       this.alldepots = alldepots;
     });
-    this.companyservice.companydata.pipe(takeUntil(this.comopnentDestroyed)).subscribe(co => {
-      this.company = co;
+    this.companyservice.omcconfig.pipe(takeUntil(this.comopnentDestroyed)).subscribe(co => {
+      // this.company = co;
     });
   }
 
@@ -78,7 +78,7 @@ export class DepotManagementComponent implements OnInit, OnDestroy {
 
     this.creatingsync = true;
     const syncobject: SyncRequest = {
-      companyid: this.config.companydata.value.qbconfig.companyid,
+      companyid: this.config.getEnvironment().auth.companyId,
       time: firestore.Timestamp.now(),
       synctype: ["Item"]
     };

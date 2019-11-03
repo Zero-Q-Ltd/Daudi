@@ -1,11 +1,10 @@
 import { Injectable } from "@angular/core";
-import { fueltypesArray } from "../../models/Fueltypes";
-import { Entry, emptybatches } from "../../models/Entry";
+import { Entry, emptybatches } from "../../models/fuel/Entry";
 import { BehaviorSubject } from "rxjs";
 import { AngularFirestore } from "@angular/fire/firestore";
-import { DepotsService } from "./core/depots.service";
-import { fuelTypes } from "../../models/universal";
-import { Depot } from "../../models/Depot";
+import { DepotService } from "./core/depot.service";
+import { fuelTypes, fueltypesArray } from "../../models/fuel/fuelTypes";
+import { Depot } from "../../models/depot/Depot";
 
 @Injectable({
   providedIn: "root"
@@ -27,9 +26,9 @@ export class BatchesService {
    */
   subscriptions: Map<string, any> = new Map<string, any>();
 
-  constructor(private db: AngularFirestore, private depotsservice: DepotsService) {
+  constructor(private db: AngularFirestore, private depotsservice: DepotService) {
     this.depotsservice.activedepot.subscribe(depot => {
-      this.activedepot = depot;
+      // this.activedepot = depot;
       this.unsubscribeAll();
       this.fetchbatches();
     });
@@ -38,10 +37,10 @@ export class BatchesService {
   fetchbatches() {
     this.fetchingbatches.next(true);
     fueltypesArray.forEach((fueltype) => {
-      if (!this.depotsservice.activedepot.value.Id) {
+      if (!this.depotsservice.activedepot.value.depot.Id) {
         return;
       }
-      const subscriprion = this.db.firestore.collection("depots").doc(this.depotsservice.activedepot.value.Id).collection("batches")
+      const subscriprion = this.db.firestore.collection("depots").doc(this.depotsservice.activedepot.value.depot.Id).collection("batches")
         .orderBy("date", "asc")
         .where("status", "==", 1)
         .where("type", "==", fueltype)
@@ -67,13 +66,13 @@ export class BatchesService {
   getbatches(type: fuelTypes) {
 
     return this.db.firestore.collection("depots")
-      .doc(this.depotsservice.activedepot.value.Id)
+      .doc(this.depotsservice.activedepot.value.depot.Id)
       .collection("batches")
       .where("type", "==", type)
       .orderBy("status", "desc");
   }
 
   updatebatch(batchid: string) {
-    return this.db.firestore.collection("depots").doc(this.depotsservice.activedepot.value.Id).collection(`batches`).doc(batchid);
+    return this.db.firestore.collection("depots").doc(this.depotsservice.activedepot.value.depot.Id).collection(`batches`).doc(batchid);
   }
 }

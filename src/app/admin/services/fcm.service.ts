@@ -2,11 +2,11 @@ import { Injectable } from "@angular/core";
 import { AngularFireMessaging } from "@angular/fire/messaging";
 import { BehaviorSubject } from "rxjs";
 import { AngularFirestore } from "@angular/fire/firestore";
-import { Admin } from "../../models/Admin";
+import { Admin } from "../../models/admin/Admin";
 import { NotificationService } from "../../shared/services/notification.service";
-import { FCM } from "../../models/FCM";
+import { FCM } from "../../models/notification/FCM";
 import { distinctUntilChanged } from "rxjs/operators";
-import { AdminsService } from "./core/admins.service";
+import { AdminService } from "./core/admin.service";
 
 @Injectable({
   providedIn: "root"
@@ -14,10 +14,11 @@ import { AdminsService } from "./core/admins.service";
 export class FcmService {
   currentMessage = new BehaviorSubject(null);
 
-  constructor(private db: AngularFirestore,
+  constructor(
+    private db: AngularFirestore,
     private afMessaging: AngularFireMessaging,
     private notification: NotificationService,
-    private adminservice: AdminsService) {
+    private adminservice: AdminService) {
     this.adminservice.observableuserdata
       .pipe(distinctUntilChanged())
       .subscribe(admin => {
@@ -29,7 +30,7 @@ export class FcmService {
   }
 
   updateusertokes(user: Admin, token) {
-    if (user.fcmtokens.web !== token) {
+    if (user.config.fcm.tokens.web !== token) {
       this.db.firestore.collection("admins").doc(user.Id).update({ "fcmtokens.web": token });
     }
   }

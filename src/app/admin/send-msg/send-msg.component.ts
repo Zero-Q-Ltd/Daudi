@@ -1,9 +1,9 @@
-import {Component, Inject, OnInit} from "@angular/core";
-import {MAT_DIALOG_DATA, MatDialog} from "@angular/material"; // added dialog data receive
-import {NotificationService} from "../../shared/services/notification.service";
-import {emptysms, SMS} from "../../models/sms";
-import {AngularFirestore} from "@angular/fire/firestore";
-import {SmsService} from "../services/sms.service";
+import { Component, Inject, OnInit } from "@angular/core";
+import { MAT_DIALOG_DATA, MatDialog } from "@angular/material"; // added dialog data receive
+import { NotificationService } from "../../shared/services/notification.service";
+import { emptysms, SMS } from "../../models/sms/sms";
+import { AngularFirestore } from "@angular/fire/firestore";
+import { SmsService } from "../services/sms.service";
 
 @Component({
   selector: "send-msg",
@@ -18,8 +18,12 @@ export class SendMsgComponent implements OnInit {
   bulk = false;
   tempbulkmodel: SMS = emptysms;
 
-  constructor(private dialog: MatDialog, @Inject(MAT_DIALOG_DATA) public tempsms: SMS | Array<SMS>,
-              private sms: SmsService, private notificationService: NotificationService, private db: AngularFirestore
+  constructor(
+    private dialog: MatDialog,
+    @Inject(MAT_DIALOG_DATA) public tempsms: SMS | Array<SMS>,
+    private sms: SmsService,
+    private notificationService: NotificationService,
+    private db: AngularFirestore
   ) {
     if (this.tempsms instanceof Array) {
       this.bulk = true;
@@ -36,7 +40,7 @@ export class SendMsgComponent implements OnInit {
     if (this.tempsms instanceof Array) {
       const batchaction = this.db.firestore.batch();
       this.tempsms.forEach((sms, index) => {
-        if (this.validatephone(sms.company.phone)) {
+        if (this.validatephone(sms.phone)) {
           sms.greeting = this.tempbulkmodel.greeting;
           sms.msg = `ID ${sms.company.Id} ${this.tempbulkmodel.msg}`;
           sms.type = {

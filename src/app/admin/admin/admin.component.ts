@@ -2,9 +2,9 @@ import { Component, OnDestroy, OnInit } from "@angular/core";
 import { MatDialog } from "@angular/material";
 import { BatchTrucksComponent } from "../batch-trucks/batch-trucks.component";
 import { FormControl, Validators } from "@angular/forms";
-import { Depot } from "../../models/Depot";
-import { AdminsService } from "../services/core/admins.service";
-import { DepotsService } from "../services/core/depots.service";
+import { Depot } from "../../models/depot/Depot";
+import { AdminService } from "../services/core/admin.service";
+import { DepotService } from "../services/core/depot.service";
 import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 
@@ -24,9 +24,9 @@ export class AdminComponent implements OnInit, OnDestroy {
   alldepots: Array<Depot>;
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
 
-  constructor(private adminservice: AdminsService,
+  constructor(private adminservice: AdminService,
     private dialog: MatDialog,
-    private depotsservice: DepotsService) {
+    private depotsservice: DepotService) {
 
     this.depotsservice.alldepots.pipe(takeUntil(this.comopnentDestroyed)).subscribe(depots => {
       this.alldepots = depots;

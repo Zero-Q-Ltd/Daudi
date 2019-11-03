@@ -1,34 +1,35 @@
 import { Injectable } from "@angular/core";
-import { Customer } from "../../models/Customer";
+import { Customer } from "../../models/customer/Customer";
 import { AngularFirestore } from "@angular/fire/firestore";
-import { DepotsService } from "./core/depots.service";
+import { DepotService } from "./core/depot.service";
 import { BehaviorSubject, Observable } from "rxjs";
 import { AngularFireFunctions } from "@angular/fire/functions";
-import { distinctUntilKeyChanged } from "rxjs/operators";
+import { distinctUntilKeyChanged, distinctUntilChanged } from "rxjs/operators";
+import { ConfigService } from "./core/config.service";
 
 @Injectable({
   providedIn: "root"
 })
 export class CustomerService {
-  allcompanies: BehaviorSubject<Array<Customer>> = new BehaviorSubject<Array<Customer>>([]);
-  loadingcompanies: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
-  depotAttachedCompany = "";
+  allcustomers: BehaviorSubject<Array<Customer>> = new BehaviorSubject<Array<Customer>>([]);
+  loadingcustomers: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
 
   /**
    * this keeps a local copy of all the subscriptions within this service
    */
   subscriptions: Map<string, any> = new Map<string, any>();
 
+  constructor(
+    private db: AngularFirestore,
+    private depotsservice: DepotService,
+    private config: ConfigService,
+    private functions: AngularFireFunctions) {
+    this.config.environment.subscribe(val => {
+      this.unsubscribeAll();
+      this.getallcustomers();
+    });
+    this.depotsservice.activedepot.subscribe(depot => {
 
-  constructor(private db: AngularFirestore,
-              private depotsservice: DepotsService,
-              private functions: AngularFireFunctions) {
-    this.depotsservice.activedepot.pipe(distinctUntilKeyChanged("companyId")).subscribe(depot => {
-      if (depot.Id) {
-        this.depotAttachedCompany = depot.companyId;
-        this.unsubscribeAll();
-        this.getallcompanies();
-      }
     });
   }
 
@@ -37,30 +38,30 @@ export class CustomerService {
    * @param krapin
    */
   queryActivecompany(krapin: string) {
-    return this.db.firestore.collection("companies")
+    return this.db.firestore.collection("customers")
       .where("krapin", "==", krapin)
       .where("Active", "==", true)
       .limit(1);
   }
 
   getcompany(companyid) {
-    return this.db.firestore.collection("companies")
+    return this.db.firestore.collection("customers")
       .doc(companyid);
   }
 
-  getallcompanies() {
-    this.loadingcompanies.next(true);
-    const subscriprion = this.db.firestore.collection("companies")
-      .where("sandbox", "==", this.depotsservice.activedepot.value.sandbox)
+  getallcustomers() {
+    this.loadingcustomers.next(true);
+    const subscriprion = this.db.firestore.collection("customers")
+      .where("sandbox", "==", this.config.environment.value)
       .onSnapshot(snapshot => {
-        this.allcompanies.next(snapshot.docs.map(value => {
+        this.allcustomers.next(snapshot.docs.map(value => {
           const co: Customer = value.data() as Customer;
           co.Id = value.id;
           return co;
         }));
-        this.loadingcompanies.next(false);
+        this.loadingcustomers.next(false);
       });
-    this.subscriptions.set("allcompanies", subscriprion);
+    this.subscriptions.set("allcustomers", subscriprion);
   }
 
   unsubscribeAll() {
@@ -74,16 +75,16 @@ export class CustomerService {
    * @param {string} krapin
    */
   verifykra(krapin: string) {
-    return this.db.firestore.collection("companies")
+    return this.db.firestore.collection("customers")
       .where("krapin", "==", krapin);
   }
 
-  querycompanies(companyname: string, maxstring: string) {
-    return this.db.firestore.collection("companies")
-      .where("name", ">=", companyname)
+  querycustomers(customer: string, maxstring: string) {
+    return this.db.firestore.collection("customers")
+      .where("name", ">=", customer)
       .where("name", "<", maxstring)
       .where("Active", "==", true)
-      .where("companyId", "==", this.depotsservice.activedepot.value.companyId);
+      .where("companyId", "==", this.config.getEnvironment().auth.companyId);
   }
 
   createcompany(company: Customer): Observable<any> {
@@ -93,7 +94,7 @@ export class CustomerService {
 
 
   updatecompany(companyid: string) {
-    return this.db.firestore.collection("companies").doc(companyid);
+    return this.db.firestore.collection("customers").doc(companyid);
   }
 
 }

@@ -3,17 +3,16 @@ import * as moment from "moment";
 import { CalendarRangesComponent } from "../calendar-ranges/calendar-ranges.component";
 import { EChartOption } from "echarts";
 import { FuelBoundstats } from "../charts/charts.config";
-import { emptystat, Stat } from "../../../models/Stats";
+import { emptystat, Stat } from "../../../models/stats/Stats";
 import { FormControl } from "@angular/forms";
 import { Router } from "@angular/router";
 import { MatSnackBar } from "@angular/material";
-import { DepotsService } from "../../services/core/depots.service";
+import { DepotService } from "../../services/core/depot.service";
 import { BatchesService } from "../../services/batches.service";
 import { StatsService } from "../../services/stats.service";
 import { PricesService } from "../../services/prices.service";
-import { fueltypesArray } from "../../../models/Fueltypes";
-import { Entry } from "../../../models/Entry";
-import { Price } from "../../../models/Price";
+import { Entry } from "../../../models/fuel/Entry";
+import { Price } from "../../../models/depot/Price";
 import { calculateMA } from "../charts/generalCalc";
 import { fuelgauge } from "../charts/qty";
 import { saleStats } from "../charts/sales";
@@ -21,6 +20,7 @@ import { singleFuelpricestat } from "../charts/prices";
 import "echarts/theme/macarons.js";
 import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
+import { fueltypesArray } from "../../../models/fuel/fuelTypes";
 
 @Component({
   selector: "app-stats",
@@ -80,9 +80,10 @@ export class StatsComponent implements OnInit, OnDestroy {
   subscriptions: Map<string, any> = new Map<string, any>();
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
 
-  constructor(private router: Router,
+  constructor(
+    private router: Router,
     public snackBar: MatSnackBar,
-    private depotservice: DepotsService,
+    private depotservice: DepotService,
     private batcheservice: BatchesService,
     private statservice: StatsService,
     private priceservice: PricesService) {
@@ -92,7 +93,7 @@ export class StatsComponent implements OnInit, OnDestroy {
         const b = moment(value.end);
         this.getstats(Math.abs(a.diff(b, "days")));
       });
-      if (depot.Id) {
+      if (depot.depot.Id) {
         /**
          * reset loading every time the depot is changed
          */
@@ -121,7 +122,7 @@ export class StatsComponent implements OnInit, OnDestroy {
                * force change detection in the charts directive
                */
               this.fuelgauge[fueltype] = { ...fuelgauge[fueltype] };
-              this.fuelgauge[fueltype].series[0].max += Math.round(batch.qty / 1000);
+              // this.fuelgauge[fueltype].series[0].max += Math.round(batch.qty / 1000);
               const available = this.getTotalAvailable(batch);
               this.fuelgauge[fueltype].series[0].data[0].value += Math.round(available / 1000);
             });
@@ -151,10 +152,10 @@ export class StatsComponent implements OnInit, OnDestroy {
   }
 
   getTotalAvailable(batch: Entry) {
-    const totalqty = batch.qty;
-    const loadedqty = batch.loadedqty;
-    const accumulated = batch.accumulated;
-    return totalqty - loadedqty + accumulated.usable;
+    const totalqty = batch.qty.total;
+    const totalLoaded = batch.qty.directLoad.total + batch.qty.transfered;
+    const accumulated = batch.qty.directLoad.accumulated;
+    return totalqty - totalLoaded + accumulated.usable;
   }
 
   /**

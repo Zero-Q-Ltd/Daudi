@@ -6,19 +6,21 @@ import { Observable, ReplaySubject } from "rxjs";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { MapsComponent } from "../maps/maps.component";
 import { NotificationService } from "../../shared/services/notification.service";
-import { Customer, emptycompany } from "../../models/Customer";
-import { emptyorder, Order } from "../../models/Order";
-import { Depot, emptydepot } from "../../models/Depot";
-import { AdminsService } from "../services/core/admins.service";
-import { fueltypesArray } from "../../models/Fueltypes";
-import { DepotsService } from "../services/core/depots.service";
+import { Customer, emptycompany } from "../../models/customer/Customer";
+import { emptyorder, Order } from "../../models/order/Order";
+import { Depot, emptydepot } from "../../models/depot/Depot";
+import { AdminService } from "../services/core/admin.service";
+import { DepotService } from "../services/core/depot.service";
 import { CustomerService } from "../services/customers.service";
 import { OrdersService } from "../services/orders.service";
 import { PricesService } from "../services/prices.service";
 import { AngularFireFunctions } from "@angular/fire/functions";
-import { map, startWith, takeUntil } from "rxjs/operators";
-import { fuelTypes } from "../../models/universal";
+import { map, startWith, takeUntil, skipWhile } from "rxjs/operators";
+import { fuelTypes, fueltypesArray } from "../../models/fuel/fuelTypes";
 import { ConfirmDepotComponent } from "./confirm-depot/confirm-depot.component";
+import { OmcService } from "../services/omc.service";
+import { ConfigService } from "../services/core/config.service";
+import { Config, emptyConfig } from "../../models/omc/Config";
 
 @Component({
   selector: "create-order",
@@ -26,7 +28,7 @@ import { ConfirmDepotComponent } from "./confirm-depot/confirm-depot.component";
   styleUrls: ["./create-order.component.scss"]
 })
 
-export class CreateOrderComponent implements OnInit, AfterViewInit, OnDestroy {
+export class CreateOrderComponent implements OnDestroy {
   position = "before";
   position1 = "above";
   // for KRA mask
@@ -35,7 +37,6 @@ export class CreateOrderComponent implements OnInit, AfterViewInit, OnDestroy {
   depotsdataSource = new MatTableDataSource<Depot>();
   priceColumns = ["depot", "pms_price", "pms_avgprice", "ago_price", "ago_avgprice", "ik_price", "ik_avgprice"];
   @ViewChild(MatSort, { static: true }) sort: MatSort;
-
   companyInfo: {
     newcompany: boolean,
     /**
@@ -76,8 +77,7 @@ export class CreateOrderComponent implements OnInit, AfterViewInit, OnDestroy {
   fueltypesArray = fueltypesArray;
   filteredCompanies: Observable<Customer[]>;
   companyControl = new FormControl();
-  currentdepotconfig: Depot = { ...emptydepot };
-  loadingcompanies = false;
+  loadingcustomers = false;
   queuedorders = [];
 
   /**
@@ -86,120 +86,139 @@ export class CreateOrderComponent implements OnInit, AfterViewInit, OnDestroy {
   subscriptions: Map<string, any> = new Map<string, any>();
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
 
-  constructor(private router: Router,
-              private notificationService: NotificationService,
-              private dialog: MatDialog,
-              private route: ActivatedRoute,
-              private adminservice: AdminsService,
-              private depotservice: DepotsService,
-              private companieservice: CustomerService,
-              private orderservice: OrdersService,
-              private priceservice: PricesService,
-              private functions: AngularFireFunctions) {
+  constructor(
+    private router: Router,
+    private notificationService: NotificationService,
+    private dialog: MatDialog,
+    private route: ActivatedRoute,
+    private adminservice: AdminService,
+    private depotService: DepotService,
+    private customerService: CustomerService,
+    private orderservice: OrdersService,
+    private omcservice: OmcService,
+    private configService: ConfigService,
+    private priceservice: PricesService,
+    private functions: AngularFireFunctions) {
 
 
-    this.route.params.pipe(takeUntil(this.comopnentDestroyed)).subscribe((paramdata: { orderid: string }) => {
-      if (!paramdata.orderid) {
-        console.log("Not discount approval");
-        this.depotservice.activedepot.pipe(takeUntil(this.comopnentDestroyed)).subscribe((value: Depot) => {
-          if (!value.Id) {
-            return;
-          }
-          this.currentdepotconfig = value;
-          /**
-           * This must execute in this exact order
-           */
-          this.initfuelprices();
-          this.initordersform();
-        });
-      } else {
-        this.discApproval = true;
-        const subscription = this.orderservice.getorder(paramdata.orderid).onSnapshot(ordersnapshot => {
-          this.temporder = ordersnapshot.data() as Order;
-          if (this.temporder.stage !== 1) {
-            this.notificationService.notify({
-              alert_type: "warning",
-              body: "Order has been approved",
-              duration: 2000,
-              title: "Conflict"
+    this.route.params
+      .pipe(takeUntil(this.comopnentDestroyed))
+      .subscribe((paramdata: { orderid: string }) => {
+        if (!paramdata.orderid) {
+          console.log("Not discount approval");
+          this.depotService.activedepot
+            .pipe(
+              takeUntil(this.comopnentDestroyed),
+              skipWhile(t => !t.depot.Id)
+            )
+            .subscribe((value) => {
+              /**
+               * This must execute in this exact order
+               */
+              this.initfuelprices();
+              this.initordersform();
             });
-            return;
-          }
-          this.depotservice.activedepot.pipe(takeUntil(this.comopnentDestroyed)).subscribe((value: Depot) => {
-            if (!value.Id) {
+        } else {
+          this.discApproval = true;
+          const subscription = this.orderservice.getorder(paramdata.orderid).onSnapshot(ordersnapshot => {
+            this.temporder = ordersnapshot.data() as Order;
+            if (this.temporder.stage !== 1) {
+              this.notificationService.notify({
+                alert_type: "warning",
+                body: "Order has been approved",
+                duration: 2000,
+                title: "Conflict"
+              });
               return;
             }
-            this.currentdepotconfig = value;
-            /**
-             * This must execute in this exact order
-             */
-            this.initfuelprices();
-            this.initordersform();
+            this.depotService.activedepot
+              .pipe(
+                takeUntil(this.comopnentDestroyed),
+                skipWhile(t => !t.depot.Id)
+              ).subscribe((value) => {
+                if (!value.depot.Id) {
+                  return;
+                }
+                /**
+                 * This must execute in this exact order
+                 */
+                this.initfuelprices();
+                this.initordersform();
+              });
           });
-        });
-        this.subscriptions.set(`discountorder`, subscription);
-      }
+          this.subscriptions.set(`discountorder`, subscription);
+        }
 
-    });
-
-    this.companieservice.loadingcompanies.pipe(takeUntil(this.comopnentDestroyed)).subscribe(value => {
-      this.loadingcompanies = value;
-    });
-    this.depotservice.alldepots.pipe(takeUntil(this.comopnentDestroyed)).subscribe((value) => {
-      this.depotsdataSource.data = value.filter((n) => n);
-    });
-    this.orderservice.queuedorders.pipe(takeUntil(this.comopnentDestroyed)).subscribe(value => {
-      this.queuedorders = value;
-    });
-    this.contactform.valueChanges.pipe(takeUntil(this.comopnentDestroyed)).subscribe((value) => {
-      this.temporder.company = {
-        QbId: this.companyInfo.companydata.QbId,
-        phone: value.phoneControl,
-        name: this.companyControl.value,
-        email: value.emailControl,
-        Id: null,
-        contact: {
-          email: value.emailControl,
-          name: value.nameControl,
-          phone: value.phoneControl
-        },
-        krapin: value.kraControl
-      };
-    });
-    this.orderform.valueChanges.pipe(takeUntil(this.comopnentDestroyed)).subscribe((value) => {
-      if (value.pmsqtyControl >= 1000 || value.agoqtyControl >= 1000 || value.ikqtyControl >= 1000) {
-        this.orderform.controls.pmsqtyControl.setErrors(null);
-        this.orderform.controls.agoqtyControl.setErrors(null);
-        this.orderform.controls.ikqtyControl.setErrors(null);
-      }
-      fueltypesArray.forEach((fueltype) => {
-        this.temporder.fuel[fueltype].qty = Number(value[fueltype + "qtyControl"]);
-        this.temporder.fuel[fueltype].priceconfig.price = Number(value[fueltype]);
-        this.temporder.fuel[fueltype].priceconfig.retailprice = this.tempsellingprices[fueltype];
-        this.temporder.fuel[fueltype].priceconfig.minsp = this.currentdepotconfig.minpriceconfig[fueltype].price;
-        const decimamlResolution = value[`${fueltype}qtyControl`] >= 10000 ? 4 : 3;
-        const calculatedpirces = this.deriveprice(this.temporder.fuel[fueltype].priceconfig.price, fueltype as fuelTypes, decimamlResolution);
-        this.temporder.fuel[fueltype].priceconfig.taxablePrice = calculatedpirces.taxablePrice;
-        this.temporder.fuel[fueltype].priceconfig.nonTaxprice = calculatedpirces.pricewithoutvat;
-
-        const taxcalculations = this.calculatevatamount(this.temporder.fuel[fueltype].priceconfig.taxablePrice, this.temporder.fuel[fueltype].qty);
-        this.temporder.fuel[fueltype].priceconfig.taxAmnt = taxcalculations.taxamount;
-        this.temporder.fuel[fueltype].priceconfig.taxableAmnt = taxcalculations.taxableamount;
-
-        const totalwithouttax = this.totalswithouttax(this.temporder.fuel[fueltype].priceconfig.nonTaxprice, this.temporder.fuel[fueltype].qty);
-        this.temporder.fuel[fueltype].priceconfig.nonTaxtotal = totalwithouttax;
-        this.temporder.fuel[fueltype].priceconfig.total = taxcalculations.taxamount + totalwithouttax;
-        this.temporder.fuel[fueltype].priceconfig.difference = this.calculateupmark(this.temporder.fuel[fueltype].priceconfig.price, this.temporder.fuel[fueltype].priceconfig.retailprice, this.temporder.fuel[fueltype].qty);
-
-        this.validateandcorrect();
       });
-    });
+
+    this.customerService.loadingcustomers
+      .pipe(takeUntil(this.comopnentDestroyed))
+      .subscribe(value => {
+        this.loadingcustomers = value;
+      });
+    this.depotService.alldepots
+      .pipe(takeUntil(this.comopnentDestroyed))
+      .subscribe((value) => {
+        this.depotsdataSource.data = value.filter((n) => n);
+      });
+    this.orderservice.queuedorders
+      .pipe(takeUntil(this.comopnentDestroyed))
+      .subscribe(value => {
+        this.queuedorders = value;
+      });
+    this.contactform.valueChanges
+      .pipe(takeUntil(this.comopnentDestroyed))
+      .subscribe((value) => {
+        this.temporder.company = {
+          QbId: this.companyInfo.companydata.QbId,
+          phone: value.phoneControl,
+          name: this.companyControl.value,
+          Id: null,
+          contact: [{
+            email: value.emailControl,
+            name: value.nameControl,
+            phone: value.phoneControl
+          }],
+          krapin: value.kraControl
+        };
+      });
+    this.orderform.valueChanges
+      .pipe(takeUntil(this.comopnentDestroyed))
+      .subscribe((value) => {
+        if (value.pmsqtyControl >= 1000 || value.agoqtyControl >= 1000 || value.ikqtyControl >= 1000) {
+          this.orderform.controls.pmsqtyControl.setErrors(null);
+          this.orderform.controls.agoqtyControl.setErrors(null);
+          this.orderform.controls.ikqtyControl.setErrors(null);
+        }
+        fueltypesArray.forEach((fueltype) => {
+          // this.temporder.fuel[fueltype].qty = Number(value[fueltype + "qtyControl"]);
+          // this.temporder.fuel[fueltype].priceconfig.price = Number(value[fueltype]);
+          // this.temporder.fuel[fueltype].priceconfig.retailprice = this.tempsellingprices[fueltype];
+          // this.temporder.fuel[fueltype].priceconfig.minsp = this.currentdepotconfig.minpriceconfig[fueltype].price;
+          // const decimamlResolution = value[`${fueltype}qtyControl`] >= 10000 ? 4 : 3;
+          // const calculatedpirces = this.deriveprice(this.temporder.fuel[fueltype].priceconfig.price, fueltype as fuelTypes, decimamlResolution);
+          // this.temporder.fuel[fueltype].priceconfig.taxablePrice = calculatedpirces.taxablePrice;
+          // this.temporder.fuel[fueltype].priceconfig.nonTaxprice = calculatedpirces.pricewithoutvat;
+
+          // const taxcalculations = this.calculatevatamount(this.temporder.fuel[fueltype].priceconfig.taxablePrice, this.temporder.fuel[fueltype].qty);
+          // this.temporder.fuel[fueltype].priceconfig.taxAmnt = taxcalculations.taxamount;
+          // this.temporder.fuel[fueltype].priceconfig.taxableAmnt = taxcalculations.taxableamount;
+
+          // const totalwithouttax = this.totalswithouttax(this.temporder.fuel[fueltype].priceconfig.nonTaxprice, this.temporder.fuel[fueltype].qty);
+          // this.temporder.fuel[fueltype].priceconfig.nonTaxtotal = totalwithouttax;
+          // this.temporder.fuel[fueltype].priceconfig.total = taxcalculations.taxamount + totalwithouttax;
+          // this.temporder.fuel[fueltype].priceconfig.difference = this.calculateupmark(this.temporder.fuel[fueltype].priceconfig.price, this.temporder.fuel[fueltype].priceconfig.retailprice, this.temporder.fuel[fueltype].qty);
+
+          this.validateandcorrect();
+        });
+      });
   }
 
   ngOnDestroy(): void {
     this.comopnentDestroyed.next(true);
     this.unsubscribeAll();
   }
+
 
   unsubscribeAll() {
     this.subscriptions.forEach(value => {
@@ -214,9 +233,9 @@ export class CreateOrderComponent implements OnInit, AfterViewInit, OnDestroy {
    * Dont want decimals at lower quantities
    */
   deriveprice(priceinclusivevat: number, fueltype: fuelTypes, decimalResolution: number): { pricewithoutvat: number, amountdeducted: number, taxablePrice: number } {
-    const pricewithoutvat = Number(((priceinclusivevat + (0.08 * this.currentdepotconfig.taxconfig[fueltype].nonTax)) / 1.08).toFixed(decimalResolution));
+    const pricewithoutvat = Number(((priceinclusivevat + (0.08 * this.configService.getEnvironment().fuelconfig[fueltype].tax.nonTax)) / 1.08).toFixed(decimalResolution));
     const amountdeducted = priceinclusivevat - pricewithoutvat;
-    const taxablePrice = Number((pricewithoutvat - this.currentdepotconfig.taxconfig[fueltype].nonTax).toFixed(decimalResolution));
+    const taxablePrice = Number((pricewithoutvat - this.configService.getEnvironment()[fueltype].tax.nonTax).toFixed(decimalResolution));
     return { pricewithoutvat, amountdeducted, taxablePrice };
   }
 
@@ -252,8 +271,8 @@ export class CreateOrderComponent implements OnInit, AfterViewInit, OnDestroy {
   initfuelprices() {
     if (!this.discApproval) {
       fueltypesArray.forEach((fueltype) => {
-        this.temporder.fuel[fueltype].priceconfig.taxQbId = this.currentdepotconfig.taxconfig[fueltype].QbId ? this.currentdepotconfig.taxconfig[fueltype].QbId : null;
-        this.temporder.fuel[fueltype].priceconfig.nonTax = this.currentdepotconfig.taxconfig[fueltype].nonTax ? Number(this.currentdepotconfig.taxconfig[fueltype].nonTax) : null;
+        // this.temporder.fuel[fueltype].priceconfig.taxQbId = this.currentdepotconfig.taxconfig[fueltype].QbId ? this.currentdepotconfig.taxconfig[fueltype].QbId : null;
+        // this.temporder.fuel[fueltype].priceconfig.nonTax = this.currentdepotconfig.taxconfig[fueltype].nonTax ? Number(this.currentdepotconfig.taxconfig[fueltype].nonTax) : null;
         /**
          * force the form to detect a change so that calculations are redone
          */
@@ -271,42 +290,45 @@ export class CreateOrderComponent implements OnInit, AfterViewInit, OnDestroy {
   initordersform() {
     if (!this.discApproval) {
       this.temporder.notifications = {
-        sms: !this.currentdepotconfig.sandbox,
-        email: !this.currentdepotconfig.sandbox
-      };
-
-      fueltypesArray.forEach((fueltype) => {
         /**
-         * Make sure that the current selling price is lower than the min selling price for that batch
+         * Initialise these variables default as false for sandbox environment
          */
-        if (this.currentdepotconfig.currentpriceconfig[fueltype].price >= this.currentdepotconfig.minpriceconfig[fueltype].price) {
-          this.tempsellingprices[fueltype] = this.currentdepotconfig.currentpriceconfig[fueltype].price;
-        } else {
-          this.tempsellingprices[fueltype] = this.currentdepotconfig.minpriceconfig[fueltype].price;
-          this.notificationService.notify({
-            alert_type: "notify",
-            duration: 20000,
-            title: "Invalid Prices",
-            body: `The current selling price for ${fueltype} is lower than the Min selling price, hence the Min selling price has been used`
-          });
-        }
-        this.orderform.controls[fueltype].setValue(this.temporder.fuel[fueltype].priceconfig.price = this.tempsellingprices[fueltype]);
-        this.orderform.controls[fueltype].setValidators(Validators.compose([Validators.min(this.currentdepotconfig.minpriceconfig[fueltype].price), Validators.required]));
+        sms: this.configService.environment.value === "sandbox" ? false : true,
+        email: this.configService.environment.value === "sandbox" ? false : true
+      };
+      /**
+       * @todo finish min price calculation logic
+       */
+      fueltypesArray.forEach((fueltype: fuelTypes) => {
+        /**
+         * Make sure that the current selling price is lower than the min selling price for the most recent entry
+         */
+        // if (this.currentdepotconfig.fuelconfig[fueltype].price >= this.currentdepotconfig.minpriceconfig[fueltype].price) {
+        //   this.tempsellingprices[fueltype] = this.currentdepotconfig.currentpriceconfig[fueltype].price;
+        // } else {
+        //   this.tempsellingprices[fueltype] = this.currentdepotconfig.minpriceconfig[fueltype].price;
+        //   this.notificationService.notify({
+        //     alert_type: "notify",
+        //     duration: 20000,
+        //     title: "Invalid Prices",
+        //     body: `The current selling price for ${fueltype} is lower than the Min selling price, hence the Min selling price has been used`
+        //   });
+        // }
+        // this.orderform.controls[fueltype].setValue(this.temporder.fuel[fueltype].priceconfig.price = this.tempsellingprices[fueltype]);
+        // this.orderform.controls[fueltype].setValidators(Validators.compose([Validators.min(this.currentdepotconfig.minpriceconfig[fueltype].price), Validators.required]));
       });
     } else {
       fueltypesArray.forEach((fueltype) => {
         this.orderform.controls[fueltype].setValue(this.temporder.fuel[fueltype].priceconfig.price = this.tempsellingprices[fueltype]);
-        this.orderform.controls[fueltype].setValidators(Validators.compose([Validators.min(this.currentdepotconfig.minpriceconfig[fueltype].price), Validators.required]));
+        // this.orderform.controls[fueltype].setValidators(Validators.compose([Validators.min(this.currentdepotconfig.minpriceconfig[fueltype].price), Validators.required]));
       });
-
     }
-
   }
 
   openmaps() {
     const dialogRef = this.dialog.open(MapsComponent,
       {
-        data: this.currentdepotconfig
+        // data: this.currentdepotconfig
       });
     dialogRef.disableClose = true;
     dialogRef.afterClosed().pipe(takeUntil(this.comopnentDestroyed)).subscribe((result) => {
@@ -322,7 +344,7 @@ export class CreateOrderComponent implements OnInit, AfterViewInit, OnDestroy {
       .pipe(
         startWith(""),
         map(value => {
-          // this.contactform.reset();
+          // this.contactform.reset()
           return this._filter(value);
         })
       );
@@ -340,7 +362,7 @@ export class CreateOrderComponent implements OnInit, AfterViewInit, OnDestroy {
    * Returns true if this KRA pin has not been used
    */
   searchkra(krapin: string): Customer | undefined {
-    return this.companieservice.allcompanies.value.filter(value => {
+    return this.customerService.allcustomers.value.filter(value => {
       return value.krapin === krapin;
     })[0];
   }
@@ -367,7 +389,7 @@ export class CreateOrderComponent implements OnInit, AfterViewInit, OnDestroy {
     const dialogRef = this.dialog.open(ConfirmDepotComponent,
       {
         role: "dialog",
-        data: this.currentdepotconfig.Name
+        data: this.depotService.activedepot.value.depot.Name
       });
     dialogRef.afterClosed().pipe(takeUntil(this.comopnentDestroyed)).subscribe(result => {
       if (result) {
@@ -407,28 +429,25 @@ export class CreateOrderComponent implements OnInit, AfterViewInit, OnDestroy {
   saveOrder(redirect: boolean, stage: number) {
     this.temporder.stage = stage;
     this.temporder.origin = "backend";
-    this.temporder.fuel.pms.QbId = this.currentdepotconfig.fuelconfig.pms;
-    this.temporder.fuel.ago.QbId = this.currentdepotconfig.fuelconfig.ago;
-    this.temporder.fuel.ik.QbId = this.currentdepotconfig.fuelconfig.ik;
+    this.temporder.fuel.pms.QbId = this.configService.getEnvironment().fuelconfig.pms.QbId;
+    this.temporder.fuel.ago.QbId = this.configService.getEnvironment().fuelconfig.ago.QbId;
+    this.temporder.fuel.ik.QbId = this.configService.getEnvironment().fuelconfig.ik.QbId;
     this.temporder.company.krapin = this.temporder.company.krapin.toLocaleUpperCase();
     this.temporder.stagedata["1"] = {
       user: this.adminservice.createuserobject(),
       data: null
     };
     this.temporder.config = {
-      depot: {
-        name: this.currentdepotconfig.Name,
-        Id: this.currentdepotconfig.Id
-      },
-      companyId: this.currentdepotconfig.companyId,
-      sandbox: this.currentdepotconfig.sandbox
+      depotId: this.depotService.activedepot.value.depot.Id,
+      QbCompanyId: this.configService.getEnvironment().auth.companyId,
+      environment: this.configService.environment.value
     };
     if (this.companyInfo.newcompany) {
       // check if KRA pin is unique
       /**
        * Todo : USe transaction instead
        */
-      this.companyInfo.companydata.sandbox = this.currentdepotconfig.sandbox;
+      // this.companyInfo.companydata.sandbox = this.currentdepotconfig.sandbox;
       this.companyInfo.companydata.krapin = this.temporder.company.krapin;
       if (this.searchkra(this.companyInfo.companydata.krapin)) {
         /**
@@ -436,7 +455,7 @@ export class CreateOrderComponent implements OnInit, AfterViewInit, OnDestroy {
          */
         this.krausedmsg(this.companyInfo.companydata.krapin);
       } else {
-        this.companieservice.createcompany(this.companyInfo.companydata).pipe(takeUntil(this.comopnentDestroyed)).subscribe((newcompany: Customer) => {
+        this.customerService.createcompany(this.companyInfo.companydata).pipe(takeUntil(this.comopnentDestroyed)).subscribe((newcompany: Customer) => {
           this.notificationService.notify({
             duration: 2000,
             title: "Synchronising",
@@ -495,14 +514,13 @@ export class CreateOrderComponent implements OnInit, AfterViewInit, OnDestroy {
     this.companyInfo.newcompany = false;
     this.companyInfo.companydata = selectedcompany;
     this.contactform.controls.kraControl.setValue(selectedcompany.krapin, { emitEvent: false });
-    this.contactform.controls.nameControl.setValue(selectedcompany.contact.name, { emitEvent: false });
-    this.contactform.controls.phoneControl.setValue(selectedcompany.contact.phone, { emitEvent: false });
-    this.contactform.controls.emailControl.setValue(selectedcompany.contact.email, { emitEvent: false });
+    this.contactform.controls.nameControl.setValue(selectedcompany.contact[0].name, { emitEvent: false });
+    this.contactform.controls.phoneControl.setValue(selectedcompany.contact[0].phone, { emitEvent: false });
+    this.contactform.controls.emailControl.setValue(selectedcompany.contact[0].email, { emitEvent: false });
     this.temporder.company.QbId = selectedcompany.QbId;
     this.temporder.company.name = selectedcompany.name;
     this.temporder.company.krapin = selectedcompany.krapin;
-    this.temporder.company.email = selectedcompany.contact.email;
-    this.temporder.company.phone = selectedcompany.contact.phone;
+    this.temporder.company.phone = selectedcompany.contact[0].phone;
     this.temporder.company.contact = selectedcompany.contact;
   }
 
@@ -517,7 +535,7 @@ export class CreateOrderComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   updatecompany() {
-    return this.companieservice.updatecompany(this.companyInfo.companydata.Id).update(this.temporder.company);
+    return this.customerService.updatecompany(this.companyInfo.companydata.Id).update(this.temporder.company);
   }
 
   createorder(redirect) {
@@ -553,6 +571,6 @@ export class CreateOrderComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     const filterValue = value.toLowerCase();
 
-    return this.companieservice.allcompanies.value.filter(option => option.name.toLowerCase().includes(filterValue));
+    return this.customerService.allcustomers.value.filter(option => option.name.toLowerCase().includes(filterValue));
   }
 }

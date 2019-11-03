@@ -2,14 +2,14 @@ import { map, take } from "rxjs/operators";
 import { Injectable } from "@angular/core";
 import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from "@angular/router";
 import { Observable } from "rxjs";
-import { Admin } from "../../models/Admin";
+import { Admin } from "../../models/admin/Admin";
 import { NotificationService } from "../../shared/services/notification.service";
-import { AdminsService } from "../services/core/admins.service";
-import { DepotsService } from "../services/core/depots.service"; // get our service
+import { AdminService } from "../services/core/admin.service";
+import { DepotService } from "../services/core/depot.service"; // get our service
 
 @Injectable()
 export class UsersGuard implements CanActivate {
-  constructor(private depotserviice: DepotsService, private adminservice: AdminsService, private router: Router, private notification: NotificationService) {
+  constructor(private depotserviice: DepotService, private adminservice: AdminService, private router: Router, private notification: NotificationService) {
 
   }
 
@@ -19,13 +19,7 @@ export class UsersGuard implements CanActivate {
       map((userdata: Admin) => {
         console.log(next, activated);
         if (userdata) {
-          if (activated.url !== "/app/dashboard" && this.depotserviice.activedepot.value.Id) {
-            // this.router.navigate(['app/page/orders-table/3']);
-            return true;
-          } else {
-            return true;
-          }
-
+          return true;
         } else {
           this.router.navigate(["/admin/login"]);
           this.notification.notify({

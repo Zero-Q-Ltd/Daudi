@@ -1,5 +1,5 @@
-import {CHARTCONFIG} from "./charts.config";
-import {EChartOption} from "echarts";
+import { CHARTCONFIG } from "./charts.config";
+import { EChartOption } from "echarts";
 
 export let saleStats: EChartOption = {
   toolbox: {
@@ -7,29 +7,29 @@ export let saleStats: EChartOption = {
     left: "left",
     feature: {
       // dataZoom: { show: true },
-      dataView: {show: true, readOnly: false, title: "   Raw Data", lang: ["Raw Data", "Close", null]},
+      dataView: { show: true, readOnly: false, title: "   Raw Data", lang: ["Raw Data", "Close", null] },
       magicType: {
         show: true,
         type: ["line", "stack", "tiled"],
-        title: {line: "Line", stack: "stack", tiled: "tiles"}
+        title: { line: "Line", stack: "stack", tiled: "tiles" }
       },
-      restore: {show: true, title: "Refresh"},
-      saveAsImage: {show: true, title: "Save Image"}
+      restore: { show: true, title: "Refresh" },
+      saveAsImage: { show: true, title: "Save Image" }
     }
   },
   legend: {
     show: true,
-    x: "right",
-    y: "top",
+    // x: "right",
+    // y: "top",
     textStyle: {
       color: CHARTCONFIG.textColor
     },
     data: ["Trend", "PMS", "AGO", "IK"]
   },
   grid: {
-    x: 60,
-    y: 80,
-    borderWidth: 0
+    // x: 60,
+    // y: 80,
+    // borderWidth: 0
   },
   tooltip: {
     show: true,
@@ -95,17 +95,17 @@ export let saleStats: EChartOption = {
     {
       name: "Trend",
       type: "line",
-      lineStyle: {
-        normal: {
-          color: CHARTCONFIG.gray
-        }
-      },
-      areaStyle: {
-        normal: {
-          color: CHARTCONFIG.gray
-        },
-        emphasis: {}
-      },
+      // lineStyle: {
+      //   normal: {
+      //     color: CHARTCONFIG.gray
+      //   }
+      // },
+      // areaStyle: {
+      //   normal: {
+      //     color: CHARTCONFIG.gray
+      //   },
+      //   emphasis: {}
+      // },
       data: [],
       legendHoverLink: false,
       z: 1

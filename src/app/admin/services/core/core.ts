@@ -1,1 +1,1 @@
-import * as admin from "./admins.service";
+import * as admin from "./admin.service";

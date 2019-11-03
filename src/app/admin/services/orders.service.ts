@@ -1,12 +1,12 @@
 import { Injectable } from "@angular/core";
-import { Order, orderqueryStagesarray, orderStages } from "../../models/Order";
+import { Order, orderStagesarray } from "../../models/order/Order";
+import { OrderStages } from "../../models/order/OrderStages";
 import { firestore } from "firebase";
 import * as moment from "moment";
 import { BehaviorSubject } from "rxjs";
 import { AngularFirestore } from "@angular/fire/firestore";
-import { DepotsService } from "./core/depots.service";
-import { Depot } from "../../models/Depot";
-import { ColNode } from "../../models/ColNode";
+import { DepotService } from "./core/depot.service";
+import { Depot } from "../../models/depot/Depot";
 import { MatTreeNestedDataSource } from "@angular/material";
 import { AngularFireFunctions } from "@angular/fire/functions";
 
@@ -17,7 +17,7 @@ export class OrdersService {
   loadingorders = new BehaviorSubject(true);
   activedepot: Depot;
   orders: {
-    [key in orderStages]: BehaviorSubject<Array<Order>>
+    [key in OrderStages]: BehaviorSubject<Array<Order>>
   } = {
       1: new BehaviorSubject<Array<Order>>([]),
       2: new BehaviorSubject<Array<Order>>([]),
@@ -33,13 +33,14 @@ export class OrdersService {
    */
   subscriptions: Map<string, any> = new Map<string, any>();
 
-  constructor(private db: AngularFirestore,
-    private depotsservice: DepotsService,
+  constructor(
+    private db: AngularFirestore,
+    private depotsservice: DepotService,
     private functions: AngularFireFunctions) {
     this.depotsservice.activedepot.subscribe(depot => {
       this.unsubscribeAll();
-      this.activedepot = depot;
-      this.getpipeline(depot);
+      // this.activedepot = depot;
+      // this.getpipeline(depot);
     });
   }
 
@@ -143,67 +144,6 @@ export class OrdersService {
     return queryvalue;
   }
 
-  querybuild(node: MatTreeNestedDataSource<ColNode>) {
-    let queryvalue: any = this.db.firestore.collection("depots")
-      .doc(this.activedepot.Id)
-      .collection("orders");
-    node.data.forEach(colnode => {
-      /**
-       * Check if the node is activated for search
-       */
-      if (colnode.selected) {
-        /**
-         * Check if the node has children, characterized by a the data array being empty
-         */
-        if (colnode.children && colnode.children.length > 0) {
-          /**
-           * Explode the node... haha
-           */
-          colnode.children.forEach(child => {
-            this.explodechildnode(child, queryvalue, colnode.nodename);
-          });
-        } else {
-          /**
-           * ignore activated empty nodes
-           */
-          if (colnode.searchvalue) {
-            queryvalue = queryvalue.where(`${colnode.nodename}`, "==", colnode.searchvalue);
-          }
-        }
-      }
-    });
-    console.log(queryvalue);
-    return queryvalue;
-  }
-
-  /**
-   * Recursively iterates over child nodes.
-   * @description Should only be called with valid selected nodes
-   * @param node
-   * @param queryvalue
-   * @param parentnode
-   */
-  explodechildnode(node: ColNode, queryvalue, parentnode: string) {
-    if (node.children && node.children.length > 0) {
-      node.children.forEach(child => {
-        /**
-         * recursively iterate over all the children
-         * Ignore nodes that are not selected
-         */
-        if (node.selected) {
-          this.explodechildnode(child, queryvalue, parentnode + "." + node.nodename);
-        }
-      });
-    } else {
-      /**
-       * Only search if a value had been typed
-       */
-      if (node.searchvalue && node.selected) {
-        queryvalue = queryvalue.where(`${parentnode ? parentnode + "." + node.nodename : node.nodename}`, "==", node.searchvalue);
-      }
-    }
-  }
-
   /**
    * Fetches all orders and trucks Relevant to the header
    */
@@ -222,7 +162,7 @@ export class OrdersService {
     this.orders["5"].next([]);
     this.orders["6"].next([]);
 
-    orderqueryStagesarray.forEach(stage => {
+    orderStagesarray.forEach(stage => {
 
       const subscriprion = this.db.firestore.collection("depots")
         .doc(activedepot.Id)
@@ -248,7 +188,7 @@ export class OrdersService {
           this.orders[stage].next(snapshot.docs.filter(doc => {
             const value = doc.data() as Order;
             value.Id = doc.id;
-            if (value.stage == 6 && (value.stagedata["1"].user.time instanceof firestore.Timestamp) && value.stagedata["1"].user.time.toDate() < moment().subtract(2, "w").toDate()) {
+            if (value.stage === 6 && (value.stagedata["1"].user.time instanceof firestore.Timestamp) && value.stagedata["1"].user.time.toDate() < moment().subtract(2, "w").toDate()) {
               doc.ref.delete();
               return false;
             } else {

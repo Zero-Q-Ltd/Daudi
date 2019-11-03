@@ -1,11 +1,11 @@
 import { Component, OnDestroy } from "@angular/core";
-import { orderStagesarray } from "../../../../models/Order";
-import { truckStagesarray } from "../../../../models/Truck";
+import { orderStagesarray } from "../../../../models/order/Order";
+import { truckStagesarray } from "../../../../models/order/Truck";
 import { OrdersService } from "../../../services/orders.service";
 import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators"; // get our service
-import { DepotsService } from "../../../services/core/depots.service";
-import { Depot, emptydepot } from "../../../../models/Depot";
+import { DepotService } from "../../../services/core/depot.service";
+import { Depot, emptydepot } from "../../../../models/depot/Depot";
 
 @Component({
   selector: "my-app-sidenav-menu",
@@ -33,7 +33,7 @@ export class AppSidenavMenuComponent implements OnDestroy {
   activedepot: Depot = Object.assign({}, emptydepot);
 
   constructor(private orderservice: OrdersService,
-    private depotservice: DepotsService) {
+    private depotservice: DepotService) {
     orderStagesarray.forEach(stage => {
       this.orderservice.orders[stage].pipe(takeUntil(this.comopnentDestroyed)).subscribe(orders => this.orderscount[stage] = orders.length);
     });
@@ -43,8 +43,8 @@ export class AppSidenavMenuComponent implements OnDestroy {
     this.depotservice.alldepots.pipe(takeUntil(this.comopnentDestroyed)).subscribe((alldepots: Array<Depot>) => {
       this.alldepots = alldepots;
     });
-    this.depotservice.activedepot.pipe(takeUntil(this.comopnentDestroyed)).subscribe((depot: Depot) => {
-      this.activedepot = depot;
+    this.depotservice.activedepot.pipe(takeUntil(this.comopnentDestroyed)).subscribe((depot) => {
+      // this.activedepot = depot;
     });
   }
 

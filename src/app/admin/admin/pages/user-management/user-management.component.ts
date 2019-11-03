@@ -1,19 +1,19 @@
 import { Component, OnDestroy, OnInit, ViewChild, HostListener } from "@angular/core";
-import { Admin, emptyadmin } from "../../../../models/Admin";
+import { Admin, emptyadmin } from "../../../../models/admin/Admin";
 import { MatDialog, MatPaginator, MatSnackBar, MatSort, MatTableDataSource } from "@angular/material";
 import * as moment from "moment";
 import { NotificationService } from "../../../../shared/services/notification.service";
-import { SyncRequest } from "../../../../models/Sync";
+import { SyncRequest } from "../../../../models/qbo/sync/Sync";
 import { firestore } from "firebase";
 import { animate, sequence, state, style, transition, trigger } from "@angular/animations";
 import { FormControl, Validators } from "@angular/forms";
-import { AdminsService } from "../../../services/core/admins.service";
-import { DepotsService } from "../../../services/core/depots.service";
-import { Depot } from "../../../../models/Depot";
+import { AdminService } from "../../../services/core/admin.service";
+import { DepotService } from "../../../services/core/depot.service";
+import { Depot } from "../../../../models/depot/Depot";
 import { AngularFireFunctions } from "@angular/fire/functions";
 import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
-import { OMC, emptyomc } from "../../../../models/Config";
+import { OMC, emptyomc } from "../../../../models/omc/OMC";
 import { ConfigService } from "../../../services/core/config.service";
 
 @Component({
@@ -56,16 +56,16 @@ export class UserManagementComponent implements OnInit, OnDestroy {
 
   constructor(
     private companyservice: ConfigService,
-    private adminservice: AdminsService,
+    private adminservice: AdminService,
     private functions: AngularFireFunctions,
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
     private notification: NotificationService,
-    private adminsService: AdminsService,
+    private adminsService: AdminService,
     private config: ConfigService,
-    private depotservice: DepotsService) {
+    private depotservice: DepotService) {
     this.depotservice.activedepot.pipe(takeUntil(this.comopnentDestroyed)).subscribe(depotvata => {
-      if (depotvata.Id) {
+      if (depotvata.depot.Id) {
         this.adminservice.observableuserdata.pipe(takeUntil(this.comopnentDestroyed)).subscribe(admin => {
           this.activeuser = admin;
         });
@@ -77,8 +77,8 @@ export class UserManagementComponent implements OnInit, OnDestroy {
             return value as Admin;
           });
         });
-        this.companyservice.companydata.pipe(takeUntil(this.comopnentDestroyed)).subscribe(co => {
-          this.originalCompany = co;
+        this.companyservice.omcconfig.pipe(takeUntil(this.comopnentDestroyed)).subscribe(co => {
+          // this.originalCompany = co;
         });
       }
     });
@@ -112,7 +112,7 @@ export class UserManagementComponent implements OnInit, OnDestroy {
     this.creatingsync = true;
 
     const syncobject: SyncRequest = {
-      companyid: this.config.companydata.value.qbconfig.companyid,
+      companyid: this.config.getEnvironment().auth.companyId,
       time: firestore.Timestamp.now(),
       synctype: ["Employee"]
     };

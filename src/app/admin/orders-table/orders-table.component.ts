@@ -6,14 +6,14 @@ import { ActivatedRoute } from "@angular/router";
 import { NotificationService } from "../../shared/services/notification.service";
 import { AngularFirestore } from "@angular/fire/firestore";
 import { animate, sequence, state, style, transition, trigger } from "@angular/animations";
-import { Truck } from "../../models/Truck";
-import { Order } from "../../models/Order";
-import { SMS } from "../../models/sms";
+import { Truck } from "../../models/order/Truck";
+import { Order } from "../../models/order/Order";
+import { SMS } from "../../models/sms/sms";
 import { firestore } from "firebase";
 import { ReasonComponent } from "../reason/reason.component";
 import { ExcelService } from "../services/excel-service.service";
 import { ColumnsCustomizerComponent } from "../columns-customizer/columns-customizer.component";
-import { AdminsService } from "../services/core/admins.service";
+import { AdminService } from "../services/core/admin.service";
 import { OrdersService } from "../services/orders.service";
 import { ComponentCommunicationService } from "../services/component-communication.service";
 import { switchMap, takeUntil } from "rxjs/operators";
@@ -68,7 +68,7 @@ export class OrdersTableComponent implements OnInit, OnDestroy {
     private db: AngularFirestore,
     private notification: NotificationService,
     private excelService: ExcelService,
-    private adminservice: AdminsService,
+    private adminservice: AdminService,
     private orderservice: OrdersService,
     private componentcommunication: ComponentCommunicationService) {
 
@@ -127,11 +127,11 @@ export class OrdersTableComponent implements OnInit, OnDestroy {
       Id: null,
       company: {
         QbId: clickedOrder.company.QbId,
-        contactname: clickedOrder.company.contact[0].name,
         Id: clickedOrder.company.Id,
         name: clickedOrder.company.name,
-        phone: clickedOrder.company.phone
+        krapin: clickedOrder.company.krapin
       },
+      phone: clickedOrder.company.phone,
       type: {
         reason: null,
         origin: "custom"

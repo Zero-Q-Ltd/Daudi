@@ -2,16 +2,16 @@ import { Injectable } from "@angular/core";
 import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from "@angular/router";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
-import { Admin } from "../../models/Admin";
-import { DepotsService } from "../services/core/depots.service";
-import { AdminsService } from "../services/core/admins.service";
+import { Admin } from "../../models/admin/Admin";
+import { DepotService } from "../services/core/depot.service";
+import { AdminService } from "../services/core/admin.service";
 import { NotificationService } from "../../shared/services/notification.service";
 
 @Injectable({
   providedIn: "root"
 })
 export class PricechangerGuard implements CanActivate {
-  constructor(private depotserviice: DepotsService, private adminservice: AdminsService, private router: Router, private notification: NotificationService) {
+  constructor(private depotserviice: DepotService, private adminservice: AdminService, private router: Router, private notification: NotificationService) {
 
   }
 

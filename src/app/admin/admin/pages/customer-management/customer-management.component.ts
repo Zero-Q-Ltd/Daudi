@@ -3,14 +3,14 @@ import { MAT_DIALOG_DATA, MatDialog, MatDialogRef, MatPaginator, MatSnackBar, Ma
 import { CompanyMembersComponent } from "../company-members/company-members.component";
 import { SendMsgComponent } from "../../../send-msg/send-msg.component";
 import { firestore } from "firebase";
-import { Customer } from "../../../../models/Customer";
-import { SyncRequest } from "../../../../models/Sync";
-import { SMS } from "../../../../models/sms";
+import { Customer } from "../../../../models/customer/Customer";
+import { SyncRequest } from "../../../../models/qbo/sync/Sync";
+import { SMS } from "../../../../models/sms/sms";
 import { NotificationService } from "../../../../shared/services/notification.service";
 import { SelectionModel } from "@angular/cdk/collections";
-import { AdminsService } from "../../../services/core/admins.service";
+import { AdminService } from "../../../services/core/admin.service";
 import { CustomerService } from "../../../services/customers.service";
-import { DepotsService } from "../../../services/core/depots.service";
+import { DepotService } from "../../../services/core/depot.service";
 import { AngularFireFunctions } from "@angular/fire/functions";
 import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
@@ -40,18 +40,18 @@ export class CustomerManagementComponent implements OnInit, OnDestroy {
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
     private notification: NotificationService,
-    private adminservice: AdminsService,
+    private adminservice: AdminService,
     private customerservice: CustomerService,
     private functions: AngularFireFunctions,
     private config: ConfigService,
-    private depot: DepotsService,
+    private depot: DepotService,
     @Optional() public dialogRef: MatDialogRef<CustomerManagementComponent>,
     @Optional() @Inject(MAT_DIALOG_DATA) public purpose: "SMS" | "Attach") {
     this.depot.activedepot.pipe(takeUntil(this.comopnentDestroyed))
       .subscribe(depotvata => {
         this.companiesdatasource.data = [];
         this.loadingcompanies = true;
-        if (depotvata.Id) {
+        if (depotvata.depot.Id) {
           if (purpose) {
             switch (purpose) {
               case "Attach": {
@@ -62,14 +62,14 @@ export class CustomerManagementComponent implements OnInit, OnDestroy {
               }
             }
           }
-          this.customerservice.loadingcompanies.pipe(takeUntil(this.comopnentDestroyed))
-            .subscribe(value => {
-              this.loadingcompanies = value;
-            });
-          customerservice.allcompanies.pipe(takeUntil(this.comopnentDestroyed))
-            .subscribe(data => {
-              this.companiesdatasource.data = data;
-            });
+          // this.customerservice.loadingcompanies.pipe(takeUntil(this.comopnentDestroyed))
+          //   .subscribe(value => {
+          //     this.loadingcompanies = value;
+          //   });
+          // customerservice.allcompanies.pipe(takeUntil(this.comopnentDestroyed))
+          //   .subscribe(data => {
+          //     this.companiesdatasource.data = data;
+          //   });
         }
       });
 
@@ -151,7 +151,7 @@ export class CustomerManagementComponent implements OnInit, OnDestroy {
     this.creatingsync = true;
 
     const syncobject: SyncRequest = {
-      companyid: this.config.companydata.value.qbconfig.companyid,
+      companyid: this.config.getEnvironment().auth.companyId,
       time: firestore.Timestamp.now(),
       synctype: ["Customer"]
     };

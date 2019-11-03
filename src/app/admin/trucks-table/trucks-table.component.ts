@@ -4,16 +4,16 @@ import * as moment from "moment";
 import { ActivatedRoute } from "@angular/router";
 import { animate, sequence, state, style, transition, trigger } from "@angular/animations";
 import { SendMsgComponent } from "../send-msg/send-msg.component";
-import { emptytruck, Truck } from "../../models/Truck";
-import { SMS } from "../../models/sms";
+import { emptytruck, Truck } from "../../models/order/Truck";
+import { SMS } from "../../models/sms/sms";
 import { firestore } from "firebase";
 import { ExcelService } from "../services/excel-service.service";
 import { ColumnsCustomizerComponent } from "../columns-customizer/columns-customizer.component";
-import { DepotsService } from "../services/core/depots.service";
+import { DepotService } from "../services/core/depot.service";
 import { ReplaySubject } from "rxjs";
 import { switchMap, takeUntil } from "rxjs/operators";
 import { OrdersService as OrderService } from "../services/orders.service";
-import { Order } from "src/app/models/Order";
+import { Order } from "../../models/order/Order";
 
 @Component({
   selector: "trucks-table",
@@ -62,7 +62,7 @@ export class TrucksTableComponent implements OnInit {
     private route: ActivatedRoute,
     private excelService: ExcelService,
     private orderService: OrderService,
-    private depotservice: DepotsService) {
+    private depotservice: DepotService) {
 
     /**
      * propagate changes when depot changes
@@ -113,6 +113,7 @@ export class TrucksTableComponent implements OnInit {
         reason: null,
         origin: "custom"
       },
+      phone: clickedOrder.company.phone,
       greeting: "Jambo",
       msg: null,
       status: {

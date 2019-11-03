@@ -9,7 +9,7 @@
         </agm-marker>
         <agm-marker *ngFor="let depot of alldepots">
           <agm-info-window>
-            <strong>{{depot.name}} </strong>
+            <strong>{{depot.Name}} </strong>
           </agm-info-window>
         </agm-marker>
       </agm-map>
@@ -61,7 +61,7 @@
               <input [(ngModel)]="activedepot.Name" matInput minlength="2" name="depotname" name="name"
                 placeholder="Depot Name" required type="text">
             </mat-form-field>
-            <mat-form-field (click)="openmaps()">
+            <!-- <mat-form-field (click)="openmaps()">
               <input #depotlocation aria-label="Company Location" matInput name="depotlocation"
                 placeholder="Depot Location" type="text"
                 value="{{activedepot.Location? tempdepot.Location.latitude : ''}}, {{activedepot.Location? activedepot.location.longitude : 'Empty Location'}}">
@@ -71,7 +71,7 @@
                 Location
                 <strong>required</strong>
               </mat-error>
-            </mat-form-field>
+            </mat-form-field> -->
           </mat-card-content>
         </mat-card>
       </mat-expansion-panel>

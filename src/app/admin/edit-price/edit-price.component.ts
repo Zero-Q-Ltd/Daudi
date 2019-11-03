@@ -4,20 +4,18 @@ import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { AngularFirestore } from "@angular/fire/firestore";
 import { NotificationService } from "../../shared/services/notification.service";
 import { ConfirmDialogComponent } from "../confirm-dialog/confirm-dialog.component";
-import { fuelTypes } from "../../models/universal";
-import { Price } from "../../models/Price";
-import { Depot, emptydepot } from "../../models/Depot";
-import { emptytaxconfig, taxconfig } from "../../models/Taxconfig";
-import { AdminsService } from "../services/core/admins.service";
+import { fuelTypes, fueltypesArray } from "../../models/fuel/fuelTypes";
+import { Price } from "../../models/depot/Price";
+import { Depot, emptydepot } from "../../models/depot/Depot";
+import { AdminService } from "../services/core/admin.service";
 import { PricesService } from "../services/prices.service";
-import { DepotsService } from "../services/core/depots.service";
-import { fueltypesArray } from "../../models/Fueltypes";
-import { Admin, emptyadmin } from "../../models/Admin";
-import { AvgPrice } from "../../models/AvgPrice";
-import { Omc } from "../../models/Omc";
+import { DepotService } from "../services/core/depot.service";
+import { Admin, emptyadmin } from "../../models/admin/Admin";
+import { AvgPrice } from "../../models/price/AvgPrice";
 import { OmcService } from "../services/omc.service";
 import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
+import { OMC } from "../../models/omc/OMC";
 
 @Component({
   selector: "edit-price",
@@ -50,7 +48,7 @@ export class EditPriceComponent implements OnInit, OnDestroy {
       }
     };
   activedepot: Depot = Object.assign({}, emptydepot);
-  taxexempt: taxconfig = emptytaxconfig;
+  taxexempt;
   spPricesform: FormGroup = new FormGroup({
     pms: new FormControl("", []),
     ago: new FormControl("", []),
@@ -73,16 +71,16 @@ export class EditPriceComponent implements OnInit, OnDestroy {
   depotsdataSource = new MatTableDataSource<Depot>();
   priceColumns = ["depot", "pms_price", "pms_avgprice", "ago_price", "ago_avgprice", "ik_price", "ik_avgprice"];
   userdata: Admin = Object.assign({}, { ...emptyadmin });
-  omcs: Array<Omc> = [];
+  omcs: Array<OMC> = [];
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
-  selectedOMC: Omc;
+  selectedOMC: OMC;
 
   constructor(
     private dialog: MatDialog,
     private db: AngularFirestore,
-    private depotservice: DepotsService,
+    private depotservice: DepotService,
     private notificationService: NotificationService,
-    private adminservice: AdminsService,
+    private adminservice: AdminService,
     private priceservice: PricesService,
     private omcservice: OmcService) {
 
@@ -95,17 +93,12 @@ export class EditPriceComponent implements OnInit, OnDestroy {
 
 
     this.depotservice.activedepot.pipe(takeUntil(this.comopnentDestroyed)).subscribe(depot => {
-      this.activedepot = depot;
-      this.spPricesform.controls.pms.setValidators(Validators.compose([Validators.min(this.activedepot.minpriceconfig.pms.price)]));
-      this.spPricesform.controls.ago.setValidators(Validators.compose([Validators.min(this.activedepot.minpriceconfig.ago.price)]));
-      this.spPricesform.controls.ik.setValidators(Validators.compose([Validators.min(this.activedepot.minpriceconfig.ik.price)]));
-      /**
-       * Olny fetch the avg prices after the active depot has been asigned, hence ignore the first value initializes in the Replaysubject
-       */
-      if (!depot.Name) {
-        return;
-      }
-      this.taxexempt = depot.taxconfig;
+      // this.activedepot = depot;
+      // this.spPricesform.controls.pms.setValidators(Validators.compose([Validators.min(this.activedepot.minpriceconfig.pms.price)]));
+      // this.spPricesform.controls.ago.setValidators(Validators.compose([Validators.min(this.activedepot.minpriceconfig.ago.price)]));
+      // this.spPricesform.controls.ik.setValidators(Validators.compose([Validators.min(this.activedepot.minpriceconfig.ik.price)]));
+
+      // this.taxexempt = depot.taxconfig;
       this.taxconfigform.disable();
       fueltypesArray.forEach(fueltyp => {
         this.priceservice.avgprices[fueltyp].total.pipe(takeUntil(this.comopnentDestroyed)).subscribe(total => {
@@ -131,7 +124,7 @@ export class EditPriceComponent implements OnInit, OnDestroy {
     this.depotsdataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  displayFn(omc?: Omc): string | undefined {
+  displayFn(omc?: OMC): string | undefined {
     return omc ? omc.name : undefined;
   }
 
@@ -153,18 +146,18 @@ export class EditPriceComponent implements OnInit, OnDestroy {
             fueltytype: fueltype,
             Id: null
           };
-          batchaction.set(this.priceservice.createprice(), tempprice);
-          this.activedepot.currentpriceconfig[fueltype].price = tempprice.price;
-          this.activedepot.currentpriceconfig[fueltype].user = tempprice.user;
-          batchaction.update(this.depotservice.updatedepot(), this.activedepot);
-          batchaction.commit().then(res => {
-            this.saving = false;
-            this.notificationService.notify({
-              body: `${fueltype} in ${this.activedepot.Name} successfully changed`,
-              title: `Success`,
-              alert_type: "success"
-            });
-          });
+          // batchaction.set(this.priceservice.createprice(), tempprice);
+          // this.activedepot.price[fueltype].price = tempprice.price;
+          // this.activedepot.price[fueltype].user = tempprice.user;
+          // batchaction.update(this.depotservice.updatedepot(), this.activedepot);
+          // batchaction.commit().then(res => {
+          //   this.saving = false;
+          //   this.notificationService.notify({
+          //     body: `${fueltype} in ${this.activedepot.Name} successfully changed`,
+          //     title: `Success`,
+          //     alert_type: "success"
+          //   });
+          // });
         } else {
           this.saving = false;
           this.notificationService.notify({
