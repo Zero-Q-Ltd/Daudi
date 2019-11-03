@@ -11,8 +11,8 @@ import * as firebase from "firebase";
 import { ConfirmDialogComponent } from "../../../confirm-dialog/confirm-dialog.component";
 @Component({
   selector: "app-company",
-  templateUrl: "./company.component.html",
-  styleUrls: ["./company.component.scss"]
+  templateUrl: "./config.component.html",
+  styleUrls: ["./config.component.scss"]
 })
 export class ConfigComponent implements OnInit, OnDestroy {
   /**

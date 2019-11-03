@@ -18,8 +18,12 @@ export class SendMsgComponent implements OnInit {
   bulk = false;
   tempbulkmodel: SMS = emptysms;
 
-  constructor(private dialog: MatDialog, @Inject(MAT_DIALOG_DATA) public tempsms: SMS | Array<SMS>,
-    private sms: SmsService, private notificationService: NotificationService, private db: AngularFirestore
+  constructor(
+    private dialog: MatDialog,
+    @Inject(MAT_DIALOG_DATA) public tempsms: SMS | Array<SMS>,
+    private sms: SmsService,
+    private notificationService: NotificationService,
+    private db: AngularFirestore
   ) {
     if (this.tempsms instanceof Array) {
       this.bulk = true;
