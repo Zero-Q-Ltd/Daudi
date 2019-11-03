@@ -55,8 +55,8 @@ export class ConfigComponent implements OnInit, OnDestroy {
   initvalues(): void {
     this.companyservice.omcconfig.pipe(takeUntil(this.comopnentDestroyed)).subscribe(co => {
       console.log(co);
-      this.originalCompany = co;
-      this.tempcompany = Object.assign({}, co);
+      // this.originalCompany = co;
+      // this.tempcompany = Object.assign({}, co);
     });
   }
 
@@ -83,12 +83,12 @@ export class ConfigComponent implements OnInit, OnDestroy {
       });
     dialogRef.afterClosed().pipe(takeUntil(this.comopnentDestroyed)).subscribe(result => {
       if (result) {
-        this.companyservice.saveConfig(null, this.tempcompany).then(() => {
-          this.notificationservice.notify({
-            title: "SAVED",
-            body: ""
-          });
-        });
+        // this.companyservice.saveConfig(null, this.tempcompany).then(() => {
+        //   this.notificationservice.notify({
+        //     title: "SAVED",
+        //     body: ""
+        //   });
+        // });
       }
     });
   }

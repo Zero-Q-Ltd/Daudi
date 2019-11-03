@@ -1,11 +1,13 @@
 import { Metadata } from "../universal/Metadata";
 import { ContactPerson } from "./ContactPerson";
+import { firestore } from "firebase";
+import { emptymetadata } from "../universal/universal";
 export interface OMC {
     license: string;
     location: firebase.firestore.GeoPoint;
     name: string;
     userid: string;
-    id: string;
+    Id: string;
     description: string;
     status: boolean;
     contactperson: Array<ContactPerson>;
@@ -27,7 +29,7 @@ export const emptyomc: OMC = {
      */
     location: new firestore.GeoPoint(-1.3373943, 36.7208522),
     name: null,
-    id: null,
+    Id: null,
     userid: null,
     description: null,
     metadata: emptymetadata,

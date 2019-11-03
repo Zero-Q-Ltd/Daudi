@@ -43,8 +43,8 @@ export class AppSidenavMenuComponent implements OnDestroy {
     this.depotservice.alldepots.pipe(takeUntil(this.comopnentDestroyed)).subscribe((alldepots: Array<Depot>) => {
       this.alldepots = alldepots;
     });
-    this.depotservice.activedepot.pipe(takeUntil(this.comopnentDestroyed)).subscribe((depot: Depot) => {
-      this.activedepot = depot;
+    this.depotservice.activedepot.pipe(takeUntil(this.comopnentDestroyed)).subscribe((depot) => {
+      // this.activedepot = depot;
     });
   }
 

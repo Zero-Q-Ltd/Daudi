@@ -1,16 +1,16 @@
 import { Injectable } from "@angular/core";
-import { Omc } from "../../models/Omc";
 import { AngularFirestore } from "@angular/fire/firestore";
 import { BehaviorSubject } from "rxjs";
 import { DepotService } from "./core/depot.service";
 import { take } from "rxjs/operators";
+import { OMC } from "../../models/omc/OMC";
 
 @Injectable({
   providedIn: "root"
 })
 export class OmcService {
 
-  omcs: BehaviorSubject<Array<Omc>> = new BehaviorSubject<Array<Omc>>([]);
+  omcs: BehaviorSubject<Array<OMC>> = new BehaviorSubject<Array<OMC>>([]);
 
   /**
    * this keeps a local copy of all the subscriptions within this service
@@ -50,7 +50,7 @@ export class OmcService {
       .orderBy("name", "asc")
       .onSnapshot(snapshot => {
         this.omcs.next(snapshot.docs.map(value => {
-          const co: Omc = value.data() as Omc;
+          const co: OMC = value.data() as OMC;
           co.Id = value.id;
           return co;
         }));

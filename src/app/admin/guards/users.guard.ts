@@ -19,13 +19,7 @@ export class UsersGuard implements CanActivate {
       map((userdata: Admin) => {
         console.log(next, activated);
         if (userdata) {
-          if (activated.url !== "/app/dashboard" && this.depotserviice.activedepot.value.Id) {
-            // this.router.navigate(['app/page/orders-table/3']);
-            return true;
-          } else {
-            return true;
-          }
-
+          return true;
         } else {
           this.router.navigate(["/admin/login"]);
           this.notification.notify({

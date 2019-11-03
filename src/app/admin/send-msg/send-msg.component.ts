@@ -36,7 +36,7 @@ export class SendMsgComponent implements OnInit {
     if (this.tempsms instanceof Array) {
       const batchaction = this.db.firestore.batch();
       this.tempsms.forEach((sms, index) => {
-        if (this.validatephone(sms.company.phone)) {
+        if (this.validatephone(sms.phone)) {
           sms.greeting = this.tempbulkmodel.greeting;
           sms.msg = `ID ${sms.company.Id} ${this.tempbulkmodel.msg}`;
           sms.type = {

@@ -1,11 +1,10 @@
 import { Injectable } from "@angular/core";
-import { Types } from "../../models/fuel/fuelTypes";
+import { fuelTypes, fueltypesArray } from "../../models/fuel/fuelTypes";
 import * as moment from "moment";
 import { AngularFirestore } from "@angular/fire/firestore";
 import { Depot } from "../../models/depot/Depot";
 import { DepotService } from "./core/depot.service";
 import { BehaviorSubject } from "rxjs";
-import { fueltypesArray } from "../../models/fuel/Types";
 import { Price } from "../../models/depot/Price";
 
 @Injectable({
@@ -15,7 +14,7 @@ export class PricesService {
   activedepot: Depot;
 
   avgprices: {
-    [key in Types]: {
+    [key in fuelTypes]: {
       total: BehaviorSubject<number>,
       avg: BehaviorSubject<number>,
       prices: BehaviorSubject<Array<Price>>
@@ -44,8 +43,8 @@ export class PricesService {
 
   constructor(private db: AngularFirestore, private depotservice: DepotService) {
     depotservice.activedepot.subscribe(depot => {
-      this.activedepot = depot;
-      if (depot.Id) {
+      // this.activedepot = depot;
+      if (depot.depot.Id) {
         this.unsubscribeAll();
         fueltypesArray.forEach(fueltyp => {
           const subscriprion = this.getavgprices(fueltyp as any)
@@ -85,7 +84,7 @@ export class PricesService {
   }
 
 
-  getavgprices(fueltye: Types) {
+  getavgprices(fueltye: fuelTypes) {
     if (!this.activedepot.Id) {
       return;
     }

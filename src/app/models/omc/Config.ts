@@ -6,6 +6,7 @@ import { firestore } from "firebase";
 import { Meta } from "../universal/Meta";
 import { DepotConfig } from "../depot/DepotConfig";
 import { FuelConfig, emptyFuelConfig } from "./FuelConfig";
+import { Environment } from "./Environments";
 
 export interface Config {
     adminTypes: Array<AdminType>;
@@ -13,8 +14,7 @@ export interface Config {
         /**
          * Every company has a sandbox and a live config
          */
-        sandbox: QboEnvironment,
-        live: QboEnvironment,
+        [key in Environment]: QboEnvironment
     };
     /**
      * Depot configurations remains constant across different environments

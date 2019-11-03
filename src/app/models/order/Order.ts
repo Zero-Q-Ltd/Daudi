@@ -1,9 +1,10 @@
-import { Types } from "../fuel/fuelTypes";
+import { fuelTypes } from "../fuel/fuelTypes";
 import { User } from "../universal/User";
 import { Contact } from "../customer/Contact";
 import { Truck, emptytruck } from "./Truck";
 import { FuelConfig } from "./FuelConfig";
 import { OrderStages } from "./OrderStages";
+import { Environment } from "../omc/Environments";
 
 export interface Order {
   Id: string; // used to temporarily store the key, used later for looping
@@ -25,7 +26,7 @@ export interface Order {
   config: {
     QbCompanyId: number,
     depotId: string,
-    sandbox: boolean,
+    environment: Environment,
   };
   error?: {
     status: boolean,
@@ -38,7 +39,7 @@ export interface Order {
   truck: Truck;
   loaded: boolean;
   fuel: {
-    [key in Types]: FuelConfig
+    [key in fuelTypes]: FuelConfig
   };
   discount?: {
     approved: {
@@ -47,7 +48,7 @@ export interface Order {
       data: {},
     },
     request: {
-      [key in Types]: number;
+      [key in fuelTypes]: number;
     }
   };
   stagedata: {
@@ -108,7 +109,7 @@ export const emptyorder: Order = {
   config: {
     QbCompanyId: null,
     depotId: null,
-    sandbox: null
+    environment: null
   },
   origin: null,
   stage: null,

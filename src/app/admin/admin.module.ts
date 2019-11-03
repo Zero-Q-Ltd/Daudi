@@ -82,7 +82,6 @@ import { FcmService } from "./services/fcm.service";
 import { AdminService } from "./services/core/admin.service";
 import { OrdersService } from "./services/orders.service";
 import { PricesService } from "./services/prices.service";
-import { PricingComponent } from "./pricing/pricing.component";
 import { OmcService } from "./services/omc.service";
 import { OmcManagementComponent } from "./admin/pages/omc-management/omc-management.component";
 import { BatchesComponent } from "./admin/pages/batches/batches.component";
@@ -184,7 +183,6 @@ import { CreateComponent } from "./admin/pages/payments/create/create.component"
     ReasonComponent,
     ColumnsCustomizerComponent,
     DepotManagementComponent,
-    PricingComponent,
     OmcManagementComponent,
     BatchesComponent,
     CalendarRangesComponent,

@@ -1,173 +1,172 @@
 <mat-card-content *ngIf="!loadingtruck">
   <div>
-      <span [matTooltipPosition]="position" class="truck-details" matTooltip="Driver Name">
-        <i class="fa fa-user color-primary"></i>: {{clickedtruck?.drivername}}
-      </span>
+    <span [matTooltipPosition]="position" class="truck-details" matTooltip="Driver Name">
+      <i class="fa fa-user color-primary"></i>: {{order.truck?.drivername}}
+    </span>
     <span [matTooltipPosition]="position" class="truck-details" matTooltip="Driver ID">
-        <i class="fa fa-id-card-o color-primary"></i>: {{clickedtruck?.driverid}}
-      </span>
+      <i class="fa fa-id-card-o color-primary"></i>: {{order.truck?.driverid}}
+    </span>
     <span [matTooltipPosition]="position" class="truck-details" matTooltip="Truck Number Plate">
-        <i class="fa fa-truck color-primary"></i>: {{clickedtruck?.numberplate}}
-      </span>
+      <i class="fa fa-truck color-primary"></i>: {{order.truck?.numberplate}}
+    </span>
 
     <span class="float-right">
-        <button (click)="deleteTruck()" *ngIf="clickedtruck?.stage === 0" mat-icon-button>
-          <span [matTooltipPosition]="position1" class="nav-icon nav-dot material-icons color-danger"
-                matTooltip="Delete">delete_sweep
-          </span>
-        </button>
-        <button (click)="resetTruck(clickedtruck)"
-                *ngIf="clickedtruck?.stage > 0 && clickedtruck?.stage < 4 && !clickedtruck.stagedata['4'].data"
-                mat-icon-button matSuffix type="button">
-          <span class="material-icons color-danger" matTooltip="Reset">restore</span>
-        </button>
-        <mat-slide-toggle (toggleChange)="freezetruck(clickedtruck)" [(ngModel)]="clickedtruck.frozen"
-                          [disabled]="order.stage!=4"
-                          matTooltip="{{order.stage!=4 ? 'You can only freeze a truck that has been approved, and not complete' : ''}}">
-          Freeze</mat-slide-toggle>
-        <button (click)="approveTruck()" *ngIf="clickedtruck?.stage === 0" mat-icon-button>
-          <span [matTooltipPosition]="position2" class="nav-icon nav-dot material-icons color-success"
-                matTooltip="Approve">check_circle
-          </span>
-        </button>
-      </span>
+      <button (click)="deleteTruck()" *ngIf="order.truck?.stage === 0" mat-icon-button>
+        <span [matTooltipPosition]="position1" class="nav-icon nav-dot material-icons color-danger"
+          matTooltip="Delete">delete_sweep
+        </span>
+      </button>
+      <button (click)="resetTruck(order.truck)"
+        *ngIf="order.truck?.stage > 0 && order.truck?.stage < 4 && !order.truck.stagedata['4'].data" mat-icon-button
+        matSuffix type="button">
+        <span class="material-icons color-danger" matTooltip="Reset">restore</span>
+      </button>
+      <mat-slide-toggle (toggleChange)="freezetruck(order.truck)" [(ngModel)]="order.truck.frozen"
+        [disabled]="order.stage!=4"
+        matTooltip="{{order.stage!=4 ? 'You can only freeze a truck that has been approved, and not complete' : ''}}">
+        Freeze</mat-slide-toggle>
+      <button (click)="approveTruck()" *ngIf="order.truck?.stage === 0" mat-icon-button>
+        <span [matTooltipPosition]="position2" class="nav-icon nav-dot material-icons color-success"
+          matTooltip="Approve">check_circle
+        </span>
+      </button>
+    </span>
   </div>
-  <table *ngIf="clickedtruck?.stage > 0" class="table table-stripped card-body">
+  <table *ngIf="order.truck?.stage > 0" class="table table-stripped card-body">
     <thead class="thead-primary">
-    <tr>
-      <th scope="col">Stage</th>
-      <th>Status</th>
-      <th scope="col">Total Est Time</th>
-      <th>Time Spent in Stage</th>
-      <th>Additions</th>
-      <th>Accuracy</th>
-      <th>User</th>
-      <th style="text-align: center">Time Taken</th>
-    </tr>
+      <tr>
+        <th scope="col">Stage</th>
+        <th>Status</th>
+        <th scope="col">Total Est Time</th>
+        <th>Time Spent in Stage</th>
+        <th>Additions</th>
+        <th>Accuracy</th>
+        <th>User</th>
+        <th style="text-align: center">Time Taken</th>
+      </tr>
     </thead>
     <tbody>
-    <tr
-      [ngClass]="{ 'color-danger' : clickedtruck.stage == 1 && expired(clickedtruck?.stagedata['1'].data.expiry[0]?.timestamp) ,
-                       'color-success' : clickedtruck.stage == 1 && !expired(clickedtruck?.stagedata['1'].data.expiry[0]?.timestamp)} ">
-      <td class="order-stage">Processing</td>
-      <td>
-        <span *ngIf="clickedtruck.stage == 1 else completed">
-          <span *ngIf="clickedtruck.isPrinted; else not_printed">
-            {{resolvetime(clickedtruck?.stagedata["1"].data.expiry[0]?.timestamp)}}
+      <tr
+        [ngClass]="{ 'color-danger' : order.truck.stage == 1 && expired(order.truck?.stagedata['1'].data.expiry[0]?.timestamp) ,
+                       'color-success' : order.truck.stage == 1 && !expired(order.truck?.stagedata['1'].data.expiry[0]?.timestamp)} ">
+        <td class="order-stage">Processing</td>
+        <td>
+          <span *ngIf="order.truck.stage == 1 else completed">
+            <span *ngIf="order.truck.isPrinted; else not_printed">
+              {{resolvetime(order.truck?.stagedata["1"].data.expiry[0]?.timestamp)}}
+            </span>
+            <ng-template #not_printed>
+              Not Printed
+            </ng-template>
           </span>
-         <ng-template #not_printed>
-           Not Printed
-         </ng-template>
-        </span>
-        <ng-template #completed class="color-success">
-          Completed
-        </ng-template>
-      </td>
-      <td>
-          <span *ngIf="clickedtruck.stage > 1 else not_done">
-            {{calculatetotaltime(clickedtruck.stagedata["1"].data.expiry)}}
+          <ng-template #completed class="color-success">
+            Completed
+          </ng-template>
+        </td>
+        <td>
+          <span *ngIf="order.truck.stage > 1 else not_done">
+            {{calculatetotaltime(order.truck.stagedata["1"].data.expiry)}}
           </span>
-        <ng-template #not_done class="color-success">
-          Developing
-        </ng-template>
-      </td>
-      <td>
-            <span *ngIf="clickedtruck.stage > 1">
-              {{timespent(clickedtruck.stagedata["1"].user.time, clickedtruck.stagedata["2"].user.time)}}
-            </span>
-      </td>
-      <td>
-            <span *ngIf="clickedtruck.stage > 0">
-              {{clickedtruck.stagedata["1"].data.expiry?.length - 1}}
-            </span>
-      </td>
-      <td class="custom-slider">
-        <ng5-slider
-          *ngIf="clickedtruck.stage > 1 && calculateaccuracy(clickedtruck.stagedata['1'].data.expiry, clickedtruck.stagedata['1'].user.time, clickedtruck.stagedata['2'].user.time, 1 )"
-          [manualRefresh]="manualRefresh" [options]="slider" [value]="accuracycolors[1].percentage"></ng5-slider>
-      </td>
-      <td>{{clickedtruck.stagedata["1"].user?.name}}</td>
-      <td></td>
-    </tr>
-    <tr
-      [ngClass]="{ 'color-danger' : clickedtruck.stage == 2 && expired(clickedtruck?.stagedata['2'].data.expiry[0]?.timestamp) ,
-                       'color-success' : clickedtruck.stage == 2 && !expired(clickedtruck?.stagedata['2'].data.expiry[0]?.timestamp)} ">
-      <td class="order-stage">Queued</td>
-      <td>
-            <span *ngIf="clickedtruck.stage == 2">
-              {{resolvetime(clickedtruck?.stagedata["2"].data.expiry[0]?.timestamp)}}
-            </span>
-        <span *ngIf="clickedtruck.stage > 2" class="color-success">
-              Completed
-            </span>
-      </td>
-      <td>{{calculatetotaltime(clickedtruck.stagedata["2"].data.expiry)}}</td>
-      <td>
-            <span *ngIf="clickedtruck.stage > 2">
-              {{timespent(clickedtruck.stagedata["2"].user.time, clickedtruck.stagedata["3"].user.time)}}
-            </span>
-      </td>
-      <td>
-            <span *ngIf="clickedtruck.stage > 1">
-              {{clickedtruck.stagedata["2"].data.expiry?.length - 1}}
-            </span>
-      </td>
-      <td class="custom-slider">
-        <ng5-slider
-          *ngIf="clickedtruck.stage > 2 && calculateaccuracy(clickedtruck.stagedata['2'].data.expiry, clickedtruck.stagedata['2'].user.time, clickedtruck.stagedata['3'].user.time, 2 )"
-          [manualRefresh]="manualRefresh" [options]="slider" [value]="accuracycolors[2].percentage"></ng5-slider>
-      </td>
-      <td>{{clickedtruck.stagedata["2"].user?.name}}</td>
-      <td rowspan="2"
-          style="vertical-align : middle;text-align:center;font-weight: bold;background-color: lightgray">
-            <span *ngIf="clickedtruck.stage == 4">
-              {{timespent(clickedtruck.stagedata['2'].user.time, clickedtruck.stagedata['4'].user.time)}}
-            </span>
-      </td>
-    </tr>
-    <tr
-      [ngClass]="{ 'color-danger' : clickedtruck.stage == 3 && expired(clickedtruck?.stagedata['3'].data.expiry[0]?.timestamp) ,
-                       'color-success' : clickedtruck.stage == 3 && !expired(clickedtruck?.stagedata['3'].data.expiry[0]?.timestamp)} ">
-      <td class="order-stage">Loading</td>
-      <td>
-            <span *ngIf="clickedtruck.stage == 3">
-              {{resolvetime(clickedtruck?.stagedata["3"].data.expiry[0]?.timestamp)}}
-            </span>
-        <span *ngIf="clickedtruck.stage > 3" class="color-success">
-              Completed
-            </span>
-      </td>
-      <td>{{calculatetotaltime(clickedtruck.stagedata["3"].data.expiry)}}</td>
-      <td>
-            <span *ngIf="clickedtruck.stage > 3">
-              {{timespent(clickedtruck.stagedata["3"].user.time, clickedtruck.stagedata["4"].user.time)}}
-            </span>
-      </td>
-      <td>
-            <span *ngIf="clickedtruck.stage > 2">
-              {{clickedtruck.stagedata["3"].data.expiry?.length - 1}}
-            </span>
-      </td>
-      <td class="custom-slider">
-        <ng5-slider
-          *ngIf="clickedtruck.stage > 3 && calculateaccuracy(clickedtruck.stagedata['3'].data.expiry, clickedtruck.stagedata['3'].user.time, clickedtruck.stagedata['4'].user.time, 3 )"
-          [manualRefresh]="manualRefresh" [options]="slider" [value]="accuracycolors[3].percentage"></ng5-slider>
-      </td>
-      <td>{{clickedtruck.stagedata["3"].user?.name}}</td>
-    </tr>
+          <ng-template #not_done class="color-success">
+            Developing
+          </ng-template>
+        </td>
+        <td>
+          <span *ngIf="order.truck.stage > 1">
+            {{timespent(order.truck.stagedata["1"].user.time, order.truck.stagedata["2"].user.time)}}
+          </span>
+        </td>
+        <td>
+          <span *ngIf="order.truck.stage > 0">
+            {{order.truck.stagedata["1"].data.expiry?.length - 1}}
+          </span>
+        </td>
+        <td class="custom-slider">
+          <ng5-slider
+            *ngIf="order.truck.stage > 1 && calculateaccuracy(order.truck.stagedata['1'].data.expiry, order.truck.stagedata['1'].user.time, order.truck.stagedata['2'].user.time, 1 )"
+            [manualRefresh]="manualRefresh" [options]="slider" [value]="accuracycolors[1].percentage"></ng5-slider>
+        </td>
+        <td>{{order.truck.stagedata["1"].user?.name}}</td>
+        <td></td>
+      </tr>
+      <tr
+        [ngClass]="{ 'color-danger' : order.truck.stage == 2 && expired(order.truck?.stagedata['2'].data.expiry[0]?.timestamp) ,
+                       'color-success' : order.truck.stage == 2 && !expired(order.truck?.stagedata['2'].data.expiry[0]?.timestamp)} ">
+        <td class="order-stage">Queued</td>
+        <td>
+          <span *ngIf="order.truck.stage == 2">
+            {{resolvetime(order.truck?.stagedata["2"].data.expiry[0]?.timestamp)}}
+          </span>
+          <span *ngIf="order.truck.stage > 2" class="color-success">
+            Completed
+          </span>
+        </td>
+        <td>{{calculatetotaltime(order.truck.stagedata["2"].data.expiry)}}</td>
+        <td>
+          <span *ngIf="order.truck.stage > 2">
+            {{timespent(order.truck.stagedata["2"].user.time, order.truck.stagedata["3"].user.time)}}
+          </span>
+        </td>
+        <td>
+          <span *ngIf="order.truck.stage > 1">
+            {{order.truck.stagedata["2"].data.expiry?.length - 1}}
+          </span>
+        </td>
+        <td class="custom-slider">
+          <ng5-slider
+            *ngIf="order.truck.stage > 2 && calculateaccuracy(order.truck.stagedata['2'].data.expiry, order.truck.stagedata['2'].user.time, order.truck.stagedata['3'].user.time, 2 )"
+            [manualRefresh]="manualRefresh" [options]="slider" [value]="accuracycolors[2].percentage"></ng5-slider>
+        </td>
+        <td>{{order.truck.stagedata["2"].user?.name}}</td>
+        <td rowspan="2" style="vertical-align : middle;text-align:center;font-weight: bold;background-color: lightgray">
+          <span *ngIf="order.truck.stage == 4">
+            {{timespent(order.truck.stagedata['2'].user.time, order.truck.stagedata['4'].user.time)}}
+          </span>
+        </td>
+      </tr>
+      <tr
+        [ngClass]="{ 'color-danger' : order.truck.stage == 3 && expired(order.truck?.stagedata['3'].data.expiry[0]?.timestamp) ,
+                       'color-success' : order.truck.stage == 3 && !expired(order.truck?.stagedata['3'].data.expiry[0]?.timestamp)} ">
+        <td class="order-stage">Loading</td>
+        <td>
+          <span *ngIf="order.truck.stage == 3">
+            {{resolvetime(order.truck?.stagedata["3"].data.expiry[0]?.timestamp)}}
+          </span>
+          <span *ngIf="order.truck.stage > 3" class="color-success">
+            Completed
+          </span>
+        </td>
+        <td>{{calculatetotaltime(order.truck.stagedata["3"].data.expiry)}}</td>
+        <td>
+          <span *ngIf="order.truck.stage > 3">
+            {{timespent(order.truck.stagedata["3"].user.time, order.truck.stagedata["4"].user.time)}}
+          </span>
+        </td>
+        <td>
+          <span *ngIf="order.truck.stage > 2">
+            {{order.truck.stagedata["3"].data.expiry?.length - 1}}
+          </span>
+        </td>
+        <td class="custom-slider">
+          <ng5-slider
+            *ngIf="order.truck.stage > 3 && calculateaccuracy(order.truck.stagedata['3'].data.expiry, order.truck.stagedata['3'].user.time, order.truck.stagedata['4'].user.time, 3 )"
+            [manualRefresh]="manualRefresh" [options]="slider" [value]="accuracycolors[3].percentage"></ng5-slider>
+        </td>
+        <td>{{order.truck.stagedata["3"].user?.name}}</td>
+      </tr>
 
     </tbody>
   </table>
-  <div *ngIf="clickedtruck?.stage > 0" class="full-div">
-      <span [matTooltipPosition]="position3" class="order-stage" matTooltip="Exit Time">
-        <i class="fa fa-clock-o color-primary"></i>:
-        {{clickedtruck.stagedata["4"].user?.time?.toDate()| date: 'short'}}</span>
+  <div *ngIf="order.truck?.stage > 0" class="full-div">
+    <span [matTooltipPosition]="position3" class="order-stage" matTooltip="Exit Time">
+      <i class="fa fa-clock-o color-primary"></i>:
+      {{order.truck.stagedata["4"].user?.time?.toDate()| date: 'short'}}</span>
     <span [matTooltipPosition]="position3" class="order-stage" matTooltip="Seals Range">
-        <i class="fa fa-folder-o color-primary"></i>: {{clickedtruck.stagedata["4"].data?.seals.range}}</span>
+      <i class="fa fa-folder-o color-primary"></i>: {{order.truck.stagedata["4"].data?.seals.range}}</span>
     <span [matTooltipPosition]="position3" class="order-stage" matTooltip="Broken Seals">
-        <i class="fa fa-folder-open-o color-primary"></i>: {{clickedtruck.stagedata["4"].data?.seals.broken}}</span>
+      <i class="fa fa-folder-open-o color-primary"></i>: {{order.truck.stagedata["4"].data?.seals.broken}}</span>
     <span [matTooltipPosition]="position3" class="order-stage" matTooltip="Completed By">
-        <i class="fa fa-user color-primary"></i>: {{clickedtruck.stagedata["3"].user?.name}}</span>
+      <i class="fa fa-user color-primary"></i>: {{order.truck.stagedata["3"].user?.name}}</span>
   </div>
   <br>
   <mat-accordion>
@@ -182,46 +181,46 @@
       </mat-expansion-panel-header>
       <table class="table table-stripped">
         <thead class="thead-primary">
-        <tr>
-          <th>Comp 1</th>
-          <th>Comp 2</th>
-          <th>Comp 3</th>
-          <th>Comp 4</th>
-          <th>Comp 5</th>
-          <th>Comp 6</th>
-          <th>Comp 7</th>
-        </tr>
+          <tr>
+            <th>Comp 1</th>
+            <th>Comp 2</th>
+            <th>Comp 3</th>
+            <th>Comp 4</th>
+            <th>Comp 5</th>
+            <th>Comp 6</th>
+            <th>Comp 7</th>
+          </tr>
         </thead>
 
         <tbody>
-        <tr>
-          <td class="color-{{clickedtruck?.compartments[0].fueltype}}">
-            {{clickedtruck?.compartments[0].qty}}
-          </td>
-          <td class="color-{{clickedtruck?.compartments[1].fueltype}}">
-            {{clickedtruck?.compartments[1].qty}}
-          </td>
-          <td class="color-{{clickedtruck?.compartments[2].fueltype}}">
-            {{clickedtruck?.compartments[2].qty}}
-          </td>
-          <td class="color-{{clickedtruck?.compartments[3].fueltype}}">
-            {{clickedtruck?.compartments[3].qty}}
-          </td>
-          <td class="color-{{clickedtruck?.compartments[4].fueltype}}">
-            {{clickedtruck?.compartments[4].qty}}
-          </td>
-          <td class="color-{{clickedtruck?.compartments[5].fueltype}}">
-            {{clickedtruck?.compartments[5].qty}}
-          </td>
-          <td class="color-{{clickedtruck?.compartments[6].fueltype}}">
-            {{clickedtruck?.compartments[6].qty}}
-          </td>
-        </tr>
+          <tr>
+            <td class="color-{{order.truck?.compartments[0].fueltype}}">
+              {{order.truck?.compartments[0].qty}}
+            </td>
+            <td class="color-{{order.truck?.compartments[1].fueltype}}">
+              {{order.truck?.compartments[1].qty}}
+            </td>
+            <td class="color-{{order.truck?.compartments[2].fueltype}}">
+              {{order.truck?.compartments[2].qty}}
+            </td>
+            <td class="color-{{order.truck?.compartments[3].fueltype}}">
+              {{order.truck?.compartments[3].qty}}
+            </td>
+            <td class="color-{{order.truck?.compartments[4].fueltype}}">
+              {{order.truck?.compartments[4].qty}}
+            </td>
+            <td class="color-{{order.truck?.compartments[5].fueltype}}">
+              {{order.truck?.compartments[5].qty}}
+            </td>
+            <td class="color-{{order.truck?.compartments[6].fueltype}}">
+              {{order.truck?.compartments[6].qty}}
+            </td>
+          </tr>
         </tbody>
       </table>
     </mat-expansion-panel>
   </mat-accordion>
-  <mat-accordion *ngIf="clickedtruck?.stage > 0">
+  <mat-accordion *ngIf="order.truck?.stage > 0">
     <mat-expansion-panel>
       <mat-expansion-panel-header>
         <mat-panel-title class="expanded-pane">
@@ -233,86 +232,86 @@
       </mat-expansion-panel-header>
       <div class="row no-gutters">
         <div class="col-sm-4">
-            <span class="batch-table color-pms">
-              <mat-icon>local_gas_station</mat-icon>
-              PMS : {{clickedtruck.fuel.pms.qty}}
-            </span>
+          <span class="batch-table color-pms">
+            <mat-icon>local_gas_station</mat-icon>
+            PMS : {{order.truck.fuel.pms.qty}}
+          </span>
           <table class="table table-stripped">
             <thead class="thead-primary">
-            <tr class="color-pms">
-              <th>{{clickedtruck?.fuel.pms.batches["0"]?.Name || 'Batch1'}}</th>
-              <th>{{clickedtruck?.fuel.pms.batches["1"]?.Name || 'Batch2'}}</th>
-              <th>Total</th>
-              <th>Observed</th>
-            </tr>
+              <tr class="color-pms">
+                <th>{{order.truck?.fuel.pms.batches["0"]?.Name || 'Batch1'}}</th>
+                <th>{{order.truck?.fuel.pms.batches["1"]?.Name || 'Batch2'}}</th>
+                <th>Total</th>
+                <th>Observed</th>
+              </tr>
             </thead>
             <tbody>
-            <tr class="color-pms">
-              <td>{{clickedtruck?.fuel.pms.batches["0"]?.qty}}</td>
-              <td>{{clickedtruck?.fuel.pms.batches["1"]?.qty}}</td>
-              <td>{{clickedtruck.fuel.pms.qty}}</td>
-              <td>
-                {{clickedtruck?.fuel.pms.batches["1"]?.qty ?
-                  clickedtruck?.fuel.pms.batches["1"]?.observed :
-                  clickedtruck?.fuel.pms.batches["0"]?.observed}}
-              </td>
-            </tr>
+              <tr class="color-pms">
+                <td>{{order.truck?.fuel.pms.batches["0"]?.qty}}</td>
+                <td>{{order.truck?.fuel.pms.batches["1"]?.qty}}</td>
+                <td>{{order.truck.fuel.pms.qty}}</td>
+                <td>
+                  {{order.truck?.fuel.pms.batches["1"]?.qty ?
+                  order.truck?.fuel.pms.batches["1"]?.observed :
+                  order.truck?.fuel.pms.batches["0"]?.observed}}
+                </td>
+              </tr>
 
             </tbody>
           </table>
         </div>
         <div class="col-sm-4">
-            <span class="batch-table color-ago">
-              <mat-icon>local_gas_station</mat-icon>
-              AGO : {{clickedtruck.fuel.ago.qty}}
-            </span>
+          <span class="batch-table color-ago">
+            <mat-icon>local_gas_station</mat-icon>
+            AGO : {{order.truck.fuel.ago.qty}}
+          </span>
           <table class="table table-stripped">
             <thead class="thead-primary">
-            <tr class="color-ago">
-              <th>{{clickedtruck?.fuel.ago.batches["0"]?.Name || 'Batch1'}}</th>
-              <th>{{clickedtruck?.fuel.ago.batches["1"]?.Name || 'Batch2'}}</th>
-              <th>Total</th>
-              <th>Observed</th>
-            </tr>
+              <tr class="color-ago">
+                <th>{{order.truck?.fuel.ago.batches["0"]?.Name || 'Batch1'}}</th>
+                <th>{{order.truck?.fuel.ago.batches["1"]?.Name || 'Batch2'}}</th>
+                <th>Total</th>
+                <th>Observed</th>
+              </tr>
             </thead>
             <tbody>
-            <tr class="color-ago">
-              <td>{{clickedtruck?.fuel.ago.batches["0"]?.qty}}</td>
-              <td>{{clickedtruck?.fuel.ago.batches["1"]?.qty}}</td>
-              <td>{{clickedtruck.fuel.ago.qty}}</td>
-              <td>{{clickedtruck?.fuel.ago.batches["1"]?.qty ?
-                  clickedtruck?.fuel.ago.batches["1"]?.observed :
-                  clickedtruck?.fuel.ago.batches["0"]?.observed}}
-              </td>
-            </tr>
+              <tr class="color-ago">
+                <td>{{order.truck?.fuel.ago.batches["0"]?.qty}}</td>
+                <td>{{order.truck?.fuel.ago.batches["1"]?.qty}}</td>
+                <td>{{order.truck.fuel.ago.qty}}</td>
+                <td>{{order.truck?.fuel.ago.batches["1"]?.qty ?
+                  order.truck?.fuel.ago.batches["1"]?.observed :
+                  order.truck?.fuel.ago.batches["0"]?.observed}}
+                </td>
+              </tr>
 
             </tbody>
           </table>
         </div>
         <div class="col-sm-4">
-            <span class="batch-table color-ik">
-              <mat-icon>local_gas_station</mat-icon>
-              IK : {{clickedtruck.fuel.ik.qty}}
-            </span>
+          <span class="batch-table color-ik">
+            <mat-icon>local_gas_station</mat-icon>
+            IK : {{order.truck.fuel.ik.qty}}
+          </span>
           <table class="table table-stripped">
             <thead class="thead-primary">
-            <tr class="color-ik">
-              <th>{{clickedtruck?.fuel.ik.batches["0"]?.Name || 'Batch1'}}</th>
-              <th>{{clickedtruck?.fuel.ik.batches["1"]?.Name || 'Batch2'}}</th>
-              <th>Total</th>
-              <th>Observed</th>
-            </tr>
+              <tr class="color-ik">
+                <th>{{order.truck?.fuel.ik.batches["0"]?.Name || 'Batch1'}}</th>
+                <th>{{order.truck?.fuel.ik.batches["1"]?.Name || 'Batch2'}}</th>
+                <th>Total</th>
+                <th>Observed</th>
+              </tr>
             </thead>
             <tbody>
-            <tr class="color-ik">
-              <td>{{clickedtruck?.fuel.ik.batches["0"]?.qty}}</td>
-              <td>{{clickedtruck?.fuel.ik.batches["1"]?.qty}}</td>
-              <td>{{clickedtruck.fuel.ik.qty}}</td>
-              <td>{{clickedtruck?.fuel.ik.batches["1"]?.qty ?
-                  clickedtruck?.fuel.ik.batches["1"]?.observed :
-                  clickedtruck?.fuel.ik.batches["0"]?.observed}}
-              </td>
-            </tr>
+              <tr class="color-ik">
+                <td>{{order.truck?.fuel.ik.batches["0"]?.qty}}</td>
+                <td>{{order.truck?.fuel.ik.batches["1"]?.qty}}</td>
+                <td>{{order.truck.fuel.ik.qty}}</td>
+                <td>{{order.truck?.fuel.ik.batches["1"]?.qty ?
+                  order.truck?.fuel.ik.batches["1"]?.observed :
+                  order.truck?.fuel.ik.batches["0"]?.observed}}
+                </td>
+              </tr>
 
             </tbody>
           </table>

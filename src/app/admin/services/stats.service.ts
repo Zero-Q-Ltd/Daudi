@@ -11,7 +11,7 @@ export class StatsService {
 
   constructor(private db: AngularFirestore, depotservice: DepotService) {
     depotservice.activedepot.subscribe(depot => {
-      this.activedepot = depot;
+      // this.activedepot = depot;
     });
   }
 

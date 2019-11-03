@@ -1,5 +1,5 @@
 import { inituser } from "../universal/universal";
-import { Types } from "../fuel/fuelTypes";
+import { fuelTypes } from "../fuel/fuelTypes";
 import { User } from "../universal/User";
 import * as firebase from "firebase";
 

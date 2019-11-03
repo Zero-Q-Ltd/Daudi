@@ -23,7 +23,6 @@ import { firestore } from "firebase";
 })
 export class TruckDetailsComponent implements OnInit, OnDestroy {
   order: Order;
-  clickedtruck: Truck = { ...emptytruck };
   loadingtruck = false;
   position = "above";
 
@@ -111,7 +110,6 @@ export class TruckDetailsComponent implements OnInit, OnDestroy {
         return;
       }
       this.order = order;
-      this.gettruck();
     });
 
   }
@@ -127,29 +125,7 @@ export class TruckDetailsComponent implements OnInit, OnDestroy {
     });
   }
 
-  gettruck() {
-    this.loadingtruck = true;
-    if (!this.order.Id) {
-      return;
-    }
-    const subscription = this.truckservice.getTruck(this.order.Id)
-      .onSnapshot(truck => {
-        this.clickedtruck = truck.data() as Truck;
-        if (truck.exists) {
-          this.clickedtruck.Id = truck.id;
-        } else {
-          console.log("error fetching truck");
-        }
-        /**
-         * Deliberately delay the operation to make the animation amooth
-         */
-        setTimeout(() => {
-          this.loadingtruck = false;
-          return;
-        }, 700);
-      });
-    this.subscriptions.set(`truck`, subscription);
-  }
+
 
   timespent(start, stop) {
     const difference = moment(stop.toDate()).diff(moment(start.toDate()));
@@ -231,11 +207,11 @@ export class TruckDetailsComponent implements OnInit, OnDestroy {
   }
 
   approveTruck() {
-    const dialogRef = this.dialog.open(BatchesSelectorComponent, {
-      role: "dialog",
-      data: this.clickedtruck.Id,
-      width: "80%"
-    });
+    // const dialogRef = this.dialog.open(BatchesSelectorComponent, {
+    //   role: "dialog",
+    //   data: this.clickedtruck.Id,
+    //   width: "80%"
+    // });
 
   }
 
@@ -287,11 +263,12 @@ export class TruckDetailsComponent implements OnInit, OnDestroy {
       if (result) {
         truck.stagedata[1].user = this.adminservice.createuserobject();
         truck.stagedata[1].expiry = [
-          {
-            duration: "00:45:00",
-            timeCreated: firestore.Timestamp.now(),
-            expiry: firestore.Timestamp.fromDate(moment().add(45, "minutes").toDate())
-          }];
+          // {
+          //   duration: "00:45:00",
+          //   timeCreated: firestore.Timestamp.now(),
+          //   expiry: firestore.Timestamp.fromDate(moment().add(45, "minutes").toDate())
+          // }
+        ];
         truck.stagedata[2].expiry = [];
         truck.stagedata[3].expiry = [];
         truck.stage = 1;

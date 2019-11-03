@@ -7,12 +7,11 @@ import { Depot, emptydepot } from "../../../models/depot/Depot";
 import { AdminService } from "../../services/core/admin.service";
 import { DepotService } from "../../services/core/depot.service";
 import { Admin, emptyadmin } from "../../../models/admin/Admin";
-import { fueltypesArray } from "../../../models/fuel/Types";
 import { OrdersService } from "../../services/orders.service";
 import { orderStagesarray } from "../../../models/order/Order";
 import { truckStagesarray } from "../../../models/order/Truck";
 import { PricesService } from "../../services/prices.service";
-import { Types } from "../../../models/fuel/fuelTypes";
+import { fuelTypes, fueltypesArray } from "../../../models/fuel/fuelTypes";
 import { Price } from "../../../models/depot/Price";
 import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
@@ -56,7 +55,7 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
   };
 
   avgprices: {
-    [key in Types]: {
+    [key in fuelTypes]: {
       total: number,
       prices: Array<Price>
     }
@@ -79,13 +78,13 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
 
   constructor(private router: Router,
-              private afAuth: AngularFireAuth,
-              private orderservice: OrdersService,
-              private adminservice: AdminService,
-              private depotservice: DepotService,
-              private priceservice: PricesService) {
-    this.depotservice.activedepot.pipe(takeUntil(this.comopnentDestroyed)).subscribe((depot: Depot) => {
-      this.activedepot = depot;
+    private afAuth: AngularFireAuth,
+    private orderservice: OrdersService,
+    private adminservice: AdminService,
+    private depotservice: DepotService,
+    private priceservice: PricesService) {
+    this.depotservice.activedepot.pipe(takeUntil(this.comopnentDestroyed)).subscribe((depot) => {
+      // this.activedepot = depot;
     });
     this.depotservice.alldepots.pipe(takeUntil(this.comopnentDestroyed)).subscribe((alldepots: Array<Depot>) => {
       this.alldepots = alldepots;

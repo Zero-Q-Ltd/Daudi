@@ -14,7 +14,8 @@ import { AdminService } from "./core/admin.service";
 export class FcmService {
   currentMessage = new BehaviorSubject(null);
 
-  constructor(private db: AngularFirestore,
+  constructor(
+    private db: AngularFirestore,
     private afMessaging: AngularFireMessaging,
     private notification: NotificationService,
     private adminservice: AdminService) {
@@ -29,7 +30,7 @@ export class FcmService {
   }
 
   updateusertokes(user: Admin, token) {
-    if (user.fcmtokens.web !== token) {
+    if (user.config.fcm.tokens.web !== token) {
       this.db.firestore.collection("admins").doc(user.Id).update({ "fcmtokens.web": token });
     }
   }

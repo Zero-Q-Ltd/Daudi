@@ -68,7 +68,7 @@ export class BatchesComponent implements OnInit {
         ik: true
       };
 
-      if (depotvata.Id) {
+      if (depotvata.depot.Id) {
         fueltypesArray.forEach((fueltype: fuelTypes) => {
           /**
            * Create a subscrition for 1000 batches history
@@ -118,7 +118,7 @@ export class BatchesComponent implements OnInit {
   syncdb() {
     this.creatingsync = true;
     const syncobject: SyncRequest = {
-      companyid: this.config.omcconfig.value.Qbo.companyId,
+      companyid: this.config.getEnvironment().auth.companyId,
       time: firestore.Timestamp.now(),
       synctype: ["BillPayment"]
     };

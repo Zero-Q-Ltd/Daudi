@@ -16,7 +16,6 @@ import { LoginComponent } from "./login/login.component";
 import { LayoutComponent } from "./layout/layout.component";
 import { UsersGuard } from "./guards/users.guard";
 import { PricechangerGuard } from "./guards/pricechanger.guard";
-import { PricingComponent } from "./pricing/pricing.component";
 
 const routes: Routes = [
   {
@@ -121,15 +120,6 @@ const routes: Routes = [
     },
     component: LoginComponent
   },
-  {
-    path: "editprice",
-    data: {
-      description: "Sales representatives price submission page",
-      configurable: true,
-
-    },
-    component: PricingComponent, canActivate: [PricechangerGuard]
-  }
 
 ];
 

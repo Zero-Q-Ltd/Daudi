@@ -17,7 +17,6 @@ export class DepotService {
    */
   activedepot: BehaviorSubject<{ depot: Depot, config: Config }> = new BehaviorSubject({ depot: { ...emptydepot }, config: { ...emptyConfig } });
 
-  sandbox: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
   /**
    * this keeps a local copy of all the subscriptions within this service
@@ -39,13 +38,12 @@ export class DepotService {
   }
 
   updatedepot() {
-    return this.db.firestore.collection("depots").doc(this.activedepot.value.Id);
+    return this.db.firestore.collection("depots").doc(this.activedepot.value.depot.Id);
   }
 
   fetchdepots() {
     const depotquery = this.db.firestore.collection("depots")
       .where("Active", "==", true);
-    0;
     const subscriprion = depotquery.onSnapshot(snapshot => {
       const tempdepot: Depot = Object.assign({}, emptydepot, snapshot.docs[0].data());
       tempdepot.Id = snapshot.docs[0].id;
@@ -58,8 +56,8 @@ export class DepotService {
         value.Id = doc.id;
         return value as Depot;
       });
-      if (alldepots.find(depot => depot.Id === this.activedepot.value.Id)) {
-        this.changeactivedepot(alldepots.find(depot => depot.Id === this.activedepot.value.Id));
+      if (alldepots.find(depot => depot.Id === this.activedepot.value.depot.Id)) {
+        this.changeactivedepot(alldepots.find(depot => depot.Id === this.activedepot.value.depot.Id));
       } else {
         this.changeactivedepot(tempdepot);
       }
@@ -82,7 +80,7 @@ export class DepotService {
   changeactivedepot(depot: Depot) {
     if (JSON.stringify(depot) !== JSON.stringify(this.activedepot.value)) {
       console.log("changing");
-      this.activedepot.next(depot);
+      // this.activedepot.next(depot);
     } else {
       return;
     }

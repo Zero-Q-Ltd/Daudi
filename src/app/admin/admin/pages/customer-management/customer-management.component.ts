@@ -51,7 +51,7 @@ export class CustomerManagementComponent implements OnInit, OnDestroy {
       .subscribe(depotvata => {
         this.companiesdatasource.data = [];
         this.loadingcompanies = true;
-        if (depotvata.Id) {
+        if (depotvata.depot.Id) {
           if (purpose) {
             switch (purpose) {
               case "Attach": {
@@ -62,14 +62,14 @@ export class CustomerManagementComponent implements OnInit, OnDestroy {
               }
             }
           }
-          this.customerservice.loadingcompanies.pipe(takeUntil(this.comopnentDestroyed))
-            .subscribe(value => {
-              this.loadingcompanies = value;
-            });
-          customerservice.allcompanies.pipe(takeUntil(this.comopnentDestroyed))
-            .subscribe(data => {
-              this.companiesdatasource.data = data;
-            });
+          // this.customerservice.loadingcompanies.pipe(takeUntil(this.comopnentDestroyed))
+          //   .subscribe(value => {
+          //     this.loadingcompanies = value;
+          //   });
+          // customerservice.allcompanies.pipe(takeUntil(this.comopnentDestroyed))
+          //   .subscribe(data => {
+          //     this.companiesdatasource.data = data;
+          //   });
         }
       });
 
@@ -151,7 +151,7 @@ export class CustomerManagementComponent implements OnInit, OnDestroy {
     this.creatingsync = true;
 
     const syncobject: SyncRequest = {
-      companyid: this.config.omcconfig.value.Qbo.companyId,
+      companyid: this.config.getEnvironment().auth.companyId,
       time: firestore.Timestamp.now(),
       synctype: ["Customer"]
     };

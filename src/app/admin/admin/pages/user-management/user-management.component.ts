@@ -13,8 +13,7 @@ import { Depot } from "../../../../models/depot/Depot";
 import { AngularFireFunctions } from "@angular/fire/functions";
 import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
-import { emptyomc } from "../../../../models/omc/Configg";
-import { OMC } from "../../../../models/omc/OMC";
+import { OMC, emptyomc } from "../../../../models/omc/OMC";
 import { ConfigService } from "../../../services/core/config.service";
 
 @Component({
@@ -66,7 +65,7 @@ export class UserManagementComponent implements OnInit, OnDestroy {
     private config: ConfigService,
     private depotservice: DepotService) {
     this.depotservice.activedepot.pipe(takeUntil(this.comopnentDestroyed)).subscribe(depotvata => {
-      if (depotvata.Id) {
+      if (depotvata.depot.Id) {
         this.adminservice.observableuserdata.pipe(takeUntil(this.comopnentDestroyed)).subscribe(admin => {
           this.activeuser = admin;
         });
@@ -79,7 +78,7 @@ export class UserManagementComponent implements OnInit, OnDestroy {
           });
         });
         this.companyservice.omcconfig.pipe(takeUntil(this.comopnentDestroyed)).subscribe(co => {
-          this.originalCompany = co;
+          // this.originalCompany = co;
         });
       }
     });
@@ -113,7 +112,7 @@ export class UserManagementComponent implements OnInit, OnDestroy {
     this.creatingsync = true;
 
     const syncobject: SyncRequest = {
-      companyid: this.config.omcconfig.value.Qbo.companyId,
+      companyid: this.config.getEnvironment().auth.companyId,
       time: firestore.Timestamp.now(),
       synctype: ["Employee"]
     };

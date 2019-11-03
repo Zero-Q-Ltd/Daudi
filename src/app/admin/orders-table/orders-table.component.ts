@@ -127,11 +127,11 @@ export class OrdersTableComponent implements OnInit, OnDestroy {
       Id: null,
       company: {
         QbId: clickedOrder.company.QbId,
-        contactname: clickedOrder.company.contact[0].name,
         Id: clickedOrder.company.Id,
         name: clickedOrder.company.name,
-        phone: clickedOrder.company.phone
+        krapin: clickedOrder.company.krapin
       },
+      phone: clickedOrder.company.phone,
       type: {
         reason: null,
         origin: "custom"

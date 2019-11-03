@@ -11,7 +11,6 @@ import { DepotService } from "../../services/core/depot.service";
 import { BatchesService } from "../../services/batches.service";
 import { StatsService } from "../../services/stats.service";
 import { PricesService } from "../../services/prices.service";
-import { fueltypesArray } from "../../../models/fuel/Types";
 import { Entry } from "../../../models/fuel/Entry";
 import { Price } from "../../../models/depot/Price";
 import { calculateMA } from "../charts/generalCalc";
@@ -21,6 +20,7 @@ import { singleFuelpricestat } from "../charts/prices";
 import "echarts/theme/macarons.js";
 import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
+import { fueltypesArray } from "../../../models/fuel/fuelTypes";
 
 @Component({
   selector: "app-stats",
@@ -80,7 +80,8 @@ export class StatsComponent implements OnInit, OnDestroy {
   subscriptions: Map<string, any> = new Map<string, any>();
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
 
-  constructor(private router: Router,
+  constructor(
+    private router: Router,
     public snackBar: MatSnackBar,
     private depotservice: DepotService,
     private batcheservice: BatchesService,
@@ -92,7 +93,7 @@ export class StatsComponent implements OnInit, OnDestroy {
         const b = moment(value.end);
         this.getstats(Math.abs(a.diff(b, "days")));
       });
-      if (depot.Id) {
+      if (depot.depot.Id) {
         /**
          * reset loading every time the depot is changed
          */

@@ -13,7 +13,7 @@ import { DepotService } from "../services/core/depot.service";
 import { ReplaySubject } from "rxjs";
 import { switchMap, takeUntil } from "rxjs/operators";
 import { OrdersService as OrderService } from "../services/orders.service";
-import { Order } from "src/app/models/order/Order";
+import { Order } from "../../models/order/Order";
 
 @Component({
   selector: "trucks-table",
@@ -113,6 +113,7 @@ export class TrucksTableComponent implements OnInit {
         reason: null,
         origin: "custom"
       },
+      phone: clickedOrder.company.phone,
       greeting: "Jambo",
       msg: null,
       status: {

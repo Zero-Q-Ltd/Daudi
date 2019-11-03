@@ -10,8 +10,7 @@ import { MapsComponent } from "../../../maps/maps.component";
 import { AngularFireFunctions } from "@angular/fire/functions";
 import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
-import { emptyomc } from "../../../../models/omc/Configg";
-import { OMC } from "../../../../models/omc/OMC";
+import { OMC, emptyomc } from "../../../../models/omc/OMC";
 import { ConfigService } from "../../../services/core/config.service";
 
 @Component({
@@ -39,13 +38,13 @@ export class DepotManagementComponent implements OnInit, OnDestroy {
     private config: ConfigService,
     private functions: AngularFireFunctions) {
     this.depotservice.activedepot.pipe(takeUntil(this.comopnentDestroyed)).subscribe(depot => {
-      this.activedepot = depot;
+      this.activedepot = depot.depot;
     });
     this.depotservice.alldepots.pipe(takeUntil(this.comopnentDestroyed)).subscribe(alldepots => {
       this.alldepots = alldepots;
     });
     this.companyservice.omcconfig.pipe(takeUntil(this.comopnentDestroyed)).subscribe(co => {
-      this.company = co;
+      // this.company = co;
     });
   }
 
@@ -79,7 +78,7 @@ export class DepotManagementComponent implements OnInit, OnDestroy {
 
     this.creatingsync = true;
     const syncobject: SyncRequest = {
-      companyid: this.config.omcconfig.value.Qbo.companyId,
+      companyid: this.config.getEnvironment().auth.companyId,
       time: firestore.Timestamp.now(),
       synctype: ["Item"]
     };

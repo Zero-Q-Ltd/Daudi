@@ -1,11 +1,11 @@
-import { Types } from "../fuel/fuelTypes";
+import { fuelTypes } from "../fuel/fuelTypes";
 import { User } from "../universal/User";
 
 export interface AvgPrice {
   Id: string;
   price: number;
   user: User;
-  fueltytype: Types;
+  fueltytype: fuelTypes;
   omcId?: string;
 }
 
