@@ -7,7 +7,7 @@ import { Options } from "ng5-slider";
 import { NotificationService } from "../../shared/services/notification.service";
 import { BatchesSelectorComponent } from "../batches-selector/batches-selector.component";
 import { OrdersService } from "../services/orders.service";
-import { AdminsService } from "../services/core/admins.service";
+import { AdminService } from "../services/core/admin.service";
 import { ComponentCommunicationService } from "../services/component-communication.service";
 import { MatDialog } from "@angular/material";
 import { AngularFirestore } from "@angular/fire/firestore";
@@ -103,7 +103,7 @@ export class TruckDetailsComponent implements OnInit, OnDestroy {
     public db: AngularFirestore,
     private notification: NotificationService,
     private orderservice: OrdersService,
-    private adminservice: AdminsService,
+    private adminservice: AdminService,
     private dialog: MatDialog,
     private componentcommunication: ComponentCommunicationService) {
     this.componentcommunication.clickedorder.pipe(takeUntil(this.comopnentDestroyed)).subscribe(order => {

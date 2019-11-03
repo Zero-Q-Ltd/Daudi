@@ -7,7 +7,7 @@ import { emptystat, Stat } from "../../../models/stats/Stats";
 import { FormControl } from "@angular/forms";
 import { Router } from "@angular/router";
 import { MatSnackBar } from "@angular/material";
-import { DepotsService } from "../../services/core/depots.service";
+import { DepotService } from "../../services/core/depot.service";
 import { BatchesService } from "../../services/batches.service";
 import { StatsService } from "../../services/stats.service";
 import { PricesService } from "../../services/prices.service";
@@ -81,11 +81,11 @@ export class StatsComponent implements OnInit, OnDestroy {
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
 
   constructor(private router: Router,
-              public snackBar: MatSnackBar,
-              private depotservice: DepotsService,
-              private batcheservice: BatchesService,
-              private statservice: StatsService,
-              private priceservice: PricesService) {
+    public snackBar: MatSnackBar,
+    private depotservice: DepotService,
+    private batcheservice: BatchesService,
+    private statservice: StatsService,
+    private priceservice: PricesService) {
     this.depotservice.activedepot.pipe(takeUntil(this.comopnentDestroyed)).subscribe(depot => {
       this.dateControl.valueChanges.pipe(takeUntil(this.comopnentDestroyed)).subscribe(value => {
         const a = moment(value.begin);
@@ -121,7 +121,7 @@ export class StatsComponent implements OnInit, OnDestroy {
                * force change detection in the charts directive
                */
               this.fuelgauge[fueltype] = { ...fuelgauge[fueltype] };
-              this.fuelgauge[fueltype].series[0].max += Math.round(batch.qty / 1000);
+              // this.fuelgauge[fueltype].series[0].max += Math.round(batch.qty / 1000);
               const available = this.getTotalAvailable(batch);
               this.fuelgauge[fueltype].series[0].data[0].value += Math.round(available / 1000);
             });
@@ -151,10 +151,10 @@ export class StatsComponent implements OnInit, OnDestroy {
   }
 
   getTotalAvailable(batch: Entry) {
-    const totalqty = batch.qty;
-    const loadedqty = batch.loadedqty;
-    const accumulated = batch.accumulated;
-    return totalqty - loadedqty + accumulated.usable;
+    const totalqty = batch.qty.total;
+    const totalLoaded = batch.qty.directLoad.total + batch.qty.transfered;
+    const accumulated = batch.qty.directLoad.accumulated;
+    return totalqty - totalLoaded + accumulated.usable;
   }
 
   /**

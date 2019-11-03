@@ -5,11 +5,11 @@ import { NotificationService } from "../../shared/services/notification.service"
 import { FormControl, Validators } from "@angular/forms";
 import { Order } from "../../models/order/Order";
 import { emptytruck, Truck } from "../../models/order/Truck";
-import { AdminsService } from "../services/core/admins.service";
-import { fueltypesArray } from "../../models/fuel/Types";
+import { AdminService } from "../services/core/admin.service";
 import { OrdersService } from "../services/orders.service";
-import { DepotsService } from "../services/core/depots.service";
+import { DepotService } from "../services/core/depot.service";
 import { ReplaySubject } from "rxjs";
+import { fueltypesArray } from "../../models/fuel/fuelTypes";
 
 @Component({
   selector: "compartments",
@@ -38,9 +38,9 @@ export class CompartmentsComponent implements OnInit, OnDestroy {
   constructor(
     private notification: NotificationService,
     private orderservice: OrdersService,
-    private depotservice: DepotsService,
+    private depotservice: DepotService,
     private dialogRef: MatDialogRef<OrderDetailsComponent>,
-    private adminservice: AdminsService) {
+    private adminservice: AdminService) {
 
   }
 

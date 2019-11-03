@@ -1,7 +1,7 @@
 import { fuelTypes } from "../fuel/fuelTypes";
 import { DepotPrice } from "./DepotPrice";
 export interface DepotConfig {
-    ContactPerson: {
+    CompanyRep: {
         phone: null;
         name: null;
     };

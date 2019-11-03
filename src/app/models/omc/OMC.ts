@@ -1,8 +1,5 @@
-import { AdminType } from "../admin/AdminType";
-import { fuelTypes } from "../fuel/fuelTypes";
 import { Metadata } from "../universal/Metadata";
 import { ContactPerson } from "./ContactPerson";
-import { QBOconfig } from "./QBOconfig";
 export interface OMC {
     license: string;
     location: firebase.firestore.GeoPoint;
@@ -12,21 +9,28 @@ export interface OMC {
     description: string;
     status: boolean;
     contactperson: Array<ContactPerson>;
-    qbconfig: QBOconfig;
-    fuelconfig: {
-        [key in fuelTypes]: {
-            allocation: {
-                qty: number
-            }
-            QbId: number;
-            tax: {
-                QbId: number;
-                nonTax: number;
-                metadata: Metadata;
-            };
-        };
-    };
     logourl: string;
     metadata: Metadata;
-    adminTypes: Array<AdminType>;
 }
+
+
+
+export const emptyomc: OMC = {
+    license: null,
+    contactperson: [],
+    logourl: null,
+    status: null,
+
+
+    /**
+     * make default location Somewhere in nbi
+     */
+    location: new firestore.GeoPoint(-1.3373943, 36.7208522),
+    name: null,
+    id: null,
+    userid: null,
+    description: null,
+    metadata: emptymetadata,
+
+};
+

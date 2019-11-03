@@ -5,7 +5,7 @@ import { firestore } from "firebase";
 import * as moment from "moment";
 import { BehaviorSubject } from "rxjs";
 import { AngularFirestore } from "@angular/fire/firestore";
-import { DepotsService } from "./core/depots.service";
+import { DepotService } from "./core/depot.service";
 import { Depot } from "../../models/depot/Depot";
 import { ColNode } from "../../models/ColNode";
 import { MatTreeNestedDataSource } from "@angular/material";
@@ -35,7 +35,7 @@ export class OrdersService {
   subscriptions: Map<string, any> = new Map<string, any>();
 
   constructor(private db: AngularFirestore,
-    private depotsservice: DepotsService,
+    private depotsservice: DepotService,
     private functions: AngularFireFunctions) {
     this.depotsservice.activedepot.subscribe(depot => {
       this.unsubscribeAll();

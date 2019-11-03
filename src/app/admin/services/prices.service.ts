@@ -3,7 +3,7 @@ import { Types } from "../../models/fuel/fuelTypes";
 import * as moment from "moment";
 import { AngularFirestore } from "@angular/fire/firestore";
 import { Depot } from "../../models/depot/Depot";
-import { DepotsService } from "./core/depots.service";
+import { DepotService } from "./core/depot.service";
 import { BehaviorSubject } from "rxjs";
 import { fueltypesArray } from "../../models/fuel/Types";
 import { Price } from "../../models/depot/Price";
@@ -42,7 +42,7 @@ export class PricesService {
    */
   subscriptions: Map<string, any> = new Map<string, any>();
 
-  constructor(private db: AngularFirestore, private depotservice: DepotsService) {
+  constructor(private db: AngularFirestore, private depotservice: DepotService) {
     depotservice.activedepot.subscribe(depot => {
       this.activedepot = depot;
       if (depot.Id) {

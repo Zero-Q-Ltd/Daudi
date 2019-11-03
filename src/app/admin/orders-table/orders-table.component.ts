@@ -13,7 +13,7 @@ import { firestore } from "firebase";
 import { ReasonComponent } from "../reason/reason.component";
 import { ExcelService } from "../services/excel-service.service";
 import { ColumnsCustomizerComponent } from "../columns-customizer/columns-customizer.component";
-import { AdminsService } from "../services/core/admins.service";
+import { AdminService } from "../services/core/admin.service";
 import { OrdersService } from "../services/orders.service";
 import { ComponentCommunicationService } from "../services/component-communication.service";
 import { switchMap, takeUntil } from "rxjs/operators";
@@ -68,7 +68,7 @@ export class OrdersTableComponent implements OnInit, OnDestroy {
     private db: AngularFirestore,
     private notification: NotificationService,
     private excelService: ExcelService,
-    private adminservice: AdminsService,
+    private adminservice: AdminService,
     private orderservice: OrdersService,
     private componentcommunication: ComponentCommunicationService) {
 

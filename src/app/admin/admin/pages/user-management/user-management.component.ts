@@ -7,13 +7,13 @@ import { SyncRequest } from "../../../../models/qbo/sync/Sync";
 import { firestore } from "firebase";
 import { animate, sequence, state, style, transition, trigger } from "@angular/animations";
 import { FormControl, Validators } from "@angular/forms";
-import { AdminsService } from "../../../services/core/admins.service";
-import { DepotsService } from "../../../services/core/depots.service";
+import { AdminService } from "../../../services/core/admin.service";
+import { DepotService } from "../../../services/core/depot.service";
 import { Depot } from "../../../../models/depot/Depot";
 import { AngularFireFunctions } from "@angular/fire/functions";
 import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
-import { emptyomc } from "../../../../models/omc/Config";
+import { emptyomc } from "../../../../models/omc/Configg";
 import { OMC } from "../../../../models/omc/OMC";
 import { ConfigService } from "../../../services/core/config.service";
 
@@ -57,14 +57,14 @@ export class UserManagementComponent implements OnInit, OnDestroy {
 
   constructor(
     private companyservice: ConfigService,
-    private adminservice: AdminsService,
+    private adminservice: AdminService,
     private functions: AngularFireFunctions,
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
     private notification: NotificationService,
-    private adminsService: AdminsService,
+    private adminsService: AdminService,
     private config: ConfigService,
-    private depotservice: DepotsService) {
+    private depotservice: DepotService) {
     this.depotservice.activedepot.pipe(takeUntil(this.comopnentDestroyed)).subscribe(depotvata => {
       if (depotvata.Id) {
         this.adminservice.observableuserdata.pipe(takeUntil(this.comopnentDestroyed)).subscribe(admin => {
@@ -78,7 +78,7 @@ export class UserManagementComponent implements OnInit, OnDestroy {
             return value as Admin;
           });
         });
-        this.companyservice.companydata.pipe(takeUntil(this.comopnentDestroyed)).subscribe(co => {
+        this.companyservice.omcconfig.pipe(takeUntil(this.comopnentDestroyed)).subscribe(co => {
           this.originalCompany = co;
         });
       }
@@ -113,7 +113,7 @@ export class UserManagementComponent implements OnInit, OnDestroy {
     this.creatingsync = true;
 
     const syncobject: SyncRequest = {
-      companyid: this.config.companydata.value.qbconfig.companyid,
+      companyid: this.config.omcconfig.value.Qbo.companyId,
       time: firestore.Timestamp.now(),
       synctype: ["Employee"]
     };

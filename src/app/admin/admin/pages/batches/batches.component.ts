@@ -1,9 +1,7 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
-import { fueltypesArray } from "../../../../models/fuel/Types";
 import { MatPaginator, MatTableDataSource } from "@angular/material";
 import { Entry, emptybatches } from "../../../../models/fuel/Entry";
-import { Types } from "../../../../models/fuel/fuelTypes";
-import { DepotsService } from "../../../services/core/depots.service";
+import { DepotService } from "../../../services/core/depot.service";
 import { BatchesService } from "../../../services/batches.service";
 import { SyncRequest } from "../../../../models/qbo/sync/Sync";
 import { firestore } from "firebase";
@@ -12,6 +10,7 @@ import { AngularFireFunctions } from "@angular/fire/functions";
 import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { ConfigService } from "../../../services/core/config.service";
+import { fuelTypes, fueltypesArray } from "../../../../models/fuel/fuelTypes";
 
 @Component({
   selector: "app-batches",
@@ -56,7 +55,7 @@ export class BatchesComponent implements OnInit {
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
 
   constructor(
-    private depotsservice: DepotsService,
+    private depotsservice: DepotService,
     private notification: NotificationService,
     private functions: AngularFireFunctions,
     private batcheservice: BatchesService,
@@ -70,7 +69,7 @@ export class BatchesComponent implements OnInit {
       };
 
       if (depotvata.Id) {
-        fueltypesArray.forEach((fueltype: Types) => {
+        fueltypesArray.forEach((fueltype: fuelTypes) => {
           /**
            * Create a subscrition for 1000 batches history
            */
@@ -119,7 +118,7 @@ export class BatchesComponent implements OnInit {
   syncdb() {
     this.creatingsync = true;
     const syncobject: SyncRequest = {
-      companyid: this.config.companydata.value.qbconfig.companyid,
+      companyid: this.config.omcconfig.value.Qbo.companyId,
       time: firestore.Timestamp.now(),
       synctype: ["BillPayment"]
     };

@@ -4,12 +4,12 @@ import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from
 import { Observable } from "rxjs";
 import { Admin } from "../../models/admin/Admin";
 import { NotificationService } from "../../shared/services/notification.service";
-import { AdminsService } from "../services/core/admins.service";
-import { DepotsService } from "../services/core/depots.service"; // get our service
+import { AdminService } from "../services/core/admin.service";
+import { DepotService } from "../services/core/depot.service"; // get our service
 
 @Injectable()
 export class UsersGuard implements CanActivate {
-  constructor(private depotserviice: DepotsService, private adminservice: AdminsService, private router: Router, private notification: NotificationService) {
+  constructor(private depotserviice: DepotService, private adminservice: AdminService, private router: Router, private notification: NotificationService) {
 
   }
 

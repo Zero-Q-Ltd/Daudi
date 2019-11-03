@@ -1,62 +1,85 @@
-import { emptymetadata } from "../universal/universal";
-import { Meta } from "../universal/Meta";
+import { AdminType } from "../admin/AdminType";
+import { fuelTypes } from "../fuel/fuelTypes";
 import { Metadata } from "../universal/Metadata";
+import { QBOconfig as QboAuth } from "./QboAuth";
 import { firestore } from "firebase";
-import { OMC } from "./OMC";
-import { QBOconfig } from "./QBOconfig";
+import { Meta } from "../universal/Meta";
+import { DepotConfig } from "../depot/DepotConfig";
+import { FuelConfig, emptyFuelConfig } from "./FuelConfig";
 
+export interface Config {
+    adminTypes: Array<AdminType>;
+    Qbo: {
+        /**
+         * Every company has a sandbox and a live config
+         */
+        sandbox: QboEnvironment,
+        live: QboEnvironment,
+    };
+    /**
+     * Depot configurations remains constant across different environments
+     */
+    depotconfig: Array<DepotConfig>;
+}
+
+export interface QboEnvironment {
+    auth: QboAuth;
+    fuelconfig: {
+        [key in fuelTypes]: FuelConfig
+    };
+}
 /**
  * This is an initialization variable for the undeletable level for System Admins
  * More levels can be added via db, but these init values are forced to exist
  */
-const KisingaMetadata: Metadata = {
-    created: {
-        adminId: "oSGSG2uCQJd3SqpZf6TXObrbDo73",
-        date: new Date("Aug 29, 2019")
-    },
-    edited: {
-        adminId: "oSGSG2uCQJd3SqpZf6TXObrbDo73",
-        date: new Date("Aug 29, 2019")
-    }
+const happy: Meta = {
+    adminId: "oSGSG2uCQJd3SqpZf6TXObrbDo73",
+    date: firestore.Timestamp.fromDate(new Date("Aug 29, 2019"))
 };
 
-export const emptyqbo: QBOconfig = {
-    companyid: 0,
-    clientid: "",
+const InfoMetadata: Metadata = {
+    created: happy,
+    edited: happy
+};
+
+
+export const emptyqboAuth: QboAuth = {
+    companyId: 0,
+    clientId: "",
     clientSecret: "",
-    webhooksverifier: "",
-    issandbox: true,
-    authconfig: {
+    webhooksVerifier: "",
+    isSandbox: true,
+    authConfig: {
         previousDCT: firestore.Timestamp.fromDate(new Date()),
         accessToken: "",
-        refreshtoken: "",
+        refreshToken: "",
         accesstokenExpiry: firestore.Timestamp.fromDate(new Date()),
         refreshtokenExpiry: firestore.Timestamp.fromDate(new Date()),
         time: firestore.Timestamp.fromDate(new Date())
     }
 };
-export const emptyomc: OMC = {
-    license: null,
-    contactperson: [],
-    logourl: null,
-    status: null,
-    fuelconfig: {
-        ago: null,
-        ik: null,
-        pms: null
+
+
+export const emptyConfig: Config = {
+    depotconfig: [],
+    Qbo: {
+        live: {
+            auth: { ...emptyqboAuth },
+            fuelconfig: {
+                pms: { ...emptyFuelConfig },
+                ago: { ...emptyFuelConfig },
+                ik: { ...emptyFuelConfig }
+            }
+        },
+        sandbox: {
+            auth: { ...emptyqboAuth },
+            fuelconfig: {
+                pms: { ...emptyFuelConfig },
+                ago: { ...emptyFuelConfig },
+                ik: { ...emptyFuelConfig }
+            }
+        },
     },
-    qbconfig: { ...emptyqbo },
-
-    /**
-     * make default location Somewhere in nbi
-     */
-    location: new firestore.GeoPoint(-1.3373943, 36.7208522),
-    name: null,
-    id: null,
-    userid: null,
-    description: null,
-    metadata: emptymetadata,
-
     /**
      * Hardcoded this so that the system always has System Admin values
      * Always... Tutatambulikaje???
@@ -64,17 +87,14 @@ export const emptyomc: OMC = {
     adminTypes: [
         {
             description: "Zero-Q IT Development Team",
-            metadata: KisingaMetadata,
+            metadata: { ...InfoMetadata },
             name: "System Admins", levels: [
                 {
                     description: "System Developers",
                     name: "Developers",
-                    metadata: KisingaMetadata
+                    metadata: { ...InfoMetadata }
                 }
             ]
         }
     ]
 };
-
-
-

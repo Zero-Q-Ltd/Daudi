@@ -1,8 +1,8 @@
-import {Pipe, PipeTransform} from '@angular/core';
-import {OmcService} from "../admin/services/omc.service";
+import { Pipe, PipeTransform } from "@angular/core";
+import { OmcService } from "../admin/services/omc.service";
 
 @Pipe({
-  name: 'getomc'
+  name: "getomc"
 })
 export class GetomcPipe implements PipeTransform {
 

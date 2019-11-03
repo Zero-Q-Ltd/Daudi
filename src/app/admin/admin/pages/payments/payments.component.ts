@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import { AngularFireFunctions } from "@angular/fire/functions";
 import { ipnmodel } from "../../../../models/universal/universal";
-import { AdminsService } from "../../../services/core/admins.service";
+import { AdminService } from "../../../services/core/admin.service";
 import { NotificationService } from "../../../../shared/services/notification.service";
 import { MatDialog, MatPaginator, MatSort, MatTableDataSource } from "@angular/material";
 import { PaymentsService } from "../../../services/payments.service";
@@ -23,10 +23,10 @@ export class PaymentsComponent implements OnInit, OnDestroy {
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
 
   constructor(private functions: AngularFireFunctions,
-    private adminservice: AdminsService,
+    private adminservice: AdminService,
     private notification: NotificationService,
     private payments: PaymentsService,
-    private admins: AdminsService,
+    private admins: AdminService,
     private dialog: MatDialog) {
     payments.unprocessedpayments.pipe(takeUntil(this.comopnentDestroyed)).subscribe(value => {
       this.unprocesseddatasource.data = value;

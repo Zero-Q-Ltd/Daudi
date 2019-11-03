@@ -79,7 +79,7 @@ import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { Ng5SliderModule } from "ng5-slider";
 import { MatChipsModule } from "@angular/material/chips";
 import { FcmService } from "./services/fcm.service";
-import { AdminsService } from "./services/core/admins.service";
+import { AdminService } from "./services/core/admin.service";
 import { OrdersService } from "./services/orders.service";
 import { PricesService } from "./services/prices.service";
 import { PricingComponent } from "./pricing/pricing.component";
@@ -92,7 +92,7 @@ import { CalendarRangesComponent } from "./dashboard/calendar-ranges/calendar-ra
 import { ConfirmDepotComponent } from "./create-order/confirm-depot/confirm-depot.component";
 import { StatsComponent } from "./dashboard/stats/stats.component";
 import { UserLevelsComponent } from "./admin/pages/user-levels/user-levels.component";
-import { CompanyComponent } from "./admin/pages/company/company.component";
+import { ConfigComponent } from "./admin/pages/config/config.component";
 import { AdminRolesComponent } from "./admin/pages/admin-roles/admin-roles.component";
 import { AdminLevelsComponent } from "./admin/pages/admin-levels/admin-levels.component";
 import { CreateComponent } from "./admin/pages/payments/create/create.component";
@@ -191,14 +191,14 @@ import { CreateComponent } from "./admin/pages/payments/create/create.component"
     ConfirmDepotComponent,
     StatsComponent,
     UserLevelsComponent,
-    CompanyComponent,
+    ConfigComponent,
     AdminRolesComponent,
     AdminLevelsComponent,
     CreateComponent,
   ],
   providers: [UsersGuard,
     LayoutService,
-    AdminsService,
+    AdminService,
     OrdersService,
     PricesService,
     FcmService],
@@ -219,7 +219,7 @@ export class AdminModule {
    * used to force initialization of the most crucial services of the app on load
    *
    */
-  constructor(private adminservice: AdminsService, private omcservice: OmcService, private prices: PricesService) {
+  constructor(private adminservice: AdminService, private omcservice: OmcService, private prices: PricesService) {
 
   }
 }

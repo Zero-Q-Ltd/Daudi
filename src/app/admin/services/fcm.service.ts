@@ -6,7 +6,7 @@ import { Admin } from "../../models/admin/Admin";
 import { NotificationService } from "../../shared/services/notification.service";
 import { FCM } from "../../models/notification/FCM";
 import { distinctUntilChanged } from "rxjs/operators";
-import { AdminsService } from "./core/admins.service";
+import { AdminService } from "./core/admin.service";
 
 @Injectable({
   providedIn: "root"
@@ -17,7 +17,7 @@ export class FcmService {
   constructor(private db: AngularFirestore,
     private afMessaging: AngularFireMessaging,
     private notification: NotificationService,
-    private adminservice: AdminsService) {
+    private adminservice: AdminService) {
     this.adminservice.observableuserdata
       .pipe(distinctUntilChanged())
       .subscribe(admin => {

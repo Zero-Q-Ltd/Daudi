@@ -8,9 +8,9 @@ import { fueltypesArray } from "../../models/fuel/Types";
 import { MatDialog } from "@angular/material";
 import { Admin, emptyadmin } from "../../models/admin/Admin";
 import { AngularFirestore } from "@angular/fire/firestore";
-import { DepotsService } from "../services/core/depots.service";
+import { DepotService } from "../services/core/depot.service";
 import { NotificationService } from "../../shared/services/notification.service";
-import { AdminsService } from "../services/core/admins.service";
+import { AdminService } from "../services/core/admin.service";
 import { PricesService } from "../services/prices.service";
 import { ConfirmDialogComponent } from "../confirm-dialog/confirm-dialog.component";
 import { ReplaySubject } from "rxjs";
@@ -74,9 +74,9 @@ export class PricingComponent implements OnInit, OnDestroy {
 
   constructor(private dialog: MatDialog,
     private db: AngularFirestore,
-    private depotservice: DepotsService,
+    private depotservice: DepotService,
     private notificationService: NotificationService,
-    private adminservice: AdminsService,
+    private adminservice: AdminService,
     private priceservice: PricesService) {
 
     this.adminservice.connectionStatus.pipe(takeUntil(this.comopnentDestroyed)).subscribe(status => {

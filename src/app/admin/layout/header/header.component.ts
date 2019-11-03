@@ -4,8 +4,8 @@ import { Router } from "@angular/router";
 // interfaces
 import { AngularFireAuth } from "@angular/fire/auth";
 import { Depot, emptydepot } from "../../../models/depot/Depot";
-import { AdminsService } from "../../services/core/admins.service";
-import { DepotsService } from "../../services/core/depots.service";
+import { AdminService } from "../../services/core/admin.service";
+import { DepotService } from "../../services/core/depot.service";
 import { Admin, emptyadmin } from "../../../models/admin/Admin";
 import { fueltypesArray } from "../../../models/fuel/Types";
 import { OrdersService } from "../../services/orders.service";
@@ -81,8 +81,8 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
   constructor(private router: Router,
               private afAuth: AngularFireAuth,
               private orderservice: OrdersService,
-              private adminservice: AdminsService,
-              private depotservice: DepotsService,
+              private adminservice: AdminService,
+              private depotservice: DepotService,
               private priceservice: PricesService) {
     this.depotservice.activedepot.pipe(takeUntil(this.comopnentDestroyed)).subscribe((depot: Depot) => {
       this.activedepot = depot;

@@ -23,6 +23,7 @@ export interface Order {
     email: boolean
   };
   config: {
+    QbCompanyId: number,
     depotId: string,
     sandbox: boolean,
   };
@@ -105,6 +106,7 @@ export const emptyorder: Order = {
     email: null
   },
   config: {
+    QbCompanyId: null,
     depotId: null,
     sandbox: null
   },

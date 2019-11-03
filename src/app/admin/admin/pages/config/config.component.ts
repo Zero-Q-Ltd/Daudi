@@ -4,25 +4,17 @@ import { MatDialog } from "@angular/material";
 import { ConfigService } from "../../../services/core/config.service";
 import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
-import { emptyomc } from "../../../../models/omc/Config";
-import { OMC } from "../../../../models/omc/OMC";
-import { FormArray, FormControl, FormGroup, FormBuilder } from "ngx-strongly-typed-forms";
+import { OMC, emptyomc } from "../../../../models/omc/OMC";
 
 import { NotificationService } from "../../../../shared/services/notification.service";
 import * as firebase from "firebase";
-import { NewAdminType, AdminType } from "../../../../models/admin/AdminType";
-import { Validators } from "@angular/forms";
-import { AdminLevel } from "../../../../models/admin/AdminLevel";
-import { Meta } from "../../../../models/universal/Meta";
-import { Metadata } from "../../../../models/universal/Metadata";
-import { AdminsService } from "../../../services/core/admins.service";
 import { ConfirmDialogComponent } from "../../../confirm-dialog/confirm-dialog.component";
 @Component({
   selector: "app-company",
   templateUrl: "./company.component.html",
   styleUrls: ["./company.component.scss"]
 })
-export class CompanyComponent implements OnInit, OnDestroy {
+export class ConfigComponent implements OnInit, OnDestroy {
   /**
    * the payment channels that require collection of transaction details
    */
@@ -39,8 +31,7 @@ export class CompanyComponent implements OnInit, OnDestroy {
 
   constructor(
     private notificationservice: NotificationService,
-    private adminService: AdminsService,
-    private communicatioservice: CommunicationService,
+    communicatioservice: CommunicationService,
     private companyservice: ConfigService,
     private _matDialog: MatDialog) {
 
@@ -62,7 +53,7 @@ export class CompanyComponent implements OnInit, OnDestroy {
     this.comopnentDestroyed.complete();
   }
   initvalues(): void {
-    this.companyservice.companydata.pipe(takeUntil(this.comopnentDestroyed)).subscribe(co => {
+    this.companyservice.omcconfig.pipe(takeUntil(this.comopnentDestroyed)).subscribe(co => {
       console.log(co);
       this.originalCompany = co;
       this.tempcompany = Object.assign({}, co);
@@ -92,7 +83,7 @@ export class CompanyComponent implements OnInit, OnDestroy {
       });
     dialogRef.afterClosed().pipe(takeUntil(this.comopnentDestroyed)).subscribe(result => {
       if (result) {
-        this.companyservice.savecompany(this.tempcompany).then(() => {
+        this.companyservice.saveConfig(null, this.tempcompany).then(() => {
           this.notificationservice.notify({
             title: "SAVED",
             body: ""

@@ -8,9 +8,9 @@ import { Types } from "../../models/fuel/fuelTypes";
 import { Price } from "../../models/depot/Price";
 import { Depot, emptydepot } from "../../models/depot/Depot";
 import { emptytaxconfig, taxconfig } from "../../models/FuelConfig";
-import { AdminsService } from "../services/core/admins.service";
+import { AdminService } from "../services/core/admin.service";
 import { PricesService } from "../services/prices.service";
-import { DepotsService } from "../services/core/depots.service";
+import { DepotService } from "../services/core/depot.service";
 import { fueltypesArray } from "../../models/fuel/Types";
 import { Admin, emptyadmin } from "../../models/admin/Admin";
 import { AvgPrice } from "../../models/price/AvgPrice";
@@ -80,9 +80,9 @@ export class EditPriceComponent implements OnInit, OnDestroy {
   constructor(
     private dialog: MatDialog,
     private db: AngularFirestore,
-    private depotservice: DepotsService,
+    private depotservice: DepotService,
     private notificationService: NotificationService,
-    private adminservice: AdminsService,
+    private adminservice: AdminService,
     private priceservice: PricesService,
     private omcservice: OmcService) {
 

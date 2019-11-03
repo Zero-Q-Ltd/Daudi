@@ -1,18 +1,18 @@
 import { Injectable } from "@angular/core";
 import { AngularFirestore } from "@angular/fire/firestore";
-import { AdminsService } from "./admins.service";
+import { AdminService } from "./admin.service";
 import { BehaviorSubject } from "rxjs";
-import { emptyomc } from "src/app/models/omc/Config";
-import { OMC } from "src/app/models/omc/OMC";
+import { Config, emptyConfig } from "src/app/models/omc/Config";
 import { Admin } from "src/app/models/admin/Admin";
 
 @Injectable({
   providedIn: "root"
 })
 export class ConfigService {
-  companydata: BehaviorSubject<OMC> = new BehaviorSubject<OMC>({ ...emptyomc });
+  omcconfig: BehaviorSubject<Config> = new BehaviorSubject<Config>({ ...emptyConfig });
+  sandbox: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
-  constructor(private db: AngularFirestore, private adminservice: AdminsService) {
+  constructor(private db: AngularFirestore, private adminservice: AdminService) {
     adminservice.observableuserdata
       .subscribe(admin => {
         if (admin) {
@@ -23,16 +23,20 @@ export class ConfigService {
   fetchcompany(admin: Admin) {
     this.db.firestore.collection("omc")
       .doc(admin.config.omcid)
+      .collection("config")
+      .doc("main")
       .onSnapshot(companydata => {
         if (!companydata.exists) {
           return;
         }
-        this.companydata.next(Object.assign({}, { ...emptyomc }, { id: companydata.id }, companydata.data()));
+        this.omcconfig.next(Object.assign({}, { ...emptyConfig }, { id: companydata.id }, companydata.data()));
       });
   }
-  savecompany(data: OMC) {
-    return this.db.firestore.collection("companies")
-      .doc("default")
+  saveConfig(omcid: string, data: Config) {
+    return this.db.firestore.collection("omc")
+      .doc(omcid)
+      .collection("config")
+      .doc("main")
       .set(data);
   }
 }

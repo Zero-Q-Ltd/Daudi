@@ -9,16 +9,18 @@ import { NotificationService } from "../../shared/services/notification.service"
 import { Customer, emptycompany } from "../../models/customer/Customer";
 import { emptyorder, Order } from "../../models/order/Order";
 import { Depot, emptydepot } from "../../models/depot/Depot";
-import { AdminsService } from "../services/core/admins.service";
-import { fueltypesArray } from "../../models/fuel/Types";
-import { DepotsService } from "../services/core/depots.service";
+import { AdminService } from "../services/core/admin.service";
+import { DepotService } from "../services/core/depot.service";
 import { CustomerService } from "../services/customers.service";
 import { OrdersService } from "../services/orders.service";
 import { PricesService } from "../services/prices.service";
 import { AngularFireFunctions } from "@angular/fire/functions";
 import { map, startWith, takeUntil } from "rxjs/operators";
-import { Types } from "../../models/fuel/fuelTypes";
+import { fuelTypes, fueltypesArray } from "../../models/fuel/fuelTypes";
 import { ConfirmDepotComponent } from "./confirm-depot/confirm-depot.component";
+import { OmcService } from "../services/omc.service";
+import { ConfigService } from "../services/core/config.service";
+import { Config, emptyConfig } from "../../models/omc/Config";
 
 @Component({
   selector: "create-order",
@@ -75,7 +77,7 @@ export class CreateOrderComponent implements OnDestroy {
   fueltypesArray = fueltypesArray;
   filteredCompanies: Observable<Customer[]>;
   companyControl = new FormControl();
-  currentdepotconfig: Depot = { ...emptydepot };
+  currentdepotconfig: Config = { ...emptyConfig };
   loadingcompanies = false;
   queuedorders = [];
 
@@ -90,10 +92,12 @@ export class CreateOrderComponent implements OnDestroy {
     private notificationService: NotificationService,
     private dialog: MatDialog,
     private route: ActivatedRoute,
-    private adminservice: AdminsService,
-    private depotservice: DepotsService,
-    private companieservice: CustomerService,
+    private adminservice: AdminService,
+    private depotservice: DepotService,
+    private customerService: CustomerService,
     private orderservice: OrdersService,
+    private omcservice: OmcService,
+    private configService: ConfigService,
     private priceservice: PricesService,
     private functions: AngularFireFunctions) {
 
@@ -142,7 +146,7 @@ export class CreateOrderComponent implements OnDestroy {
 
     });
 
-    this.companieservice.loadingcompanies.pipe(takeUntil(this.comopnentDestroyed)).subscribe(value => {
+    this.customerService.loadingcompanies.pipe(takeUntil(this.comopnentDestroyed)).subscribe(value => {
       this.loadingcompanies = value;
     });
     this.depotservice.alldepots.pipe(takeUntil(this.comopnentDestroyed)).subscribe((value) => {
@@ -213,10 +217,10 @@ export class CreateOrderComponent implements OnDestroy {
    * Decimal resolution depends on the qty, as above 10000l the point affects significant amount, but at the same time we
    * Dont want decimals at lower quantities
    */
-  deriveprice(priceinclusivevat: number, fueltype: Types, decimalResolution: number): { pricewithoutvat: number, amountdeducted: number, taxablePrice: number } {
-    const pricewithoutvat = Number(((priceinclusivevat + (0.08 * this.currentdepotconfig.taxconfig[fueltype].nonTax)) / 1.08).toFixed(decimalResolution));
+  deriveprice(priceinclusivevat: number, fueltype: fuelTypes, decimalResolution: number): { pricewithoutvat: number, amountdeducted: number, taxablePrice: number } {
+    const pricewithoutvat = Number(((priceinclusivevat + (0.08 * this.configService.omcconfig.value.fuelconfig[fueltype].tax.nonTax)) / 1.08).toFixed(decimalResolution));
     const amountdeducted = priceinclusivevat - pricewithoutvat;
-    const taxablePrice = Number((pricewithoutvat - this.currentdepotconfig.taxconfig[fueltype].nonTax).toFixed(decimalResolution));
+    const taxablePrice = Number((pricewithoutvat - this.configService.omcconfig.value.fuelconfig[fueltype].tax.nonTax).toFixed(decimalResolution));
     return { pricewithoutvat, amountdeducted, taxablePrice };
   }
 
@@ -269,38 +273,41 @@ export class CreateOrderComponent implements OnDestroy {
   }
 
   initordersform() {
-    // if (!this.discApproval) {
-    //   this.temporder.notifications = {
-    //     sms: !this.currentdepotconfig.sandbox,
-    //     email: !this.currentdepotconfig.sandbox
-    //   };
-
-    //   fueltypesArray.forEach((fueltype) => {
-    //     /**
-    //      * Make sure that the current selling price is lower than the min selling price for that batch
-    //      */
-    //     if (this.currentdepotconfig.currentpriceconfig[fueltype].price >= this.currentdepotconfig.minpriceconfig[fueltype].price) {
-    //       this.tempsellingprices[fueltype] = this.currentdepotconfig.currentpriceconfig[fueltype].price;
-    //     } else {
-    //       this.tempsellingprices[fueltype] = this.currentdepotconfig.minpriceconfig[fueltype].price;
-    //       this.notificationService.notify({
-    //         alert_type: "notify",
-    //         duration: 20000,
-    //         title: "Invalid Prices",
-    //         body: `The current selling price for ${fueltype} is lower than the Min selling price, hence the Min selling price has been used`
-    //       });
-    //     }
-    //     this.orderform.controls[fueltype].setValue(this.temporder.fuel[fueltype].priceconfig.price = this.tempsellingprices[fueltype]);
-    //     this.orderform.controls[fueltype].setValidators(Validators.compose([Validators.min(this.currentdepotconfig.minpriceconfig[fueltype].price), Validators.required]));
-    //   });
-    // } else {
-    //   fueltypesArray.forEach((fueltype) => {
-    //     this.orderform.controls[fueltype].setValue(this.temporder.fuel[fueltype].priceconfig.price = this.tempsellingprices[fueltype]);
-    //     this.orderform.controls[fueltype].setValidators(Validators.compose([Validators.min(this.currentdepotconfig.minpriceconfig[fueltype].price), Validators.required]));
-    //   });
-
-    // }
-
+    if (!this.discApproval) {
+      this.temporder.notifications = {
+        /**
+         * Initialise these variables default as false for sandbox environment
+         */
+        sms: !this.configService.sandbox.value,
+        email: !this.configService.sandbox.value
+      };
+      /**
+       * @todo finish min price calculation logic
+       */
+      fueltypesArray.forEach((fueltype: fuelTypes) => {
+        /**
+         * Make sure that the current selling price is lower than the min selling price for the most recent entry
+         */
+        // if (this.currentdepotconfig.fuelconfig[fueltype].price >= this.currentdepotconfig.minpriceconfig[fueltype].price) {
+        //   this.tempsellingprices[fueltype] = this.currentdepotconfig.currentpriceconfig[fueltype].price;
+        // } else {
+        //   this.tempsellingprices[fueltype] = this.currentdepotconfig.minpriceconfig[fueltype].price;
+        //   this.notificationService.notify({
+        //     alert_type: "notify",
+        //     duration: 20000,
+        //     title: "Invalid Prices",
+        //     body: `The current selling price for ${fueltype} is lower than the Min selling price, hence the Min selling price has been used`
+        //   });
+        // }
+        // this.orderform.controls[fueltype].setValue(this.temporder.fuel[fueltype].priceconfig.price = this.tempsellingprices[fueltype]);
+        // this.orderform.controls[fueltype].setValidators(Validators.compose([Validators.min(this.currentdepotconfig.minpriceconfig[fueltype].price), Validators.required]));
+      });
+    } else {
+      fueltypesArray.forEach((fueltype) => {
+        this.orderform.controls[fueltype].setValue(this.temporder.fuel[fueltype].priceconfig.price = this.tempsellingprices[fueltype]);
+        // this.orderform.controls[fueltype].setValidators(Validators.compose([Validators.min(this.currentdepotconfig.minpriceconfig[fueltype].price), Validators.required]));
+      });
+    }
   }
 
   openmaps() {
@@ -340,7 +347,7 @@ export class CreateOrderComponent implements OnDestroy {
    * Returns true if this KRA pin has not been used
    */
   searchkra(krapin: string): Customer | undefined {
-    return this.companieservice.allcompanies.value.filter(value => {
+    return this.customerService.allcompanies.value.filter(value => {
       return value.krapin === krapin;
     })[0];
   }
@@ -407,22 +414,19 @@ export class CreateOrderComponent implements OnDestroy {
   saveOrder(redirect: boolean, stage: number) {
     this.temporder.stage = stage;
     this.temporder.origin = "backend";
-    // this.temporder.fuel.pms.QbId = this.currentdepotconfig.fuelconfig.pms;
-    // this.temporder.fuel.ago.QbId = this.currentdepotconfig.fuelconfig.ago;
-    // this.temporder.fuel.ik.QbId = this.currentdepotconfig.fuelconfig.ik;
-    // this.temporder.company.krapin = this.temporder.company.krapin.toLocaleUpperCase()
-    // this.temporder.stagedata["1"] = {
-    //   user: this.adminservice.createuserobject(),
-    //   data: null
-    // };
-    // this.temporder.config = {
-    //   depot: {
-    //     name: this.currentdepotconfig.Name,
-    //     Id: this.currentdepotconfig.Id
-    //   },
-    //   companyId: this.currentdepotconfig.companyId,
-    //   sandbox: this.currentdepotconfig.sandbox
-    // };
+    this.temporder.fuel.pms.QbId = this.configService.omcconfig.value.fuelconfig.pms.QbId;
+    this.temporder.fuel.ago.QbId = this.configService.omcconfig.value.fuelconfig.ago.QbId;
+    this.temporder.fuel.ik.QbId = this.configService.omcconfig.value.fuelconfig.ik.QbId;
+    this.temporder.company.krapin = this.temporder.company.krapin.toLocaleUpperCase();
+    this.temporder.stagedata["1"] = {
+      user: this.adminservice.createuserobject(),
+      data: null
+    };
+    this.temporder.config = {
+      depotId: this.currentdepotconfig.Id,
+      QbCompanyId: this.configService.omcconfig.value.Qbo.companyId,
+      sandbox: this.configService.sandbox.value
+    };
     if (this.companyInfo.newcompany) {
       // check if KRA pin is unique
       /**
@@ -436,7 +440,7 @@ export class CreateOrderComponent implements OnDestroy {
          */
         this.krausedmsg(this.companyInfo.companydata.krapin);
       } else {
-        this.companieservice.createcompany(this.companyInfo.companydata).pipe(takeUntil(this.comopnentDestroyed)).subscribe((newcompany: Customer) => {
+        this.customerService.createcompany(this.companyInfo.companydata).pipe(takeUntil(this.comopnentDestroyed)).subscribe((newcompany: Customer) => {
           this.notificationService.notify({
             duration: 2000,
             title: "Synchronising",
@@ -516,7 +520,7 @@ export class CreateOrderComponent implements OnDestroy {
   }
 
   updatecompany() {
-    return this.companieservice.updatecompany(this.companyInfo.companydata.Id).update(this.temporder.company);
+    return this.customerService.updatecompany(this.companyInfo.companydata.Id).update(this.temporder.company);
   }
 
   createorder(redirect) {
@@ -552,6 +556,6 @@ export class CreateOrderComponent implements OnDestroy {
     }
     const filterValue = value.toLowerCase();
 
-    return this.companieservice.allcompanies.value.filter(option => option.name.toLowerCase().includes(filterValue));
+    return this.customerService.allcompanies.value.filter(option => option.name.toLowerCase().includes(filterValue));
   }
 }

@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { AngularFirestore } from "@angular/fire/firestore";
-import { DepotsService } from "./core/depots.service";
+import { DepotService } from "./core/depot.service";
 import { BehaviorSubject } from "rxjs";
 import { ipnmodel } from "../../models/universal/universal";
 import { distinctUntilKeyChanged } from "rxjs/operators";
@@ -20,7 +20,7 @@ export class PaymentsService {
    */
   subscriptions: Map<string, any> = new Map<string, any>();
 
-  constructor(private db: AngularFirestore, private depotservice: DepotsService) {
+  constructor(private db: AngularFirestore, private depotservice: DepotService) {
     /**
      * only fetch payments when the companyId of activedepot changes
      */

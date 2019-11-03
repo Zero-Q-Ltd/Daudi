@@ -4,8 +4,7 @@ import { MatDialog } from "@angular/material";
 import { ConfigService } from "../../../services/core/config.service";
 import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
-import { emptyomc } from "../../../../models/omc/Config";
-import { OMC } from "../../../../models/omc/OMC";
+import { OMC, emptyomc } from "../../../../models/omc/OMC";
 import { FormArray, FormControl, FormGroup, FormBuilder } from "ngx-strongly-typed-forms";
 
 import { NotificationService } from "../../../../shared/services/notification.service";
@@ -15,7 +14,7 @@ import { Validators } from "@angular/forms";
 import { AdminLevel } from "../../../../models/admin/AdminLevel";
 import { Meta } from "../../../../models/universal/Meta";
 import { Metadata } from "../../../../models/universal/Metadata";
-import { AdminsService } from "../../../services/core/admins.service";
+import { AdminService } from "../../../services/core/admin.service";
 import { ConfirmDialogComponent } from "../../../confirm-dialog/confirm-dialog.component";
 
 @Component({
@@ -29,11 +28,12 @@ export class AdminLevelsComponent implements OnInit, OnDestroy {
   originalCompany: OMC = { ...emptyomc };
   tempcompany: OMC = { ...emptyomc };
 
-  constructor(private companyservice: ConfigService,
+  constructor(
+    private companyservice: ConfigService,
     private formBuilder: FormBuilder,
     private _matDialog: MatDialog,
     private notificationservice: NotificationService,
-    private adminService: AdminsService,
+    private adminService: AdminService,
 
   ) {
     this.initforms();
@@ -48,9 +48,9 @@ export class AdminLevelsComponent implements OnInit, OnDestroy {
     this.comopnentDestroyed.complete();
   }
   initvalues(): void {
-    this.companyservice.companydata.pipe(takeUntil(this.comopnentDestroyed)).subscribe(co => {
-      this.originalCompany = co;
-      this.tempcompany = Object.assign({}, co);
+    this.companyservice.omcconfig.pipe(takeUntil(this.comopnentDestroyed)).subscribe(co => {
+      // this.originalCompany = co;
+      // this.tempcompany = Object.assign({}, co);
       this.initforms();
     });
   }
@@ -59,7 +59,7 @@ export class AdminLevelsComponent implements OnInit, OnDestroy {
     const newtype: NewAdminType = this.newadminform.getRawValue();
     const meta: Meta = {
       adminId: this.adminService.userdata.Id,
-      date: new Date()
+      date: firebase.firestore.Timestamp.now()
     };
 
     const newMeta: Metadata = {
@@ -70,7 +70,7 @@ export class AdminLevelsComponent implements OnInit, OnDestroy {
     // @TODO temporary hack
     // @ts-ignore
     delete (withMeta.level);
-    this.tempcompany.adminTypes.splice(newtype.level, 0, withMeta);
+    // this.tempcompany.adminTypes.splice(newtype.level, 0, withMeta);
     this.savecompany();
   }
 
@@ -84,12 +84,12 @@ export class AdminLevelsComponent implements OnInit, OnDestroy {
       });
     dialogRef.afterClosed().pipe(takeUntil(this.comopnentDestroyed)).subscribe(result => {
       if (result) {
-        this.companyservice.savecompany(this.tempcompany).then(() => {
-          this.notificationservice.notify({
-            title: "SAVED",
-            body: ""
-          });
-        });
+        // this.companyservice.saveConfig(this.tempcompany).then(() => {
+        //   this.notificationservice.notify({
+        //     title: "SAVED",
+        //     body: ""
+        //   });
+        // });
       }
     });
   }
@@ -122,10 +122,10 @@ export class AdminLevelsComponent implements OnInit, OnDestroy {
    * This adds an admin level to the tempcompany model
    */
   addLevelsdirect(index: number) {
-    this.tempcompany.adminTypes[index].levels.push({
-      description: "",
-      name: ""
-    });
+    // this.tempcompany.adminTypes[index].levels.push({
+    //   description: "",
+    //   name: ""
+    // });
   }
 
   deleteTypedirect(index: number) {
@@ -136,7 +136,7 @@ export class AdminLevelsComponent implements OnInit, OnDestroy {
       });
     dialogRef.afterClosed().pipe(takeUntil(this.comopnentDestroyed)).subscribe(result => {
       if (result) {
-        this.tempcompany.adminTypes.splice(index, 1);
+        // this.tempcompany.adminTypes.splice(index, 1);
       }
     });
   }
@@ -147,7 +147,7 @@ export class AdminLevelsComponent implements OnInit, OnDestroy {
     if (index === 0) {
       return;
     }
-    this.tempcompany.adminTypes[typeindex].levels.splice(index, 1);
+    // this.tempcompany.adminTypes[typeindex].levels.splice(index, 1);
   }
 
   initforms() {

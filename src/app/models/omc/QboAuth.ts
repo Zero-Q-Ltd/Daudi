@@ -1,14 +1,14 @@
 import { firestore } from "firebase";
 export interface QBOconfig {
-    companyid: number;
-    clientid: string;
+    companyId: number;
+    clientId: string;
     clientSecret: string;
-    webhooksverifier: string;
-    issandbox: boolean;
-    authconfig: {
+    webhooksVerifier: string;
+    isSandbox: boolean;
+    authConfig: {
         previousDCT: firestore.Timestamp;
         accessToken: string;
-        refreshtoken: string;
+        refreshToken: string;
         accesstokenExpiry: firestore.Timestamp;
         refreshtokenExpiry: firestore.Timestamp;
         time: firestore.Timestamp;

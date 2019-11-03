@@ -9,7 +9,7 @@ import { SMS } from "../../models/sms/sms";
 import { firestore } from "firebase";
 import { ExcelService } from "../services/excel-service.service";
 import { ColumnsCustomizerComponent } from "../columns-customizer/columns-customizer.component";
-import { DepotsService } from "../services/core/depots.service";
+import { DepotService } from "../services/core/depot.service";
 import { ReplaySubject } from "rxjs";
 import { switchMap, takeUntil } from "rxjs/operators";
 import { OrdersService as OrderService } from "../services/orders.service";
@@ -62,7 +62,7 @@ export class TrucksTableComponent implements OnInit {
     private route: ActivatedRoute,
     private excelService: ExcelService,
     private orderService: OrderService,
-    private depotservice: DepotsService) {
+    private depotservice: DepotService) {
 
     /**
      * propagate changes when depot changes

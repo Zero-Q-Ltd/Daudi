@@ -1,27 +1,30 @@
-import {Injectable} from "@angular/core";
-import {AngularFirestore} from "@angular/fire/firestore";
-import {Depot, emptydepot} from "../../../models/depot/Depot";
-import {AdminsService} from "./admins.service";
-import {BehaviorSubject} from "rxjs";
-import {distinctUntilChanged} from "rxjs/operators";
+import { Injectable } from "@angular/core";
+import { AngularFirestore } from "@angular/fire/firestore";
+import { Depot, emptydepot } from "../../../models/depot/Depot";
+import { AdminService } from "./admin.service";
+import { BehaviorSubject } from "rxjs";
+import { distinctUntilChanged } from "rxjs/operators";
+import { Config, emptyConfig } from "../../../models/omc/Config";
 
 @Injectable({
   providedIn: "root"
 })
-export class DepotsService {
+export class DepotService {
   alldepots: BehaviorSubject<Array<Depot>> = new BehaviorSubject([]);
 
   /**
    * Be careful when subscribing to this value because it will always emit a value
    */
-  activedepot: BehaviorSubject<Depot> = new BehaviorSubject<Depot>(emptydepot);
+  activedepot: BehaviorSubject<{ depot: Depot, config: Config }> = new BehaviorSubject({ depot: { ...emptydepot }, config: { ...emptyConfig } });
+
+  sandbox: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
   /**
    * this keeps a local copy of all the subscriptions within this service
    */
   subscriptions: Map<string, any> = new Map<string, any>();
 
-  constructor(private db: AngularFirestore, private adminservice: AdminsService) {
+  constructor(private db: AngularFirestore, private adminservice: AdminService) {
     /**
      * Only subscribe to depots when the user data changes
      */
@@ -40,13 +43,9 @@ export class DepotsService {
   }
 
   fetchdepots() {
-    let depotquery = this.db.firestore.collection("depots")
-      .where("Active", "==", true)
-      .orderBy("sandbox", "desc");
-
-    if (!this.adminservice.userdata.config.viewsandbox) {
-      depotquery = depotquery.where("sandbox", "==", this.adminservice.userdata.config.viewsandbox);
-    }
+    const depotquery = this.db.firestore.collection("depots")
+      .where("Active", "==", true);
+    0;
     const subscriprion = depotquery.onSnapshot(snapshot => {
       const tempdepot: Depot = Object.assign({}, emptydepot, snapshot.docs[0].data());
       tempdepot.Id = snapshot.docs[0].id;

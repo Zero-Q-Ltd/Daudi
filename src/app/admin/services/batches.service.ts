@@ -3,7 +3,7 @@ import { fueltypesArray } from "../../models/fuel/Types";
 import { Entry, emptybatches } from "../../models/fuel/Entry";
 import { BehaviorSubject } from "rxjs";
 import { AngularFirestore } from "@angular/fire/firestore";
-import { DepotsService } from "./core/depots.service";
+import { DepotService } from "./core/depot.service";
 import { Types } from "../../models/fuel/fuelTypes";
 import { Depot } from "../../models/depot/Depot";
 
@@ -27,7 +27,7 @@ export class BatchesService {
    */
   subscriptions: Map<string, any> = new Map<string, any>();
 
-  constructor(private db: AngularFirestore, private depotsservice: DepotsService) {
+  constructor(private db: AngularFirestore, private depotsservice: DepotService) {
     this.depotsservice.activedepot.subscribe(depot => {
       this.activedepot = depot;
       this.unsubscribeAll();

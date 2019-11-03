@@ -8,9 +8,9 @@ import { SyncRequest } from "../../../../models/qbo/sync/Sync";
 import { SMS } from "../../../../models/sms/sms";
 import { NotificationService } from "../../../../shared/services/notification.service";
 import { SelectionModel } from "@angular/cdk/collections";
-import { AdminsService } from "../../../services/core/admins.service";
+import { AdminService } from "../../../services/core/admin.service";
 import { CustomerService } from "../../../services/customers.service";
-import { DepotsService } from "../../../services/core/depots.service";
+import { DepotService } from "../../../services/core/depot.service";
 import { AngularFireFunctions } from "@angular/fire/functions";
 import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
@@ -40,11 +40,11 @@ export class CustomerManagementComponent implements OnInit, OnDestroy {
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
     private notification: NotificationService,
-    private adminservice: AdminsService,
+    private adminservice: AdminService,
     private customerservice: CustomerService,
     private functions: AngularFireFunctions,
     private config: ConfigService,
-    private depot: DepotsService,
+    private depot: DepotService,
     @Optional() public dialogRef: MatDialogRef<CustomerManagementComponent>,
     @Optional() @Inject(MAT_DIALOG_DATA) public purpose: "SMS" | "Attach") {
     this.depot.activedepot.pipe(takeUntil(this.comopnentDestroyed))
@@ -151,7 +151,7 @@ export class CustomerManagementComponent implements OnInit, OnDestroy {
     this.creatingsync = true;
 
     const syncobject: SyncRequest = {
-      companyid: this.config.companydata.value.qbconfig.companyid,
+      companyid: this.config.omcconfig.value.Qbo.companyId,
       time: firestore.Timestamp.now(),
       synctype: ["Customer"]
     };

@@ -5,11 +5,10 @@ import * as moment from "moment";
 import { AngularFirestore } from "@angular/fire/firestore";
 import { Entry } from "../../models/fuel/Entry";
 import { emptytruck, Truck, StageData } from "../../models/order/Truck";
-import { Types } from "../../models/fuel/fuelTypes";
+import { fuelTypes, fueltypesArray } from "../../models/fuel/fuelTypes";
 import { emptyorder, Order } from "../../models/order/Order";
-import { AdminsService } from "../services/core/admins.service";
-import { fueltypesArray } from "../../models/fuel/Types";
-import { DepotsService } from "../services/core/depots.service";
+import { AdminService } from "../services/core/admin.service";
+import { DepotService } from "../services/core/depot.service";
 import { BatchesService } from "../services/batches.service";
 import { OrdersService } from "../services/orders.service";
 import { ReplaySubject } from "rxjs";
@@ -57,7 +56,7 @@ export class BatchesSelectorComponent implements OnInit, OnDestroy {
       ik: []
     };
   drawnbatch: {
-    [key in Types]: {
+    [key in fuelTypes]: {
       batch0: batchContent,
       batch1: batchContent
     }
@@ -133,15 +132,16 @@ export class BatchesSelectorComponent implements OnInit, OnDestroy {
    */
   subscriptions: Map<string, any> = new Map<string, any>();
 
-  constructor(public dialogRef: MatDialogRef<BatchesSelectorComponent>,
-              @Inject(MAT_DIALOG_DATA) private orderid: string,
-              private notification: NotificationService,
-              private db: AngularFirestore,
-              private adminservice: AdminsService,
-              private depotsservice: DepotsService,
-              private batchesservice: BatchesService,
-              private ordersservice: OrdersService) {
-    fueltypesArray.forEach((fueltype: Types) => {
+  constructor(
+    public dialogRef: MatDialogRef<BatchesSelectorComponent>,
+    @Inject(MAT_DIALOG_DATA) private orderid: string,
+    private notification: NotificationService,
+    private db: AngularFirestore,
+    private adminservice: AdminService,
+    private depotsservice: DepotService,
+    private batchesservice: BatchesService,
+    private ordersservice: OrdersService) {
+    fueltypesArray.forEach((fueltype: fuelTypes) => {
       this.batchesservice.depotbatches[fueltype].pipe(takeUntil(this.comopnentDestroyed)).subscribe((batches: Array<Entry>) => {
         // console.log(batches);
         this.depotbatches[fueltype] = batches;
@@ -189,7 +189,7 @@ export class BatchesSelectorComponent implements OnInit, OnDestroy {
 
   calculateqty() {
     this.donecalculating = false;
-    fueltypesArray.forEach((fueltype: Types) => {
+    fueltypesArray.forEach((fueltype: fuelTypes) => {
       this.fuelerror[fueltype] = false;
       /**
        * Check if there are batches to assign
@@ -207,7 +207,7 @@ export class BatchesSelectorComponent implements OnInit, OnDestroy {
                */
               qtydrawn: this.order.fuel[fueltype].qty,
               name: this.depotbatches[fueltype][0].batch,
-              totalqty: this.depotbatches[fueltype][0].qty,
+              totalqty: this.depotbatches[fueltype][0].qty.total,
               resultstatus: this.getTotalAvailable(0, fueltype) > this.order.fuel[fueltype].qty,
               remainqty: this.getTotalAvailable(0, fueltype) - this.order.fuel[fueltype].qty
             },
@@ -269,7 +269,7 @@ export class BatchesSelectorComponent implements OnInit, OnDestroy {
                     id: batch.Id,
                     qtydrawn,
                     name: batch.batch,
-                    totalqty: batch.qty,
+                    totalqty: batch.qty.total,
                     resultstatus: this.getTotalAvailable(index, fueltype) > assignedamount,
                     remainqty: this.getTotalAvailable(index, fueltype) - qtydrawn
                   };
@@ -295,7 +295,7 @@ export class BatchesSelectorComponent implements OnInit, OnDestroy {
                */
               qtydrawn: this.getTotalAvailable(0, fueltype),
               name: this.depotbatches[fueltype][0].batch,
-              totalqty: this.depotbatches[fueltype][0].qty,
+              totalqty: this.depotbatches[fueltype][0].qty.total,
               resultstatus: false,
               remainqty: 0
             },
@@ -323,7 +323,7 @@ export class BatchesSelectorComponent implements OnInit, OnDestroy {
     }
   }
 
-  getTotalAvailable(index: number, fueltype: Types) {
+  getTotalAvailable(index: number, fueltype: fuelTypes) {
     const totalqty = this.depotbatches[fueltype][index].qty.total;
     const loadedqty = this.depotbatches[fueltype][index].qty.directLoad.total + this.depotbatches[fueltype][index].qty.transfered;
     const accumulated = this.depotbatches[fueltype][index].qty.directLoad.accumulated;
@@ -336,7 +336,7 @@ export class BatchesSelectorComponent implements OnInit, OnDestroy {
   approvetruck() {
     this.saving = true;
     this.dialogRef.disableClose = true;
-    fueltypesArray.forEach((fueltype: Types) => {
+    fueltypesArray.forEach((fueltype: fuelTypes) => {
       if (this.fuelerror[fueltype]) {
         this.saving = false;
         this.dialogRef.disableClose = false;

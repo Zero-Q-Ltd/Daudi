@@ -4,7 +4,7 @@ import { truckStagesarray } from "../../../../models/order/Truck";
 import { OrdersService } from "../../../services/orders.service";
 import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators"; // get our service
-import { DepotsService } from "../../../services/core/depots.service";
+import { DepotService } from "../../../services/core/depot.service";
 import { Depot, emptydepot } from "../../../../models/depot/Depot";
 
 @Component({
@@ -33,7 +33,7 @@ export class AppSidenavMenuComponent implements OnDestroy {
   activedepot: Depot = Object.assign({}, emptydepot);
 
   constructor(private orderservice: OrdersService,
-    private depotservice: DepotsService) {
+    private depotservice: DepotService) {
     orderStagesarray.forEach(stage => {
       this.orderservice.orders[stage].pipe(takeUntil(this.comopnentDestroyed)).subscribe(orders => this.orderscount[stage] = orders.length);
     });

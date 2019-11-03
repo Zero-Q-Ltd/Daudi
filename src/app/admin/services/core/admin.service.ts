@@ -12,8 +12,8 @@ import { AngularFireDatabase } from "@angular/fire/database";
 @Injectable({
   providedIn: "root"
 })
-export class AdminsService {
-  userdata: Admin = Object.assign({}, emptyadmin);
+export class AdminService {
+  userdata: Admin = { ...emptyadmin };
   observableuserdata = new ReplaySubject<Admin>(1);
   connectionStatus: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   authroken: BehaviorSubject<string> = new BehaviorSubject<string>("");
@@ -46,7 +46,7 @@ export class AdminsService {
           }
         });
       } else {
-        this.userdata = emptyadmin;
+        this.userdata = { ...emptyadmin };
         if (router.routerState.snapshot.url !== "/admin/login") {
           router.navigate(["/admin/login"]);
         }
@@ -101,12 +101,8 @@ export class AdminsService {
           tempdata.data.photoURL = user.photoURL;
           tempdata.data.uid = user.uid;
           tempdata.Id = user.uid;
-
           this.userdata = tempdata;
           this.observableuserdata.next(tempdata);
-          // this.fetchdepots();
-          // this.msg.requestPermission(tempdata);
-          // this.msg.receiveMessage();
         } else {
           this.observableuserdata.next(null);
         }
