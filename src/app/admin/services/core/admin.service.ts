@@ -8,43 +8,28 @@ import { User } from "../../../models/universal/User";
 import { firestore } from "firebase";
 import { Router } from "@angular/router";
 import { AngularFireDatabase } from "@angular/fire/database";
+import { take } from "rxjs/operators";
 
 @Injectable({
   providedIn: "root"
 })
 export class AdminService {
-  userdata: Admin = { ...emptyadmin };
+  /**
+   * The only source of truth
+   */
   observableuserdata = new ReplaySubject<Admin>(1);
-  connectionStatus: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  authroken: BehaviorSubject<string> = new BehaviorSubject<string>("");
+  /**
+   * Secondary copy of data to avoid many unnecessary subscriptions
+   */
 
-  constructor(private db: AngularFirestore, private rtdb: AngularFireDatabase, private afAuth: AngularFireAuth, router: Router) {
+  userdata: Admin = { ...emptyadmin };
+
+
+  constructor(private db: AngularFirestore, private afAuth: AngularFireAuth, router: Router) {
     afAuth.authState.subscribe(state => {
       if (state) {
         this.getuser(afAuth.auth.currentUser);
-        afAuth.auth.currentUser.getIdToken().then(res => {
-          this.authroken.next(res);
-        });
-        /**
-         * Keep the online status active
-         */
-        const userStatusDatabaseRef = this.rtdb.database.ref("/admins/" + afAuth.auth.currentUser.uid);
-        const isOfflineForDatabase = {
-          online: false
-        };
-        const isOnlineForDatabase = {
-          online: true
-        };
-        this.rtdb.database.ref(".info/connected").on("value", result => {
-          if (result.val() === false) {
-            userStatusDatabaseRef.onDisconnect().set(isOfflineForDatabase);
-            this.connectionStatus.next(false);
-            return;
-          } else {
-            userStatusDatabaseRef.set(isOnlineForDatabase);
-            this.connectionStatus.next(true);
-          }
-        });
+        // this.init(afAuth.auth.currentUser);
       } else {
         this.userdata = { ...emptyadmin };
         if (router.routerState.snapshot.url !== "/admin/login") {
@@ -53,13 +38,17 @@ export class AdminService {
         this.observableuserdata.next(null);
       }
     });
+
+    this.observableuserdata.subscribe(userdata => {
+      this.userdata = userdata;
+    });
   }
 
   /**
    * make the user go offline before logging out
    */
   logoutsequence() {
-    this.db.firestore.collection("admins").doc(this.userdata.Id).update({
+    this.db.firestore.collection("admin").doc(this.userdata.Id).update({
       status: {
         online: false,
         time: moment().toDate()
@@ -70,7 +59,7 @@ export class AdminService {
   }
 
   getalladmins() {
-    return this.db.firestore.collection("admins")
+    return this.db.firestore.collection("admin")
       .where("Active", "==", true);
   }
 
@@ -86,24 +75,24 @@ export class AdminService {
   }
 
   updateadmin(adminid: string) {
-    return this.db.firestore.collection("admins").doc(adminid);
+    return this.db.firestore.collection("admin").doc(adminid);
   }
 
   getuser(user, unsub?: boolean) {
-    // console.log(user);
-    const unsubscribe = this.db.firestore.collection("admins").doc(user.uid)
+    const unsubscribe = this.db.firestore.collection("admin").doc(user.uid)
       .onSnapshot(userdata => {
         if (userdata.exists) {
 
-          const tempdata = Object.assign({}, emptyadmin, userdata.data());
-          tempdata.data.email = user.email;
-          tempdata.data.name = user.displayName;
-          tempdata.data.photoURL = user.photoURL;
-          tempdata.data.uid = user.uid;
-          tempdata.Id = user.uid;
-          this.userdata = tempdata;
-          this.observableuserdata.next(tempdata);
+          const temp: Admin = Object.assign({}, { ...emptyadmin }, userdata.data());
+          temp.profile.email = user.email;
+          temp.profile.name = user.displayName;
+          temp.profile.photoURL = user.photoURL;
+          temp.Id = userdata.id;
+          this.userdata = temp;
+          this.observableuserdata.next(temp);
+          console.log(temp);
         } else {
+          console.log("User not found!!");
           this.observableuserdata.next(null);
         }
 
@@ -115,7 +104,15 @@ export class AdminService {
     }
   }
 
+  init(user: firebase.User) {
+    const temp: Admin = { ...emptyadmin };
+    temp.profile.email = user.email;
+    temp.profile.name = user.displayName;
+    temp.profile.photoURL = user.photoURL;
+    temp.Id = user.uid;
+    this.db.firestore.collection("admin").doc(user.uid).set(temp);
 
+  }
 
   unsubscribeAll() {
     this.getuser(null);

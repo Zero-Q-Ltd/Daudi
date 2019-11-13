@@ -1,23 +1,39 @@
-import { map, take } from "rxjs/operators";
 import { Injectable } from "@angular/core";
 import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from "@angular/router";
-import { Observable } from "rxjs";
+import { Observable, forkJoin, combineLatest } from "rxjs";
 import { Admin } from "../../models/admin/Admin";
 import { NotificationService } from "../../shared/services/notification.service";
 import { AdminService } from "../services/core/admin.service";
 import { DepotService } from "../services/core/depot.service"; // get our service
+import { RouteData } from "src/app/models/navigation/RouteData";
+import { PermissionService } from "../services/core/permission.service";
+import { map } from "rxjs/operators";
 
 @Injectable()
 export class UsersGuard implements CanActivate {
-  constructor(private depotserviice: DepotService, private adminservice: AdminService, private router: Router, private notification: NotificationService) {
+  constructor(
+    private depotserviice: DepotService,
+    private adminservice: AdminService,
+    private router: Router,
+    private permission: PermissionService,
+    private notification: NotificationService) {
 
   }
-
+  boolean;
   canActivate(next: ActivatedRouteSnapshot, activated: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
-    return this.adminservice.observableuserdata.pipe(
-      take(1),
-      map((userdata: Admin) => {
+    return combineLatest([this.adminservice.observableuserdata, this.permission.pagepermissions])
+      .pipe(map(s => {
         console.log(next, activated);
+
+        const data: RouteData = next.data as RouteData;
+        if (data.configurable) {
+          return this.checkPermission("next", s[0], s[1]);
+        } else {
+          return true;
+        }
+      }));
+    return this.adminservice.observableuserdata.pipe(
+      map((userdata: Admin) => {
         if (userdata) {
           return true;
         } else {
@@ -32,7 +48,7 @@ export class UsersGuard implements CanActivate {
         }
       }));
   }
-  // checkUrl(url: string, user: Admin_): boolean {
+  // checkUrl(url: string, user: Admin): boolean {
   //   const urlSegments = url.split("/");
   //   switch (urlSegments) {
   //     case:
@@ -41,9 +57,10 @@ export class UsersGuard implements CanActivate {
   //     default:
   //   }
   // }
-  // checkPermission(urlsegment: string, user: Admin_): boolean {
 
-  // }
+  checkPermission(urlsegment: string, user: Admin, permissions) {
+    return true;
+  }
 
 
 }

@@ -15,6 +15,7 @@ import { fuelTypes, fueltypesArray } from "../../../models/fuel/fuelTypes";
 import { Price } from "../../../models/depot/Price";
 import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
+import { StatusService } from "../../services/core/status.service";
 
 
 @Component({
@@ -77,12 +78,14 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
   fueltypesArray = fueltypesArray;
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
 
-  constructor(private router: Router,
+  constructor(
+    private router: Router,
     private afAuth: AngularFireAuth,
     private orderservice: OrdersService,
     private adminservice: AdminService,
     private depotservice: DepotService,
-    private priceservice: PricesService) {
+    private priceservice: PricesService,
+    private status: StatusService) {
     this.depotservice.activedepot.pipe(takeUntil(this.comopnentDestroyed)).subscribe((depot) => {
       // this.activedepot = depot;
     });
@@ -98,7 +101,7 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
     this.adminservice.observableuserdata.pipe(takeUntil(this.comopnentDestroyed)).subscribe(admin => {
       this.currentuser = admin;
     });
-    this.adminservice.connectionStatus.pipe(takeUntil(this.comopnentDestroyed)).subscribe(status => {
+    this.status.connectionStatus.pipe(takeUntil(this.comopnentDestroyed)).subscribe(status => {
       this.connectionStatus = status;
     });
     fueltypesArray.forEach(fueltyp => {
