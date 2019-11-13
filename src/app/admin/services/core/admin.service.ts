@@ -87,7 +87,7 @@ export class AdminService {
           temp.profile.email = user.email;
           temp.profile.name = user.displayName;
           temp.profile.photoURL = user.photoURL;
-          temp.Id = user.uid;
+          temp.Id = userdata.id;
           this.userdata = temp;
           this.observableuserdata.next(temp);
           console.log(temp);

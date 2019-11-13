@@ -27,7 +27,7 @@ export class DepotService {
     /**
      * Only subscribe to depot when the user data changes
      */
-    adminservice.observableuserdata
+    this.adminservice.observableuserdata
       .pipe(distinctUntilChanged())
       .subscribe(admin => {
         if (admin) {
