@@ -29,6 +29,7 @@ export class AdminService {
     afAuth.authState.subscribe(state => {
       if (state) {
         this.getuser(afAuth.auth.currentUser);
+        // this.init(afAuth.auth.currentUser);
       } else {
         this.userdata = { ...emptyadmin };
         if (router.routerState.snapshot.url !== "/admin/login") {
@@ -47,7 +48,7 @@ export class AdminService {
    * make the user go offline before logging out
    */
   logoutsequence() {
-    this.db.firestore.collection("admins").doc(this.userdata.Id).update({
+    this.db.firestore.collection("admin").doc(this.userdata.Id).update({
       status: {
         online: false,
         time: moment().toDate()
@@ -58,7 +59,7 @@ export class AdminService {
   }
 
   getalladmins() {
-    return this.db.firestore.collection("admins")
+    return this.db.firestore.collection("admin")
       .where("Active", "==", true);
   }
 
@@ -74,24 +75,24 @@ export class AdminService {
   }
 
   updateadmin(adminid: string) {
-    return this.db.firestore.collection("admins").doc(adminid);
+    return this.db.firestore.collection("admin").doc(adminid);
   }
 
   getuser(user, unsub?: boolean) {
-    // console.log(user);
-    const unsubscribe = this.db.firestore.collection("admins").doc(user.uid)
+    const unsubscribe = this.db.firestore.collection("admin").doc(user.uid)
       .onSnapshot(userdata => {
         if (userdata.exists) {
 
-          const tempdata = Object.assign({}, emptyadmin, userdata.data());
-          tempdata.data.email = user.email;
-          tempdata.data.name = user.displayName;
-          tempdata.data.photoURL = user.photoURL;
-          tempdata.data.uid = user.uid;
-          tempdata.Id = user.uid;
-          this.userdata = tempdata;
-          this.observableuserdata.next(tempdata);
+          const temp: Admin = Object.assign({}, { ...emptyadmin }, userdata.data());
+          temp.profile.email = user.email;
+          temp.profile.name = user.displayName;
+          temp.profile.photoURL = user.photoURL;
+          temp.Id = user.uid;
+          this.userdata = temp;
+          this.observableuserdata.next(temp);
+          console.log(temp);
         } else {
+          console.log("User not found!!");
           this.observableuserdata.next(null);
         }
 
@@ -103,7 +104,15 @@ export class AdminService {
     }
   }
 
+  init(user: firebase.User) {
+    const temp: Admin = { ...emptyadmin };
+    temp.profile.email = user.email;
+    temp.profile.name = user.displayName;
+    temp.profile.photoURL = user.photoURL;
+    temp.Id = user.uid;
+    this.db.firestore.collection("admin").doc(user.uid).set(temp);
 
+  }
 
   unsubscribeAll() {
     this.getuser(null);

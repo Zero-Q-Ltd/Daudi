@@ -17,7 +17,7 @@ export class UsersGuard implements CanActivate {
     return this.adminservice.observableuserdata.pipe(
       take(1),
       map((userdata: Admin) => {
-        console.log(next, activated);
+        console.log(next, activated, userdata);
         if (userdata) {
           return true;
         } else {

@@ -24,11 +24,10 @@ export class StatusService {
      * Just take the first emmision and use that to create the object
      */
     this.admin.observableuserdata.pipe(take(1)).subscribe(admindata => {
-
       /**
        * Keep the online status active
        */
-      const userStatusDatabaseRef = this.rtdb.database.ref("/admins/" + admindata.Id);
+      const userStatusDatabaseRef = this.rtdb.database.ref("/admin/" + admindata.Id);
       const isOfflineForDatabase = {
         online: false
       };

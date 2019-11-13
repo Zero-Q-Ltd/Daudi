@@ -25,7 +25,7 @@ export class DepotService {
 
   constructor(private db: AngularFirestore, private adminservice: AdminService) {
     /**
-     * Only subscribe to depots when the user data changes
+     * Only subscribe to depot when the user data changes
      */
     adminservice.observableuserdata
       .pipe(distinctUntilChanged())
@@ -38,11 +38,11 @@ export class DepotService {
   }
 
   updatedepot() {
-    return this.db.firestore.collection("depots").doc(this.activedepot.value.depot.Id);
+    return this.db.firestore.collection("depot").doc(this.activedepot.value.depot.Id);
   }
 
   fetchdepots() {
-    const depotquery = this.db.firestore.collection("depots")
+    const depotquery = this.db.firestore.collection("depot")
       .where("Active", "==", true);
     const subscriprion = depotquery.onSnapshot(snapshot => {
       const tempdepot: Depot = Object.assign({}, emptydepot, snapshot.docs[0].data());
