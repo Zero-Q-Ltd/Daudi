@@ -8,43 +8,27 @@ import { User } from "../../../models/universal/User";
 import { firestore } from "firebase";
 import { Router } from "@angular/router";
 import { AngularFireDatabase } from "@angular/fire/database";
+import { take } from "rxjs/operators";
 
 @Injectable({
   providedIn: "root"
 })
 export class AdminService {
-  userdata: Admin = { ...emptyadmin };
+  /**
+   * The only source of truth
+   */
   observableuserdata = new ReplaySubject<Admin>(1);
-  connectionStatus: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  authroken: BehaviorSubject<string> = new BehaviorSubject<string>("");
+  /**
+   * Secondary copy of data to avoid many unnecessary subscriptions
+   */
 
-  constructor(private db: AngularFirestore, private rtdb: AngularFireDatabase, private afAuth: AngularFireAuth, router: Router) {
+  userdata: Admin = { ...emptyadmin };
+
+
+  constructor(private db: AngularFirestore, private afAuth: AngularFireAuth, router: Router) {
     afAuth.authState.subscribe(state => {
       if (state) {
         this.getuser(afAuth.auth.currentUser);
-        afAuth.auth.currentUser.getIdToken().then(res => {
-          this.authroken.next(res);
-        });
-        /**
-         * Keep the online status active
-         */
-        const userStatusDatabaseRef = this.rtdb.database.ref("/admins/" + afAuth.auth.currentUser.uid);
-        const isOfflineForDatabase = {
-          online: false
-        };
-        const isOnlineForDatabase = {
-          online: true
-        };
-        this.rtdb.database.ref(".info/connected").on("value", result => {
-          if (result.val() === false) {
-            userStatusDatabaseRef.onDisconnect().set(isOfflineForDatabase);
-            this.connectionStatus.next(false);
-            return;
-          } else {
-            userStatusDatabaseRef.set(isOnlineForDatabase);
-            this.connectionStatus.next(true);
-          }
-        });
       } else {
         this.userdata = { ...emptyadmin };
         if (router.routerState.snapshot.url !== "/admin/login") {
@@ -52,6 +36,10 @@ export class AdminService {
         }
         this.observableuserdata.next(null);
       }
+    });
+
+    this.observableuserdata.subscribe(userdata => {
+      this.userdata = userdata;
     });
   }
 
