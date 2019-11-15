@@ -95,7 +95,6 @@ import { ConfigComponent } from "./admin/pages/config/config.component";
 import { AdminRolesComponent } from "./admin/pages/admin-roles/admin-roles.component";
 import { AdminLevelsComponent } from "./admin/pages/admin-levels/admin-levels.component";
 import { CreateComponent } from "./admin/pages/payments/create/create.component";
-import { LoginResolver } from "./services/resolvers/login.resolver";
 
 @NgModule({
 
@@ -200,7 +199,6 @@ import { LoginResolver } from "./services/resolvers/login.resolver";
     AdminService,
     OrdersService,
     PricesService,
-    LoginResolver,
     FcmService],
   entryComponents: [ConfirmDialogComponent,
     BatchTrucksComponent,

@@ -17,7 +17,7 @@ import { Payment } from "../models/Qbo/Payment";
 
 const version = "2.0.24";
 const APP_CENTER_BASE = "https://appcenter.intuit.com";
-const V3_endpoint_BASE_URL = "https://sandbox-quickbooks.api.intuit.com/v3/company/";
+const V3_endpoint_BASE_URL = "https://quickbooks.api.intuit.com/v3/company/";
 const QUERY_OPERATORS = ["=", "IN", "<", ">", "<=", ">=", "LIKE"];
 const RECONNECT_URL = APP_CENTER_BASE + "/api/v1/connection/reconnect";
 const DISCONNECT_URL = APP_CENTER_BASE + "/api/v1/connection/disconnect";

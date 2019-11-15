@@ -1,32 +1,39 @@
-import { fuelTypes } from "../common";
-import { OrderAction } from "../Cloud/OrderAction";
+import { fuelTypes } from "../fuel/fuelTypes";
 
 export interface Stat {
   date: any;
   id: string;
   fuelsold?: {
     [key in fuelTypes]: {
-      qty: number;
-      amount: number;
-    };
+      qty: number,
+      amount: number,
+    }
   };
   orders?: {
-    [key in OrderAction]: number;
+    discounted?: number
+    created?: number,
+    paid?: number,
+    deleted?: number,
+    voided?: number,
+    exited?: number,
+    backend?: number,
+    frontend?: number
   };
   batches?: {
     [key in fuelTypes]: {
-      created: number;
-      accumulated: number;
-    };
+      created: number,
+      accumulated: number
+    }
   };
   customers?: {
-    new: number;
+    new: number,
   };
+
 }
 
 export const emptystat: Stat = {
   date: new Date(),
-  id: "",
+  id: null,
   fuelsold: {
     pms: {
       amount: 0,
@@ -44,9 +51,12 @@ export const emptystat: Stat = {
   orders: {
     voided: 0,
     paid: 0,
+    exited: 0,
+    discounted: 0,
     deleted: 0,
     created: 0,
-    completed: 0
+    backend: 0,
+    frontend: 0
   },
   batches: {
     pms: {

@@ -1,6 +1,6 @@
-import { createQbo } from "../../sharedqb";
-import { Customer } from "../../../models/Qbo/Customer";
-import { Company_ } from "../../../models/Daudi/Company";
+import { createQbo } from "../../../sharedqb";
+import { Customer } from "../../../../models/Qbo/Customer";
+import { Company_ } from "../../../../models/Daudi/Company";
 
 export function updateCustomer(customerdata: Company_) {
   return createQbo(customerdata.companyId).then(result => {

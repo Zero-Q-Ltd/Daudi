@@ -16,6 +16,7 @@ import { Price } from "../../../models/depot/Price";
 import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { StatusService } from "../../services/core/status.service";
+import { Config, emptyConfig } from "../../../models/omc/Config";
 
 
 @Component({
@@ -36,7 +37,7 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
   // fuelprices: FuelPrices = {};
 
   adminLevel: number = null;
-  activedepot: Depot = Object.assign({}, emptydepot);
+  activedepot: { depot: Depot, config: Config } = { depot: { ...emptydepot }, config: { ...emptyConfig } };
   currentuser: Admin = { ...emptyadmin };
   connectionStatus: boolean;
   alldepots: Array<Depot>;
@@ -87,7 +88,7 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
     private priceservice: PricesService,
     private status: StatusService) {
     this.depotservice.activedepot.pipe(takeUntil(this.comopnentDestroyed)).subscribe((depot) => {
-      // this.activedepot = depot;
+      this.activedepot = depot;
     });
     this.depotservice.alldepots.pipe(takeUntil(this.comopnentDestroyed)).subscribe((alldepots: Array<Depot>) => {
       this.alldepots = alldepots;

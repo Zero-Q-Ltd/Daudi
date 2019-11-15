@@ -1,6 +1,8 @@
 import { Truck_ } from "../models/Daudi/Truck";
 import { driverchangedsms, truckchangesdsms, trucksms } from "./sms/smscompose";
 import { truckFcm } from "./FCM/truckFcm";
+import * as orderCrud from './crud/daudi/Order'
+
 
 export function truckdatachanged(truckbefore: Truck_, truckafter: Truck_) {
   const smsPromise = () =>
@@ -10,13 +12,25 @@ export function truckdatachanged(truckbefore: Truck_, truckafter: Truck_) {
          * SMS
          */
         if (truckbefore.stage < truckafter.stage) {
-          return trucksms(truckafter);
+          const promises: Array<Promise<any>> = [trucksms(truckafter)]
+          if (truckafter.stage === 4) {
+            promises.push(orderCrud.updateOrder(truckafter.config.depot.Id, truckafter.orderdata.OrderID, { stage: 5 }))
+          }
+          return Promise.all(promises)
+
+          // return trucksms(truckafter).then(() => {
+          //   if (truckafter.stage === 4) {
+          //     return orderCrud.updateOrder(truckafter.config.depot.Id, truckafter.orderdata.OrderID, { stage: 5 })
+          //   } else {
+          //     resolver(true)
+          //   }
+          // })
         } else {
           console.log("Stage not increased, ignoring ....");
-          return resolver(true);
+          return true
         }
       } else {
-        resolver(true);
+        return (true);
       }
     });
 

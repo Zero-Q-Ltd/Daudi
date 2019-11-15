@@ -1,6 +1,6 @@
-export interface PageRules {
+export interface PageRule {
   name: string;
-  url: string;
+  urlsegment: string;
   functions: Array<Functions>;
   minlevel: number;
 }
@@ -10,3 +10,4 @@ export interface Functions {
   description: string;
   minlevel: number;
 }
+

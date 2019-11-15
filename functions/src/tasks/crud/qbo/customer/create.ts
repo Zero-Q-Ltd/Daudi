@@ -1,6 +1,6 @@
-import { Company_ } from "../../../models/Daudi/Company";
-import { Customer } from "../../../models/Qbo/Customer";
-import { createQbo } from "../../sharedqb";
+import { Company_ } from "../../../../models/Daudi/Company";
+import { Customer } from "../../../../models/Qbo/Customer";
+import { createQbo } from "../../../sharedqb";
 import { firestore } from "firebase-admin";
 
 export function createCustomer(customerdata: Company_) {
