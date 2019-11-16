@@ -43,9 +43,9 @@ export class PermissionService {
   }
 
   unsubscribeAll() {
-    this.subscriptions.forEach(value => {
-      value();
-    });
+    // this.subscriptions.forEach(value => {
+    //   value();
+    // });
   }
 
 }

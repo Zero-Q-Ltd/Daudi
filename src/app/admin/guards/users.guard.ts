@@ -5,7 +5,7 @@ import { Admin } from "../../models/admin/Admin";
 import { NotificationService } from "../../shared/services/notification.service";
 import { AdminService } from "../services/core/admin.service";
 import { DepotService } from "../services/core/depot.service"; // get our service
-import { RouteData } from "src/app/models/navigation/RouteData";
+import { RouteData } from "../../models/navigation/RouteData";
 import { PermissionService } from "../services/core/permission.service";
 import { map } from "rxjs/operators";
 
@@ -27,7 +27,7 @@ export class UsersGuard implements CanActivate {
 
         const data: RouteData = next.data as RouteData;
         if (data.configurable) {
-          return this.checkPermission("next", s[0], s[1]);
+          return this.checkPermission(next.routeConfig.path, s[0], s[1]);
         } else {
           return true;
         }

@@ -50,7 +50,7 @@ export function resolveipn(ipndetail: ipnmodel, ipnid: string): Promise<any> {
             });
 
             console.log(
-              `Customer has ${applicableinvoices} applicable invoices`
+              `Customer has ${applicableinvoices.length} applicable invoices`
             );
             let appliedamount = 0;
             if (applicableinvoices.length > 0) {

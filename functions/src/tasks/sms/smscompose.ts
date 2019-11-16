@@ -142,13 +142,13 @@ function resolveTrucksText(truck: Truck_): string {
   switch (truck.stage) {
     case 0:
       text +=
-        " Your fuel is now [RESERVED] at" +
+        " Your fuel is now [RESERVED] at " +
         truck.config.depot.name +
         " Please collect within the next 36 hours. Thank you for making it Emkay today.";
       break;
     case 1:
       text +=
-        " [WAITING] at " +
+        " [ORDER SUBMITTED] at " +
         truck.config.depot.name +
         " Est-Time " +
         truck.stagedata["1"].data.expiry[0].time +

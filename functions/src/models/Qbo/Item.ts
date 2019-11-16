@@ -1,5 +1,7 @@
+import { fuelTypes } from "../common";
+
 export interface Item {
-  Name: string;
+  Name: fuelTypes;
   Description: string;
   Active: boolean;
   FullyQualifiedName: string;
@@ -10,18 +12,18 @@ export interface Item {
     value: string;
     name: string;
   };
-  PurchaseDesc: string;
-  PurchaseCost: number;
+  PurchaseDesc?: string;
+  PurchaseCost?: number;
   ExpenseAccountRef: {
     value: string;
     name: string;
   };
-  ParentRef: {
+  ParentRef?: {
     value: string;
     name: string;
   };
 
-  AssetAccountRef: {
+  AssetAccountRef?: {
     value: string;
     name: string;
   };
@@ -30,10 +32,19 @@ export interface Item {
   InvStartDate: string;
   domain: "QBO";
   sparse: false;
-  Id: string;
+  Id?: number;
   SyncToken: string;
-  MetaData: {
+  MetaData?: {
     CreateTime: string;
     LastUpdatedTime: string;
   };
+  SalesTaxCodeRef: {
+    value: string;
+    name: string;
+  },
+  ClassRef?: {
+    value: string;
+    name: string;
+  },
+  SalesTaxIncluded?: boolean
 }
