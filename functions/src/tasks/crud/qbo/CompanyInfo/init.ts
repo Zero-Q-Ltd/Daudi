@@ -3,50 +3,21 @@ import { Config } from "../../../../models/Daudi/omc/Config";
 import { createQbo } from "../../../sharedqb";
 import { firestore } from "firebase-admin";
 import { Environment } from "../../../../models/Daudi/omc/Environments";
+import { CompanyInfo } from "../../../../models/Qbo/CompanyInfo";
 import { Item } from "../../../../models/Qbo/Item";
 import { fueltypesArray } from "../../../../models/Daudi/fuel/fuelTypes";
 import { fuelTypes } from "../../../../models/common";
 
-export function createCompanyInfo(omc: OMC, config: Config, environment: Environment) {
+export function initCompanyInfo(omc: OMC, config: Config, environment: Environment) {
     /**
-     * Simultaneously create the 3 fuel types on initialisation
-     */
-    const generalfuel: Item = {
-        Active: true,
-        Name: "pms",
-        FullyQualifiedName: "",
-        Taxable: true,
-        TrackQtyOnHand: true,
-        sparse: false,
-        UnitPrice: 0,
-
-        SyncToken: "0",
-        InvStartDate: firestore.Timestamp.now().toDate().formatUTC("YYYY-MM-DDZ"),
-        Type: "Inventory",
-        QtyOnHand: 0,
-        Description: "",
-        IncomeAccountRef: {
-            name: "",
-            value: ""
-        },
-        ExpenseAccountRef: {
-            name: "",
-            value: ""
-        },
-        SalesTaxCodeRef: {
-            name: "",
-            value: ""
-        },
-        domain: "QBO",
+     * Convert Daudi OMC to QBO company Info
+       */
+    const companyInfo: CompanyInfo = {
 
     }
-    const fuelItems: Array<Item> = fueltypesArray.map((fuel: fuelTypes) => {
-        return { ...generalfuel, ...{ Name: fuel } }
-    });
-
     return createQbo(omc.Id, config, environment).then(result => {
         const qbo = result;
-        return qbo.createItem(fuelItems).then(operationresult => {
+        return qbo.updateCompanyInfo(companyInfo).then(operationresult => {
             // console.log(innerresult);
             // const batch = firestore().batch();
 

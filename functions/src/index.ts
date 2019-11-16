@@ -9,7 +9,7 @@ import { sendsms } from './tasks/sms/sms';
 import { Customer } from './models/Daudi/customer/Customer';
 import { Order } from './models/Daudi/order/Order';
 import { SMS } from './models/Daudi/sms/sms';
-import { createCompanyInfo } from './tasks/crud/qbo/CompanyInfo/create';
+import { initCompanyInfo } from './tasks/crud/qbo/CompanyInfo/init';
 import { OMC } from './models/Daudi/omc/OMC';
 import { Config } from './models/Daudi/omc/Config';
 import { Environment } from './models/Daudi/omc/Environments';
@@ -46,8 +46,9 @@ exports.initCompany = functions.https.onCall((data, context) => {
   const omc = data.omc as OMC;
   const config = data.config as Config;
   const environment = data.environment as Environment;
+  const publicdepots = data.environment as Environment;
   console.log(data);
-  return Promise.all([createCompanyInfo(omc, config, environment)]);
+  return Promise.all([initCompanyInfo(omc, config, environment), initCompanyInfo(omc, config, environment)]);
 
 });
 
