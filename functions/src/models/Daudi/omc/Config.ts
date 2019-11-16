@@ -1,12 +1,12 @@
 import { AdminType } from "../admin/AdminType";
 import { fuelTypes } from "../fuel/fuelTypes";
 import { Metadata } from "../universal/Metadata";
-import { QBOconfig as QboAuth } from "./QboAuth";
 import { firestore } from "firebase-admin";
 import { Meta } from "../universal/Meta";
 import { DepotConfig } from "../depot/DepotConfig";
 import { FuelConfig, emptyFuelConfig } from "./FuelConfig";
 import { Environment } from "./Environments";
+import { QBOAuthCOnfig } from "./QboAuthConfig";
 
 export interface Config {
     adminTypes: Array<AdminType>;
@@ -23,7 +23,7 @@ export interface Config {
 }
 
 export interface QboEnvironment {
-    auth: QboAuth;
+    auth: QBOAuthCOnfig;
     fuelconfig: {
         [key in fuelTypes]: FuelConfig
     };
@@ -43,7 +43,7 @@ const InfoMetadata: Metadata = {
 };
 
 
-export const emptyqboAuth: QboAuth = {
+export const emptyqboAuth: QBOAuthCOnfig = {
     companyId: 0,
     clientId: "",
     clientSecret: "",

@@ -1,23 +1,14 @@
+import { OMC } from "../../../../models/Daudi/omc/OMC";
+import { Config } from "../../../../models/Daudi/omc/Config";
+import { createQbo } from "../../../sharedqb";
+import { firestore } from "firebase-admin";
+import { Environment } from "../../../../models/Daudi/omc/Environments";
 
-export function createCustomer(customerdata: Company_) {
-    const newCustomer: Customer = {
-        FullyQualifiedName: customerdata.name,
-        DisplayName: customerdata.contact.name,
-        CompanyName: customerdata.name,
-        BillAddr: {
-            Lat: customerdata.location.latitude,
-            Long: customerdata.location.longitude
-        },
-        PrimaryEmailAddr: {
-            Address: customerdata.contact.email
-        },
-        Notes: customerdata.krapin,
-        // PrimaryTaxIdentifier: customerdata.krapin,
-        PrimaryPhone: {
-            FreeFormNumber: customerdata.contact.phone
-        }
+export function createCompanyInfo(omc: OMC, config: Config, environment: Environment) {
+    const newCustomer = {
+
     };
-    return createQbo(customerdata.companyId).then(result => {
+    return createQbo(omc.Id, config, environment).then(result => {
         const qbo = result;
         return qbo.createCustomer(newCustomer).then(innerresult => {
             console.log(innerresult);
