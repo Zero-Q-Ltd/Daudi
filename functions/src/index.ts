@@ -14,6 +14,8 @@ import { OMC } from './models/Daudi/omc/OMC';
 import { Config } from './models/Daudi/omc/Config';
 import { Environment } from './models/Daudi/omc/Environments';
 import { initFuels } from './tasks/crud/qbo/Item/Init';
+import { Depot } from './models/Daudi/depot/Depot';
+import { initDepots } from './tasks/crud/qbo/Class/init';
 
 const alreadyRunEventIDs: Array<string> = [];
 
@@ -47,9 +49,9 @@ exports.initCompany = functions.https.onCall((data, context) => {
   const omc = data.omc as OMC;
   const config = data.config as Config
   const environment = data.environment as Environment;
-  const publicdepots = data.environment as Environment;
+  const publicdepots = data.depots as Array<Depot>;
   console.log(data);
-  return Promise.all([initCompanyInfo(omc, config, environment), initFuels(omc, config, environment)]);
+  return Promise.all([initCompanyInfo(omc, config, environment), initFuels(omc, config, environment), initDepots(omc, config, environment, publicdepots)]);
 
 });
 

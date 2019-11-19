@@ -4,16 +4,23 @@ import { createQbo } from "../../../sharedqb";
 import { firestore } from "firebase-admin";
 import { Environment } from "../../../../models/Daudi/omc/Environments";
 import { CompanyInfo } from "../../../../models/Qbo/CompanyInfo";
-import { Item } from "../../../../models/Qbo/Item";
-import { fueltypesArray } from "../../../../models/Daudi/fuel/fuelTypes";
-import { fuelTypes } from "../../../../models/common";
-
 export function initCompanyInfo(omc: OMC, config: Config, environment: Environment) {
     /**
      * Convert Daudi OMC to QBO company Info
        */
     const companyInfo: CompanyInfo = {
-
+        CompanyAddr: {
+            City: "Kenya",
+            Country: "Kenya",
+            CountrySubDivisionCode: "Ke",
+            Id: "1",
+            Line1: "",
+            PostalCode: ""
+        },
+        CompanyName: omc.name,
+        Country: "Kenya",
+        sparse: true,
+        domain: "QBO",
     }
     return createQbo(omc.Id, config, environment).then(result => {
         const qbo = result;
@@ -29,7 +36,7 @@ export function initCompanyInfo(omc: OMC, config: Config, environment: Environme
             //         .doc("main"),
             //     config
             // );
-            const res = operationresult.Item as Array<Item>
+            const res = operationresult.CompanyInfo as Array<CompanyInfo>
             res.forEach(item => {
                 config.Qbo[environment].fuelconfig[item.Name].QbId = item.Id
             })

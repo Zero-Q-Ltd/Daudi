@@ -40,7 +40,7 @@ export function initDepots(omc: OMC, config: Config, environment: Environment, d
             //         .doc("main"),
             //     config
             // );
-            const res = operationresult.Item as Array<Class>
+            const res = operationresult.Class as Array<Class>
             res.forEach(class_ => {
                 config.depotconfig[environment][class_.Name].QbId = class_.Id
             })
