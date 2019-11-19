@@ -1,10 +1,10 @@
 <section class="app-header">
   <div [ngClass]="{'bg-color-light': ['11','12','13','14','15','16','21'].indexOf(AppConfig.colorOption) >= 0,
-                 'bg-color-dark': AppConfig.colorOption === '31',
+                 'bg-color-dark': AppConfig.colorOption === '32',
                  'bg-color-primary': ['22','32'].indexOf(AppConfig.colorOption) >= 0,
                  'bg-color-success': ['23','33'].indexOf(AppConfig.colorOption) >= 0,
                  'bg-color-info': ['24','34'].indexOf(AppConfig.colorOption) >= 0,
-                 'bg-color-warning': ['25','35'].indexOf(AppConfig.colorOption) >= 0,
+                 'bg-color-warning': ['25','35'].indexOf(AppConfig.colorOption) === 2,
                  'bg-color-danger': ['26','36'].indexOf(AppConfig.colorOption) >= 0}" class="app-header-inner">
 
     <div class="d-lg-none d-xl-none float-left">
@@ -36,7 +36,7 @@
                 <button [routerLinkActiveOptions]="{ exact: true }" [routerLink]="['/admin/orders-table', 1]"
                   class=" btn btn-primary " routerLinkActive='active' type="button">
                   <span class="badge badge-info">{{orderscount[1]}}</span>
-                  ORDERS
+                  ESTIMATES
                 </button>
                 <button [routerLinkActiveOptions]="{ exact: true }" [routerLink]="['/admin/orders-table', 2]"
                   class="btn btn-primary " routerLinkActive='active' type="button">
@@ -83,7 +83,7 @@
             <div class="col-md-12">
               <button [routerLinkActiveOptions]="{ exact: true }" [routerLink]="['/admin/orders-table', 4]"
                 class="btn btn-primary  btn-block" routerLinkActive='active' type="button">
-                <span class="badge badge-info">{{orderscount[4]}}</span> PENDING
+                <span class="badge badge-info">{{orderscount[4]}}</span> LOADING ORDERS
                 <i class="fa fa-truck"></i>
               </button>
             </div>
@@ -105,11 +105,6 @@
                   class="btn btn-primary " routerLinkActive='active' type="button">
                   <span class="badge badge-info">{{truckscount[3]}}</span>
                   Loading
-                </button>
-                <button [routerLinkActiveOptions]="{ exact: true }" [routerLink]="['/admin/trucks-table', 4]"
-                  class="btn btn-primary " routerLinkActive='active' type="button">
-                  <span class="badge badge-info">{{truckscount[4]}}</span>
-                  Exit
                 </button>
               </div>
             </div>
@@ -175,6 +170,9 @@
       <span></span>
     </div>
     <div class="top-nav-right">
+      <mat-slide-toggle class="example-margin" [color]="primary" [checked]="checked" (change)=changeEnvironment($event)>
+        Sandbox
+      </mat-slide-toggle>
       <!--{{firestore.connectionStatus.value === true ? 'Online ' : 'Offline'}}-->
       <ul class="list-unstyled float-right">
         <li>

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from "@angular/core";
+import { Component, OnDestroy, OnInit, EventEmitter } from "@angular/core";
 import { APPCONFIG } from "../../config";
 import { Router } from "@angular/router";
 // interfaces
@@ -17,6 +17,9 @@ import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { StatusService } from "../../services/core/status.service";
 import { Config, emptyConfig } from "../../../models/omc/Config";
+import { MatSlideToggleChange } from "@angular/material";
+import { Environment } from "src/app/models/omc/Environments";
+import { ConfigService } from "../../services/core/config.service";
 
 
 @Component({
@@ -78,14 +81,14 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
 
   fueltypesArray = fueltypesArray;
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
-
+  environment: Environment;
   constructor(
     private router: Router,
-    private afAuth: AngularFireAuth,
     private orderservice: OrdersService,
     private adminservice: AdminService,
     private depotservice: DepotService,
     private priceservice: PricesService,
+    private config: ConfigService,
     private status: StatusService) {
     this.depotservice.activedepot.pipe(takeUntil(this.comopnentDestroyed)).subscribe((depot) => {
       this.activedepot = depot;
@@ -131,6 +134,12 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
   onLogoutClick() {
     this.adminservice.logoutsequence();
   }
-
+  changeEnvironment(change: MatSlideToggleChange) {
+    this.environment = change.checked ? "sandbox" : "live";
+    this.config.environment.next(this.environment);
+    const tempappconfig = { ...APPCONFIG };
+    tempappconfig.colorOption = change.checked ? "2" : "32";
+    this.AppConfig = { ...tempappconfig };
+  }
 
 }
