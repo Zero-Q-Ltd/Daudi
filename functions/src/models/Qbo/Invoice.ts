@@ -54,6 +54,10 @@ export interface Invoice {
   CustomerMemo?: {
     value: string;
   };
+  ClassRef: {
+    value: string;
+    name: string;
+  },
   AutoDocNumber?: boolean;
 }
 

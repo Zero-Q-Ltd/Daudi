@@ -7,14 +7,19 @@ import { Item } from "../../../../models/Qbo/Item";
 import { fueltypesArray } from "../../../../models/Daudi/fuel/fuelTypes";
 import { fuelTypes } from "../../../../models/common";
 
-export function initItems(omc: OMC, config: Config, environment: Environment) {
+/**
+ * There are 3 fuel types, where every fuel is an ITEM, as far as qbo is concerned
+ * @param omc 
+ * @param config 
+ * @param environment 
+ */
+export function initFuels(omc: OMC, config: Config, environment: Environment) {
     /**
      * Simultaneously create the 3 fuel types on initialisation
      */
     const generalfuel: Item = {
         Active: true,
         Name: "pms",
-        FullyQualifiedName: "",
         Taxable: true,
         TrackQtyOnHand: true,
         sparse: false,
