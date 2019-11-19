@@ -19,7 +19,8 @@ export interface Config {
     /**
      * Depot configurations remains constant across different environments
      */
-    depotconfig: Array<DepotConfig>;
+    depotconfig: {
+        [key in Environment]: Array<DepotConfig> };
 }
 
 export interface QboEnvironment {

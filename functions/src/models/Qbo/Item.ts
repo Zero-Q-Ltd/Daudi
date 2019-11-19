@@ -4,7 +4,7 @@ export interface Item {
   Name: fuelTypes;
   Description: string;
   Active: boolean;
-  FullyQualifiedName: string;
+  FullyQualifiedName?: string;
   Taxable: true;
   UnitPrice: number;
   Type: "Inventory" | "Service" | "NonInventory" | "Group" | "Category";
