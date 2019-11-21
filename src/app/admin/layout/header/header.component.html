@@ -170,7 +170,8 @@
       <span></span>
     </div>
     <div class="top-nav-right">
-      <mat-slide-toggle class="example-margin" [color]="primary" [checked]="checked" (change)=changeEnvironment($event)>
+      <mat-slide-toggle *ngIf="allowsandbox" class="example-margin" color="primary"
+        [checked]="environment === 'sandbox'" (change)=changeEnvironment($event)>
         Sandbox
       </mat-slide-toggle>
       <!--{{firestore.connectionStatus.value === true ? 'Online ' : 'Offline'}}-->

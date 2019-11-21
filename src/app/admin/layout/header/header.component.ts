@@ -18,7 +18,7 @@ import { takeUntil } from "rxjs/operators";
 import { StatusService } from "../../services/core/status.service";
 import { Config, emptyConfig } from "../../../models/omc/Config";
 import { MatSlideToggleChange } from "@angular/material";
-import { Environment } from "src/app/models/omc/Environments";
+import { Environment } from "../../../models/omc/Environments";
 import { ConfigService } from "../../services/core/config.service";
 
 
@@ -38,7 +38,7 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
   hide = true;
   firstload = true;
   // fuelprices: FuelPrices = {};
-
+  allowsandbox = false;
   adminLevel: number = null;
   activedepot: { depot: Depot, config: Config } = { depot: { ...emptydepot }, config: { ...emptyConfig } };
   currentuser: Admin = { ...emptyadmin };
