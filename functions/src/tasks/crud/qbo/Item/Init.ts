@@ -6,6 +6,7 @@ import { Environment } from "../../../../models/Daudi/omc/Environments";
 import { Item } from "../../../../models/Qbo/Item";
 import { fueltypesArray } from "../../../../models/Daudi/fuel/fuelTypes";
 import { fuelTypes } from "../../../../models/common";
+import { QuickBooks } from "../../../../libs/qbmain";
 
 /**
  * There are 3 fuel types, where every fuel is an ITEM, as far as qbo is concerned
@@ -13,7 +14,7 @@ import { fuelTypes } from "../../../../models/common";
  * @param config 
  * @param environment 
  */
-export function initFuels(omc: OMC, config: Config, environment: Environment) {
+export function initFuels(omc: OMC, config: Config, environment: Environment, qbo: QuickBooks) {
     /**
      * Simultaneously create the 3 fuel types on initialisation
      */
@@ -49,30 +50,28 @@ export function initFuels(omc: OMC, config: Config, environment: Environment) {
         return { ...generalfuel, ...{ Name: fuel } }
     });
 
-    return createQbo(omc.Id, config, environment).then(result => {
-        const qbo = result;
-        return qbo.createItem(fuelItems).then(operationresult => {
-            // console.log(innerresult);
-            // const batch = firestore().batch();
 
-            // batch.update(
-            //     firestore()
-            //         .collection("omc")
-            //         .doc(omc.Id)
-            //         .collection("config")
-            //         .doc("main"),
-            //     config
-            // );
-            const res = operationresult.Item as Array<Item>
-            res.forEach(item => {
-                config.Qbo[environment].fuelconfig[item.Name].QbId = item.Id
-            })
-            return firestore()
-                .collection("omc")
-                .doc(omc.Id)
-                .collection("config")
-                .doc("main")
-                .update(config)
-        });
+    return qbo.createItem(fuelItems).then(operationresult => {
+        // console.log(innerresult);
+        // const batch = firestore().batch();
+
+        // batch.update(
+        //     firestore()
+        //         .collection("omc")
+        //         .doc(omc.Id)
+        //         .collection("config")
+        //         .doc("main"),
+        //     config
+        // );
+        const res = operationresult.Item as Array<Item>
+        res.forEach(item => {
+            config.Qbo[environment].fuelconfig[item.Name].QbId = item.Id
+        })
+        return firestore()
+            .collection("omc")
+            .doc(omc.Id)
+            .collection("config")
+            .doc("main")
+            .update(config)
     });
 }

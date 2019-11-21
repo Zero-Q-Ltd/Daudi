@@ -1,12 +1,12 @@
-import { Order_ } from "../../../../models/Daudi/Order";
 import { Invoice, ItemLine } from "../../../../models/Qbo/Invoice";
 import { createQbo } from "../../../sharedqb";
 import { Payment } from "../../../../models/Qbo/Payment";
 import * as admin from "firebase-admin";
 import * as moment from "moment";
 import { fuelTypes } from "../../../../models/common";
+import { Order } from "../../../../models/Daudi/order/Order";
 
-function syncfueltypes(orderdata: Order_): Array<any> {
+function syncfueltypes(orderdata: Order): Array<any> {
   const fuels = ["pms", "ago", "ik"];
   const values: Array<ItemLine> = [];
   fuels.forEach(fuel => {
@@ -32,7 +32,7 @@ function syncfueltypes(orderdata: Order_): Array<any> {
   return values;
 }
 
-function formulateInvoice(orderdata: Order_): Invoice {
+function formulateInvoice(orderdata: Order): Invoice {
   const newInvoice: Invoice = {
     Balance: 0,
     TotalAmt: 0,
@@ -83,7 +83,7 @@ function formulateInvoice(orderdata: Order_): Invoice {
   return newInvoice;
 }
 
-export function createInvoice(orderdata: Order_) {
+export function createInvoice(orderdata: Order) {
   /**
    * format the timestamp again as it loses it when it doesnt directly go to the database
    */

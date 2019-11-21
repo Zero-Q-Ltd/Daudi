@@ -16,6 +16,8 @@ import { Environment } from './models/Daudi/omc/Environments';
 import { initFuels } from './tasks/crud/qbo/Item/Init';
 import { Depot } from './models/Daudi/depot/Depot';
 import { initDepots } from './tasks/crud/qbo/Class/init';
+import { initTax } from './tasks/crud/qbo/tax/init';
+import { createQbo } from './tasks/sharedqb';
 
 const alreadyRunEventIDs: Array<string> = [];
 
@@ -45,14 +47,17 @@ exports.createInvoice = functions.https.onCall((data, context) => {
  * This is a function that should ONLY be called by system admins
  * It initialises a company by creating all the relevant entries on QBO and notes their ID's
  */
-exports.initCompany = functions.https.onCall((data, context) => {
-  const omc = data.omc as OMC;
-  const config = data.config as Config
-  const environment = data.environment as Environment;
-  const publicdepots = data.depots as Array<Depot>;
-  console.log(data);
-  return Promise.all([initCompanyInfo(omc, config, environment), initFuels(omc, config, environment), initDepots(omc, config, environment, publicdepots)]);
+exports.initCompany = functions.https.onCall((data: { omc: OMC, config: Config, environment: Environment, depots: Array<Depot> }, context) => {
 
+  console.log(data);
+  return createQbo(data.omc.Id, data.config, data.environment).then(result => {
+    const qbo = result;
+    return Promise.all([
+      initCompanyInfo(data.omc, data.config, data.environment, qbo),
+      initFuels(data.omc, data.config, data.environment, qbo),
+      initTax(data.omc, data.config, data.environment, qbo),
+      initDepots(data.omc, data.config, data.environment, data.depots, qbo)]);
+  })
 });
 
 /**

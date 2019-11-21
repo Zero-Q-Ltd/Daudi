@@ -4,7 +4,8 @@ import { createQbo } from "../../../sharedqb";
 import { firestore } from "firebase-admin";
 import { Environment } from "../../../../models/Daudi/omc/Environments";
 import { CompanyInfo } from "../../../../models/Qbo/CompanyInfo";
-export function initCompanyInfo(omc: OMC, config: Config, environment: Environment) {
+import { QuickBooks } from "../../../../libs/qbmain";
+export function initCompanyInfo(omc: OMC, config: Config, environment: Environment, qbo: QuickBooks) {
     /**
      * Convert Daudi OMC to QBO company Info
        */
@@ -22,30 +23,28 @@ export function initCompanyInfo(omc: OMC, config: Config, environment: Environme
         sparse: true,
         domain: "QBO",
     }
-    return createQbo(omc.Id, config, environment).then(result => {
-        const qbo = result;
-        return qbo.updateCompanyInfo(companyInfo).then(operationresult => {
-            // console.log(innerresult);
-            // const batch = firestore().batch();
 
-            // batch.update(
-            //     firestore()
-            //         .collection("omc")
-            //         .doc(omc.Id)
-            //         .collection("config")
-            //         .doc("main"),
-            //     config
-            // );
-            const res = operationresult.CompanyInfo as Array<CompanyInfo>
-            res.forEach(item => {
-                config.Qbo[environment].fuelconfig[item.Name].QbId = item.Id
-            })
-            return firestore()
-                .collection("omc")
-                .doc(omc.Id)
-                .collection("config")
-                .doc("main")
-                .update(config)
-        });
+    return qbo.updateCompanyInfo(companyInfo).then(operationresult => {
+        // console.log(innerresult);
+        // const batch = firestore().batch();
+
+        // batch.update(
+        //     firestore()
+        //         .collection("omc")
+        //         .doc(omc.Id)
+        //         .collection("config")
+        //         .doc("main"),
+        //     config
+        // );
+        const res = operationresult.CompanyInfo as Array<CompanyInfo>
+        res.forEach(item => {
+            config.Qbo[environment].fuelconfig[item.Name].QbId = item.Id
+        })
+        return firestore()
+            .collection("omc")
+            .doc(omc.Id)
+            .collection("config")
+            .doc("main")
+            .update(config)
     });
 }
