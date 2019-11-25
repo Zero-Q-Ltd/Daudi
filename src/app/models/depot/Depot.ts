@@ -1,7 +1,7 @@
-import * as firebase from "firebase";
-import { inituser, emptymetadata } from "../universal/universal";
+import { emptymetadata } from "../universal/universal";
 import { Metadata } from "../universal/Metadata";
-import { DepotCreator } from './DepotCreator';
+import { DepotCreator } from "./DepotCreator";
+import { firestore } from "firebase";
 
 export interface Depot {
   Id: string;
@@ -11,7 +11,7 @@ export interface Depot {
     phone: string,
     name: string
   };
-  Location: firebase.firestore.GeoPoint;
+  Location: firestore.GeoPoint;
   config: {
     /**
      * indicates whether it's part of KPC or not
@@ -40,14 +40,14 @@ export const emptydepot: Depot = {
     externalVisibility: false,
     creator: {
       adminId: null,
-      date: firebase.firestore.Timestamp.now(),
+      date: firestore.Timestamp.now(),
       omcId: null,
     }
   },
   /**
    * make default location Somewhere in nbi
    */
-  Location: new firebase.firestore.GeoPoint(-1.3088567, 36.7752539)
+  Location: new firestore.GeoPoint(-1.3088567, 36.7752539)
 };
 
 

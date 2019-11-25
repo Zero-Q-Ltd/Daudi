@@ -63,7 +63,10 @@ export const emptyqboAuth: QBOAuthCOnfig = {
 
 
 export const emptyConfig: Config = {
-    depotconfig: [],
+    depotconfig: {
+        live: [],
+        sandbox: []
+    },
     Qbo: {
         live: {
             auth: { ...emptyqboAuth },
@@ -71,6 +74,17 @@ export const emptyConfig: Config = {
                 pms: { ...emptyFuelConfig },
                 ago: { ...emptyFuelConfig },
                 ik: { ...emptyFuelConfig }
+            },
+            taxConfig: {
+                taxAgency: {
+                    Id: "0"
+                },
+                taxCode: {
+                    Id: "0"
+                },
+                taxRate: {
+                    Id: "0"
+                },
             }
         },
         sandbox: {
@@ -79,6 +93,17 @@ export const emptyConfig: Config = {
                 pms: { ...emptyFuelConfig },
                 ago: { ...emptyFuelConfig },
                 ik: { ...emptyFuelConfig }
+            },
+            taxConfig: {
+                taxAgency: {
+                    Id: "0"
+                },
+                taxCode: {
+                    Id: "0"
+                },
+                taxRate: {
+                    Id: "0"
+                },
             }
         },
     },

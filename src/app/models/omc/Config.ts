@@ -1,12 +1,13 @@
 import { AdminType } from "../admin/AdminType";
 import { fuelTypes } from "../fuel/fuelTypes";
 import { Metadata } from "../universal/Metadata";
-import { QBOconfig as QboAuth } from "./QboAuth";
-import { firestore } from "firebase";
 import { Meta } from "../universal/Meta";
 import { DepotConfig } from "../depot/DepotConfig";
 import { FuelConfig, emptyFuelConfig } from "./FuelConfig";
 import { Environment } from "./Environments";
+import { QBOAuthCOnfig } from "./QboAuthConfig";
+import { TaxConfig } from "./TaxConfig";
+import { firestore } from "firebase";
 
 export interface Config {
     adminTypes: Array<AdminType>;
@@ -19,14 +20,16 @@ export interface Config {
     /**
      * Depot configurations remains constant across different environments
      */
-    depotconfig: Array<DepotConfig>;
+    depotconfig: {
+        [key in Environment]: Array<DepotConfig> };
 }
 
 export interface QboEnvironment {
-    auth: QboAuth;
+    auth: QBOAuthCOnfig;
     fuelconfig: {
         [key in fuelTypes]: FuelConfig
     };
+    taxConfig: TaxConfig;
 }
 /**
  * This is an initialization variable for the undeletable level for System Admins
@@ -42,8 +45,7 @@ const InfoMetadata: Metadata = {
     edited: happy
 };
 
-
-export const emptyqboAuth: QboAuth = {
+export const emptyqboAuth: QBOAuthCOnfig = {
     companyId: 0,
     clientId: "",
     clientSecret: "",
@@ -61,7 +63,10 @@ export const emptyqboAuth: QboAuth = {
 
 
 export const emptyConfig: Config = {
-    depotconfig: [],
+    depotconfig: {
+        live: [],
+        sandbox: []
+    },
     Qbo: {
         live: {
             auth: { ...emptyqboAuth },
@@ -69,6 +74,17 @@ export const emptyConfig: Config = {
                 pms: { ...emptyFuelConfig },
                 ago: { ...emptyFuelConfig },
                 ik: { ...emptyFuelConfig }
+            },
+            taxConfig: {
+                taxAgency: {
+                    Id: "0"
+                },
+                taxCode: {
+                    Id: "0"
+                },
+                taxRate: {
+                    Id: "0"
+                },
             }
         },
         sandbox: {
@@ -77,6 +93,17 @@ export const emptyConfig: Config = {
                 pms: { ...emptyFuelConfig },
                 ago: { ...emptyFuelConfig },
                 ik: { ...emptyFuelConfig }
+            },
+            taxConfig: {
+                taxAgency: {
+                    Id: "0"
+                },
+                taxCode: {
+                    Id: "0"
+                },
+                taxRate: {
+                    Id: "0"
+                },
             }
         },
     },

@@ -1,10 +1,10 @@
 import { Metadata } from "../universal/Metadata";
 import { ContactPerson } from "./ContactPerson";
-import { firestore } from "firebase";
 import { emptymetadata } from "../universal/universal";
+import { firestore } from "firebase";
 export interface OMC {
     license: string;
-    location: firebase.firestore.GeoPoint;
+    location: firestore.GeoPoint;
     name: string;
     userid: string;
     Id: string;

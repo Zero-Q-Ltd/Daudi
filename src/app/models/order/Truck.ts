@@ -1,7 +1,7 @@
 import { inituser } from "../universal/universal";
 import { fuelTypes } from "../fuel/fuelTypes";
 import { User } from "../universal/User";
-import * as firebase from "firebase";
+import { firestore } from "firebase";
 
 const initbatch = {
   Id: null,
@@ -16,8 +16,8 @@ interface Compartment {
 }
 
 interface Expiry {
-  timeCreated: firebase.firestore.Timestamp;
-  expiry: firebase.firestore.Timestamp;
+  timeCreated: firestore.Timestamp;
+  expiry: firestore.Timestamp;
 }
 
 export interface Batch {
@@ -56,7 +56,7 @@ export interface StageData {
    */
   print?: {
     status: boolean,
-    timestamp: firebase.firestore.Timestamp | Date;
+    timestamp: firestore.Timestamp | Date;
   };
   expiry: Array<Expiry>;
   /**
