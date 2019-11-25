@@ -1,7 +1,7 @@
-import { Admin_ } from "../../models/Daudi/Admin";
 import { firestore, messaging } from "firebase-admin";
 import { ipnmodel } from "../../models/common";
 import { Fcm } from "../../models/Cloud/Fcm";
+import { Admin } from "../../models/Daudi/admin/Admin";
 
 export function paymentFcm(ipn: ipnmodel) {
   console.log("sending payment FCM");
@@ -30,7 +30,7 @@ export function paymentFcm(ipn: ipnmodel) {
     return Promise.all(
       adminsobject.docs
         .filter(rawadmindata => {
-          const admin = rawadmindata.data() as Admin_;
+          const admin = rawadmindata.data() as Admin;
           /**
            * Only users permitted to view sandbox can receive sandbox payments
            * Only users below level 3 can receive payment notifications
@@ -39,22 +39,20 @@ export function paymentFcm(ipn: ipnmodel) {
           if (ipn.daudiFields.sandbox) {
             return (
               Number(admin.config.level) < 3 &&
-              admin.config.viewsandbox &&
-              admin.fcmtokens &&
-              admin.fcmtokens.web
+              admin.config.fcm.subscriptions.payment &&
+              admin.config.fcm.tokens.web
             );
           } else {
             return (
               Number(admin.config.level) < 3 &&
-              admin.fcmtokens &&
-              admin.fcmtokens.web
+              admin.config.fcm.tokens.web
             );
           }
         })
         .map(async rawadmindata => {
-          const admin = rawadmindata.data() as Admin_;
+          const admin = rawadmindata.data() as Admin;
           console.log("sending to", admin);
-          return messaging().sendToDevice(admin.fcmtokens.web, message);
+          return messaging().sendToDevice(admin.config.fcm.tokens.web, message);
         })
     );
   });
