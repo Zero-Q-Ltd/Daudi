@@ -16,7 +16,10 @@ export interface Order {
     krapin: string,
     QbId: string,
   };
-  QbId: string;
+  QbConfig: {
+    InvoiceId: string,
+    QbId: string
+  };
   stage: number;
   origin: string;
   notifications: {
@@ -26,6 +29,7 @@ export interface Order {
   config: {
     QbCompanyId: number,
     depotId: string,
+    depotname: string,
     environment: Environment,
   };
   error?: {
@@ -100,7 +104,7 @@ export const emptyorder: Order = {
     QbId: null,
     krapin: null
   },
-  QbId: null,
+  QbConfig: null,
   truck: { ...emptytruck },
   notifications: {
     sms: null,
@@ -109,6 +113,7 @@ export const emptyorder: Order = {
   config: {
     QbCompanyId: null,
     depotId: null,
+    depotname: null,
     environment: null
   },
   origin: null,

@@ -29,8 +29,6 @@ export interface Batch {
 
 export interface Truck {
   stage: number;
-  Id: string;
-
   frozen: boolean;
   compartmentCount: number;
   driverdetail: {

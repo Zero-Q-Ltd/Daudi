@@ -166,7 +166,7 @@ export function createInvoice(orderdata: Order) {
             };
             console.log(invoiceresult);
             orderdata.stagedata[invoicefullypaid ? 3 : 2] = stagedata;
-            orderdata.QbId = invoiceresult.Id;
+            orderdata.QbConfig = invoiceresult.Id;
             orderdata.InvoiceId = invoiceresult.DocNumber || null;
             orderdata.stage = invoicefullypaid ? 3 : 2;
             return admin.firestore().collection("depots").doc(orderdata.config.depot.Id)
@@ -183,7 +183,7 @@ export function createInvoice(orderdata: Order) {
           });
         } else {
           console.log("Company doesn't have unused payments");
-          orderdata.QbId = invoiceresult.Id;
+          orderdata.QbConfig = invoiceresult.Id;
           orderdata.InvoiceId = invoiceresult.DocNumber;
           orderdata.stage = 2;
 
