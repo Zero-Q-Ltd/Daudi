@@ -44,34 +44,27 @@ export function initFuels(omc: OMC, config: Config, environment: Environment, qb
             value: ""
         },
         domain: "QBO",
-
     }
     const fuelItems: Array<Item> = fueltypesArray.map((fuel: fuelTypes) => {
         return { ...generalfuel, ...{ Name: fuel } }
     });
 
-
     return qbo.createItem(fuelItems).then(operationresult => {
-        // console.log(innerresult);
-        // const batch = firestore().batch();
-
-        // batch.update(
-        //     firestore()
-        //         .collection("omc")
-        //         .doc(omc.Id)
-        //         .collection("config")
-        //         .doc("main"),
-        //     config
-        // );
-        const res = operationresult.Item as Array<Item>
-        res.forEach(item => {
-            config.Qbo[environment].fuelconfig[item.Name].QbId = item.Id
-        })
-        return firestore()
+        const ref = firestore()
             .collection("omc")
             .doc(omc.Id)
             .collection("config")
             .doc("main")
-            .update(config)
+
+        return firestore().runTransaction(t => {
+            return t.get(ref).then(data => {
+                const newconfig = data.data() as Config
+                const res = operationresult.Item as Array<Item>
+                res.forEach(item => {
+                    newconfig.Qbo[environment].fuelconfig[item.Name].QbId = item.Id
+                })
+                return t.update(ref, newconfig)
+            })
+        })
     });
 }

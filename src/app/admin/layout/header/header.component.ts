@@ -38,7 +38,7 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
   hide = true;
   firstload = true;
   // fuelprices: FuelPrices = {};
-  allowsandbox = false;
+  allowsandbox = true;
   adminLevel: number = null;
   activedepot: { depot: Depot, config: Config } = { depot: { ...emptydepot }, config: { ...emptyConfig } };
   currentuser: Admin = { ...emptyadmin };

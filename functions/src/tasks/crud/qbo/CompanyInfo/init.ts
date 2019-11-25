@@ -24,27 +24,5 @@ export function initCompanyInfo(omc: OMC, config: Config, environment: Environme
         domain: "QBO",
     }
 
-    return qbo.updateCompanyInfo(companyInfo).then(operationresult => {
-        // console.log(innerresult);
-        // const batch = firestore().batch();
-
-        // batch.update(
-        //     firestore()
-        //         .collection("omc")
-        //         .doc(omc.Id)
-        //         .collection("config")
-        //         .doc("main"),
-        //     config
-        // );
-        const res = operationresult.CompanyInfo as Array<CompanyInfo>
-        res.forEach(item => {
-            config.Qbo[environment].fuelconfig[item.Name].QbId = item.Id
-        })
-        return firestore()
-            .collection("omc")
-            .doc(omc.Id)
-            .collection("config")
-            .doc("main")
-            .update(config)
-    });
+    return qbo.updateCompanyInfo(companyInfo)
 }

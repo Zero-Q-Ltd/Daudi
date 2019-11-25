@@ -16,7 +16,7 @@ import { Environment } from './models/Daudi/omc/Environments';
 import { initFuels } from './tasks/crud/qbo/Item/Init';
 import { Depot } from './models/Daudi/depot/Depot';
 import { initDepots } from './tasks/crud/qbo/Class/init';
-import { initTax } from './tasks/crud/qbo/tax/init';
+import { initTaxService } from './tasks/crud/qbo/tax/init';
 import { createQbo } from './tasks/sharedqb';
 
 const alreadyRunEventIDs: Array<string> = [];
@@ -55,7 +55,7 @@ exports.initCompany = functions.https.onCall((data: { omc: OMC, config: Config, 
     return Promise.all([
       initCompanyInfo(data.omc, data.config, data.environment, qbo),
       initFuels(data.omc, data.config, data.environment, qbo),
-      initTax(data.omc, data.config, data.environment, qbo),
+      initTaxService(data.omc, data.config, data.environment, qbo),
       initDepots(data.omc, data.config, data.environment, data.depots, qbo)]);
   })
 });

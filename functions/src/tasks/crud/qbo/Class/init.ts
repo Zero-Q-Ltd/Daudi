@@ -27,28 +27,22 @@ export function initDepots(omc: OMC, config: Config, environment: Environment, d
         return { ...generalclass, ...{ Name: depot.Name } }
     });
 
-
     return qbo.createItem(depotClasses).then(operationresult => {
-        // console.log(innerresult);
-        // const batch = firestore().batch();
-
-        // batch.update(
-        //     firestore()
-        //         .collection("omc")
-        //         .doc(omc.Id)
-        //         .collection("config")
-        //         .doc("main"),
-        //     config
-        // );
-        const res = operationresult.Class as Array<Class>
-        res.forEach(class_ => {
-            config.depotconfig[environment][class_.Name].QbId = class_.Id
-        })
-        return firestore()
+        const ref = firestore()
             .collection("omc")
             .doc(omc.Id)
             .collection("config")
             .doc("main")
-            .update(config)
+
+        return firestore().runTransaction(t => {
+            return t.get(ref).then(data => {
+                const newconfig = data.data() as Config
+                const res = operationresult.Class as Array<Class>
+                res.forEach(class_ => {
+                    newconfig.depotconfig[environment][class_.Name].QbId = class_.Id
+                })
+                return t.update(ref, newconfig)
+            })
+        })
     });
 }
