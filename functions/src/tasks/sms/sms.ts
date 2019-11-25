@@ -1,7 +1,7 @@
 import * as requester from "request";
 import * as _ from "underscore";
 import * as admin from "firebase-admin";
-import { SMS } from "../../models/Daudi/sms";
+import { SMS } from "../../models/Daudi/sms/sms";
 
 const https = require("https");
 
@@ -17,8 +17,8 @@ const debug = true;
 
 export function sendsms(smsdata: SMS, smsid: string) {
   return sendMessage(
-    "+254" + smsdata.company.phone,
-    `${smsdata.greeting} ${smsdata.company.contactname} ${smsdata.msg}`
+    "+254" + smsdata.phone,
+    `${smsdata.greeting} ${smsdata.company.name} ${smsdata.msg}`
   ).then(result => {
     return admin
       .firestore()
