@@ -29,7 +29,7 @@ export interface Item {
   };
   TrackQtyOnHand: true;
   QtyOnHand: number;
-  InvStartDate: string;
+  InvStartDate?: string;
   domain: "QBO";
   sparse: false;
   Id?: number;

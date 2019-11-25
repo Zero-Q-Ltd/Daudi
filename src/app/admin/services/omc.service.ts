@@ -3,7 +3,8 @@ import { AngularFirestore } from "@angular/fire/firestore";
 import { BehaviorSubject } from "rxjs";
 import { DepotService } from "./core/depot.service";
 import { take } from "rxjs/operators";
-import { OMC } from "../../models/omc/OMC";
+import { OMC, emptyomc } from "../../models/omc/OMC";
+import { AdminService } from "./core/admin.service";
 
 @Injectable({
   providedIn: "root"
@@ -11,13 +12,16 @@ import { OMC } from "../../models/omc/OMC";
 export class OmcService {
 
   omcs: BehaviorSubject<Array<OMC>> = new BehaviorSubject<Array<OMC>>([]);
-
+  currentOmc: BehaviorSubject<OMC> = new BehaviorSubject<OMC>(emptyomc);
   /**
    * this keeps a local copy of all the subscriptions within this service
    */
   subscriptions: Map<string, any> = new Map<string, any>();
 
-  constructor(private db: AngularFirestore, private depotsservice: DepotService) {
+  constructor(
+    private db: AngularFirestore,
+    private depotsservice: DepotService,
+    private admin: AdminService) {
     /**
      * only get OMC's when a valid depot has been assigned
      * only take the first element, OMC's are not dependent on depot
@@ -26,6 +30,7 @@ export class OmcService {
       this.unsubscribeAll();
       this.getomcs();
     });
+
   }
 
   // import * as omcs from '../../../assets/omc.json';
@@ -52,6 +57,13 @@ export class OmcService {
         this.omcs.next(snapshot.docs.map(value => {
           const co: OMC = value.data() as OMC;
           co.Id = value.id;
+          /**
+           * use this opportunity to find the current omc
+           * We are sure depots are fetched after the current user hasa been fetched
+           */
+          if (co.Id === this.admin.userdata.config.omcid) {
+            this.currentOmc.next(co);
+          }
           return co;
         }));
       });

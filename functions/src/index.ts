@@ -1,13 +1,7 @@
 import * as functions from 'firebase-functions';
 import * as admin from "firebase-admin";
 import Timestamp = admin.firestore.Timestamp;
-import { createInvoice } from './tasks/crud/qbo/invoice/create';
-import { ordersms } from './tasks/sms/smscompose';
-import { validorderupdate } from './validators/orderupdate';
-import { createCustomer } from './tasks/crud/qbo/customer/create';
 import { sendsms } from './tasks/sms/sms';
-import { Customer } from './models/Daudi/customer/Customer';
-import { Order } from './models/Daudi/order/Order';
 import { SMS } from './models/Daudi/sms/sms';
 import { initCompanyInfo } from './tasks/crud/qbo/CompanyInfo/init';
 import { OMC } from './models/Daudi/omc/OMC';
@@ -16,6 +10,8 @@ import { Environment } from './models/Daudi/omc/Environments';
 import { initFuels } from './tasks/crud/qbo/Item/Init';
 import { Depot } from './models/Daudi/depot/Depot';
 import { initDepots } from './tasks/crud/qbo/Class/init';
+import { initTaxService } from './tasks/crud/qbo/tax/init';
+import { createQbo } from './tasks/sharedqb';
 
 const alreadyRunEventIDs: Array<string> = [];
 
@@ -30,39 +26,43 @@ function markAsRunning(eventID: string) {
 /**
  * create an order from the client directly
  */
-exports.createInvoice = functions.https.onCall((data, context) => {
-  const order = data as Order;
-  console.log(data);
-  return createInvoice(order).then(() => {
-    /**
-     * Only send sn SMS when order creation is complete
-     * Make the two processes run parallel so that none is blocking
-     */
-    return Promise.all([ordersms(order), validorderupdate(order)]);
-  });
-});
+// exports.createInvoice = functions.https.onCall((data, context) => {
+//   const order = data as Order;
+//   console.log(data);
+//   return createInvoice(order).then(() => {
+//     /**
+//      * Only send sn SMS when order creation is complete
+//      * Make the two processes run parallel so that none is blocking
+//      */
+//     return Promise.all([ordersms(order), validorderupdate(order)]);
+//   });
+// });
 /**
  * This is a function that should ONLY be called by system admins
  * It initialises a company by creating all the relevant entries on QBO and notes their ID's
  */
-exports.initCompany = functions.https.onCall((data, context) => {
-  const omc = data.omc as OMC;
-  const config = data.config as Config
-  const environment = data.environment as Environment;
-  const publicdepots = data.depots as Array<Depot>;
-  console.log(data);
-  return Promise.all([initCompanyInfo(omc, config, environment), initFuels(omc, config, environment), initDepots(omc, config, environment, publicdepots)]);
+exports.initCompany = functions.https.onCall((data: { omc: OMC, config: Config, environment: Environment, depots: Array<Depot> }, context) => {
 
+  console.log(data);
+  return createQbo(data.omc.Id, data.config, data.environment).then(result => {
+    const qbo = result;
+    return Promise.all([
+      // initCompanyInfo(data.omc, data.config, data.environment, qbo),
+      initFuels(data.omc, data.config, data.environment, qbo),
+      // initTaxService(data.omc, data.config, data.environment, qbo),
+      // initDepots(data.omc, data.config, data.environment, data.depots, qbo)
+    ]);
+  })
 });
 
 /**
  * create a company from the client directly
  */
-exports.createcustomer = functions.https.onCall((data, context) => {
-  const company = data as Customer;
-  console.log(data);
-  return createCustomer(company);
-});
+// exports.createcustomer = functions.https.onCall((data, context) => {
+//   const company = data as Customer;
+//   console.log(data);
+//   return createCustomer(company);
+// });
 
 exports.smscreated = functions.firestore
   .document("/sms/{smsID}")

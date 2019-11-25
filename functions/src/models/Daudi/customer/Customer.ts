@@ -1,5 +1,4 @@
 import { User } from "../universal/User";
-import * as firebase from "firebase";
 import { Contact } from "./Contact";
 import { firestore } from "firebase-admin";
 

@@ -439,6 +439,7 @@ export class CreateOrderComponent implements OnDestroy {
     };
     this.temporder.config = {
       depotId: this.depotService.activedepot.value.depot.Id,
+      depotname: this.depotService.activedepot.value.depot.Name,
       QbCompanyId: this.configService.getEnvironment().auth.companyId,
       environment: this.configService.environment.value
     };

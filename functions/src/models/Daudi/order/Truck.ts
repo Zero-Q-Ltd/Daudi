@@ -29,8 +29,6 @@ export interface Batch {
 
 export interface Truck {
   stage: number;
-  Id: string;
-
   frozen: boolean;
   compartmentCount: number;
   driverdetail: {
@@ -70,7 +68,6 @@ export interface StageData {
 
 export const emptytruck: Truck = {
   stage: null,
-  Id: null,
   compartmentCount: null,
   frozen: false,
   driverdetail: {

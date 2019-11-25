@@ -203,7 +203,7 @@ export class OrdersTableComponent implements OnInit, OnDestroy {
 
         this.orderservice.updateorder(order.Id, order).then(result => {
           this.notification.notify({
-            body: `Order # ${order.QbId} Deleted. It will be permanently deleted after 1 week`,
+            body: `Order # ${order.QbConfig} Deleted. It will be permanently deleted after 1 week`,
             title: "Deleted",
             alert_type: "warning",
             duration: 2000
@@ -233,7 +233,7 @@ export class OrdersTableComponent implements OnInit, OnDestroy {
     };
     this.orderservice.updateorder(order.Id, order).then(result => {
       this.notification.notify({
-        body: `Order # ${order.QbId} Restored`,
+        body: `Order # ${order.QbConfig} Restored`,
         alert_type: "success",
         title: "Success",
         duration: 2000

@@ -1,4 +1,4 @@
-export interface QBTaxCode {
+export interface TaxCode {
   Name: string;
   Description: string;
   Active: boolean;

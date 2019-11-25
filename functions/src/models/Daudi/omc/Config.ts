@@ -7,6 +7,7 @@ import { DepotConfig } from "../depot/DepotConfig";
 import { FuelConfig, emptyFuelConfig } from "./FuelConfig";
 import { Environment } from "./Environments";
 import { QBOAuthCOnfig } from "./QboAuthConfig";
+import { TaxConfig } from "./TaxConfig";
 
 export interface Config {
     adminTypes: Array<AdminType>;
@@ -28,6 +29,7 @@ export interface QboEnvironment {
     fuelconfig: {
         [key in fuelTypes]: FuelConfig
     };
+    taxConfig: TaxConfig
 }
 /**
  * This is an initialization variable for the undeletable level for System Admins
@@ -42,7 +44,6 @@ const InfoMetadata: Metadata = {
     created: happy,
     edited: happy
 };
-
 
 export const emptyqboAuth: QBOAuthCOnfig = {
     companyId: 0,
@@ -62,7 +63,10 @@ export const emptyqboAuth: QBOAuthCOnfig = {
 
 
 export const emptyConfig: Config = {
-    depotconfig: [],
+    depotconfig: {
+        live: [],
+        sandbox: []
+    },
     Qbo: {
         live: {
             auth: { ...emptyqboAuth },
@@ -70,6 +74,17 @@ export const emptyConfig: Config = {
                 pms: { ...emptyFuelConfig },
                 ago: { ...emptyFuelConfig },
                 ik: { ...emptyFuelConfig }
+            },
+            taxConfig: {
+                taxAgency: {
+                    Id: "0"
+                },
+                taxCode: {
+                    Id: "0"
+                },
+                taxRate: {
+                    Id: "0"
+                },
             }
         },
         sandbox: {
@@ -78,6 +93,17 @@ export const emptyConfig: Config = {
                 pms: { ...emptyFuelConfig },
                 ago: { ...emptyFuelConfig },
                 ik: { ...emptyFuelConfig }
+            },
+            taxConfig: {
+                taxAgency: {
+                    Id: "0"
+                },
+                taxCode: {
+                    Id: "0"
+                },
+                taxRate: {
+                    Id: "0"
+                },
             }
         },
     },

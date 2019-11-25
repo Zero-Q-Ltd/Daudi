@@ -1,10 +1,10 @@
 import { firestore } from "firebase-admin";
-import { Order_ } from "../../models/Daudi/Order";
-import { SMS } from "../../models/Daudi/sms";
-import { Truck_ } from "../../models/Daudi/Truck";
 import * as moment from "moment";
+import { Order } from "../../models/Daudi/order/Order";
+import { SMS } from "../../models/Daudi/sms/sms";
+import { Truck } from "../../models/Daudi/order/Truck";
 
-export function ordersms(order: Order_) {
+export function ordersms(order: Order) {
   /**
    * An order has been modified
    * Only sent an SMS if the stage has been incremented. Ignore stage 4 and 5 because another one will be sent for the truck
@@ -25,11 +25,11 @@ export function ordersms(order: Order_) {
     greeting: "Hujambo",
     company: {
       QbId: order.company.QbId,
-      contactname: order.company.contact.name,
       name: order.company.name,
-      phone: order.company.contact.phone,
-      Id: order.company.Id
+      Id: order.company.Id,
+      krapin: order.company.krapin
     },
+    phone: order.company.phone,
     msg: resolveOrderText(order),
     type: {
       origin: "system",
@@ -42,7 +42,7 @@ export function ordersms(order: Order_) {
     .add(newsms);
 }
 
-export function trucksms(truck: Truck_) {
+export function trucksms(order: Order) {
   const newsms: SMS = {
     Id: "",
     timestamp: firestore.Timestamp.fromDate(new Date()),
@@ -51,20 +51,21 @@ export function trucksms(truck: Truck_) {
       delivered: false
     },
     greeting: "Hujambo",
-    company: truck.company,
-    msg: resolveTrucksText(truck),
+    company: order.company,
+    msg: resolveTrucksText(order),
     type: {
       origin: "system",
       reason: "ordermoved"
-    }
+    },
+    phone: order.company.phone
   };
   return firestore()
     .collection("sms")
     .add(newsms);
 }
 
-export function driverchangedsms(truck: Truck_) {
-  const text = ` ID ${truck.company.QbId} Truck#${truck.truckId} [DRIVER CHANGED] to ${truck.drivername}`;
+export function driverchangedsms(order: Order) {
+  const text = ` ID ${order.company.QbId} Truck#${order.QbConfig.InvoiceId} [DRIVER CHANGED] to ${order.truck.driverdetail.name}`;
   const newsms: SMS = {
     Id: null,
     timestamp: firestore.Timestamp.fromDate(new Date()),
@@ -72,8 +73,9 @@ export function driverchangedsms(truck: Truck_) {
       sent: false,
       delivered: false
     },
+    phone: order.company.phone,
     greeting: "Hujambo",
-    company: truck.company,
+    company: order.company,
     msg: text,
     type: {
       origin: "system",
@@ -85,8 +87,8 @@ export function driverchangedsms(truck: Truck_) {
     .add(newsms);
 }
 
-export function truckchangesdsms(truck: Truck_) {
-  const text = ` ID ${truck.company.QbId} Truck#${truck.truckId} [TRUCK CHANGED] to ${truck.numberplate}`;
+export function truckchangesdsms(order: Order) {
+  const text = ` ID ${order.company.QbId} Truck#${order.QbConfig.InvoiceId} [TRUCK CHANGED] to ${order.truck.truckdetail.numberplate}`;
   const newsms: SMS = {
     Id: null,
     timestamp: firestore.Timestamp.fromDate(new Date()),
@@ -95,7 +97,8 @@ export function truckchangesdsms(truck: Truck_) {
       delivered: false
     },
     greeting: "Hujambo",
-    company: truck.company,
+    company: order.company, phone: order.company.phone,
+
     msg: text,
     type: {
       origin: "system",
@@ -107,8 +110,8 @@ export function truckchangesdsms(truck: Truck_) {
     .add(newsms);
 }
 
-function resolveOrderText(order: Order_): string {
-  let text = ` ID ${order.company.QbId} Order# ${order.InvoiceId}`;
+function resolveOrderText(order: Order): string {
+  let text = ` ID ${order.company.QbId} Order# ${order.QbConfig.InvoiceId}`;
   switch (order.stage) {
     case 1:
       text += " [RECEIVED] Thank you for making it Emkay today.";
@@ -137,33 +140,33 @@ function resolveOrderText(order: Order_): string {
   return (text += ` HELP:0733474703`);
 }
 
-function resolveTrucksText(truck: Truck_): string {
-  let text = ` ID ${truck.company.QbId} Truck#${truck.truckId}`;
-  switch (truck.stage) {
+function resolveTrucksText(order: Order): string {
+  let text = ` ID ${order.company.QbId} Truck#${order.QbConfig.InvoiceId}`;
+  switch (order.truck.stage) {
     case 0:
       text +=
         " Your fuel is now [RESERVED] at " +
-        truck.config.depot.name +
+        order.config.depotname +
         " Please collect within the next 36 hours. Thank you for making it Emkay today.";
       break;
     case 1:
       text +=
         " [ORDER SUBMITTED] at " +
-        truck.config.depot.name +
+        order.config.depotname +
         " Est-Time " +
-        truck.stagedata["1"].data.expiry[0].time +
+        order.truck.stagedata["1"].expiry[0].expiry +
         " Thank you for making it Emkay today.";
       break;
     case 2:
-      text += " [QUEUED] Est-Time " + truck.stagedata["2"].data.expiry[0].time;
+      text += " [QUEUED] Est-Time " + order.truck.stagedata["2"].expiry[0].expiry;
       break;
     case 3:
-      text += " [LOADING] Est-Time " + truck.stagedata["3"].data.expiry[0].time;
+      text += " [LOADING] Est-Time " + order.truck.stagedata["3"].expiry[0].expiry;
       break;
     case 4:
       text +=
         " [PASSED] Seal Numbers: " +
-        truck.stagedata["4"].data.seals.range +
+        order.truck.stagedata["4"].seals.range +
         " Always check your seals";
       break;
     default:
