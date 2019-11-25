@@ -22,6 +22,8 @@ export function initCompanyInfo(omc: OMC, config: Config, environment: Environme
         Country: "Kenya",
         sparse: true,
         domain: "QBO",
+        Id: "1",
+        SyncToken: "10"
     }
 
     return qbo.updateCompanyInfo(companyInfo)

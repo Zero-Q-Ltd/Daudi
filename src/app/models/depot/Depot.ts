@@ -4,6 +4,7 @@ import { DepotCreator } from "./DepotCreator";
 import { firestore } from "firebase";
 
 export interface Depot {
+  Active: boolean;
   Id: string;
   MetaData: Metadata;
   Name: string;
@@ -29,6 +30,7 @@ export interface Depot {
 
 export const emptydepot: Depot = {
   Id: null,
+  Active: true,
   MetaData: { ...emptymetadata },
   Name: null,
   Contact: {

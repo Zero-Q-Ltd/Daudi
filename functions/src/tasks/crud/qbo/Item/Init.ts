@@ -27,7 +27,6 @@ export function initFuels(omc: OMC, config: Config, environment: Environment, qb
         UnitPrice: 0,
 
         SyncToken: "0",
-        InvStartDate: firestore.Timestamp.now().toDate().formatUTC("YYYY-MM-DDZ"),
         Type: "Inventory",
         QtyOnHand: 0,
         Description: "",

@@ -41,11 +41,17 @@ export class DepotService {
     return this.db.firestore.collection("depot").doc(this.activedepot.value.depot.Id);
   }
 
+
+  createDepot(depot: Depot) {
+    this.db.firestore.collection("depot")
+      .add(depot);
+  }
+
   fetchdepots() {
     const depotquery = this.db.firestore.collection("depot")
       .where("Active", "==", true);
     const subscriprion = depotquery.onSnapshot(snapshot => {
-      const tempdepot: Depot = Object.assign({}, emptydepot, snapshot.docs[0].data());
+      const tempdepot: Depot = { ...emptydepot, ...snapshot.docs[0].data() };
       tempdepot.Id = snapshot.docs[0].id;
       /**
        * only change the activedepot if the object has just been initialized

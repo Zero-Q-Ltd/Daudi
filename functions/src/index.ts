@@ -47,10 +47,11 @@ exports.initCompany = functions.https.onCall((data: { omc: OMC, config: Config, 
   return createQbo(data.omc.Id, data.config, data.environment).then(result => {
     const qbo = result;
     return Promise.all([
-      initCompanyInfo(data.omc, data.config, data.environment, qbo),
+      // initCompanyInfo(data.omc, data.config, data.environment, qbo),
       initFuels(data.omc, data.config, data.environment, qbo),
-      initTaxService(data.omc, data.config, data.environment, qbo),
-      initDepots(data.omc, data.config, data.environment, data.depots, qbo)]);
+      // initTaxService(data.omc, data.config, data.environment, qbo),
+      // initDepots(data.omc, data.config, data.environment, data.depots, qbo)
+    ]);
   })
 });
 

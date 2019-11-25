@@ -20,6 +20,7 @@ import { Config, emptyConfig } from "../../../models/omc/Config";
 import { MatSlideToggleChange } from "@angular/material";
 import { Environment } from "../../../models/omc/Environments";
 import { ConfigService } from "../../services/core/config.service";
+import { InitService } from "../../services/core/init.service";
 
 
 @Component({
@@ -89,6 +90,7 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
     private depotservice: DepotService,
     private priceservice: PricesService,
     private config: ConfigService,
+    private init: InitService,
     private status: StatusService) {
     this.depotservice.activedepot.pipe(takeUntil(this.comopnentDestroyed)).subscribe((depot) => {
       this.activedepot = depot;
@@ -108,6 +110,8 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
     this.status.connectionStatus.pipe(takeUntil(this.comopnentDestroyed)).subscribe(status => {
       this.connectionStatus = status;
     });
+    this.init.callableInit();
+
     fueltypesArray.forEach(fueltyp => {
       this.priceservice.avgprices[fueltyp].total.pipe(takeUntil(this.comopnentDestroyed)).subscribe(total => {
         this.avgprices[fueltyp].total = total;

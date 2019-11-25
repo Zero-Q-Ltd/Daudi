@@ -11,7 +11,7 @@ import { Environment } from "../../../models/omc/Environments";
 })
 export class ConfigService {
   omcconfig: BehaviorSubject<Config> = new BehaviorSubject<Config>({ ...emptyConfig });
-  environment: BehaviorSubject<Environment> = new BehaviorSubject<Environment>("live");
+  environment: BehaviorSubject<Environment> = new BehaviorSubject<Environment>("sandbox");
 
   constructor(private db: AngularFirestore, private adminservice: AdminService) {
     adminservice.observableuserdata
@@ -28,6 +28,7 @@ export class ConfigService {
       .doc("main")
       .onSnapshot(companydata => {
         if (!companydata.exists) {
+          this.initConfig(admin);
           return;
         }
         this.omcconfig.next(Object.assign({}, { ...emptyConfig }, { id: companydata.id }, companydata.data()));
@@ -43,6 +44,11 @@ export class ConfigService {
     } else {
       return this.omcconfig.value.Qbo[envString];
     }
+  }
+
+  initConfig(admin: Admin) {
+    const newConfig: Config = { ...emptyConfig };
+    this.saveConfig(admin.config.omcid, newConfig);
   }
 
   saveConfig(omcid: string, data: Config) {

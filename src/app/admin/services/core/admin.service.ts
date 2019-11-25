@@ -29,7 +29,6 @@ export class AdminService {
     afAuth.authState.subscribe(state => {
       if (state) {
         this.getuser(afAuth.auth.currentUser);
-        // this.init(afAuth.auth.currentUser);
       } else {
         this.userdata = { ...emptyadmin };
         if (router.routerState.snapshot.url !== "/admin/login") {
@@ -74,8 +73,8 @@ export class AdminService {
     };
   }
 
-  updateadmin(adminid: string) {
-    return this.db.firestore.collection("admin").doc(adminid);
+  updateadmin(admin: Admin) {
+    return this.db.firestore.collection("admin").doc(admin.Id).update(admin);
   }
 
   getuser(user, unsub?: boolean) {
@@ -104,15 +103,6 @@ export class AdminService {
     }
   }
 
-  init(user: firebase.User) {
-    const temp: Admin = { ...emptyadmin };
-    temp.profile.email = user.email;
-    temp.profile.name = user.displayName;
-    temp.profile.photoURL = user.photoURL;
-    temp.Id = user.uid;
-    this.db.firestore.collection("admin").doc(user.uid).set(temp);
-
-  }
 
   unsubscribeAll() {
     this.getuser(null);
