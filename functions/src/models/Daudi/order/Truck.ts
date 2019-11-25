@@ -68,7 +68,6 @@ export interface StageData {
 
 export const emptytruck: Truck = {
   stage: null,
-  Id: null,
   compartmentCount: null,
   frozen: false,
   driverdetail: {

@@ -1,16 +1,17 @@
 import { firestore, messaging } from "firebase-admin";
 import { Truck } from "../../models/Daudi/order/Truck";
 import { Admin } from "../../models/Daudi/admin/Admin";
+import { Order } from "../../models/Daudi/order/Order";
 
 export function truckFcm(
-  truck: Truck,
+  order: Order,
   statusstring: "Approved" | "Reset"
 ): Promise<any> {
   console.log("sending truck FCM");
   const message = {
     notification: {
       title: `Truck ${statusstring}`,
-      body: `${truck.Id} now at Processing`,
+      body: `${order.QbConfig.InvoiceId} now at Processing`,
       icon: "https://emkaynow.com/favicon.ico",
       sound: "default"
     }

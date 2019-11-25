@@ -1,13 +1,7 @@
 import * as functions from 'firebase-functions';
 import * as admin from "firebase-admin";
 import Timestamp = admin.firestore.Timestamp;
-import { createInvoice } from './tasks/crud/qbo/invoice/create';
-import { ordersms } from './tasks/sms/smscompose';
-import { validorderupdate } from './validators/orderupdate';
-import { createCustomer } from './tasks/crud/qbo/customer/create';
 import { sendsms } from './tasks/sms/sms';
-import { Customer } from './models/Daudi/customer/Customer';
-import { Order } from './models/Daudi/order/Order';
 import { SMS } from './models/Daudi/sms/sms';
 import { initCompanyInfo } from './tasks/crud/qbo/CompanyInfo/init';
 import { OMC } from './models/Daudi/omc/OMC';
@@ -32,17 +26,17 @@ function markAsRunning(eventID: string) {
 /**
  * create an order from the client directly
  */
-exports.createInvoice = functions.https.onCall((data, context) => {
-  const order = data as Order;
-  console.log(data);
-  return createInvoice(order).then(() => {
-    /**
-     * Only send sn SMS when order creation is complete
-     * Make the two processes run parallel so that none is blocking
-     */
-    return Promise.all([ordersms(order), validorderupdate(order)]);
-  });
-});
+// exports.createInvoice = functions.https.onCall((data, context) => {
+//   const order = data as Order;
+//   console.log(data);
+//   return createInvoice(order).then(() => {
+//     /**
+//      * Only send sn SMS when order creation is complete
+//      * Make the two processes run parallel so that none is blocking
+//      */
+//     return Promise.all([ordersms(order), validorderupdate(order)]);
+//   });
+// });
 /**
  * This is a function that should ONLY be called by system admins
  * It initialises a company by creating all the relevant entries on QBO and notes their ID's
@@ -63,11 +57,11 @@ exports.initCompany = functions.https.onCall((data: { omc: OMC, config: Config, 
 /**
  * create a company from the client directly
  */
-exports.createcustomer = functions.https.onCall((data, context) => {
-  const company = data as Customer;
-  console.log(data);
-  return createCustomer(company);
-});
+// exports.createcustomer = functions.https.onCall((data, context) => {
+//   const company = data as Customer;
+//   console.log(data);
+//   return createCustomer(company);
+// });
 
 exports.smscreated = functions.firestore
   .document("/sms/{smsID}")
