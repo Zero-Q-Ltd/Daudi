@@ -17,7 +17,7 @@ import { Payment } from "../models/Qbo/Payment";
 
 const version = "2.0.24";
 const APP_CENTER_BASE = "https://appcenter.intuit.com";
-const V3_endpoint_BASE_URL = "https://quickbooks.api.intuit.com/v3/company/";
+const V3_endpoint_BASE_URL = "https://sandbox-quickbooks.api.intuit.com/v3/company/";
 const QUERY_OPERATORS = ["=", "IN", "<", ">", "<=", ">=", "LIKE"];
 const RECONNECT_URL = APP_CENTER_BASE + "/api/v1/connection/reconnect";
 const DISCONNECT_URL = APP_CENTER_BASE + "/api/v1/connection/disconnect";
@@ -35,7 +35,7 @@ const authConfig = {
   token_endpoint: null
 };
 
-export type QbConfig = {
+export type QbApiConfig = {
   clientID: string,
   clientSecret: string,
   token: string,
@@ -80,7 +80,7 @@ export class QuickBooks {
   sandbox: boolean;
   companyid: string;
 
-  constructor(qbconfig: QbConfig) {
+  constructor(qbconfig: QbApiConfig) {
     for (const key in qbconfig) {
       if (qbconfig[key] === null) {
         throw new Error(`${key} not defined`);
@@ -114,22 +114,18 @@ export class QuickBooks {
 
     requester.get(postBody, function (e, res, data) {
       const json = JSON.parse(res.body);
-      console.log();
-      // authConfig.authorization_endpoint = json.authorization_endpoint;;
-      // authConfig.token_endpoint = json.token_endpoint;
+      authConfig.authorization_endpoint = json.authorization_endpoint;;
+      authConfig.token_endpoint = json.token_endpoint;
     });
-
   }
 
 
   /**
    *
    * Use the refresh token to obtain a new access token.
-   *OR:
-   *
    */
-
   refreshAccesstoken(): Promise<any> {
+    // const auth = Buffer.from(clientID + ":" + clientSecret, "base64");
     const auth = (new Buffer(clientID + ":" + clientSecret).toString("base64"));
     const postBody = {
       url: authConfig.token_endpoint,
@@ -160,8 +156,8 @@ export class QuickBooks {
         }
       });
     });
-
   };
+
 
   /**
    * Batch operation to enable an application to perform multiple operations in a single request.

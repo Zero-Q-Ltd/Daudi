@@ -5,12 +5,12 @@ import { Depot, emptydepot } from "../../../models/depot/Depot";
 import { Admin, emptyadmin } from "../../../models/admin/Admin";
 import { AngularFireFunctions } from "@angular/fire/functions";
 import { Config } from "protractor";
-import { Environment } from "functions/src/models/Daudi/omc/Environments";
 import { ConfigService } from "./config.service";
 import { OmcService } from "../omc.service";
 import { combineLatest } from "rxjs";
-import { take } from "rxjs/operators";
+import { take, skipWhile } from "rxjs/operators";
 import { OMC } from "../../../models/omc/OMC";
+import { Environment } from "../../../models/omc/Environments";
 
 @Injectable({
   providedIn: "root"
@@ -29,9 +29,15 @@ export class InitService {
   }
 
   callableInit() {
-    combineLatest([this.omc.currentOmc, this.config.omcconfig, this.config.environment, this.depot.alldepots]).pipe(take(1)).subscribe(val => {
-      this.initCompany(val[0], val[1], val[2], val[3]);
-    });
+    combineLatest([this.omc.currentOmc, this.config.omcconfig, this.config.environment, this.depot.alldepots])
+      .pipe(
+        skipWhile(t => {
+          return !t[0].Id || !t[1].Qbo.sandbox.auth.clientId || t[3].length === 0;
+        }),
+        take(1))
+      .subscribe(val => {
+        this.initCompany(val[0], val[1], val[2], val[3]);
+      });
   }
 
   initDepots() {
@@ -52,6 +58,7 @@ export class InitService {
   }
   initCompany(omc: OMC, config: Config, environment: Environment, depots: Array<Depot>) {
     console.log("initialising company....");
+    // console.log(omc, config, environment, depots);
     const data: { omc: OMC, config: Config, environment: Environment, depots: Array<Depot> } = {
       config,
       depots,

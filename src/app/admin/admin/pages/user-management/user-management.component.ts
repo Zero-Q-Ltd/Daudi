@@ -131,7 +131,7 @@ export class UserManagementComponent implements OnInit, OnDestroy {
     // console.log(admin);
     this.saving = true;
     if (this.expandedEAdmin.config.level >= this.activeuser.config.level) {
-      this.adminsService.updateadmin(this.expandedEAdmin.Id).update(this.expandedEAdmin).then(_ => {
+      this.adminsService.updateadmin(this.expandedEAdmin).then(_ => {
         this.saving = false;
         this.notification.notify({
           alert_type: "success",

@@ -13,6 +13,10 @@ import { initDepots } from './tasks/crud/qbo/Class/init';
 import { initTaxService } from './tasks/crud/qbo/tax/init';
 import { createQbo } from './tasks/sharedqb';
 
+admin.initializeApp(functions.config().firebase);
+admin.firestore().settings({ timestampsInSnapshots: true });
+
+
 const alreadyRunEventIDs: Array<string> = [];
 
 function isAlreadyRunning(eventID: string) {
@@ -43,14 +47,15 @@ function markAsRunning(eventID: string) {
  */
 exports.initCompany = functions.https.onCall((data: { omc: OMC, config: Config, environment: Environment, depots: Array<Depot> }, context) => {
 
-  console.log(data);
+  // console.log(data);
+  // console.log(data.config.Qbo[data.environment]);
   return createQbo(data.omc.Id, data.config, data.environment).then(result => {
-    const qbo = result;
+    console.log(result)
     return Promise.all([
-      // initCompanyInfo(data.omc, data.config, data.environment, qbo),
-      initFuels(data.omc, data.config, data.environment, qbo),
-      // initTaxService(data.omc, data.config, data.environment, qbo),
-      // initDepots(data.omc, data.config, data.environment, data.depots, qbo)
+      // initCompanyInfo(data.omc, data.config, data.environment, result),
+      // initFuels(data.omc, data.config, data.environment, result),
+      // initTaxService(data.omc, data.config, data.environment, result),
+      initDepots(data.omc, data.config, data.environment, data.depots, result)
     ]);
   })
 });
