@@ -1,4 +1,3 @@
-import { Invoice, ItemLine } from "../../../../models/Qbo/Invoice";
 import { createQbo } from "../../../sharedqb";
 import { Payment } from "../../../../models/Qbo/Payment";
 import * as admin from "firebase-admin";
@@ -9,15 +8,18 @@ import { QuickBooks } from "../../../../libs/qbmain";
 import { Config } from "../../../../models/Daudi/omc/Config";
 import { Environment } from "../../../../models/Daudi/omc/Environments";
 import { OMC } from "../../../../models/Daudi/omc/OMC";
+import { EmailStatus } from "../../../../models/Qbo/enums/EmailStatus";
+import { Line } from "../../../../models/Qbo/subTypes/Line";
+import { LineDetailType } from "../../../../models/Qbo/enums/LineDetailType";
 
 function syncfueltypes(orderdata: Order, TxnTaxCodeRef: string): Array<any> {
     const fuels = ["pms", "ago", "ik"];
-    const values: Array<ItemLine> = [];
+    const values: Array<Line> = [];
     fuels.forEach(fuel => {
         if (orderdata.fuel[fuel].qty > 0) {
             values.push({
                 Amount: orderdata.fuel[fuel].priceconfig.nonTaxprice * orderdata.fuel[fuel].qty,
-                DetailType: "SalesItemLineDetail",
+                DetailType: LineDetailType.SalesItemLineDetail,
                 Description: `VAT-Exempt : ${orderdata.fuel[fuel].priceconfig.nonTax} \t, Taxable Amount: ${orderdata.fuel[fuel].priceconfig.taxableAmnt} \t , VAT Total : ${orderdata.fuel[fuel].priceconfig.taxAmnt} \t`,
                 SalesItemLineDetail: {
                     ItemRef: {
@@ -44,7 +46,7 @@ function formulateInvoice(orderdata: Order, TxnTaxCodeRef: string, TaxRateRef: s
             StringValue: orderdata.customer.QbId,
             Type: "StringType"
         }],
-        EmailStatus: "NeedToSend",
+        EmailStatus: EmailStatus.NeedToSend,
         CustomerRef: {
             value: orderdata.customer.QbId
         },
@@ -73,6 +75,7 @@ function formulateInvoice(orderdata: Order, TxnTaxCodeRef: string, TaxRateRef: s
             value: orderdata.QbConfig.classId
         },
         AutoDocNumber: true,
+        domain: "QBO",
         Line: syncfueltypes(orderdata, TxnTaxCodeRef)
     };
     return newInvoice;
@@ -89,7 +92,7 @@ export function createInvoice(orderdata: Order, qbo: QuickBooks, config: Config,
     const newInvoice = formulateInvoice(orderdata, config.Qbo[environment].taxConfig.taxCode.Id, config.Qbo[environment].taxConfig.taxRate.Id);
     console.log(newInvoice);
     return qbo.createInvoice(newInvoice).then(innerresult => {
-        const invoiceresult: Invoice = innerresult.Invoice as Invoice;
+        const invoiceresult: Invoice = innerresult.Invoice;
 
         const Balance = innerresult.Invoice.Balance;
         if (Balance === 0) {

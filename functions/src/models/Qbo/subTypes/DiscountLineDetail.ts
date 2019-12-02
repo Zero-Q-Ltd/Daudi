@@ -1,4 +1,4 @@
-import { DiscountAccountRef } from "../Estimate";
+import { DiscountAccountRef } from "./DiscountAccountRef";
 export interface DiscountLineDetail {
     DiscountAccountRef: DiscountAccountRef;
     PercentBased: boolean;

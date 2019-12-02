@@ -107,13 +107,6 @@ export type QbTypes =
   | "Vendor"
   | "VendorCredit";
 
-export type QbcustomField = {
-  DefinitionId: string;
-  Name: string;
-  Type: string;
-  StringValue: string;
-};
-
 export type LinkedTxn = {
   TxnId: string;
   TxnType: QbTypes;

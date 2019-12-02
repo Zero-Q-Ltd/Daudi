@@ -1,5 +1,6 @@
-export interface CustomField {
+export type CustomField = {
     DefinitionId: string;
-    Type: string;
     Name: string;
-}
+    Type: string;
+    StringValue: string;
+};

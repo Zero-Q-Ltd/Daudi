@@ -1,4 +1,3 @@
-import { Invoice, ItemLine } from "../../../../models/Qbo/Invoice";
 import { createQbo } from "../../../sharedqb";
 import { Payment } from "../../../../models/Qbo/Payment";
 import * as admin from "firebase-admin";
@@ -7,17 +6,22 @@ import { fuelTypes } from "../../../../models/common";
 import { Order } from "../../../../models/Daudi/order/Order";
 import { QuickBooks } from "../../../../libs/qbmain";
 import { Estimate } from "../../../../models/Qbo/Estimate";
+import { PrintStatus } from "../../../../models/Qbo/enums/PrintStatus";
 import { Config } from "../../../../models/Daudi/omc/Config";
 import { Environment } from "../../../../models/Daudi/omc/Environments";
+import { TxnStatus } from "../../../../models/Qbo/enums/TxnStatus";
+import { EmailStatus } from "../../../../models/Qbo/enums/EmailStatus";
+import { Line } from "../../../../models/Qbo/subTypes/Line";
+import { LineDetailType } from "../../../../models/Qbo/enums/LineDetailType";
 
-function syncfueltypes(orderdata: Order): Array<any> {
+function syncfueltypes(orderdata: Order, TxnTaxCodeRef: string): Array<any> {
     const fuels = ["pms", "ago", "ik"];
-    const values: Array<ItemLine> = [];
+    const values: Array<Line> = [];
     fuels.forEach(fuel => {
         if (orderdata.fuel[fuel].qty > 0) {
             values.push({
                 Amount: orderdata.fuel[fuel].priceconfig.nonTaxprice * orderdata.fuel[fuel].qty,
-                DetailType: "SalesItemLineDetail",
+                DetailType: LineDetailType.SalesItemLineDetail,
                 Description: `VAT-Exempt : ${orderdata.fuel[fuel].priceconfig.nonTax} \t, Taxable Amount: ${orderdata.fuel[fuel].priceconfig.taxableAmnt} \t , VAT Total : ${orderdata.fuel[fuel].priceconfig.taxAmnt} \t`,
                 SalesItemLineDetail: {
                     ItemRef: {
@@ -27,7 +31,7 @@ function syncfueltypes(orderdata: Order): Array<any> {
                     UnitPrice: orderdata.fuel[fuel].priceconfig.nonTaxprice,
                     Qty: orderdata.fuel[fuel].qty,
                     TaxCodeRef: {
-                        value: orderdata.config.sandbox ? "TAX" : "5"
+                        value: TxnTaxCodeRef
                     }
                 }
             });
@@ -36,32 +40,25 @@ function syncfueltypes(orderdata: Order): Array<any> {
     return values;
 }
 
-function formulateEstimate(orderdata: Order): Estimate {
+function formulateEstimate(orderdata: Order, TxnTaxCodeRef: string, TaxRateRef: string): Estimate {
     const newEstimate: Estimate = {
-        Balance: 0,
-        TotalAmt: 0,
         CustomField: [{
-            DefinitionId: "1",
-            Name: "[Do not Edit!]",
-            StringValue: `${orderdata.config.depot.Id}/${orderdata.Id}`,
-            Type: "StringType"
-        }, {
             DefinitionId: "2",
             Name: "Customer ID",
             StringValue: orderdata.customer.QbId,
             Type: "StringType"
         }],
-        EmailStatus: "NeedToSend",
+        EmailStatus: EmailStatus.NeedToSend,
         CustomerRef: {
             value: orderdata.customer.QbId
         },
         BillEmail: {
-            Address: orderdata.customer.email
+            Address: orderdata.customer.contact[0].email
         },
         TxnTaxDetail: {
             TotalTax: orderdata.fuel.pms.priceconfig.taxAmnt + orderdata.fuel.ago.priceconfig.taxAmnt + orderdata.fuel.ik.priceconfig.taxAmnt,
             TxnTaxCodeRef: {
-                value: orderdata.config.sandbox ? "TAX" : "5"
+                value: TxnTaxCodeRef
             },
             TaxLine: [{
                 Amount: (orderdata.fuel.pms.priceconfig.taxAmnt + orderdata.fuel.ago.priceconfig.taxAmnt + orderdata.fuel.ik.priceconfig.taxAmnt),
@@ -71,19 +68,18 @@ function formulateEstimate(orderdata: Order): Estimate {
                     PercentBased: false,
                     TaxPercent: 8,
                     TaxRateRef: {
-                        value: orderdata.config.sandbox ? '5' : '9'
+                        value: TaxRateRef
                     }
                 }
             }]
         },
-        AutoDocNumber: true,
-        Line: syncfueltypes(orderdata)
+        domain: "QBO",
+        TxnStatus: TxnStatus.Pending,
+        PrintStatus: PrintStatus.NeedToPrint,
+
+        Line: syncfueltypes(orderdata, TxnTaxCodeRef)
     };
-    /**
-     * very bad temporary error
-     */
-    delete newEstimate.Balance
-    delete newEstimate.TotalAmt
+
     return newEstimate;
 }
 
@@ -95,7 +91,7 @@ export function createEstimate(orderdata: Order, qbo: QuickBooks, config: Config
 
     console.log("Not new company, checking for pending payments");
 
-    const newInvoice = formulateEstimate(orderdata);
+    const newInvoice = formulateEstimate(orderdata, config.Qbo[environment].taxConfig.taxCode.Id, config.Qbo[environment].taxConfig.taxRate.Id);
     console.log(newInvoice);
     return qbo.createEstimate(newInvoice)
 }

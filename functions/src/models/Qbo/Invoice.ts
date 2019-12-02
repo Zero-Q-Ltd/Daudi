@@ -1,8 +1,13 @@
-import { LinkedTxn, QbcustomField } from "../common";
-import { BillEmail } from "./Estimate";
+import { LinkedTxn } from "../common";
+import { CustomField } from "./subTypes/CustomField";
+import { BillEmail } from "./subTypes/BillEmail";
+import { TxnTaxDetail } from "./subTypes/TxnTaxDetail";
+import { Line } from "./subTypes/Line";
+import { PrintStatus } from "./enums/PrintStatus";
+import { EmailStatus } from "./enums/EmailStatus";
 
 export interface Invoice {
-  Line?: Array<ItemLine>;
+  Line?: Array<Line>;
   CustomerRef?: {
     value: string;
     name?: string;
@@ -12,7 +17,7 @@ export interface Invoice {
   AllowOnlinePayment?: boolean;
   AllowOnlineCreditCardPayment?: boolean;
   AllowOnlineACHPayment?: boolean;
-  domain?: "QBO";
+  domain: "QBO";
   sparse?: boolean;
   Id?: string;
   SyncToken?: string;
@@ -20,7 +25,7 @@ export interface Invoice {
     CreateTime: string;
     LastUpdatedTime: string;
   };
-  CustomField?: Array<QbcustomField>;
+  CustomField?: Array<CustomField>;
   DocNumber?: string;
   TxnDate?: string;
   CurrencyRef?: {
@@ -28,22 +33,13 @@ export interface Invoice {
     name: string;
   };
   LinkedTxn?: Array<LinkedTxn>;
-  TxnTaxDetail?: {
-    TxnTaxCodeRef: {
-      value: string;
-    };
-    TotalTax?: number;
-    /**
-     * Only used for tax codes that are split into different amounts
-     */
-    TaxLine?: Array<TaxLine>;
-  };
+  TxnTaxDetail?: TxnTaxDetail;
   Balance?: number;
   DueDate?: string;
   TotalAmt?: number;
   ApplyTaxAfterDiscount?: boolean;
-  PrintStatus?: "NeedToPrint";
-  EmailStatus?: "NotSet" | "NeedToSend" | "EmailSent";
+  PrintStatus?: PrintStatus;
+  EmailStatus?: EmailStatus;
   BillEmail: BillEmail
   /**
    * @description allow voiding an invoice
@@ -60,33 +56,4 @@ export interface Invoice {
   AutoDocNumber?: boolean;
 }
 
-export type TaxLine = {
-  Amount?: number;
-  DetailType: "TaxLineDetail";
-  TaxLineDetail: {
-    TaxRateRef: {
-      value: string;
-    };
-    PercentBased?: boolean;
-    TaxPercent?: number;
-    NetAmountTaxable: number;
-  };
-};
 
-export type ItemLine = {
-  LineNum?: number;
-  Description?: string;
-  Amount: number;
-  DetailType: "SalesItemLineDetail";
-  SalesItemLineDetail: {
-    ItemRef: {
-      value: string;
-      name: string;
-    };
-    UnitPrice: number;
-    Qty: number;
-    TaxCodeRef?: {
-      value: "TAX" | string;
-    };
-  };
-};
