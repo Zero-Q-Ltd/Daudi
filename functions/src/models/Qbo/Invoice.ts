@@ -1,4 +1,5 @@
 import { LinkedTxn, QbcustomField } from "../common";
+import { BillEmail } from "./Estimate";
 
 export interface Invoice {
   Line?: Array<ItemLine>;
@@ -37,15 +38,13 @@ export interface Invoice {
      */
     TaxLine?: Array<TaxLine>;
   };
-  Balance: number;
+  Balance?: number;
   DueDate?: string;
-  TotalAmt: number;
+  TotalAmt?: number;
   ApplyTaxAfterDiscount?: boolean;
   PrintStatus?: "NeedToPrint";
   EmailStatus?: "NotSet" | "NeedToSend" | "EmailSent";
-  BillEmail: {
-    Address: string;
-  };
+  BillEmail: BillEmail
   /**
    * @description allow voiding an invoice
    */
@@ -56,7 +55,7 @@ export interface Invoice {
   };
   ClassRef: {
     value: string;
-    name: string;
+    name?: string;
   },
   AutoDocNumber?: boolean;
 }

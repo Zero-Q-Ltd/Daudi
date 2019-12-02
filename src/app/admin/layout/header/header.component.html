@@ -22,7 +22,7 @@
     </div>
     <mat-menu #mymenu="matMenu">
       <button (click)='changeactivedepot(depot)' *ngFor='let depot of alldepots; let i = index'
-        [disabled]='depot.Id === activedepot.Id' mat-menu-item>
+        [disabled]='depot.Id === activedepot.depot.Id' mat-menu-item>
         <mat-icon>local_gas_station</mat-icon>
         <span [ngClass]="{ 'color-danger' : depot.sandbox}">{{depot.Name}}</span>
       </button>

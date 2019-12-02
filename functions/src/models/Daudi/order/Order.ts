@@ -8,7 +8,7 @@ import { Environment } from "../omc/Environments";
 
 export interface Order {
   Id: string; // used to temporarily store the key, used later for looping
-  company: {
+  customer: {
     name: string,
     Id: string,
     phone: string,
@@ -18,7 +18,12 @@ export interface Order {
   };
   QbConfig: {
     InvoiceId: string,
-    QbId: string
+    QbId: string,
+    /**
+     * depots are created in qbo as classes
+     * The class Id's must be referenced
+     */
+    classId: string,
   };
   stage: number;
   origin: string;
@@ -27,9 +32,10 @@ export interface Order {
     email: boolean
   };
   config: {
-    QbCompanyId: number,
-    depotId: string,
-    depotname: string,
+    depot: {
+      name: string,
+      id: string
+    }
     environment: Environment,
   };
   error?: {
@@ -96,7 +102,7 @@ const initstages = {
 
 export const emptyorder: Order = {
   Id: null,
-  company: {
+  customer: {
     contact: [],
     phone: null,
     name: null,

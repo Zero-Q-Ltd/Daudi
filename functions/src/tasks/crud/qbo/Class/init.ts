@@ -27,7 +27,7 @@ export function initDepots(omc: OMC, config: Config, environment: Environment, d
         return { ...generalclass, ...{ Name: depot.Name } }
     });
 
-    return qbo.createItem(depotClasses).then(operationresult => {
+    return qbo.createClass([depotClasses]).then(operationresult => {
         const ref = firestore()
             .collection("omc")
             .doc(omc.Id)

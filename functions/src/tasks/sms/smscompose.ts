@@ -24,12 +24,12 @@ export function ordersms(order: Order) {
     },
     greeting: "Hujambo",
     company: {
-      QbId: order.company.QbId,
-      name: order.company.name,
-      Id: order.company.Id,
-      krapin: order.company.krapin
+      QbId: order.customer.QbId,
+      name: order.customer.name,
+      Id: order.customer.Id,
+      krapin: order.customer.krapin
     },
-    phone: order.company.phone,
+    phone: order.customer.phone,
     msg: resolveOrderText(order),
     type: {
       origin: "system",
@@ -51,13 +51,13 @@ export function trucksms(order: Order) {
       delivered: false
     },
     greeting: "Hujambo",
-    company: order.company,
+    company: order.customer,
     msg: resolveTrucksText(order),
     type: {
       origin: "system",
       reason: "ordermoved"
     },
-    phone: order.company.phone
+    phone: order.customer.phone
   };
   return firestore()
     .collection("sms")
@@ -65,7 +65,7 @@ export function trucksms(order: Order) {
 }
 
 export function driverchangedsms(order: Order) {
-  const text = ` ID ${order.company.QbId} Truck#${order.QbConfig.InvoiceId} [DRIVER CHANGED] to ${order.truck.driverdetail.name}`;
+  const text = ` ID ${order.customer.QbId} Truck#${order.QbConfig.InvoiceId} [DRIVER CHANGED] to ${order.truck.driverdetail.name}`;
   const newsms: SMS = {
     Id: null,
     timestamp: firestore.Timestamp.fromDate(new Date()),
@@ -73,9 +73,9 @@ export function driverchangedsms(order: Order) {
       sent: false,
       delivered: false
     },
-    phone: order.company.phone,
+    phone: order.customer.phone,
     greeting: "Hujambo",
-    company: order.company,
+    company: order.customer,
     msg: text,
     type: {
       origin: "system",
@@ -88,7 +88,7 @@ export function driverchangedsms(order: Order) {
 }
 
 export function truckchangesdsms(order: Order) {
-  const text = ` ID ${order.company.QbId} Truck#${order.QbConfig.InvoiceId} [TRUCK CHANGED] to ${order.truck.truckdetail.numberplate}`;
+  const text = ` ID ${order.customer.QbId} Truck#${order.QbConfig.InvoiceId} [TRUCK CHANGED] to ${order.truck.truckdetail.numberplate}`;
   const newsms: SMS = {
     Id: null,
     timestamp: firestore.Timestamp.fromDate(new Date()),
@@ -97,7 +97,7 @@ export function truckchangesdsms(order: Order) {
       delivered: false
     },
     greeting: "Hujambo",
-    company: order.company, phone: order.company.phone,
+    company: order.customer, phone: order.customer.phone,
 
     msg: text,
     type: {
@@ -111,7 +111,7 @@ export function truckchangesdsms(order: Order) {
 }
 
 function resolveOrderText(order: Order): string {
-  let text = ` ID ${order.company.QbId} Order# ${order.QbConfig.InvoiceId}`;
+  let text = ` ID ${order.customer.QbId} Order# ${order.QbConfig.InvoiceId}`;
   switch (order.stage) {
     case 1:
       text += " [RECEIVED] Thank you for making it Emkay today.";
@@ -141,7 +141,7 @@ function resolveOrderText(order: Order): string {
 }
 
 function resolveTrucksText(order: Order): string {
-  let text = ` ID ${order.company.QbId} Truck#${order.QbConfig.InvoiceId}`;
+  let text = ` ID ${order.customer.QbId} Truck#${order.QbConfig.InvoiceId}`;
   switch (order.truck.stage) {
     case 0:
       text +=

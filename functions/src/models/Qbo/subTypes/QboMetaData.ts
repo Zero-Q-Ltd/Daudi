@@ -1,4 +1,3 @@
-
 export interface QboMetaData {
     /**
      * Time the entity was created in the source domain.

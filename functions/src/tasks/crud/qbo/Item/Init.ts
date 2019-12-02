@@ -48,7 +48,7 @@ export function initFuels(omc: OMC, config: Config, environment: Environment, qb
         return { ...generalfuel, ...{ Name: fuel } }
     });
 
-    return qbo.createItem(fuelItems).then(operationresult => {
+    return qbo.createItem(fuelItems[0]).then(operationresult => {
         const ref = firestore()
             .collection("omc")
             .doc(omc.Id)
