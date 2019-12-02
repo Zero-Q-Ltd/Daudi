@@ -132,7 +132,7 @@ export const emptyorder: Order = {
     3: { ...initstages },
     4: { ...initstages },
     5: { ...initstages },
-    6: { ...initstages }
+    6: { ...initstages },
   },
 
 
@@ -142,5 +142,3 @@ export const emptyorder: Order = {
     ik: { ...initorderfuel }
   }
 };
-export let orderStagesarray = ["1", "2", "3", "4", "5", "6"];
-

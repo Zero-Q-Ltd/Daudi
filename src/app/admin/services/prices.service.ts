@@ -6,12 +6,13 @@ import { Depot } from "../../models/Daudi/depot/Depot";
 import { DepotService } from "./core/depot.service";
 import { BehaviorSubject } from "rxjs";
 import { Price } from "../../models/Daudi/depot/Price";
+import { OmcService } from "./core/omc.service";
+import { skipWhile } from "rxjs/operators";
 
 @Injectable({
   providedIn: "root"
 })
 export class PricesService {
-  activedepot: Depot;
 
   avgprices: {
     [key in fuelTypes]: {
@@ -42,13 +43,25 @@ export class PricesService {
   subscriptions: Map<string, any> = new Map<string, any>();
   fueltypesArray = Object.keys(fuelTypes);
 
-  constructor(private db: AngularFirestore, private depotservice: DepotService) {
-    depotservice.activedepot.subscribe(depot => {
+  constructor(
+    private omc: OmcService,
+    private db: AngularFirestore,
+    private depotservice: DepotService) {
+    this.omc.currentOmc
+      .pipe(
+        skipWhile(t => !t.Id)
+      ).subscribe(() => {
+        this.subcribePrices();
+      });
+  }
+
+  subcribePrices() {
+    this.depotservice.activedepot.subscribe(depot => {
       // this.activedepot = depot;
       if (depot.depot.Id) {
         this.unsubscribeAll();
         this.fueltypesArray.forEach(fueltyp => {
-          const subscriprion = this.getavgprices(fueltyp as any)
+          const subscriprion = this.getavgprices(fuelTypes[fueltyp])
             .onSnapshot(avgarray => {
               /**
                * calculate the average whenever there is a change in the data
@@ -77,20 +90,23 @@ export class PricesService {
   }
 
   createavgprice() {
-    return this.db.firestore.collection("depots").doc(this.activedepot.Id).collection(`avgprices`).doc(this.db.createId());
+    return this.db.firestore.collection("omc")
+      .doc(this.omc.currentOmc.value.Id)
+      .collection(`avgprices`)
+      .doc(this.db.createId());
   }
 
   deleteavgprice(id: string) {
-    return this.db.firestore.collection("depots").doc(this.activedepot.Id).collection(`avgprices`).doc(id);
+    return this.db.firestore.collection("omc")
+      .doc(this.omc.currentOmc.value.Id)
+      .collection(`avgprices`)
+      .doc(id);
   }
 
 
   getavgprices(fueltye: fuelTypes) {
-    if (!this.activedepot.Id) {
-      return;
-    }
-    return this.db.firestore.collection("depots")
-      .doc(this.activedepot.Id)
+    return this.db.firestore.collection("omc")
+      .doc(this.omc.currentOmc.value.Id)
       .collection("avgprices")
       .where("fueltytype", "==", fueltye)
       /**
@@ -101,14 +117,17 @@ export class PricesService {
   }
 
   getAvgpricesrange(start, stop) {
-    return this.db.firestore.collection("depots")
-      .doc(this.activedepot.Id)
+    return this.db.firestore.collection("omc")
+      .doc(this.omc.currentOmc.value.Id)
       .collection(`avgprices`)
       .where("user.time", ">=", start)
       .where("user.time", "<=", stop);
   }
 
   createprice() {
-    return this.db.firestore.collection("depots").doc(this.activedepot.Id).collection(`prices`).doc(this.db.createId());
+    return this.db.firestore.collection("omc")
+      .doc(this.omc.currentOmc.value.Id)
+      .collection(`prices`)
+      .doc(this.db.createId());
   }
 }
