@@ -20,7 +20,7 @@ import { singleFuelpricestat } from "../charts/prices";
 import "echarts/theme/macarons.js";
 import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
-import { fueltypesArray } from "../../../models/Daudi/fuel/fuelTypes";
+import { fuelTypes } from "../../../models/Daudi/fuel/fuelTypes";
 
 @Component({
   selector: "app-stats",
@@ -44,8 +44,7 @@ export class StatsComponent implements OnInit, OnDestroy {
     ik: this.assignvalues("ik")
   };
 
-
-  allfueltypes = ["pms", "ago", "ik"];
+  fueltypesArray = Object.keys(fuelTypes);
   emptystats = {
     thisweek: { ...emptystat },
     lastweek: { ...emptystat },
@@ -108,7 +107,7 @@ export class StatsComponent implements OnInit, OnDestroy {
          * Load data for the last 1 months by default, dont forget to reset the FormControl every time the depot changes
          */
         this.dateControl.reset({ begin: new Date(moment().subtract(1, "M").startOf("day").toDate()), end: new Date() });
-        fueltypesArray.forEach(fueltype => {
+        this.fueltypesArray.forEach(fueltype => {
           this.batcheservice.depotbatches[fueltype].pipe(takeUntil(this.comopnentDestroyed)).subscribe((batches: Array<Entry>) => {
             /**
              * Reset the values every time the batches change
@@ -172,7 +171,7 @@ export class StatsComponent implements OnInit, OnDestroy {
       const temp = moment().subtract(i, "days").startOf("day").toDate();
       datesrange[dayCount - i] = temp;
       this.saleStats.xAxis[0].data.push(moment(temp).format("DD-MM-YY"));
-      this.allfueltypes.forEach(ftype => {
+      this.fueltypesArray.forEach(ftype => {
         /**
          * Important so that later the array can be properly iterated
          */
@@ -247,7 +246,7 @@ export class StatsComponent implements OnInit, OnDestroy {
           /**
            * find the highest in each fuel type
            */
-          this.allfueltypes.forEach((ftype, i) => {
+          this.fueltypesArray.forEach((ftype, i) => {
             if (history.fuelsold[ftype].qty > highest[ftype]) {
               highest[ftype] = history.fuelsold[ftype].qty;
             }
@@ -289,7 +288,7 @@ export class StatsComponent implements OnInit, OnDestroy {
         /**
          * MA calculation must be done sequentially, so wait until all the data has been mapped to the right position
          */
-        this.allfueltypes.forEach(ftype => {
+        this.fueltypesArray.forEach(ftype => {
           const copy = JSON.parse(JSON.stringify(this.priceStats[ftype].series[0].data));
           copy.map((data, pos) => {
             // console.log(pos, data);

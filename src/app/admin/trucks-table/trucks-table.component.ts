@@ -108,12 +108,12 @@ export class TrucksTableComponent implements OnInit {
   sendSMS(clickedOrder: Order) {
     const sms: SMS = {
       Id: null,
-      company: clickedOrder.company,
+      company: clickedOrder.customer,
       type: {
         reason: null,
         origin: "custom"
       },
-      phone: clickedOrder.company.phone,
+      phone: clickedOrder.customer.phone,
       greeting: "Jambo",
       msg: null,
       status: {

@@ -3,7 +3,6 @@ import { Admin, emptyadmin } from "../../../../models/Daudi/admin/Admin";
 import { MatDialog, MatPaginator, MatSnackBar, MatSort, MatTableDataSource } from "@angular/material";
 import * as moment from "moment";
 import { NotificationService } from "../../../../shared/services/notification.service";
-import { SyncRequest } from "../../../../models/Daudi/qbo/sync/Sync";
 import { firestore } from "firebase";
 import { animate, sequence, state, style, transition, trigger } from "@angular/animations";
 import { FormControl, Validators } from "@angular/forms";
@@ -15,6 +14,7 @@ import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { OMC, emptyomc } from "../../../../models/Daudi/omc/OMC";
 import { ConfigService } from "../../../services/core/config.service";
+import { SyncRequest } from "../../../../models/Cloud/Sync";
 
 @Component({
   selector: "user-management",

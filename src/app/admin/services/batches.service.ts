@@ -3,7 +3,7 @@ import { Entry, emptybatches } from "../../models/Daudi/fuel/Entry";
 import { BehaviorSubject } from "rxjs";
 import { AngularFirestore } from "@angular/fire/firestore";
 import { DepotService } from "./core/depot.service";
-import { fuelTypes, fueltypesArray } from "../../models/Daudi/fuel/fuelTypes";
+import { fuelTypes } from "../../models/Daudi/fuel/fuelTypes";
 import { Depot } from "../../models/Daudi/depot/Depot";
 
 @Injectable({
@@ -25,6 +25,7 @@ export class BatchesService {
    * this keeps a local copy of all the subscriptions within this service
    */
   subscriptions: Map<string, any> = new Map<string, any>();
+  fueltypesArray = Object.keys(fuelTypes);
 
   constructor(private db: AngularFirestore, private depotsservice: DepotService) {
     this.depotsservice.activedepot.subscribe(depot => {
@@ -36,7 +37,7 @@ export class BatchesService {
 
   fetchbatches() {
     this.fetchingbatches.next(true);
-    fueltypesArray.forEach((fueltype) => {
+    this.fueltypesArray.forEach((fueltype) => {
       if (!this.depotsservice.activedepot.value.depot.Id) {
         return;
       }

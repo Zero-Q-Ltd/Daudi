@@ -5,7 +5,7 @@ import * as moment from "moment";
 import { AngularFirestore } from "@angular/fire/firestore";
 import { Entry } from "../../models/Daudi/fuel/Entry";
 import { emptytruck, Truck, StageData } from "../../models/Daudi/order/Truck";
-import { fuelTypes, fueltypesArray } from "../../models/Daudi/fuel/fuelTypes";
+import { fuelTypes, } from "../../models/Daudi/fuel/fuelTypes";
 import { emptyorder, Order } from "../../models/Daudi/order/Order";
 import { AdminService } from "../services/core/admin.service";
 import { DepotService } from "../services/core/depot.service";
@@ -124,7 +124,7 @@ export class BatchesSelectorComponent implements OnInit, OnDestroy {
   saving = false;
   order: Order = Object.assign({}, emptyorder);
   donecalculating = false;
-  fueltypesArray = fueltypesArray;
+  fueltypesArray = Object.keys(fuelTypes);
   fetchingbatches: boolean;
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
   /**
@@ -141,7 +141,7 @@ export class BatchesSelectorComponent implements OnInit, OnDestroy {
     private depotsservice: DepotService,
     private batchesservice: BatchesService,
     private ordersservice: OrdersService) {
-    fueltypesArray.forEach((fueltype: fuelTypes) => {
+    this.fueltypesArray.forEach((fueltype: fuelTypes) => {
       this.batchesservice.depotbatches[fueltype].pipe(takeUntil(this.comopnentDestroyed)).subscribe((batches: Array<Entry>) => {
         // console.log(batches);
         this.depotbatches[fueltype] = batches;
@@ -156,7 +156,6 @@ export class BatchesSelectorComponent implements OnInit, OnDestroy {
       .onSnapshot(trucksnapshot => {
         if (trucksnapshot.exists) {
           this.truck = Object.assign({}, trucksnapshot.data()) as Truck;
-          this.truck.Id = trucksnapshot.id;
           const ordersubscription = this.ordersservice.getorder(orderid)
             .onSnapshot(ordersnapshot => {
               if (trucksnapshot.exists) {
@@ -189,7 +188,7 @@ export class BatchesSelectorComponent implements OnInit, OnDestroy {
 
   calculateqty() {
     this.donecalculating = false;
-    fueltypesArray.forEach((fueltype: fuelTypes) => {
+    this.fueltypesArray.forEach((fueltype: fuelTypes) => {
       this.fuelerror[fueltype] = false;
       /**
        * Check if there are batches to assign
@@ -336,7 +335,7 @@ export class BatchesSelectorComponent implements OnInit, OnDestroy {
   approvetruck() {
     this.saving = true;
     this.dialogRef.disableClose = true;
-    fueltypesArray.forEach((fueltype: fuelTypes) => {
+    this.fueltypesArray.forEach((fueltype: fuelTypes) => {
       if (this.fuelerror[fueltype]) {
         this.saving = false;
         this.dialogRef.disableClose = false;

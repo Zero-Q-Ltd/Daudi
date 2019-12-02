@@ -11,7 +11,7 @@ import { OrdersService } from "../../services/orders.service";
 import { orderStagesarray } from "../../../models/Daudi/order/Order";
 import { truckStagesarray } from "../../../models/Daudi/order/Truck";
 import { PricesService } from "../../services/prices.service";
-import { fuelTypes, fueltypesArray } from "../../../models/Daudi/fuel/fuelTypes";
+import { fuelTypes } from "../../../models/Daudi/fuel/fuelTypes";
 import { Price } from "../../../models/Daudi/depot/Price";
 import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
@@ -20,8 +20,7 @@ import { Config, emptyConfig } from "../../../models/Daudi/omc/Config";
 import { MatSlideToggleChange } from "@angular/material";
 import { Environment } from "../../../models/Daudi/omc/Environments";
 import { ConfigService } from "../../services/core/config.service";
-import { InitService } from "../../services/core/init.service";
-
+import { DepotConfig, emptyDepotConfig } from "../../../models/Daudi/depot/DepotConfig";
 
 @Component({
   selector: "my-app-header",
@@ -41,7 +40,7 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
   // fuelprices: FuelPrices = {};
   allowsandbox = true;
   adminLevel: number = null;
-  activedepot: { depot: Depot, config: Config } = { depot: { ...emptydepot }, config: { ...emptyConfig } };
+  activedepot: { depot: Depot, config: DepotConfig } = { depot: { ...emptydepot }, config: { ...emptyDepotConfig } };
   currentuser: Admin = { ...emptyadmin };
   connectionStatus: boolean;
   alldepots: Array<Depot>;
@@ -80,7 +79,7 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
       }
     };
 
-  fueltypesArray = fueltypesArray;
+  fueltypesArray = Object.keys(fuelTypes);
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
   environment: Environment;
   constructor(
@@ -90,9 +89,9 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
     private depotservice: DepotService,
     private priceservice: PricesService,
     private config: ConfigService,
-    private init: InitService,
     private status: StatusService) {
     this.depotservice.activedepot.pipe(takeUntil(this.comopnentDestroyed)).subscribe((depot) => {
+      console.log(depot);
       this.activedepot = depot;
     });
     this.depotservice.alldepots.pipe(takeUntil(this.comopnentDestroyed)).subscribe((alldepots: Array<Depot>) => {
@@ -110,9 +109,8 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
     this.status.connectionStatus.pipe(takeUntil(this.comopnentDestroyed)).subscribe(status => {
       this.connectionStatus = status;
     });
-    this.init.callableInit();
 
-    fueltypesArray.forEach(fueltyp => {
+    this.fueltypesArray.forEach(fueltyp => {
       this.priceservice.avgprices[fueltyp].total.pipe(takeUntil(this.comopnentDestroyed)).subscribe(total => {
         this.avgprices[fueltyp].total = total;
       });

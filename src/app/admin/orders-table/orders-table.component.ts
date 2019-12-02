@@ -126,12 +126,12 @@ export class OrdersTableComponent implements OnInit, OnDestroy {
     const sms: SMS = {
       Id: null,
       company: {
-        QbId: clickedOrder.company.QbId,
-        Id: clickedOrder.company.Id,
-        name: clickedOrder.company.name,
-        krapin: clickedOrder.company.krapin
+        QbId: clickedOrder.customer.QbId,
+        Id: clickedOrder.customer.Id,
+        name: clickedOrder.customer.name,
+        krapin: clickedOrder.customer.krapin
       },
-      phone: clickedOrder.company.phone,
+      phone: clickedOrder.customer.phone,
       type: {
         reason: null,
         origin: "custom"

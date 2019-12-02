@@ -1,4 +1,5 @@
-import { User } from "../common";
+import { AssociatedUser } from "../Daudi/admin/AssociatedUser";
+
 export interface Jenga {
     customer: {
         name: string;
@@ -32,7 +33,7 @@ export interface Jenga {
          */
         status: 0 | 1 | 2 | 3 | 48;
         errordetail?: any;
-        approvedby?: User;
+        approvedby?: AssociatedUser;
         bank: "equity" | "kcb";
     };
 }

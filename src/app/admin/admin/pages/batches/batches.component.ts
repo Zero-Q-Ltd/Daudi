@@ -3,14 +3,14 @@ import { MatPaginator, MatTableDataSource } from "@angular/material";
 import { Entry, emptybatches } from "../../../../models/Daudi/fuel/Entry";
 import { DepotService } from "../../../services/core/depot.service";
 import { BatchesService } from "../../../services/batches.service";
-import { SyncRequest } from "../../../../models/Daudi/qbo/sync/Sync";
 import { firestore } from "firebase";
 import { NotificationService } from "../../../../shared/services/notification.service";
 import { AngularFireFunctions } from "@angular/fire/functions";
 import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { ConfigService } from "../../../services/core/config.service";
-import { fuelTypes, fueltypesArray } from "../../../../models/Daudi/fuel/fuelTypes";
+import { fuelTypes } from "../../../../models/Daudi/fuel/fuelTypes";
+import { SyncRequest } from "../../../../models/Cloud/Sync";
 
 @Component({
   selector: "app-batches",
@@ -18,7 +18,7 @@ import { fuelTypes, fueltypesArray } from "../../../../models/Daudi/fuel/fuelTyp
   styleUrls: ["./batches.component.scss"]
 })
 export class BatchesComponent implements OnInit {
-  fueltypesArray = fueltypesArray;
+  fueltypesArray = Object.keys(fuelTypes);
   datasource = {
     pms: new MatTableDataSource<Entry>(),
     ago: new MatTableDataSource<Entry>(),
@@ -69,7 +69,7 @@ export class BatchesComponent implements OnInit {
       };
 
       if (depotvata.depot.Id) {
-        fueltypesArray.forEach((fueltype: fuelTypes) => {
+        this.fueltypesArray.forEach((fueltype: fuelTypes) => {
           /**
            * Create a subscrition for 1000 batches history
            */

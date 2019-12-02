@@ -1,4 +1,5 @@
-import { User } from "./common";
+import { AssociatedUser } from "../Daudi/admin/AssociatedUser";
+
 export interface EquityBulk {
     billNumber: string;
     billAmount: number;
@@ -26,7 +27,7 @@ export interface EquityBulk {
         status: 0 | 1 | 2 | 3 | 48;
         error?: any;
         errordetail?: any;
-        approvedby?: User;
+        approvedby?: AssociatedUser;
         bank: "equity" | "kcb";
     };
 }

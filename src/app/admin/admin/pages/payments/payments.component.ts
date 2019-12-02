@@ -1,6 +1,5 @@
 import { Component, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import { AngularFireFunctions } from "@angular/fire/functions";
-import { ipnmodel } from "../../../../models/Daudi/universal/universal";
 import { AdminService } from "../../../services/core/admin.service";
 import { NotificationService } from "../../../../shared/services/notification.service";
 import { MatDialog, MatPaginator, MatSort, MatTableDataSource } from "@angular/material";
@@ -9,6 +8,7 @@ import { CustomerManagementComponent } from "../customer-management/customer-man
 import { Customer } from "../../../../models/Daudi/customer/Customer";
 import { takeUntil } from "rxjs/operators";
 import { ReplaySubject } from "rxjs";
+import { EquityBulk } from "../../../../models/ipn/EquityBulk";
 
 @Component({
   selector: "app-payments",
@@ -19,10 +19,11 @@ export class PaymentsComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = ["bank", "mode", "bankref", "amount", "name", "phone"];
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
-  unprocesseddatasource = new MatTableDataSource<ipnmodel>();
+  unprocesseddatasource = new MatTableDataSource<EquityBulk>();
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
 
-  constructor(private functions: AngularFireFunctions,
+  constructor(
+    private functions: AngularFireFunctions,
     private adminservice: AdminService,
     private notification: NotificationService,
     private payments: PaymentsService,
@@ -43,7 +44,7 @@ export class PaymentsComponent implements OnInit, OnDestroy {
     this.comopnentDestroyed.complete();
   }
 
-  attachpayment(payment: ipnmodel) {
+  attachpayment(payment: EquityBulk) {
     const dialogRef = this.dialog.open(CustomerManagementComponent, {
       width: "80%",
       data: "Attach"

@@ -9,7 +9,7 @@ import { AdminService } from "../services/core/admin.service";
 import { OrdersService } from "../services/orders.service";
 import { DepotService } from "../services/core/depot.service";
 import { ReplaySubject } from "rxjs";
-import { fueltypesArray } from "../../models/Daudi/fuel/fuelTypes";
+import { fuelTypes } from "../../models/Daudi/fuel/fuelTypes";
 
 @Component({
   selector: "compartments",
@@ -22,7 +22,7 @@ export class CompartmentsComponent implements OnInit, OnDestroy {
   saving = false;
   @Input() order: Order;
   mask = [/^[kK]+$/i, /^[a-zA-Z]+$/i, /^[a-zA-Z]+$/i, " ", /\d/, /\d/, /\d/, /^[a-zA-Z]+$/i];
-  fueltypesArray = fueltypesArray;
+  fueltypesArray = Object.keys(fuelTypes);
   nameControl: FormControl = new FormControl("", [Validators.required]);
   IdControl: FormControl = new FormControl("", [Validators.required]);
   plateControl: FormControl = new FormControl("", [Validators.required, Validators.pattern(this.mask[0])]);
@@ -62,7 +62,7 @@ export class CompartmentsComponent implements OnInit, OnDestroy {
 
   setfueltype(index: number, fueltype) {
     this.order.truck.compartments[index].fueltype = fueltype;
-    fueltypesArray.forEach(type => {
+    this.fueltypesArray.forEach(type => {
       this.order.fuel[type].qty = 0;
     });
     this.order.truck.compartments.forEach((compartment, _) => {
@@ -75,7 +75,7 @@ export class CompartmentsComponent implements OnInit, OnDestroy {
   checkvalidity() {
     // if(this.nameControl.valid && this.IdControl.valid && this.plateControl.valid){
     let errorcheck = false;
-    fueltypesArray.forEach(fueltype => {
+    this.fueltypesArray.forEach(fueltype => {
       if (Number(this.order.fuel[fueltype].qty) !== Number(this.order.fuel[fueltype].qty)) {
         errorcheck = true;
         this.notification.notify({
@@ -109,7 +109,6 @@ export class CompartmentsComponent implements OnInit, OnDestroy {
       this.order.truck.stage = 0;
       // this.order.truck.isPrinted = false;
 
-      this.order.truck.Id = this.order.Id;
       this.order.loaded = true;
       return this.dialogRef.close({ order: this.order, truck: this.order.truck });
     }

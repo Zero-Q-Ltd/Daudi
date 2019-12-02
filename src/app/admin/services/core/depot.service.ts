@@ -4,7 +4,8 @@ import { Depot, emptydepot } from "../../../models/Daudi/depot/Depot";
 import { AdminService } from "./admin.service";
 import { BehaviorSubject } from "rxjs";
 import { distinctUntilChanged } from "rxjs/operators";
-import { Config, emptyConfig } from "../../../models/Daudi/omc/Config";
+import { DepotConfig, emptyDepotConfig } from "../../../models/Daudi/depot/DepotConfig";
+import { ConfigService } from "./config.service";
 
 @Injectable({
   providedIn: "root"
@@ -15,7 +16,7 @@ export class DepotService {
   /**
    * Be careful when subscribing to this value because it will always emit a value
    */
-  activedepot: BehaviorSubject<{ depot: Depot, config: Config }> = new BehaviorSubject({ depot: { ...emptydepot }, config: { ...emptyConfig } });
+  activedepot: BehaviorSubject<{ depot: Depot, config: DepotConfig }> = new BehaviorSubject({ depot: { ...emptydepot }, config: { ...emptyDepotConfig } });
 
 
   /**
@@ -23,7 +24,10 @@ export class DepotService {
    */
   subscriptions: Map<string, any> = new Map<string, any>();
 
-  constructor(private db: AngularFirestore, private adminservice: AdminService) {
+  constructor(
+    private db: AngularFirestore,
+    private adminservice: AdminService,
+    private config: ConfigService) {
     /**
      * Only subscribe to depot when the user data changes
      */
@@ -86,7 +90,10 @@ export class DepotService {
   changeactivedepot(depot: Depot) {
     if (JSON.stringify(depot) !== JSON.stringify(this.activedepot.value)) {
       console.log("changing");
-      // this.activedepot.next(depot);
+      const config = this.config.omcconfig.value.depotconfig[this.config.environment.value].filter(t => {
+        return t.depotId === depot.Id;
+      })[0];
+      this.activedepot.next({ depot, config });
     } else {
       return;
     }

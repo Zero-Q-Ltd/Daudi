@@ -4,11 +4,11 @@ import { Admin, emptyadmin } from "../../../models/Daudi/admin/Admin";
 import { BehaviorSubject, ReplaySubject } from "rxjs";
 import { AngularFireAuth } from "@angular/fire/auth";
 import * as moment from "moment";
-import { User } from "../../../models/Daudi/universal/User";
 import { firestore } from "firebase";
 import { Router } from "@angular/router";
 import { AngularFireDatabase } from "@angular/fire/database";
 import { take } from "rxjs/operators";
+import { AssociatedUser } from "../../../models/Daudi/admin/AssociatedUser";
 
 @Injectable({
   providedIn: "root"
@@ -65,7 +65,7 @@ export class AdminService {
   /**
    * Creates a user object for use within orders and trucks
    */
-  createuserobject(): User {
+  createuserobject(): AssociatedUser {
     return {
       name: this.userdata.profile.name,
       uid: this.userdata.profile.uid,
