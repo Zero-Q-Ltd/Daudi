@@ -9,7 +9,7 @@ import { AdminService } from "../services/core/admin.service";
 import { OrdersService } from "../services/orders.service";
 import { DepotService } from "../services/core/depot.service";
 import { ReplaySubject } from "rxjs";
-import { fuelTypes } from "../../models/Daudi/fuel/fuelTypes";
+import { FuelType } from "../../models/Daudi/fuel/fuelTypes";
 
 @Component({
   selector: "compartments",
@@ -22,7 +22,7 @@ export class CompartmentsComponent implements OnInit, OnDestroy {
   saving = false;
   @Input() order: Order;
   mask = [/^[kK]+$/i, /^[a-zA-Z]+$/i, /^[a-zA-Z]+$/i, " ", /\d/, /\d/, /\d/, /^[a-zA-Z]+$/i];
-  fueltypesArray = Object.keys(fuelTypes);
+  fueltypesArray = Object.keys(FuelType);
   nameControl: FormControl = new FormControl("", [Validators.required]);
   IdControl: FormControl = new FormControl("", [Validators.required]);
   plateControl: FormControl = new FormControl("", [Validators.required, Validators.pattern(this.mask[0])]);

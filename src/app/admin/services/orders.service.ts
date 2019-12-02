@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { Order, orderStagesarray } from "../../models/Daudi/order/Order";
+import { Order } from "../../models/Daudi/order/Order";
 import { OrderStages } from "../../models/Daudi/order/OrderStages";
 import { firestore } from "firebase";
 import * as moment from "moment";
@@ -25,10 +25,10 @@ export class OrdersService {
       3: new BehaviorSubject<Array<Order>>([]),
       4: new BehaviorSubject<Array<Order>>([]),
       5: new BehaviorSubject<Array<Order>>([]),
-      6: new BehaviorSubject<Array<Order>>([])
+      6: new BehaviorSubject<Array<Order>>([]),
     };
   queuedorders = new BehaviorSubject([]);
-
+  orderStagesarray = Object.keys(OrderStages).filter(key => isNaN(Number(OrderStages[key])));
   /**
    * this keeps a local copy of all the subscriptions within this service
    */
@@ -88,19 +88,23 @@ export class OrdersService {
   }
 
   updateorder(orderid: string, order: Order) {
-    return this.db.firestore.collection("depots").doc(this.depotsservice.activedepot.value.depot.Id).collection(`orders`).doc(orderid).update(order);
+    return this.db.firestore.collection("omc")
+      .doc(this.omc.currentOmc.value.Id)
+      .collection("orders")
+      .doc(orderid)
+      .update(order);
   }
 
   getorder(orderid: string) {
-    return this.db.firestore.collection("depots")
-      .doc(this.depotsservice.activedepot.value.depot.Id)
+    return this.db.firestore.collection("omc")
+      .doc(this.omc.currentOmc.value.Id)
       .collection("orders")
       .doc(orderid);
   }
 
   orderquery(query: any) {
-    let queryvalue: any = this.db.firestore.collection("depots")
-      .doc(this.depotsservice.activedepot.value.depot.Id)
+    let queryvalue: any = this.db.firestore.collection("omc")
+      .doc(this.omc.currentOmc.value.Id)
       .collection("orders");
     if (query.stagedata.status) {
       if (query.stagedata.invoiceno.status) {
@@ -161,14 +165,14 @@ export class OrdersService {
      * reset the trucks and orders array when this function is invoked
      */
     this.loadingorders.next(true);
-    this.orders["1"].next([]);
-    this.orders["2"].next([]);
-    this.orders["3"].next([]);
-    this.orders["4"].next([]);
-    this.orders["5"].next([]);
-    this.orders["6"].next([]);
+    this.orders[1].next([]);
+    this.orders[2].next([]);
+    this.orders[3].next([]);
+    this.orders[4].next([]);
+    this.orders[5].next([]);
+    this.orders[6].next([]);
 
-    orderStagesarray.forEach(stage => {
+    this.orderStagesarray.forEach(stage => {
 
       const subscriprion = this.db.firestore.collection("omc")
         .doc(this.omc.currentOmc.value.Id)
@@ -219,7 +223,9 @@ export class OrdersService {
     /**
      * Fetch completed orders
      */
-    const stage5subscription = this.db.firestore.collection("depots").doc(this.depotsservice.activedepot.value.depot.Id).collection("orders")
+    const stage5subscription = this.db.firestore.collection("omc")
+      .doc(this.omc.currentOmc.value.Id)
+      .collection("orders")
       .where("stage", "==", 5)
       .where("stagedata.5.user.time", ">=", startofweek)
       .orderBy("stagedata.5.user.time", "desc")

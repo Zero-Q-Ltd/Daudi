@@ -1,6 +1,6 @@
 import { firestore } from 'firebase';
 ;
-import { fuelTypes } from "./fuelTypes";
+import { FuelType } from "./fuelTypes";
 
 export interface Entry {
 
@@ -33,7 +33,7 @@ export interface Entry {
   // vessel:{
 
   // }
-  fuelType: fuelTypes;
+  fuelType: FuelType;
   price: number;
   Id: string;
   active: number; // 1 for active, 0 for inactive

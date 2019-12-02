@@ -1,1 +1,8 @@
-export type OrderStages = "1" | "2" | "3" | "4" | "5" | "6";
+export enum OrderStages {
+    "Estimates" = 1,
+    "Invoiced",
+    "Paid",
+    "Loading Orders",
+    "Complete",
+    "Deleted",
+}

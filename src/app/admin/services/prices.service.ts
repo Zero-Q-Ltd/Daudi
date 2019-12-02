@@ -1,20 +1,21 @@
 import { Injectable } from "@angular/core";
-import { fuelTypes } from "../../models/Daudi/fuel/fuelTypes";
+import { FuelType, fuelTypeNames, fuelTypeIds } from "../../models/Daudi/fuel/fuelTypes";
 import * as moment from "moment";
 import { AngularFirestore } from "@angular/fire/firestore";
 import { Depot } from "../../models/Daudi/depot/Depot";
 import { DepotService } from "./core/depot.service";
 import { BehaviorSubject } from "rxjs";
 import { Price } from "../../models/Daudi/depot/Price";
+import { OmcService } from "./core/omc.service";
+import { skipWhile } from "rxjs/operators";
 
 @Injectable({
   providedIn: "root"
 })
 export class PricesService {
-  activedepot: Depot;
 
   avgprices: {
-    [key in fuelTypes]: {
+    [key in keyof typeof FuelType]: {
       total: BehaviorSubject<number>,
       avg: BehaviorSubject<number>,
       prices: BehaviorSubject<Array<Price>>
@@ -40,20 +41,32 @@ export class PricesService {
    * this keeps a local copy of all the subscriptions within this service
    */
   subscriptions: Map<string, any> = new Map<string, any>();
-  fueltypesArray = Object.keys(fuelTypes);
+  fueltypesArray = fuelTypeIds;
 
-  constructor(private db: AngularFirestore, private depotservice: DepotService) {
-    depotservice.activedepot.subscribe(depot => {
+  constructor(
+    private omc: OmcService,
+    private db: AngularFirestore,
+    private depotservice: DepotService) {
+    this.omc.currentOmc
+      .pipe(
+        skipWhile(t => !t.Id)
+      ).subscribe(() => {
+        this.subcribePrices();
+      });
+  }
+
+  subcribePrices() {
+    this.depotservice.activedepot.subscribe(depot => {
       // this.activedepot = depot;
       if (depot.depot.Id) {
         this.unsubscribeAll();
-        this.fueltypesArray.forEach(fueltyp => {
-          const subscriprion = this.getavgprices(fueltyp as any)
+        this.fueltypesArray.forEach((fuel) => {
+          const fueltyp: FuelType = FuelType[fuel];
+          const subscriprion = this.getavgprices(fueltyp)
             .onSnapshot(avgarray => {
               /**
                * calculate the average whenever there is a change in the data
                */
-              // console.log(avgarray.docs[0].data());
               // console.log(this.avgprices[fueltyp].total.value);
               this.avgprices[fueltyp].total.next(0);
               this.avgprices[fueltyp].prices.next(avgarray.docs.map(doc => {
@@ -77,20 +90,23 @@ export class PricesService {
   }
 
   createavgprice() {
-    return this.db.firestore.collection("depots").doc(this.activedepot.Id).collection(`avgprices`).doc(this.db.createId());
+    return this.db.firestore.collection("omc")
+      .doc(this.omc.currentOmc.value.Id)
+      .collection(`avgprices`)
+      .doc(this.db.createId());
   }
 
   deleteavgprice(id: string) {
-    return this.db.firestore.collection("depots").doc(this.activedepot.Id).collection(`avgprices`).doc(id);
+    return this.db.firestore.collection("omc")
+      .doc(this.omc.currentOmc.value.Id)
+      .collection(`avgprices`)
+      .doc(id);
   }
 
 
-  getavgprices(fueltye: fuelTypes) {
-    if (!this.activedepot.Id) {
-      return;
-    }
-    return this.db.firestore.collection("depots")
-      .doc(this.activedepot.Id)
+  getavgprices(fueltye: FuelType) {
+    return this.db.firestore.collection("omc")
+      .doc(this.omc.currentOmc.value.Id)
       .collection("avgprices")
       .where("fueltytype", "==", fueltye)
       /**
@@ -101,14 +117,17 @@ export class PricesService {
   }
 
   getAvgpricesrange(start, stop) {
-    return this.db.firestore.collection("depots")
-      .doc(this.activedepot.Id)
+    return this.db.firestore.collection("omc")
+      .doc(this.omc.currentOmc.value.Id)
       .collection(`avgprices`)
       .where("user.time", ">=", start)
       .where("user.time", "<=", stop);
   }
 
   createprice() {
-    return this.db.firestore.collection("depots").doc(this.activedepot.Id).collection(`prices`).doc(this.db.createId());
+    return this.db.firestore.collection("omc")
+      .doc(this.omc.currentOmc.value.Id)
+      .collection(`prices`)
+      .doc(this.db.createId());
   }
 }
