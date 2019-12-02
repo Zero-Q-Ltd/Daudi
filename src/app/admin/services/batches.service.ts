@@ -4,14 +4,14 @@ import { BehaviorSubject } from "rxjs";
 import { AngularFirestore } from "@angular/fire/firestore";
 import { DepotService } from "./core/depot.service";
 import { fuelTypes } from "../../models/Daudi/fuel/fuelTypes";
-import { Depot } from "../../models/Daudi/depot/Depot";
+import { OmcService } from "./core/omc.service";
+import { skipWhile } from "rxjs/operators";
 
 @Injectable({
   providedIn: "root"
 })
 export class BatchesService {
   fetchingbatches = new BehaviorSubject(true);
-  activedepot: Depot;
   depotbatches: {
     pms: BehaviorSubject<Array<Entry>>,
     ago: BehaviorSubject<Array<Entry>>,
@@ -27,9 +27,13 @@ export class BatchesService {
   subscriptions: Map<string, any> = new Map<string, any>();
   fueltypesArray = Object.keys(fuelTypes);
 
-  constructor(private db: AngularFirestore, private depotsservice: DepotService) {
-    this.depotsservice.activedepot.subscribe(depot => {
-      // this.activedepot = depot;
+  constructor(
+    private db: AngularFirestore,
+    private omc: OmcService,
+    private depotsservice: DepotService) {
+    this.omc.currentOmc.pipe(
+      skipWhile(t => !t.Id)
+    ).subscribe(() => {
       this.unsubscribeAll();
       this.fetchbatches();
     });
@@ -41,7 +45,9 @@ export class BatchesService {
       if (!this.depotsservice.activedepot.value.depot.Id) {
         return;
       }
-      const subscriprion = this.db.firestore.collection("depots").doc(this.depotsservice.activedepot.value.depot.Id).collection("batches")
+      const subscriprion = this.db.firestore.collection("omc")
+        .doc(this.omc.currentOmc.value.Id)
+        .collection("batch")
         .orderBy("date", "asc")
         .where("status", "==", 1)
         .where("type", "==", fueltype)

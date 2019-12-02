@@ -12,7 +12,7 @@ import { PricesService } from "../services/prices.service";
 import { DepotService } from "../services/core/depot.service";
 import { Admin, emptyadmin } from "../../models/Daudi/admin/Admin";
 import { AvgPrice } from "../../models/Daudi/price/AvgPrice";
-import { OmcService } from "../services/omc.service";
+import { OmcService } from "../services/core/omc.service";
 import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { OMC } from "../../models/Daudi/omc/OMC";

@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from "@angular/core";
-import { OmcService } from "../admin/services/omc.service";
+import { OmcService } from "../admin/services/core/omc.service";
 
 @Pipe({
   name: "getomc"

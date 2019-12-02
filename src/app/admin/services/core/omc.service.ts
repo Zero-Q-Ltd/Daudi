@@ -1,10 +1,10 @@
 import { Injectable } from "@angular/core";
 import { AngularFirestore } from "@angular/fire/firestore";
 import { BehaviorSubject } from "rxjs";
-import { DepotService } from "./core/depot.service";
+import { DepotService } from "./depot.service";
 import { take } from "rxjs/operators";
-import { OMC, emptyomc } from "../../models/Daudi/omc/OMC";
-import { AdminService } from "./core/admin.service";
+import { OMC, emptyomc } from "../../../models/Daudi/omc/OMC";
+import { AdminService } from "./admin.service";
 
 @Injectable({
   providedIn: "root"

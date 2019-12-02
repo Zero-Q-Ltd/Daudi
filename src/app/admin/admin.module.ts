@@ -82,7 +82,7 @@ import { FcmService } from "./services/fcm.service";
 import { AdminService } from "./services/core/admin.service";
 import { OrdersService } from "./services/orders.service";
 import { PricesService } from "./services/prices.service";
-import { OmcService } from "./services/omc.service";
+import { OmcService } from "./services/core/omc.service";
 import { OmcManagementComponent } from "./admin/pages/omc-management/omc-management.component";
 import { BatchesComponent } from "./admin/pages/batches/batches.component";
 import { NgxEchartsModule } from "ngx-echarts";

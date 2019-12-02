@@ -18,7 +18,7 @@ import { AngularFireFunctions } from "@angular/fire/functions";
 import { map, startWith, takeUntil, skipWhile } from "rxjs/operators";
 import { fuelTypes } from "../../models/Daudi/fuel/fuelTypes";
 import { ConfirmDepotComponent } from "./confirm-depot/confirm-depot.component";
-import { OmcService } from "../services/omc.service";
+import { OmcService } from "../services/core/omc.service";
 import { ConfigService } from "../services/core/config.service";
 import { Config, emptyConfig } from "../../models/Daudi/omc/Config";
 
