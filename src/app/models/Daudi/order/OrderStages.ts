@@ -6,3 +6,6 @@ export enum OrderStages {
     "Complete",
     "Deleted",
 }
+
+export const OrderStageIds = Object.keys(OrderStages).filter(key => isNaN(Number(OrderStages[key])));
+export const OrderStageNames = Object.keys(OrderStages).filter(key => !isNaN(Number(OrderStages[key])));

@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { fuelTypes } from "../../models/Daudi/fuel/fuelTypes";
+import { FuelType, fuelTypeNames, fuelTypeIds } from "../../models/Daudi/fuel/fuelTypes";
 import * as moment from "moment";
 import { AngularFirestore } from "@angular/fire/firestore";
 import { Depot } from "../../models/Daudi/depot/Depot";
@@ -15,7 +15,7 @@ import { skipWhile } from "rxjs/operators";
 export class PricesService {
 
   avgprices: {
-    [key in fuelTypes]: {
+    [key in keyof typeof FuelType]: {
       total: BehaviorSubject<number>,
       avg: BehaviorSubject<number>,
       prices: BehaviorSubject<Array<Price>>
@@ -41,7 +41,7 @@ export class PricesService {
    * this keeps a local copy of all the subscriptions within this service
    */
   subscriptions: Map<string, any> = new Map<string, any>();
-  fueltypesArray = Object.keys(fuelTypes);
+  fueltypesArray = fuelTypeIds;
 
   constructor(
     private omc: OmcService,
@@ -60,13 +60,13 @@ export class PricesService {
       // this.activedepot = depot;
       if (depot.depot.Id) {
         this.unsubscribeAll();
-        this.fueltypesArray.forEach(fueltyp => {
-          const subscriprion = this.getavgprices(fuelTypes[fueltyp])
+        this.fueltypesArray.forEach((fuel) => {
+          const fueltyp: FuelType = FuelType[fuel];
+          const subscriprion = this.getavgprices(fueltyp)
             .onSnapshot(avgarray => {
               /**
                * calculate the average whenever there is a change in the data
                */
-              // console.log(avgarray.docs[0].data());
               // console.log(this.avgprices[fueltyp].total.value);
               this.avgprices[fueltyp].total.next(0);
               this.avgprices[fueltyp].prices.next(avgarray.docs.map(doc => {
@@ -104,7 +104,7 @@ export class PricesService {
   }
 
 
-  getavgprices(fueltye: fuelTypes) {
+  getavgprices(fueltye: FuelType) {
     return this.db.firestore.collection("omc")
       .doc(this.omc.currentOmc.value.Id)
       .collection("avgprices")

@@ -11,7 +11,7 @@ import { Environment } from "../../../models/Daudi/omc/Environments";
 })
 export class ConfigService {
   omcconfig: BehaviorSubject<Config> = new BehaviorSubject<Config>({ ...emptyConfig });
-  environment: BehaviorSubject<Environment> = new BehaviorSubject<Environment>("sandbox");
+  environment: BehaviorSubject<Environment> = new BehaviorSubject<Environment>(Environment.sandbox);
 
   constructor(private db: AngularFirestore, private adminservice: AdminService) {
     adminservice.observableuserdata
@@ -31,7 +31,7 @@ export class ConfigService {
           this.initConfig(admin);
           return;
         }
-        this.omcconfig.next(Object.assign({}, { ...emptyConfig }, { id: companydata.id }, companydata.data()));
+        this.omcconfig.next(Object.assign({}, { ...emptyConfig }, { id: companydata.id }, companydata.data(), { source: "db" }));
       });
   }
   /**
