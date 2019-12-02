@@ -12,14 +12,10 @@
       <div class="col-sm-4"></div>
       <div class="col-sm-4">
         <mat-form-field class="full-width">
-          <input [formControl]="dateControl"
-                 [max]="maxDate"
-                 [min]="minDate"
-                 [satDatepicker]="picker" matInput
-                 placeholder="CHOOSE A DATE RANGE">
-          <sat-datepicker #picker [calendarFooterComponent]="rangesFooter"
-                          [closeAfterSelection]="false"
-                          [rangeMode]="true">
+          <input [formControl]="dateControl" [max]="maxDate" [min]="minDate" [satDatepicker]="picker" matInput
+            placeholder="CHOOSE A DATE RANGE">
+          <sat-datepicker #picker [calendarFooterComponent]="rangesFooter" [closeAfterSelection]="false"
+            [rangeMode]="true">
           </sat-datepicker>
           <mat-hint class="date-hint">NB: Bigger Ranges may take sometime to load all the data</mat-hint>
           <sat-datepicker-toggle [for]="picker" matSuffix></sat-datepicker-toggle>
@@ -49,18 +45,17 @@
         <mat-panel-description>
         </mat-panel-description>
       </mat-expansion-panel-header>
-      <div *ngFor="let fueltype of allfueltypes">
-        <div [loading]="isLoadingPrices" [options]="priceStats[fueltype]" class="bar-height " echarts
-             theme="macarons">
+      <div *ngFor="let fueltype of fueltypesArray">
+        <div [loading]="isLoadingPrices" [options]="priceStats[fueltype]" class="bar-height " echarts theme="macarons">
         </div>
       </div>
     </mat-expansion-panel>
     <br>
   </mat-accordion>
   <div class="row">
-    <div *ngFor="let fueltype of allfueltypes" class="col-sm-4">
-      <div [loading]="isLoadingFuelqty[fueltype]" [options]="fuelgauge[fueltype]" class="gauge-height box box-default" echarts
-           theme="macarons"></div>
+    <div *ngFor="let fueltype of fueltypesArray" class="col-sm-4">
+      <div [loading]="isLoadingFuelqty[fueltype]" [options]="fuelgauge[fueltype]" class="gauge-height box box-default"
+        echarts theme="macarons"></div>
     </div>
   </div>
   <div class="row">
@@ -89,12 +84,12 @@
               <div class="row"><span class="stats-font1 text-primary">YEAR</span></div>
             </div>
             <div class="col float-left">
-              <span
-                class="float-left color-pms stats-font"> {{stats.thisweek.fuelsold.pms.qty| number : '1.0-0'}}</span>
-              <span
-                class="float-left color-pms stats-font"> {{stats.thismonth.fuelsold.pms.qty| number : '1.0-0'}}</span>
-              <span
-                class="float-left color-pms stats-font"> {{stats.thisyear.fuelsold.pms.qty| number : '1.0-0'}}</span>
+              <span class="float-left color-pms stats-font">
+                {{stats.thisweek.fuelsold.pms.qty| number : '1.0-0'}}</span>
+              <span class="float-left color-pms stats-font">
+                {{stats.thismonth.fuelsold.pms.qty| number : '1.0-0'}}</span>
+              <span class="float-left color-pms stats-font">
+                {{stats.thisyear.fuelsold.pms.qty| number : '1.0-0'}}</span>
             </div>
           </div>
         </div>
@@ -125,12 +120,12 @@
             </div>
 
             <div class="col float-left">
-              <span
-                class="float-left color-pms stats-font"> {{stats.thisweek.fuelsold.pms.amount| number : '1.0-0'}}</span>
-              <span
-                class="float-left color-pms stats-font"> {{stats.thismonth.fuelsold.pms.amount| number : '1.0-0'}}</span>
-              <span
-                class="float-left color-pms stats-font"> {{stats.thisyear.fuelsold.pms.amount| number : '1.0-0'}}</span>
+              <span class="float-left color-pms stats-font">
+                {{stats.thisweek.fuelsold.pms.amount| number : '1.0-0'}}</span>
+              <span class="float-left color-pms stats-font">
+                {{stats.thismonth.fuelsold.pms.amount| number : '1.0-0'}}</span>
+              <span class="float-left color-pms stats-font">
+                {{stats.thisyear.fuelsold.pms.amount| number : '1.0-0'}}</span>
 
             </div>
           </div>
@@ -164,12 +159,12 @@
             </div>
 
             <div class="col float-left">
-              <span
-                class="float-left color-ago stats-font"> {{stats.thisweek.fuelsold.ago.qty| number : '1.0-0'}}</span>
-              <span
-                class="float-left color-ago stats-font"> {{stats.thismonth.fuelsold.ago.qty| number : '1.0-0'}}</span>
-              <span
-                class="float-left color-ago stats-font"> {{stats.thisyear.fuelsold.ago.qty| number : '1.0-0'}}</span>
+              <span class="float-left color-ago stats-font">
+                {{stats.thisweek.fuelsold.ago.qty| number : '1.0-0'}}</span>
+              <span class="float-left color-ago stats-font">
+                {{stats.thismonth.fuelsold.ago.qty| number : '1.0-0'}}</span>
+              <span class="float-left color-ago stats-font">
+                {{stats.thisyear.fuelsold.ago.qty| number : '1.0-0'}}</span>
             </div>
           </div>
         </div>
@@ -200,12 +195,12 @@
             </div>
 
             <div class="col float-left">
-              <span
-                class="float-left color-ago stats-font"> {{stats.thisweek.fuelsold.ago.amount| number : '1.0-0'}}</span>
-              <span
-                class="float-left color-ago stats-font"> {{stats.thismonth.fuelsold.ago.amount| number : '1.0-0'}}</span>
-              <span
-                class="float-left color-ago stats-font"> {{stats.thisyear.fuelsold.ago.amount| number : '1.0-0'}}</span>
+              <span class="float-left color-ago stats-font">
+                {{stats.thisweek.fuelsold.ago.amount| number : '1.0-0'}}</span>
+              <span class="float-left color-ago stats-font">
+                {{stats.thismonth.fuelsold.ago.amount| number : '1.0-0'}}</span>
+              <span class="float-left color-ago stats-font">
+                {{stats.thisyear.fuelsold.ago.amount| number : '1.0-0'}}</span>
 
             </div>
           </div>
@@ -270,12 +265,12 @@
             </div>
 
             <div class="col float-left">
-              <span
-                class="float-left color-ik stats-font"> {{stats.thisweek.fuelsold.ik.amount| number : '1.0-0'}}</span>
-              <span
-                class="float-left color-ik stats-font"> {{stats.thismonth.fuelsold.ik.amount| number : '1.0-0'}}</span>
-              <span
-                class="float-left color-ik stats-font"> {{stats.thisyear.fuelsold.ik.amount| number : '1.0-0'}}</span>
+              <span class="float-left color-ik stats-font">
+                {{stats.thisweek.fuelsold.ik.amount| number : '1.0-0'}}</span>
+              <span class="float-left color-ik stats-font">
+                {{stats.thismonth.fuelsold.ik.amount| number : '1.0-0'}}</span>
+              <span class="float-left color-ik stats-font">
+                {{stats.thisyear.fuelsold.ik.amount| number : '1.0-0'}}</span>
 
             </div>
           </div>

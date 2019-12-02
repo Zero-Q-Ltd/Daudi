@@ -1,11 +1,11 @@
 import { Injectable } from "@angular/core";
-import { fuelTypes, fueltypesArray } from "../../models/fuel/fuelTypes";
+import { fuelTypes } from "../../models/Daudi/fuel/fuelTypes";
 import * as moment from "moment";
 import { AngularFirestore } from "@angular/fire/firestore";
-import { Depot } from "../../models/depot/Depot";
+import { Depot } from "../../models/Daudi/depot/Depot";
 import { DepotService } from "./core/depot.service";
 import { BehaviorSubject } from "rxjs";
-import { Price } from "../../models/depot/Price";
+import { Price } from "../../models/Daudi/depot/Price";
 
 @Injectable({
   providedIn: "root"
@@ -40,13 +40,14 @@ export class PricesService {
    * this keeps a local copy of all the subscriptions within this service
    */
   subscriptions: Map<string, any> = new Map<string, any>();
+  fueltypesArray = Object.keys(fuelTypes);
 
   constructor(private db: AngularFirestore, private depotservice: DepotService) {
     depotservice.activedepot.subscribe(depot => {
       // this.activedepot = depot;
       if (depot.depot.Id) {
         this.unsubscribeAll();
-        fueltypesArray.forEach(fueltyp => {
+        this.fueltypesArray.forEach(fueltyp => {
           const subscriprion = this.getavgprices(fueltyp as any)
             .onSnapshot(avgarray => {
               /**

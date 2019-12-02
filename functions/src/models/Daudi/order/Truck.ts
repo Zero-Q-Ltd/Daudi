@@ -1,14 +1,7 @@
-import { inituser } from "../universal/universal";
 import { fuelTypes } from "../fuel/fuelTypes";
-import { User } from "../universal/User";
 import { firestore } from "firebase-admin";
+import { AssociatedUser } from "../admin/AssociatedUser";
 
-const initbatch = {
-  Id: null,
-  Name: null,
-  observed: null,
-  qty: null
-};
 
 interface Compartment {
   fueltype: string;
@@ -48,7 +41,7 @@ export interface Truck {
   compartments: Array<Compartment>;
 }
 export interface StageData {
-  user: User;
+  user: AssociatedUser;
   /**
    * This data only exists for stages that have print functionality
    */

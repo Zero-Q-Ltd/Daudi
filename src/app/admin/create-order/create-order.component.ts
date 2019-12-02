@@ -6,9 +6,9 @@ import { Observable, ReplaySubject } from "rxjs";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { MapsComponent } from "../maps/maps.component";
 import { NotificationService } from "../../shared/services/notification.service";
-import { Customer, emptycompany } from "../../models/customer/Customer";
-import { emptyorder, Order } from "../../models/order/Order";
-import { Depot, emptydepot } from "../../models/depot/Depot";
+import { Customer, emptycompany } from "../../models/Daudi/customer/Customer";
+import { emptyorder, Order } from "../../models/Daudi/order/Order";
+import { Depot, emptydepot } from "../../models/Daudi/depot/Depot";
 import { AdminService } from "../services/core/admin.service";
 import { DepotService } from "../services/core/depot.service";
 import { CustomerService } from "../services/customers.service";
@@ -16,11 +16,11 @@ import { OrdersService } from "../services/orders.service";
 import { PricesService } from "../services/prices.service";
 import { AngularFireFunctions } from "@angular/fire/functions";
 import { map, startWith, takeUntil, skipWhile } from "rxjs/operators";
-import { fuelTypes, fueltypesArray } from "../../models/fuel/fuelTypes";
+import { fuelTypes } from "../../models/Daudi/fuel/fuelTypes";
 import { ConfirmDepotComponent } from "./confirm-depot/confirm-depot.component";
-import { OmcService } from "../services/omc.service";
+import { OmcService } from "../services/core/omc.service";
 import { ConfigService } from "../services/core/config.service";
-import { Config, emptyConfig } from "../../models/omc/Config";
+import { Config, emptyConfig } from "../../models/Daudi/omc/Config";
 
 @Component({
   selector: "create-order",
@@ -74,7 +74,7 @@ export class CreateOrderComponent implements OnDestroy {
       emailControl: new FormControl("", [Validators.required, Validators.email])
     }
   );
-  fueltypesArray = fueltypesArray;
+  fueltypesArray = Object.keys(fuelTypes);
   filteredCompanies: Observable<Customer[]>;
   companyControl = new FormControl();
   loadingcustomers = false;
@@ -169,7 +169,7 @@ export class CreateOrderComponent implements OnDestroy {
     this.contactform.valueChanges
       .pipe(takeUntil(this.comopnentDestroyed))
       .subscribe((value) => {
-        this.temporder.company = {
+        this.temporder.customer = {
           QbId: this.companyInfo.companydata.QbId,
           phone: value.phoneControl,
           name: this.companyControl.value,
@@ -190,7 +190,7 @@ export class CreateOrderComponent implements OnDestroy {
           this.orderform.controls.agoqtyControl.setErrors(null);
           this.orderform.controls.ikqtyControl.setErrors(null);
         }
-        fueltypesArray.forEach((fueltype) => {
+        this.fueltypesArray.forEach((fueltype) => {
           // this.temporder.fuel[fueltype].qty = Number(value[fueltype + "qtyControl"]);
           // this.temporder.fuel[fueltype].priceconfig.price = Number(value[fueltype]);
           // this.temporder.fuel[fueltype].priceconfig.retailprice = this.tempsellingprices[fueltype];
@@ -270,7 +270,7 @@ export class CreateOrderComponent implements OnDestroy {
 
   initfuelprices() {
     if (!this.discApproval) {
-      fueltypesArray.forEach((fueltype) => {
+      this.fueltypesArray.forEach((fueltype) => {
         // this.temporder.fuel[fueltype].priceconfig.taxQbId = this.currentdepotconfig.taxconfig[fueltype].QbId ? this.currentdepotconfig.taxconfig[fueltype].QbId : null;
         // this.temporder.fuel[fueltype].priceconfig.nonTax = this.currentdepotconfig.taxconfig[fueltype].nonTax ? Number(this.currentdepotconfig.taxconfig[fueltype].nonTax) : null;
         /**
@@ -299,7 +299,7 @@ export class CreateOrderComponent implements OnDestroy {
       /**
        * @todo finish min price calculation logic
        */
-      fueltypesArray.forEach((fueltype: fuelTypes) => {
+      this.fueltypesArray.forEach((fueltype: fuelTypes) => {
         /**
          * Make sure that the current selling price is lower than the min selling price for the most recent entry
          */
@@ -318,7 +318,7 @@ export class CreateOrderComponent implements OnDestroy {
         // this.orderform.controls[fueltype].setValidators(Validators.compose([Validators.min(this.currentdepotconfig.minpriceconfig[fueltype].price), Validators.required]));
       });
     } else {
-      fueltypesArray.forEach((fueltype) => {
+      this.fueltypesArray.forEach((fueltype) => {
         this.orderform.controls[fueltype].setValue(this.temporder.fuel[fueltype].priceconfig.price = this.tempsellingprices[fueltype]);
         // this.orderform.controls[fueltype].setValidators(Validators.compose([Validators.min(this.currentdepotconfig.minpriceconfig[fueltype].price), Validators.required]));
       });
@@ -432,15 +432,16 @@ export class CreateOrderComponent implements OnDestroy {
     this.temporder.fuel.pms.QbId = this.configService.getEnvironment().fuelconfig.pms.QbId;
     this.temporder.fuel.ago.QbId = this.configService.getEnvironment().fuelconfig.ago.QbId;
     this.temporder.fuel.ik.QbId = this.configService.getEnvironment().fuelconfig.ik.QbId;
-    this.temporder.company.krapin = this.temporder.company.krapin.toLocaleUpperCase();
+    this.temporder.customer.krapin = this.temporder.customer.krapin.toLocaleUpperCase();
     this.temporder.stagedata["1"] = {
       user: this.adminservice.createuserobject(),
       data: null
     };
     this.temporder.config = {
-      depotId: this.depotService.activedepot.value.depot.Id,
-      depotname: this.depotService.activedepot.value.depot.Name,
-      QbCompanyId: this.configService.getEnvironment().auth.companyId,
+      depot: {
+        id: this.depotService.activedepot.value.depot.Id,
+        name: this.depotService.activedepot.value.depot.Name
+      },
       environment: this.configService.environment.value
     };
     if (this.companyInfo.newcompany) {
@@ -449,7 +450,7 @@ export class CreateOrderComponent implements OnDestroy {
        * Todo : USe transaction instead
        */
       // this.companyInfo.companydata.sandbox = this.currentdepotconfig.sandbox;
-      this.companyInfo.companydata.krapin = this.temporder.company.krapin;
+      this.companyInfo.companydata.krapin = this.temporder.customer.krapin;
       if (this.searchkra(this.companyInfo.companydata.krapin)) {
         /**
          * This KRA pin has been used
@@ -464,8 +465,8 @@ export class CreateOrderComponent implements OnDestroy {
             alert_type: "notify"
           });
           this.companyInfo.companydata = newcompany;
-          this.temporder.company.QbId = newcompany.QbId;
-          this.temporder.company.name = newcompany.name.toUpperCase();
+          this.temporder.customer.QbId = newcompany.QbId;
+          this.temporder.customer.name = newcompany.name.toUpperCase();
           this.createorder(redirect);
         });
       }
@@ -476,7 +477,7 @@ export class CreateOrderComponent implements OnDestroy {
       /**
        * Conditionally update company if information has changed
        */
-      if (this.temporder.company.krapin !== this.companyInfo.companydata.krapin || JSON.stringify(this.temporder.company.contact) !== JSON.stringify(this.companyInfo.companydata.contact)) {
+      if (this.temporder.customer.krapin !== this.companyInfo.companydata.krapin || JSON.stringify(this.temporder.customer.contact) !== JSON.stringify(this.companyInfo.companydata.contact)) {
         this.notificationService.notify({
           duration: 2000,
           title: "Updating",
@@ -486,11 +487,11 @@ export class CreateOrderComponent implements OnDestroy {
         /**
          * Check if kra pin has been modified and update if so
          */
-        if (this.temporder.company.krapin !== this.companyInfo.companydata.krapin) {
+        if (this.temporder.customer.krapin !== this.companyInfo.companydata.krapin) {
           /**
            * make sure the kra pin is unique
            */
-          if (this.searchkra(this.temporder.company.krapin)) {
+          if (this.searchkra(this.temporder.customer.krapin)) {
             /**
              * this KRA pin has been used
              */
@@ -518,11 +519,11 @@ export class CreateOrderComponent implements OnDestroy {
     this.contactform.controls.nameControl.setValue(selectedcompany.contact[0].name, { emitEvent: false });
     this.contactform.controls.phoneControl.setValue(selectedcompany.contact[0].phone, { emitEvent: false });
     this.contactform.controls.emailControl.setValue(selectedcompany.contact[0].email, { emitEvent: false });
-    this.temporder.company.QbId = selectedcompany.QbId;
-    this.temporder.company.name = selectedcompany.name;
-    this.temporder.company.krapin = selectedcompany.krapin;
-    this.temporder.company.phone = selectedcompany.contact[0].phone;
-    this.temporder.company.contact = selectedcompany.contact;
+    this.temporder.customer.QbId = selectedcompany.QbId;
+    this.temporder.customer.name = selectedcompany.name;
+    this.temporder.customer.krapin = selectedcompany.krapin;
+    this.temporder.customer.phone = selectedcompany.contact[0].phone;
+    this.temporder.customer.contact = selectedcompany.contact;
   }
 
   krausedmsg(krapin: string) {
@@ -536,7 +537,7 @@ export class CreateOrderComponent implements OnDestroy {
   }
 
   updatecompany() {
-    return this.customerService.updatecompany(this.companyInfo.companydata.Id).update(this.temporder.company);
+    return this.customerService.updatecompany(this.companyInfo.companydata.Id).update(this.temporder.customer);
   }
 
   createorder(redirect) {

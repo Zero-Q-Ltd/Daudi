@@ -3,9 +3,8 @@ import { MAT_DIALOG_DATA, MatDialog, MatDialogRef, MatPaginator, MatSnackBar, Ma
 import { CompanyMembersComponent } from "../company-members/company-members.component";
 import { SendMsgComponent } from "../../../send-msg/send-msg.component";
 import { firestore } from "firebase";
-import { Customer } from "../../../../models/customer/Customer";
-import { SyncRequest } from "../../../../models/qbo/sync/Sync";
-import { SMS } from "../../../../models/sms/sms";
+import { Customer } from "../../../../models/Daudi/customer/Customer";
+import { SMS } from "../../../../models/Daudi/sms/sms";
 import { NotificationService } from "../../../../shared/services/notification.service";
 import { SelectionModel } from "@angular/cdk/collections";
 import { AdminService } from "../../../services/core/admin.service";
@@ -15,6 +14,7 @@ import { AngularFireFunctions } from "@angular/fire/functions";
 import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { ConfigService } from "../../../services/core/config.service";
+import { SyncRequest } from "../../../../models/Cloud/Sync";
 
 @Component({
   selector: "customer-management",

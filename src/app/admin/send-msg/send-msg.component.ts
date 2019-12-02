@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from "@angular/core";
 import { MAT_DIALOG_DATA, MatDialog } from "@angular/material"; // added dialog data receive
 import { NotificationService } from "../../shared/services/notification.service";
-import { emptysms, SMS } from "../../models/sms/sms";
+import { emptysms, SMS } from "../../models/Daudi/sms/sms";
 import { AngularFirestore } from "@angular/fire/firestore";
 import { SmsService } from "../services/sms.service";
 

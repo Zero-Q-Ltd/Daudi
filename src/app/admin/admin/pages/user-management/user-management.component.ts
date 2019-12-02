@@ -1,20 +1,20 @@
 import { Component, OnDestroy, OnInit, ViewChild, HostListener } from "@angular/core";
-import { Admin, emptyadmin } from "../../../../models/admin/Admin";
+import { Admin, emptyadmin } from "../../../../models/Daudi/admin/Admin";
 import { MatDialog, MatPaginator, MatSnackBar, MatSort, MatTableDataSource } from "@angular/material";
 import * as moment from "moment";
 import { NotificationService } from "../../../../shared/services/notification.service";
-import { SyncRequest } from "../../../../models/qbo/sync/Sync";
 import { firestore } from "firebase";
 import { animate, sequence, state, style, transition, trigger } from "@angular/animations";
 import { FormControl, Validators } from "@angular/forms";
 import { AdminService } from "../../../services/core/admin.service";
 import { DepotService } from "../../../services/core/depot.service";
-import { Depot } from "../../../../models/depot/Depot";
+import { Depot } from "../../../../models/Daudi/depot/Depot";
 import { AngularFireFunctions } from "@angular/fire/functions";
 import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
-import { OMC, emptyomc } from "../../../../models/omc/OMC";
+import { OMC, emptyomc } from "../../../../models/Daudi/omc/OMC";
 import { ConfigService } from "../../../services/core/config.service";
+import { SyncRequest } from "../../../../models/Cloud/Sync";
 
 @Component({
   selector: "user-management",
@@ -131,7 +131,7 @@ export class UserManagementComponent implements OnInit, OnDestroy {
     // console.log(admin);
     this.saving = true;
     if (this.expandedEAdmin.config.level >= this.activeuser.config.level) {
-      this.adminsService.updateadmin(this.expandedEAdmin.Id).update(this.expandedEAdmin).then(_ => {
+      this.adminsService.updateadmin(this.expandedEAdmin).then(_ => {
         this.saving = false;
         this.notification.notify({
           alert_type: "success",

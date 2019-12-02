@@ -2,8 +2,8 @@ import { Component, OnDestroy, OnInit } from "@angular/core";
 import { MatDialog, MatSnackBar, MatTreeNestedDataSource } from "@angular/material";
 import { FormControl } from "@angular/forms";
 import { NestedTreeControl } from "@angular/cdk/tree";
-import { emptyorder } from "../../models/order/Order";
-import { emptytruck } from "../../models/order/Truck";
+import { emptyorder } from "../../models/Daudi/order/Order";
+import { emptytruck } from "../../models/Daudi/order/Truck";
 import { ReplaySubject } from "rxjs";
 
 

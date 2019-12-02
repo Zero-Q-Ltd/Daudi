@@ -2,9 +2,9 @@ import { Injectable } from "@angular/core";
 import { AngularFirestore } from "@angular/fire/firestore";
 import { AdminService } from "./admin.service";
 import { BehaviorSubject } from "rxjs";
-import { Config, emptyConfig, QboEnvironment } from "../../../models/omc/Config";
-import { Admin } from "../../../models/admin/Admin";
-import { Environment } from "../../../models/omc/Environments";
+import { Config, emptyConfig, QboEnvironment } from "../../../models/Daudi/omc/Config";
+import { Admin } from "../../../models/Daudi/admin/Admin";
+import { Environment } from "../../../models/Daudi/omc/Environments";
 
 @Injectable({
   providedIn: "root"

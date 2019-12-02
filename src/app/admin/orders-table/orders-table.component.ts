@@ -6,9 +6,9 @@ import { ActivatedRoute } from "@angular/router";
 import { NotificationService } from "../../shared/services/notification.service";
 import { AngularFirestore } from "@angular/fire/firestore";
 import { animate, sequence, state, style, transition, trigger } from "@angular/animations";
-import { Truck } from "../../models/order/Truck";
-import { Order } from "../../models/order/Order";
-import { SMS } from "../../models/sms/sms";
+import { Truck } from "../../models/Daudi/order/Truck";
+import { Order } from "../../models/Daudi/order/Order";
+import { SMS } from "../../models/Daudi/sms/sms";
 import { firestore } from "firebase";
 import { ReasonComponent } from "../reason/reason.component";
 import { ExcelService } from "../services/excel-service.service";
@@ -126,12 +126,12 @@ export class OrdersTableComponent implements OnInit, OnDestroy {
     const sms: SMS = {
       Id: null,
       company: {
-        QbId: clickedOrder.company.QbId,
-        Id: clickedOrder.company.Id,
-        name: clickedOrder.company.name,
-        krapin: clickedOrder.company.krapin
+        QbId: clickedOrder.customer.QbId,
+        Id: clickedOrder.customer.Id,
+        name: clickedOrder.customer.name,
+        krapin: clickedOrder.customer.krapin
       },
-      phone: clickedOrder.company.phone,
+      phone: clickedOrder.customer.phone,
       type: {
         reason: null,
         origin: "custom"

@@ -1,6 +1,6 @@
-import { User } from "../universal/User";
 import { Contact } from "./Contact";
 import { firestore } from "firebase-admin";
+import { AssociatedUser } from "../admin/AssociatedUser";
 
 export interface Customer {
   Active: boolean;
@@ -16,7 +16,7 @@ export interface Customer {
   krapin: string;
   kraverified: {
     status: boolean
-    user: User,
+    user: AssociatedUser,
   };
   companyId: string;
   balance: number;

@@ -4,7 +4,7 @@ import { MatDialog } from "@angular/material";
 import { ConfigService } from "../../../services/core/config.service";
 import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
-import { OMC, emptyomc } from "../../../../models/omc/OMC";
+import { OMC, emptyomc } from "../../../../models/Daudi/omc/OMC";
 
 import { NotificationService } from "../../../../shared/services/notification.service";
 import * as firebase from "firebase";

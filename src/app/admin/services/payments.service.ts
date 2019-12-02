@@ -2,9 +2,9 @@ import { Injectable } from "@angular/core";
 import { AngularFirestore } from "@angular/fire/firestore";
 import { DepotService } from "./core/depot.service";
 import { BehaviorSubject } from "rxjs";
-import { ipnmodel } from "../../models/universal/universal";
 import { distinctUntilKeyChanged } from "rxjs/operators";
 import { ConfigService } from "./core/config.service";
+import { EquityBulk } from "../../models/ipn/EquityBulk";
 
 @Injectable({
   providedIn: "root"
@@ -13,7 +13,7 @@ export class PaymentsService {
 
   proddbstring = "prodpayments";
   sandboxdbstring = "sandboxpayments";
-  unprocessedpayments: BehaviorSubject<Array<ipnmodel>> = new BehaviorSubject<Array<ipnmodel>>([]);
+  unprocessedpayments: BehaviorSubject<Array<EquityBulk>> = new BehaviorSubject<Array<EquityBulk>>([]);
 
   /**
    * this keeps a local copy of all the subscriptions within this service

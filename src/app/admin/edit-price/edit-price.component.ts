@@ -4,18 +4,18 @@ import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { AngularFirestore } from "@angular/fire/firestore";
 import { NotificationService } from "../../shared/services/notification.service";
 import { ConfirmDialogComponent } from "../confirm-dialog/confirm-dialog.component";
-import { fuelTypes, fueltypesArray } from "../../models/fuel/fuelTypes";
-import { Price } from "../../models/depot/Price";
-import { Depot, emptydepot } from "../../models/depot/Depot";
+import { fuelTypes } from "../../models/Daudi/fuel/fuelTypes";
+import { Price } from "../../models/Daudi/depot/Price";
+import { Depot, emptydepot } from "../../models/Daudi/depot/Depot";
 import { AdminService } from "../services/core/admin.service";
 import { PricesService } from "../services/prices.service";
 import { DepotService } from "../services/core/depot.service";
-import { Admin, emptyadmin } from "../../models/admin/Admin";
-import { AvgPrice } from "../../models/price/AvgPrice";
-import { OmcService } from "../services/omc.service";
+import { Admin, emptyadmin } from "../../models/Daudi/admin/Admin";
+import { AvgPrice } from "../../models/Daudi/price/AvgPrice";
+import { OmcService } from "../services/core/omc.service";
 import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
-import { OMC } from "../../models/omc/OMC";
+import { OMC } from "../../models/Daudi/omc/OMC";
 
 @Component({
   selector: "edit-price",
@@ -65,8 +65,7 @@ export class EditPriceComponent implements OnInit, OnDestroy {
     ago: new FormControl("", []),
     ik: new FormControl("", [])
   });
-  fueltypesArray = fueltypesArray;
-
+  fueltypesArray = Object.keys(fuelTypes);
   saving = false;
   depotsdataSource = new MatTableDataSource<Depot>();
   priceColumns = ["depot", "pms_price", "pms_avgprice", "ago_price", "ago_avgprice", "ik_price", "ik_avgprice"];
@@ -100,7 +99,7 @@ export class EditPriceComponent implements OnInit, OnDestroy {
 
       // this.taxexempt = depot.taxconfig;
       this.taxconfigform.disable();
-      fueltypesArray.forEach(fueltyp => {
+      this.fueltypesArray.forEach(fueltyp => {
         this.priceservice.avgprices[fueltyp].total.pipe(takeUntil(this.comopnentDestroyed)).subscribe(total => {
           this.avgprices[fueltyp].total = total;
         });
@@ -128,7 +127,7 @@ export class EditPriceComponent implements OnInit, OnDestroy {
     return omc ? omc.name : undefined;
   }
 
-  addprice(fueltype: "pms" | "ago" | "ik") {
+  addprice(fueltype: fuelTypes) {
 
     if (this.spPricesform.controls[fueltype].valid) {
       this.saving = true;
@@ -170,7 +169,7 @@ export class EditPriceComponent implements OnInit, OnDestroy {
     }
   }
 
-  addavgprice(fueltype: "pms" | "ago" | "ik") {
+  addavgprice(fueltype: fuelTypes) {
     this.saving = true;
     console.log(this.avgpricesform.value);
     if (!this.selectedOMC) {

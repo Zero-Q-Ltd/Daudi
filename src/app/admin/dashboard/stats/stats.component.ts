@@ -3,7 +3,7 @@ import * as moment from "moment";
 import { CalendarRangesComponent } from "../calendar-ranges/calendar-ranges.component";
 import { EChartOption } from "echarts";
 import { FuelBoundstats } from "../charts/charts.config";
-import { emptystat, Stat } from "../../../models/stats/Stats";
+import { emptystat, Stat } from "../../../models/Daudi/stats/Stats";
 import { FormControl } from "@angular/forms";
 import { Router } from "@angular/router";
 import { MatSnackBar } from "@angular/material";
@@ -11,8 +11,8 @@ import { DepotService } from "../../services/core/depot.service";
 import { BatchesService } from "../../services/batches.service";
 import { StatsService } from "../../services/stats.service";
 import { PricesService } from "../../services/prices.service";
-import { Entry } from "../../../models/fuel/Entry";
-import { Price } from "../../../models/depot/Price";
+import { Entry } from "../../../models/Daudi/fuel/Entry";
+import { Price } from "../../../models/Daudi/depot/Price";
 import { calculateMA } from "../charts/generalCalc";
 import { fuelgauge } from "../charts/qty";
 import { saleStats } from "../charts/sales";
@@ -20,7 +20,7 @@ import { singleFuelpricestat } from "../charts/prices";
 import "echarts/theme/macarons.js";
 import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
-import { fueltypesArray } from "../../../models/fuel/fuelTypes";
+import { fuelTypes } from "../../../models/Daudi/fuel/fuelTypes";
 
 @Component({
   selector: "app-stats",
@@ -44,8 +44,7 @@ export class StatsComponent implements OnInit, OnDestroy {
     ik: this.assignvalues("ik")
   };
 
-
-  allfueltypes = ["pms", "ago", "ik"];
+  fueltypesArray = Object.keys(fuelTypes);
   emptystats = {
     thisweek: { ...emptystat },
     lastweek: { ...emptystat },
@@ -108,7 +107,7 @@ export class StatsComponent implements OnInit, OnDestroy {
          * Load data for the last 1 months by default, dont forget to reset the FormControl every time the depot changes
          */
         this.dateControl.reset({ begin: new Date(moment().subtract(1, "M").startOf("day").toDate()), end: new Date() });
-        fueltypesArray.forEach(fueltype => {
+        this.fueltypesArray.forEach(fueltype => {
           this.batcheservice.depotbatches[fueltype].pipe(takeUntil(this.comopnentDestroyed)).subscribe((batches: Array<Entry>) => {
             /**
              * Reset the values every time the batches change
@@ -172,7 +171,7 @@ export class StatsComponent implements OnInit, OnDestroy {
       const temp = moment().subtract(i, "days").startOf("day").toDate();
       datesrange[dayCount - i] = temp;
       this.saleStats.xAxis[0].data.push(moment(temp).format("DD-MM-YY"));
-      this.allfueltypes.forEach(ftype => {
+      this.fueltypesArray.forEach(ftype => {
         /**
          * Important so that later the array can be properly iterated
          */
@@ -247,7 +246,7 @@ export class StatsComponent implements OnInit, OnDestroy {
           /**
            * find the highest in each fuel type
            */
-          this.allfueltypes.forEach((ftype, i) => {
+          this.fueltypesArray.forEach((ftype, i) => {
             if (history.fuelsold[ftype].qty > highest[ftype]) {
               highest[ftype] = history.fuelsold[ftype].qty;
             }
@@ -289,7 +288,7 @@ export class StatsComponent implements OnInit, OnDestroy {
         /**
          * MA calculation must be done sequentially, so wait until all the data has been mapped to the right position
          */
-        this.allfueltypes.forEach(ftype => {
+        this.fueltypesArray.forEach(ftype => {
           const copy = JSON.parse(JSON.stringify(this.priceStats[ftype].series[0].data));
           copy.map((data, pos) => {
             // console.log(pos, data);

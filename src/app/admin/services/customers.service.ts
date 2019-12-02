@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { Customer } from "../../models/customer/Customer";
+import { Customer } from "../../models/Daudi/customer/Customer";
 import { AngularFirestore } from "@angular/fire/firestore";
 import { DepotService } from "./core/depot.service";
 import { BehaviorSubject, Observable } from "rxjs";

@@ -1,6 +1,5 @@
 import { firestore } from "firebase-admin";
-import { inituser, emptymetadata } from "../universal/universal";
-import { Metadata } from "../universal/Metadata";
+import { Metadata, emptymetadata } from "../universal/Metadata";
 import { DepotCreator } from './DepotCreator';
 
 export interface Depot {

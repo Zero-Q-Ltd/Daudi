@@ -1,21 +1,22 @@
 import { Injectable } from "@angular/core";
-import { Order, orderStagesarray } from "../../models/order/Order";
-import { OrderStages } from "../../models/order/OrderStages";
+import { Order, orderStagesarray } from "../../models/Daudi/order/Order";
+import { OrderStages } from "../../models/Daudi/order/OrderStages";
 import { firestore } from "firebase";
 import * as moment from "moment";
 import { BehaviorSubject } from "rxjs";
 import { AngularFirestore } from "@angular/fire/firestore";
 import { DepotService } from "./core/depot.service";
-import { Depot } from "../../models/depot/Depot";
+import { Depot } from "../../models/Daudi/depot/Depot";
 import { MatTreeNestedDataSource } from "@angular/material";
 import { AngularFireFunctions } from "@angular/fire/functions";
+import { OmcService } from "./core/omc.service";
+import { skipWhile } from "rxjs/operators";
 
 @Injectable({
   providedIn: "root"
 })
 export class OrdersService {
   loadingorders = new BehaviorSubject(true);
-  activedepot: Depot;
   orders: {
     [key in OrderStages]: BehaviorSubject<Array<Order>>
   } = {
@@ -36,12 +37,17 @@ export class OrdersService {
   constructor(
     private db: AngularFirestore,
     private depotsservice: DepotService,
+    private omc: OmcService,
     private functions: AngularFireFunctions) {
-    this.depotsservice.activedepot.subscribe(depot => {
-      this.unsubscribeAll();
-      // this.activedepot = depot;
-      // this.getpipeline(depot);
-    });
+
+    this.omc.currentOmc
+      .pipe(
+        skipWhile(t => !t.Id)
+      ).subscribe(depot => {
+        this.unsubscribeAll();
+        this.getpipeline();
+      });
+
   }
 
   createorder(order: Order): Promise<any> {
@@ -65,8 +71,8 @@ export class OrdersService {
          */
       });
     } else {
-      return this.db.firestore.collection("depots")
-        .doc(this.activedepot.Id)
+      return this.db.firestore.collection("omc")
+        .doc(this.depotsservice.activedepot.value.depot.Id)
         .collection("orders")
         .doc(order.Id)
         .set(order);
@@ -82,19 +88,19 @@ export class OrdersService {
   }
 
   updateorder(orderid: string, order: Order) {
-    return this.db.firestore.collection("depots").doc(this.activedepot.Id).collection(`orders`).doc(orderid).update(order);
+    return this.db.firestore.collection("depots").doc(this.depotsservice.activedepot.value.depot.Id).collection(`orders`).doc(orderid).update(order);
   }
 
   getorder(orderid: string) {
     return this.db.firestore.collection("depots")
-      .doc(this.activedepot.Id)
+      .doc(this.depotsservice.activedepot.value.depot.Id)
       .collection("orders")
       .doc(orderid);
   }
 
   orderquery(query: any) {
     let queryvalue: any = this.db.firestore.collection("depots")
-      .doc(this.activedepot.Id)
+      .doc(this.depotsservice.activedepot.value.depot.Id)
       .collection("orders");
     if (query.stagedata.status) {
       if (query.stagedata.invoiceno.status) {
@@ -147,8 +153,8 @@ export class OrdersService {
   /**
    * Fetches all orders and trucks Relevant to the header
    */
-  getpipeline(activedepot: Depot) {
-    if (!activedepot.Id) {
+  getpipeline() {
+    if (!this.depotsservice.activedepot.value.depot.Id) {
       return;
     }
     /**
@@ -164,10 +170,11 @@ export class OrdersService {
 
     orderStagesarray.forEach(stage => {
 
-      const subscriprion = this.db.firestore.collection("depots")
-        .doc(activedepot.Id)
+      const subscriprion = this.db.firestore.collection("omc")
+        .doc(this.omc.currentOmc.value.Id)
         .collection("orders")
         .where("stage", "==", Number(stage))
+        .where("config.depot.Id", "==", this.depotsservice.activedepot.value.depot.Id)
         .orderBy("stagedata.1.user.time", "asc")
         .onSnapshot(snapshot => {
 
@@ -178,7 +185,7 @@ export class OrdersService {
           /**
            * dont assign a value in case the query delayed and the depot changed before it returned a value
            */
-          if (snapshot.empty || snapshot.docs[0].data().config.depot.Id !== activedepot.Id) {
+          if (snapshot.empty || snapshot.docs[0].data().config.depot.Id !== this.depotsservice.activedepot.value.depot.Id) {
             if (snapshot.empty) {
               this.loadingorders.next(false);
             }
@@ -212,7 +219,7 @@ export class OrdersService {
     /**
      * Fetch completed orders
      */
-    const stage5subscription = this.db.firestore.collection("depots").doc(activedepot.Id).collection("orders")
+    const stage5subscription = this.db.firestore.collection("depots").doc(this.depotsservice.activedepot.value.depot.Id).collection("orders")
       .where("stage", "==", 5)
       .where("stagedata.5.user.time", ">=", startofweek)
       .orderBy("stagedata.5.user.time", "desc")
@@ -220,7 +227,7 @@ export class OrdersService {
         /**
          * dont assign a value in case the query delayed and the depot changed before it returned a value
          */
-        if (snapshot.empty || snapshot.docs[0].data().config.depot.Id !== activedepot.Id) {
+        if (snapshot.empty || snapshot.docs[0].data().config.depot.Id !== this.depotsservice.activedepot.value.depot.Id) {
           if (snapshot.empty) {
             this.loadingorders.next(false);
           }

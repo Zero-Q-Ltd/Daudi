@@ -12,6 +12,15 @@ import { Depot } from './models/Daudi/depot/Depot';
 import { initDepots } from './tasks/crud/qbo/Class/init';
 import { initTaxService } from './tasks/crud/qbo/tax/init';
 import { createQbo } from './tasks/sharedqb';
+import { createInvoice } from './tasks/crud/qbo/invoice/create';
+import { Order } from './models/Daudi/order/Order';
+import { createEstimate } from './tasks/crud/qbo/Estimate/create';
+import { ordersms } from './tasks/sms/smscompose';
+import { validorderupdate } from './validators/orderupdate';
+
+admin.initializeApp(functions.config().firebase);
+admin.firestore().settings({ timestampsInSnapshots: true });
+
 
 const alreadyRunEventIDs: Array<string> = [];
 
@@ -22,38 +31,43 @@ function isAlreadyRunning(eventID: string) {
 function markAsRunning(eventID: string) {
   alreadyRunEventIDs.push(eventID);
 }
+/**
+ * create an estimate from the client directly
+ */
+exports.createEstimate = functions.https.onCall((data: { omc: OMC, config: Config, environment: Environment, order: Order }, context) => {
+
+  return createQbo(data.omc.Id, data.config, data.environment).then(async result => {
+    console.log(result)
+    return createEstimate(data.order, result, data.config, data.environment).then(() => {
+      /**
+       * Only send sn SMS when estimate creation is complete
+       * Make the two processes run parallel so that none is blocking
+       */
+      return Promise.all([ordersms(data.order), validorderupdate(data.order, result)]);
+    });
+  })
+
+});
 
 /**
  * create an order from the client directly
  */
-// exports.createInvoice = functions.https.onCall((data, context) => {
-//   const order = data as Order;
-//   console.log(data);
-//   return createInvoice(order).then(() => {
-//     /**
-//      * Only send sn SMS when order creation is complete
-//      * Make the two processes run parallel so that none is blocking
-//      */
-//     return Promise.all([ordersms(order), validorderupdate(order)]);
-//   });
-// });
-/**
- * This is a function that should ONLY be called by system admins
- * It initialises a company by creating all the relevant entries on QBO and notes their ID's
- */
-exports.initCompany = functions.https.onCall((data: { omc: OMC, config: Config, environment: Environment, depots: Array<Depot> }, context) => {
+exports.approveInvoice = functions.https.onCall((data: { omc: OMC, config: Config, environment: Environment, order: Order }, context) => {
 
-  console.log(data);
-  return createQbo(data.omc.Id, data.config, data.environment).then(result => {
-    const qbo = result;
-    return Promise.all([
-      // initCompanyInfo(data.omc, data.config, data.environment, qbo),
-      initFuels(data.omc, data.config, data.environment, qbo),
-      // initTaxService(data.omc, data.config, data.environment, qbo),
-      // initDepots(data.omc, data.config, data.environment, data.depots, qbo)
-    ]);
+  return createQbo(data.omc.Id, data.config, data.environment).then(async result => {
+    console.log(result)
+    return createInvoice(data.order, result, data.config, data.environment, data.omc).then(() => {
+      /**
+       * Only send sn SMS when order creation is complete
+       * Make the two processes run parallel so that none is blocking
+       */
+      return Promise.all([ordersms(data.order), validorderupdate(data.order, result)]);
+    });
   })
+
 });
+
+
 
 /**
  * create a company from the client directly

@@ -1,17 +1,17 @@
 import { Injectable } from "@angular/core";
-import { Entry, emptybatches } from "../../models/fuel/Entry";
+import { Entry, emptybatches } from "../../models/Daudi/fuel/Entry";
 import { BehaviorSubject } from "rxjs";
 import { AngularFirestore } from "@angular/fire/firestore";
 import { DepotService } from "./core/depot.service";
-import { fuelTypes, fueltypesArray } from "../../models/fuel/fuelTypes";
-import { Depot } from "../../models/depot/Depot";
+import { fuelTypes } from "../../models/Daudi/fuel/fuelTypes";
+import { OmcService } from "./core/omc.service";
+import { skipWhile } from "rxjs/operators";
 
 @Injectable({
   providedIn: "root"
 })
 export class BatchesService {
   fetchingbatches = new BehaviorSubject(true);
-  activedepot: Depot;
   depotbatches: {
     pms: BehaviorSubject<Array<Entry>>,
     ago: BehaviorSubject<Array<Entry>>,
@@ -25,10 +25,15 @@ export class BatchesService {
    * this keeps a local copy of all the subscriptions within this service
    */
   subscriptions: Map<string, any> = new Map<string, any>();
+  fueltypesArray = Object.keys(fuelTypes);
 
-  constructor(private db: AngularFirestore, private depotsservice: DepotService) {
-    this.depotsservice.activedepot.subscribe(depot => {
-      // this.activedepot = depot;
+  constructor(
+    private db: AngularFirestore,
+    private omc: OmcService,
+    private depotsservice: DepotService) {
+    this.omc.currentOmc.pipe(
+      skipWhile(t => !t.Id)
+    ).subscribe(() => {
       this.unsubscribeAll();
       this.fetchbatches();
     });
@@ -36,11 +41,13 @@ export class BatchesService {
 
   fetchbatches() {
     this.fetchingbatches.next(true);
-    fueltypesArray.forEach((fueltype) => {
+    this.fueltypesArray.forEach((fueltype) => {
       if (!this.depotsservice.activedepot.value.depot.Id) {
         return;
       }
-      const subscriprion = this.db.firestore.collection("depots").doc(this.depotsservice.activedepot.value.depot.Id).collection("batches")
+      const subscriprion = this.db.firestore.collection("omc")
+        .doc(this.omc.currentOmc.value.Id)
+        .collection("batch")
         .orderBy("date", "asc")
         .where("status", "==", 1)
         .where("type", "==", fueltype)

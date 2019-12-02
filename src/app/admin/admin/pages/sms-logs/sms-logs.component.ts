@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import { MatPaginator, MatTableDataSource } from "@angular/material";
 import { animate, sequence, state, style, transition, trigger } from "@angular/animations";
-import { emptysms, SMS } from "../../../../models/sms/sms";
+import { emptysms, SMS } from "../../../../models/Daudi/sms/sms";
 import { SmsService } from "../../../services/sms.service";
 import { ReplaySubject } from "rxjs";
 

@@ -1,4 +1,4 @@
-import { LinkedTxn } from "../common";
+import { LinkedTxn } from "./subTypes/LinkedTxn";
 
 export interface Bill {
   DueDate: string;

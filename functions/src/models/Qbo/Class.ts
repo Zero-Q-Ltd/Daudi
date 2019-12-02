@@ -1,4 +1,4 @@
-import { QboMetaData } from "./common";
+import { QboMetaData } from "./subTypes/QboMetaData";
 
 export interface Class {
     /**

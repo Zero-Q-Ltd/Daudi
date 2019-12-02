@@ -1,17 +1,17 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { MatDialog } from "@angular/material";
-import { Depot, emptydepot } from "../../../../models/depot/Depot";
+import { Depot, emptydepot } from "../../../../models/Daudi/depot/Depot";
 import { NotificationService } from "../../../../shared/services/notification.service";
 import { AdminService } from "../../../services/core/admin.service";
 import { DepotService } from "../../../services/core/depot.service";
-import { SyncRequest } from "../../../../models/qbo/sync/Sync";
 import { firestore } from "firebase";
 import { MapsComponent } from "../../../maps/maps.component";
 import { AngularFireFunctions } from "@angular/fire/functions";
 import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
-import { OMC, emptyomc } from "../../../../models/omc/OMC";
+import { OMC, emptyomc } from "../../../../models/Daudi/omc/OMC";
 import { ConfigService } from "../../../services/core/config.service";
+import { SyncRequest } from "../../../../models/Cloud/Sync";
 
 @Component({
   selector: "depot-management",

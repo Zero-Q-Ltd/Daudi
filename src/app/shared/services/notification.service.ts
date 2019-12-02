@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Subject } from "rxjs";
-import { Alert } from "../../models/notification/Alert";
+import { Alert } from "../../models/Daudi/notification/Alert";
 import { MatSnackBar } from "@angular/material";
 import { Howl } from "howler";
 import { NotificationComponent } from "../notification/notification.component";

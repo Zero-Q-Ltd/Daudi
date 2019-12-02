@@ -1,4 +1,5 @@
-import { fuelTypes } from "../common";
+import { fuelTypes } from "../Daudi/fuel/fuelTypes";
+import { ItemType } from "./enums/ItemType";
 
 export interface Item {
   Name: fuelTypes;
@@ -7,7 +8,7 @@ export interface Item {
   FullyQualifiedName?: string;
   Taxable: true;
   UnitPrice: number;
-  Type: "Inventory" | "Service" | "NonInventory" | "Group" | "Category";
+  Type: ItemType;
   IncomeAccountRef: {
     value: string;
     name: string;
@@ -48,3 +49,4 @@ export interface Item {
   },
   SalesTaxIncluded?: boolean
 }
+

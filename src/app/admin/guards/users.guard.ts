@@ -1,11 +1,11 @@
 import { Injectable } from "@angular/core";
 import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from "@angular/router";
 import { Observable, forkJoin, combineLatest } from "rxjs";
-import { Admin } from "../../models/admin/Admin";
+import { Admin } from "../../models/Daudi/admin/Admin";
 import { NotificationService } from "../../shared/services/notification.service";
 import { AdminService } from "../services/core/admin.service";
 import { DepotService } from "../services/core/depot.service"; // get our service
-import { RouteData } from "../../models/navigation/RouteData";
+import { RouteData } from "../../models/Daudi/navigation/RouteData";
 import { PermissionService } from "../services/core/permission.service";
 import { map } from "rxjs/operators";
 

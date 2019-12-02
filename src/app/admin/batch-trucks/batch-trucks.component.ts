@@ -3,7 +3,7 @@ import * as moment from "moment";
 import { MAT_DIALOG_DATA, MatDialog } from "@angular/material"; // added dialog data receive
 import { OrderDetailsComponent } from "../order-details/order-details.component";
 import { ReplaySubject } from "rxjs";
-import { Truck } from "../../models/order/Truck";
+import { Truck } from "../../models/Daudi/order/Truck";
 
 @Component({
   selector: "batch-trucks",

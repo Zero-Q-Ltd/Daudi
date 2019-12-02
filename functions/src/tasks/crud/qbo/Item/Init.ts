@@ -4,9 +4,9 @@ import { createQbo } from "../../../sharedqb";
 import { firestore } from "firebase-admin";
 import { Environment } from "../../../../models/Daudi/omc/Environments";
 import { Item } from "../../../../models/Qbo/Item";
-import { fueltypesArray } from "../../../../models/Daudi/fuel/fuelTypes";
-import { fuelTypes } from "../../../../models/common";
 import { QuickBooks } from "../../../../libs/qbmain";
+import { fuelTypes } from "../../../../models/Daudi/fuel/fuelTypes";
+import { ItemType } from "../../../../models/Qbo/enums/ItemType";
 
 /**
  * There are 3 fuel types, where every fuel is an ITEM, as far as qbo is concerned
@@ -20,14 +20,14 @@ export function initFuels(omc: OMC, config: Config, environment: Environment, qb
      */
     const generalfuel: Item = {
         Active: true,
-        Name: "pms",
+        Name: fuelTypes.pms,
         Taxable: true,
         TrackQtyOnHand: true,
         sparse: false,
         UnitPrice: 0,
 
         SyncToken: "0",
-        Type: "Inventory",
+        Type: ItemType.Inventory,
         QtyOnHand: 0,
         Description: "",
         IncomeAccountRef: {
@@ -44,11 +44,12 @@ export function initFuels(omc: OMC, config: Config, environment: Environment, qb
         },
         domain: "QBO",
     }
-    const fuelItems: Array<Item> = fueltypesArray.map((fuel: fuelTypes) => {
+    const fuelItems: Array<Item> = Object.keys(fuelTypes).map(key => {
+        const fuel: fuelTypes = fuelTypes[key]
         return { ...generalfuel, ...{ Name: fuel } }
-    });
+    })
 
-    return qbo.createItem(fuelItems).then(operationresult => {
+    return qbo.createItem(fuelItems[0]).then(operationresult => {
         const ref = firestore()
             .collection("omc")
             .doc(omc.Id)
