@@ -1,13 +1,13 @@
 
-import { createQbo } from "../tasks/sharedqb";
 import { QuickBooks } from "../libs/qbmain";
 import { Invoice } from "../models/Qbo/Invoice";
 import { Order } from "../models/Daudi/order/Order";
+import { editStats } from "../tasks/crud/daudi/editStats";
 
 export function validorderupdate(order: Order, qbo: QuickBooks) {
     switch (order.stage) {
         case 3:
-            return editorderstats(order, "paid");
+            return editStats(order, "paid");
         case 6:
             /**
              * Delete orders deleted on Daudi, which havae already been created on QB

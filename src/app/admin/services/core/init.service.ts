@@ -1,16 +1,16 @@
 import { Injectable } from "@angular/core";
 import { AdminService } from "./admin.service";
 import { DepotService } from "./depot.service";
-import { Depot, emptydepot } from "../../../models/depot/Depot";
-import { Admin, emptyadmin } from "../../../models/admin/Admin";
+import { Depot, emptydepot } from "../../../models/Daudi/depot/Depot";
+import { Admin, emptyadmin } from "../../../models/Daudi/admin/Admin";
 import { AngularFireFunctions } from "@angular/fire/functions";
 import { Config } from "protractor";
 import { ConfigService } from "./config.service";
 import { OmcService } from "../omc.service";
 import { combineLatest } from "rxjs";
 import { take, skipWhile } from "rxjs/operators";
-import { OMC } from "../../../models/omc/OMC";
-import { Environment } from "../../../models/omc/Environments";
+import { OMC } from "../../../models/Daudi/omc/OMC";
+import { Environment } from "../../../models/Daudi/omc/Environments";
 
 @Injectable({
   providedIn: "root"

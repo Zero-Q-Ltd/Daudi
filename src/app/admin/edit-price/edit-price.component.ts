@@ -4,18 +4,18 @@ import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { AngularFirestore } from "@angular/fire/firestore";
 import { NotificationService } from "../../shared/services/notification.service";
 import { ConfirmDialogComponent } from "../confirm-dialog/confirm-dialog.component";
-import { fuelTypes, fueltypesArray } from "../../models/fuel/fuelTypes";
-import { Price } from "../../models/depot/Price";
-import { Depot, emptydepot } from "../../models/depot/Depot";
+import { fuelTypes, fueltypesArray } from "../../models/Daudi/fuel/fuelTypes";
+import { Price } from "../../models/Daudi/depot/Price";
+import { Depot, emptydepot } from "../../models/Daudi/depot/Depot";
 import { AdminService } from "../services/core/admin.service";
 import { PricesService } from "../services/prices.service";
 import { DepotService } from "../services/core/depot.service";
-import { Admin, emptyadmin } from "../../models/admin/Admin";
-import { AvgPrice } from "../../models/price/AvgPrice";
+import { Admin, emptyadmin } from "../../models/Daudi/admin/Admin";
+import { AvgPrice } from "../../models/Daudi/price/AvgPrice";
 import { OmcService } from "../services/omc.service";
 import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
-import { OMC } from "../../models/omc/OMC";
+import { OMC } from "../../models/Daudi/omc/OMC";
 
 @Component({
   selector: "edit-price",

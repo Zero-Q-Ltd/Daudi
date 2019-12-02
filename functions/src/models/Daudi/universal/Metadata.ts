@@ -1,4 +1,4 @@
-import { Meta } from "./Meta";
+import { Meta, emptyMeta } from "./Meta";
 
 export interface Metadata {
     /**
@@ -7,3 +7,7 @@ export interface Metadata {
     created?: Meta;
     edited: Meta;
 }
+export const emptymetadata: Metadata = {
+    created: { ...emptyMeta },
+    edited: { ...emptyMeta },
+};

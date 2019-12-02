@@ -1,20 +1,16 @@
 import { fuelTypes } from "../fuel/fuelTypes";
-import { User } from "../universal/User";
+import { AssociatedUser, inituser } from "../admin/AssociatedUser";
 
 export interface Price {
   Id: string;
   price: number;
-  user: User;
+  user: AssociatedUser;
   fueltytype: fuelTypes;
 }
 
 export const emptyprice: Price = {
   price: null,
   Id: null,
-  user: {
-    name: null,
-    time: null,
-    uid: null
-  },
+  user: { ...inituser },
   fueltytype: null
 };

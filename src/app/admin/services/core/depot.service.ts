@@ -1,10 +1,10 @@
 import { Injectable } from "@angular/core";
 import { AngularFirestore } from "@angular/fire/firestore";
-import { Depot, emptydepot } from "../../../models/depot/Depot";
+import { Depot, emptydepot } from "../../../models/Daudi/depot/Depot";
 import { AdminService } from "./admin.service";
 import { BehaviorSubject } from "rxjs";
 import { distinctUntilChanged } from "rxjs/operators";
-import { Config, emptyConfig } from "../../../models/omc/Config";
+import { Config, emptyConfig } from "../../../models/Daudi/omc/Config";
 
 @Injectable({
   providedIn: "root"

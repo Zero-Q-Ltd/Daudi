@@ -3,7 +3,7 @@ import { AngularFirestore } from "@angular/fire/firestore";
 import { BehaviorSubject } from "rxjs";
 import { DepotService } from "./core/depot.service";
 import { take } from "rxjs/operators";
-import { OMC, emptyomc } from "../../models/omc/OMC";
+import { OMC, emptyomc } from "../../models/Daudi/omc/OMC";
 import { AdminService } from "./core/admin.service";
 
 @Injectable({

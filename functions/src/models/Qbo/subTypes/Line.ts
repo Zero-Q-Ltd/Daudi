@@ -2,6 +2,7 @@ import { SalesItemLineDetail } from "./SalesItemLineDetail";
 import { DiscountLineDetail } from "./DiscountLineDetail";
 import { SubTotalLineDetail } from "./SubTotalLineDetail";
 import { LineDetailType } from "../enums/LineDetailType";
+import { GroupLineDetail } from "./GroupLineDetail";
 
 /**
  * Individual line items of a transaction. 
@@ -18,6 +19,6 @@ export interface Line {
     Id?: string;
     SubTotalLineDetail?: SubTotalLineDetail;
     DiscountLineDetail?: DiscountLineDetail;
-    GroupLineDetail:
+    GroupLineDetail?: GroupLineDetail
 }
 

@@ -3,7 +3,7 @@ import * as moment from "moment";
 import { CalendarRangesComponent } from "../calendar-ranges/calendar-ranges.component";
 import { EChartOption } from "echarts";
 import { FuelBoundstats } from "../charts/charts.config";
-import { emptystat, Stat } from "../../../models/stats/Stats";
+import { emptystat, Stat } from "../../../models/Daudi/stats/Stats";
 import { FormControl } from "@angular/forms";
 import { Router } from "@angular/router";
 import { MatSnackBar } from "@angular/material";
@@ -11,8 +11,8 @@ import { DepotService } from "../../services/core/depot.service";
 import { BatchesService } from "../../services/batches.service";
 import { StatsService } from "../../services/stats.service";
 import { PricesService } from "../../services/prices.service";
-import { Entry } from "../../../models/fuel/Entry";
-import { Price } from "../../../models/depot/Price";
+import { Entry } from "../../../models/Daudi/fuel/Entry";
+import { Price } from "../../../models/Daudi/depot/Price";
 import { calculateMA } from "../charts/generalCalc";
 import { fuelgauge } from "../charts/qty";
 import { saleStats } from "../charts/sales";
@@ -20,7 +20,7 @@ import { singleFuelpricestat } from "../charts/prices";
 import "echarts/theme/macarons.js";
 import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
-import { fueltypesArray } from "../../../models/fuel/fuelTypes";
+import { fueltypesArray } from "../../../models/Daudi/fuel/fuelTypes";
 
 @Component({
   selector: "app-stats",

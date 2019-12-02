@@ -6,9 +6,9 @@ import { Observable, ReplaySubject } from "rxjs";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { MapsComponent } from "../maps/maps.component";
 import { NotificationService } from "../../shared/services/notification.service";
-import { Customer, emptycompany } from "../../models/customer/Customer";
-import { emptyorder, Order } from "../../models/order/Order";
-import { Depot, emptydepot } from "../../models/depot/Depot";
+import { Customer, emptycompany } from "../../models/Daudi/customer/Customer";
+import { emptyorder, Order } from "../../models/Daudi/order/Order";
+import { Depot, emptydepot } from "../../models/Daudi/depot/Depot";
 import { AdminService } from "../services/core/admin.service";
 import { DepotService } from "../services/core/depot.service";
 import { CustomerService } from "../services/customers.service";
@@ -16,11 +16,11 @@ import { OrdersService } from "../services/orders.service";
 import { PricesService } from "../services/prices.service";
 import { AngularFireFunctions } from "@angular/fire/functions";
 import { map, startWith, takeUntil, skipWhile } from "rxjs/operators";
-import { fuelTypes, fueltypesArray } from "../../models/fuel/fuelTypes";
+import { fuelTypes, fueltypesArray } from "../../models/Daudi/fuel/fuelTypes";
 import { ConfirmDepotComponent } from "./confirm-depot/confirm-depot.component";
 import { OmcService } from "../services/omc.service";
 import { ConfigService } from "../services/core/config.service";
-import { Config, emptyConfig } from "../../models/omc/Config";
+import { Config, emptyConfig } from "../../models/Daudi/omc/Config";
 
 @Component({
   selector: "create-order",

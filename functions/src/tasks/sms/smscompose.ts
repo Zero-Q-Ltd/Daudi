@@ -146,13 +146,13 @@ function resolveTrucksText(order: Order): string {
     case 0:
       text +=
         " Your fuel is now [RESERVED] at " +
-        order.config.depotname +
+        order.config.depot.name +
         " Please collect within the next 36 hours. Thank you for making it Emkay today.";
       break;
     case 1:
       text +=
         " [ORDER SUBMITTED] at " +
-        order.config.depotname +
+        order.config.depot.name +
         " Est-Time " +
         order.truck.stagedata["1"].expiry[0].expiry +
         " Thank you for making it Emkay today.";

@@ -16,7 +16,7 @@ import { LoginComponent } from "./login/login.component";
 import { LayoutComponent } from "./layout/layout.component";
 import { UsersGuard } from "./guards/users.guard";
 import { PricechangerGuard } from "./guards/pricechanger.guard";
-import { RouteData, RouteDataClass } from "../models/navigation/RouteData";
+import { RouteData, RouteDataClass } from "../models/Daudi/navigation/RouteData";
 
 // /**
 //  * This has been created separately so as to take advantage of linting features

@@ -1,12 +1,12 @@
 import { Injectable } from "@angular/core";
-import { Order, orderStagesarray } from "../../models/order/Order";
-import { OrderStages } from "../../models/order/OrderStages";
+import { Order, orderStagesarray } from "../../models/Daudi/order/Order";
+import { OrderStages } from "../../models/Daudi/order/OrderStages";
 import { firestore } from "firebase";
 import * as moment from "moment";
 import { BehaviorSubject } from "rxjs";
 import { AngularFirestore } from "@angular/fire/firestore";
 import { DepotService } from "./core/depot.service";
-import { Depot } from "../../models/depot/Depot";
+import { Depot } from "../../models/Daudi/depot/Depot";
 import { MatTreeNestedDataSource } from "@angular/material";
 import { AngularFireFunctions } from "@angular/fire/functions";
 

@@ -11,7 +11,7 @@ import * as uuid from "uuid";
 import * as util from "util";
 import * as moment from "moment";
 import * as _ from "underscore";
-import { QbTypes } from "../models/common";
+import { QbTypes } from "../models/QbTypes";
 import { Invoice } from "../models/Qbo/Invoice";
 import { Payment } from "../models/Qbo/Payment";
 

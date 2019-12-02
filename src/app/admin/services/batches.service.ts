@@ -1,10 +1,10 @@
 import { Injectable } from "@angular/core";
-import { Entry, emptybatches } from "../../models/fuel/Entry";
+import { Entry, emptybatches } from "../../models/Daudi/fuel/Entry";
 import { BehaviorSubject } from "rxjs";
 import { AngularFirestore } from "@angular/fire/firestore";
 import { DepotService } from "./core/depot.service";
-import { fuelTypes, fueltypesArray } from "../../models/fuel/fuelTypes";
-import { Depot } from "../../models/depot/Depot";
+import { fuelTypes, fueltypesArray } from "../../models/Daudi/fuel/fuelTypes";
+import { Depot } from "../../models/Daudi/depot/Depot";
 
 @Injectable({
   providedIn: "root"

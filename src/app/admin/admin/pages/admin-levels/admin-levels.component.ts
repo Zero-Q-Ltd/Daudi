@@ -4,16 +4,16 @@ import { MatDialog } from "@angular/material";
 import { ConfigService } from "../../../services/core/config.service";
 import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
-import { OMC, emptyomc } from "../../../../models/omc/OMC";
+import { OMC, emptyomc } from "../../../../models/Daudi/omc/OMC";
 import { FormArray, FormControl, FormGroup, FormBuilder } from "ngx-strongly-typed-forms";
 
 import { NotificationService } from "../../../../shared/services/notification.service";
 import * as firebase from "firebase";
-import { NewAdminType, AdminType } from "../../../../models/admin/AdminType";
+import { NewAdminType, AdminType } from "../../../../models/Daudi/admin/AdminType";
 import { Validators } from "@angular/forms";
-import { AdminLevel } from "../../../../models/admin/AdminLevel";
-import { Meta } from "../../../../models/universal/Meta";
-import { Metadata } from "../../../../models/universal/Metadata";
+import { AdminLevel } from "../../../../models/Daudi/admin/AdminLevel";
+import { Meta } from "../../../../models/Daudi/universal/Meta";
+import { Metadata } from "../../../../models/Daudi/universal/Metadata";
 import { AdminService } from "../../../services/core/admin.service";
 import { ConfirmDialogComponent } from "../../../confirm-dialog/confirm-dialog.component";
 

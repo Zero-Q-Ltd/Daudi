@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from "@angular/core";
 import { MatDialog } from "@angular/material";
 import { BatchTrucksComponent } from "../batch-trucks/batch-trucks.component";
 import { FormControl, Validators } from "@angular/forms";
-import { Depot } from "../../models/depot/Depot";
+import { Depot } from "../../models/Daudi/depot/Depot";
 import { AdminService } from "../services/core/admin.service";
 import { DepotService } from "../services/core/depot.service";
 import { ReplaySubject } from "rxjs";

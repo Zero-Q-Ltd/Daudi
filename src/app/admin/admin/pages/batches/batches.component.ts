@@ -1,16 +1,16 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
 import { MatPaginator, MatTableDataSource } from "@angular/material";
-import { Entry, emptybatches } from "../../../../models/fuel/Entry";
+import { Entry, emptybatches } from "../../../../models/Daudi/fuel/Entry";
 import { DepotService } from "../../../services/core/depot.service";
 import { BatchesService } from "../../../services/batches.service";
-import { SyncRequest } from "../../../../models/qbo/sync/Sync";
+import { SyncRequest } from "../../../../models/Daudi/qbo/sync/Sync";
 import { firestore } from "firebase";
 import { NotificationService } from "../../../../shared/services/notification.service";
 import { AngularFireFunctions } from "@angular/fire/functions";
 import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { ConfigService } from "../../../services/core/config.service";
-import { fuelTypes, fueltypesArray } from "../../../../models/fuel/fuelTypes";
+import { fuelTypes, fueltypesArray } from "../../../../models/Daudi/fuel/fuelTypes";
 
 @Component({
   selector: "app-batches",

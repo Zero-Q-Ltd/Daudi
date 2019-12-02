@@ -1,4 +1,4 @@
-import { LinkedTxn } from "../common";
+import { LinkedTxn } from "./subTypes/LinkedTxn";
 import { CustomField } from "./subTypes/CustomField";
 import { BillEmail } from "./subTypes/BillEmail";
 import { TxnTaxDetail } from "./subTypes/TxnTaxDetail";

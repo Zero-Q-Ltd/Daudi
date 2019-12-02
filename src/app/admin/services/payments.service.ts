@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { AngularFirestore } from "@angular/fire/firestore";
 import { DepotService } from "./core/depot.service";
 import { BehaviorSubject } from "rxjs";
-import { ipnmodel } from "../../models/universal/universal";
+import { ipnmodel } from "../../models/Daudi/universal/universal";
 import { distinctUntilKeyChanged } from "rxjs/operators";
 import { ConfigService } from "./core/config.service";
 

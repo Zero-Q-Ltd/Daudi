@@ -10,12 +10,12 @@ import { Stat } from "../../../models/Daudi/stats/Stats";
  * @param action
  * Function that sets the relevant stats into the database
  */
-export function editorderstats(order: Order, action: OrderAction) {
+export function editStats(order: Order, action: OrderAction) {
     return firestore().runTransaction(async transaction => {
         console.log("Updating stats");
         const yearstatsdir = firestore()
             .collection("depots")
-            .doc(order.config.depotId)
+            .doc(order.config.depot.id)
             .collection("stats")
             .doc(
                 moment(order.stagedata["3"].user.time)
@@ -28,7 +28,7 @@ export function editorderstats(order: Order, action: OrderAction) {
          */
         const weekstatsdir = firestore()
             .collection("depots")
-            .doc(order.config.depotId)
+            .doc(order.config.depot.id)
             .collection("stats")
             .doc(
                 moment(order.stagedata["3"].user.time)
@@ -38,7 +38,7 @@ export function editorderstats(order: Order, action: OrderAction) {
             );
         const monthstatsdir = firestore()
             .collection("depots")
-            .doc(order.config.depotId)
+            .doc(order.config.depot.id)
             .collection("stats")
             .doc(
                 moment(order.stagedata["3"].user.time)
@@ -48,7 +48,7 @@ export function editorderstats(order: Order, action: OrderAction) {
             );
         const daytatsdir = firestore()
             .collection("depots")
-            .doc(order.config.depotId)
+            .doc(order.config.depot.id)
             .collection("stats")
             .doc(
                 moment(order.stagedata["3"].user.time)
@@ -143,5 +143,5 @@ export function editorderstats(order: Order, action: OrderAction) {
             }
         });
     });
-    // batch.update(firestore().doc('depots').collection(order.config.depotId).doc('stats').collection(order.stagedata['3'].user.time), )
+    // batch.update(firestore().doc('depots').collection(order.config.depot.id).doc('stats').collection(order.stagedata['3'].user.time), )
 }

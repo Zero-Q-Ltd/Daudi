@@ -2,7 +2,6 @@ import { createQbo } from "../../../sharedqb";
 import { Payment } from "../../../../models/Qbo/Payment";
 import * as admin from "firebase-admin";
 import * as moment from "moment";
-import { fuelTypes } from "../../../../models/common";
 import { Order } from "../../../../models/Daudi/order/Order";
 import { QuickBooks } from "../../../../libs/qbmain";
 import { Estimate } from "../../../../models/Qbo/Estimate";
@@ -13,11 +12,12 @@ import { TxnStatus } from "../../../../models/Qbo/enums/TxnStatus";
 import { EmailStatus } from "../../../../models/Qbo/enums/EmailStatus";
 import { Line } from "../../../../models/Qbo/subTypes/Line";
 import { LineDetailType } from "../../../../models/Qbo/enums/LineDetailType";
+import { fuelTypes } from "../../../../models/Daudi/fuel/fuelTypes";
 
 function syncfueltypes(orderdata: Order, TxnTaxCodeRef: string): Array<any> {
-    const fuels = ["pms", "ago", "ik"];
     const values: Array<Line> = [];
-    fuels.forEach(fuel => {
+    Object.keys(fuelTypes).forEach(key => {
+        const fuel: fuelTypes = fuelTypes[key]
         if (orderdata.fuel[fuel].qty > 0) {
             values.push({
                 Amount: orderdata.fuel[fuel].priceconfig.nonTaxprice * orderdata.fuel[fuel].qty,

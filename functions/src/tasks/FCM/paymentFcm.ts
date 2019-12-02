@@ -1,9 +1,9 @@
 import { firestore, messaging } from "firebase-admin";
-import { ipnmodel } from "../../models/common";
+import { EquityBulk } from "../../models/ipn/EquityBulk";
 import { Fcm } from "../../models/Cloud/Fcm";
 import { Admin } from "../../models/Daudi/admin/Admin";
 
-export function paymentFcm(ipn: ipnmodel) {
+export function paymentFcm(ipn: EquityBulk) {
   console.log("sending payment FCM");
   let message: Fcm;
   /**

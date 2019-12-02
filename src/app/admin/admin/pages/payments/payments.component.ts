@@ -1,12 +1,12 @@
 import { Component, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import { AngularFireFunctions } from "@angular/fire/functions";
-import { ipnmodel } from "../../../../models/universal/universal";
+import { ipnmodel } from "../../../../models/Daudi/universal/universal";
 import { AdminService } from "../../../services/core/admin.service";
 import { NotificationService } from "../../../../shared/services/notification.service";
 import { MatDialog, MatPaginator, MatSort, MatTableDataSource } from "@angular/material";
 import { PaymentsService } from "../../../services/payments.service";
 import { CustomerManagementComponent } from "../customer-management/customer-management.component";
-import { Customer } from "../../../../models/customer/Customer";
+import { Customer } from "../../../../models/Daudi/customer/Customer";
 import { takeUntil } from "rxjs/operators";
 import { ReplaySubject } from "rxjs";
 

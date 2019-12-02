@@ -3,13 +3,13 @@ import { Component, Inject, OnDestroy, OnInit, Input } from "@angular/core";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material"; // added dialog data
 import { NotificationService } from "../../shared/services/notification.service";
 import { FormControl, Validators } from "@angular/forms";
-import { Order } from "../../models/order/Order";
-import { emptytruck, Truck } from "../../models/order/Truck";
+import { Order } from "../../models/Daudi/order/Order";
+import { emptytruck, Truck } from "../../models/Daudi/order/Truck";
 import { AdminService } from "../services/core/admin.service";
 import { OrdersService } from "../services/orders.service";
 import { DepotService } from "../services/core/depot.service";
 import { ReplaySubject } from "rxjs";
-import { fueltypesArray } from "../../models/fuel/fuelTypes";
+import { fueltypesArray } from "../../models/Daudi/fuel/fuelTypes";
 
 @Component({
   selector: "compartments",

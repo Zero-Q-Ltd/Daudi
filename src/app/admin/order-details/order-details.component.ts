@@ -3,8 +3,8 @@ import { Component, Input, OnDestroy, OnInit } from "@angular/core";
 import { MatDialog } from "@angular/material"; // added dialog data receive
 import { NotificationService } from "../../shared/services/notification.service";
 import { AngularFirestore } from "@angular/fire/firestore";
-import { Truck } from "../../models/order/Truck";
-import { Order } from "../../models/order/Order";
+import { Truck } from "../../models/Daudi/order/Truck";
+import { Order } from "../../models/Daudi/order/Order";
 import { ReplaySubject } from "rxjs";
 
 @Component({
