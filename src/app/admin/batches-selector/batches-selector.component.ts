@@ -5,7 +5,7 @@ import * as moment from "moment";
 import { AngularFirestore } from "@angular/fire/firestore";
 import { Entry } from "../../models/Daudi/fuel/Entry";
 import { emptytruck, Truck, StageData } from "../../models/Daudi/order/Truck";
-import { FuelType, fuelTypeNames, } from "../../models/Daudi/fuel/fuelTypes";
+import { fuelTypes, } from "../../models/Daudi/fuel/fuelTypes";
 import { emptyorder, Order } from "../../models/Daudi/order/Order";
 import { AdminService } from "../services/core/admin.service";
 import { DepotService } from "../services/core/depot.service";
@@ -56,7 +56,7 @@ export class BatchesSelectorComponent implements OnInit, OnDestroy {
       ik: []
     };
   drawnbatch: {
-    [key in keyof typeof FuelType]: {
+    [key in fuelTypes]: {
       batch0: batchContent,
       batch1: batchContent
     }
@@ -124,7 +124,7 @@ export class BatchesSelectorComponent implements OnInit, OnDestroy {
   saving = false;
   order: Order = Object.assign({}, emptyorder);
   donecalculating = false;
-  fueltypesArray = fuelTypeNames;
+  fueltypesArray = Object.keys(fuelTypes);
   fetchingbatches: boolean;
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
   /**
@@ -141,7 +141,7 @@ export class BatchesSelectorComponent implements OnInit, OnDestroy {
     private depotsservice: DepotService,
     private batchesservice: BatchesService,
     private ordersservice: OrdersService) {
-    this.fueltypesArray.forEach((fueltype) => {
+    this.fueltypesArray.forEach((fueltype: fuelTypes) => {
       this.batchesservice.depotbatches[fueltype].pipe(takeUntil(this.comopnentDestroyed)).subscribe((batches: Array<Entry>) => {
         // console.log(batches);
         this.depotbatches[fueltype] = batches;
@@ -188,8 +188,7 @@ export class BatchesSelectorComponent implements OnInit, OnDestroy {
 
   calculateqty() {
     this.donecalculating = false;
-    this.fueltypesArray.forEach((fuel) => {
-      const fueltype = FuelType[fuel];
+    this.fueltypesArray.forEach((fueltype: fuelTypes) => {
       this.fuelerror[fueltype] = false;
       /**
        * Check if there are batches to assign
@@ -323,7 +322,7 @@ export class BatchesSelectorComponent implements OnInit, OnDestroy {
     }
   }
 
-  getTotalAvailable(index: number, fueltype: FuelType) {
+  getTotalAvailable(index: number, fueltype: fuelTypes) {
     const totalqty = this.depotbatches[fueltype][index].qty.total;
     const loadedqty = this.depotbatches[fueltype][index].qty.directLoad.total + this.depotbatches[fueltype][index].qty.transfered;
     const accumulated = this.depotbatches[fueltype][index].qty.directLoad.accumulated;
@@ -336,8 +335,7 @@ export class BatchesSelectorComponent implements OnInit, OnDestroy {
   approvetruck() {
     this.saving = true;
     this.dialogRef.disableClose = true;
-    this.fueltypesArray.forEach((fuel) => {
-      const fueltype = FuelType[fuel];
+    this.fueltypesArray.forEach((fueltype: fuelTypes) => {
       if (this.fuelerror[fueltype]) {
         this.saving = false;
         this.dialogRef.disableClose = false;

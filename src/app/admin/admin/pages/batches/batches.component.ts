@@ -9,7 +9,7 @@ import { AngularFireFunctions } from "@angular/fire/functions";
 import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { ConfigService } from "../../../services/core/config.service";
-import { FuelType } from "../../../../models/Daudi/fuel/fuelTypes";
+import { fuelTypes } from "../../../../models/Daudi/fuel/fuelTypes";
 import { SyncRequest } from "../../../../models/Cloud/Sync";
 
 @Component({
@@ -18,7 +18,7 @@ import { SyncRequest } from "../../../../models/Cloud/Sync";
   styleUrls: ["./batches.component.scss"]
 })
 export class BatchesComponent implements OnInit {
-  fueltypesArray = Object.keys(FuelType).filter(key => !isNaN(Number(FuelType[key])));
+  fueltypesArray = Object.keys(fuelTypes);
   datasource = {
     pms: new MatTableDataSource<Entry>(),
     ago: new MatTableDataSource<Entry>(),
@@ -69,11 +69,10 @@ export class BatchesComponent implements OnInit {
       };
 
       if (depotvata.depot.Id) {
-        this.fueltypesArray.forEach((fuelTypeId) => {
+        this.fueltypesArray.forEach((fueltype: fuelTypes) => {
           /**
            * Create a subscrition for 1000 batches history
            */
-          const fueltype = FuelType[fuelTypeId];
           const subscription = this.batchesservice.getbatches(fueltype).limit(100)
             .onSnapshot(snapshot => {
               this.loading[fueltype] = false;

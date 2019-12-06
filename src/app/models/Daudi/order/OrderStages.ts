@@ -1,11 +1,1 @@
-export enum OrderStages {
-    "Estimates" = 1,
-    "Invoiced",
-    "Paid",
-    "Loading Orders",
-    "Complete",
-    "Deleted",
-}
-
-export const OrderStageIds = Object.keys(OrderStages).filter(key => isNaN(Number(OrderStages[key])));
-export const OrderStageNames = Object.keys(OrderStages).filter(key => !isNaN(Number(OrderStages[key])));
+export type OrderStages = "1" | "2" | "3" | "4" | "5" | "6";

@@ -1,6 +1,2 @@
-export enum Environment {
-    "sandbox" = "sandbox",
-    "live" = "live"
-}
-
-export let EnvironmetIds = Object.keys(Environment);
+export type Environment = "sandbox" | "live";
+export let EnvironmetsArray = ["sandbox", "live"];

@@ -92,7 +92,7 @@ export class DepotService {
       console.log("changing");
       const config = this.config.omcconfig.value.depotconfig[this.config.environment.value].filter(t => {
         return t.depotId === depot.Id;
-      })[0] || { ...emptyDepotConfig };
+      })[0];
       this.activedepot.next({ depot, config });
     } else {
       return;

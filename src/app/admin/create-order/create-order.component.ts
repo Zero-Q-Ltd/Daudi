@@ -16,13 +16,11 @@ import { OrdersService } from "../services/orders.service";
 import { PricesService } from "../services/prices.service";
 import { AngularFireFunctions } from "@angular/fire/functions";
 import { map, startWith, takeUntil, skipWhile } from "rxjs/operators";
-import { FuelType, fuelTypeNames, fuelTypeIds } from "../../models/Daudi/fuel/fuelTypes";
+import { fuelTypes } from "../../models/Daudi/fuel/fuelTypes";
 import { ConfirmDepotComponent } from "./confirm-depot/confirm-depot.component";
 import { OmcService } from "../services/core/omc.service";
 import { ConfigService } from "../services/core/config.service";
 import { Config, emptyConfig } from "../../models/Daudi/omc/Config";
-import { DepotConfig, emptyDepotConfig } from "../../models/Daudi/depot/DepotConfig";
-import { Environment } from "../../models/Daudi/omc/Environments";
 
 @Component({
   selector: "create-order",
@@ -76,8 +74,7 @@ export class CreateOrderComponent implements OnDestroy {
       emailControl: new FormControl("", [Validators.required, Validators.email])
     }
   );
-  fuelNamesArray = fuelTypeNames;
-  fuelTypesArray = fuelTypeIds;
+  fueltypesArray = Object.keys(fuelTypes);
   filteredCompanies: Observable<Customer[]>;
   companyControl = new FormControl();
   loadingcustomers = false;
@@ -88,9 +85,6 @@ export class CreateOrderComponent implements OnDestroy {
    */
   subscriptions: Map<string, any> = new Map<string, any>();
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
-  currentdepot: { depot: Depot, config: DepotConfig } = { depot: { ...emptydepot }, config: { ...emptyDepotConfig } };
-  omcConfig: Config = { ...emptyConfig };
-  env: Environment = Environment.sandbox;
 
   constructor(
     private router: Router,
@@ -121,8 +115,6 @@ export class CreateOrderComponent implements OnDestroy {
               /**
                * This must execute in this exact order
                */
-              this.currentdepot = value;
-
               this.initfuelprices();
               this.initordersform();
             });
@@ -150,7 +142,6 @@ export class CreateOrderComponent implements OnDestroy {
                 /**
                  * This must execute in this exact order
                  */
-                this.currentdepot = value;
                 this.initfuelprices();
                 this.initordersform();
               });
@@ -160,18 +151,6 @@ export class CreateOrderComponent implements OnDestroy {
 
       });
 
-    this.configService.environment
-      .pipe(takeUntil(this.comopnentDestroyed))
-      .subscribe(value => {
-        this.env = value;
-      });
-
-    this.configService.omcconfig.pipe(
-      takeUntil(this.comopnentDestroyed),
-      skipWhile(t => !t)
-    ).subscribe(val => {
-      this.omcConfig = val;
-    });
     this.customerService.loadingcustomers
       .pipe(takeUntil(this.comopnentDestroyed))
       .subscribe(value => {
@@ -211,7 +190,7 @@ export class CreateOrderComponent implements OnDestroy {
           this.orderform.controls.agoqtyControl.setErrors(null);
           this.orderform.controls.ikqtyControl.setErrors(null);
         }
-        this.fuelNamesArray.forEach((fueltype) => {
+        this.fueltypesArray.forEach((fueltype) => {
           // this.temporder.fuel[fueltype].qty = Number(value[fueltype + "qtyControl"]);
           // this.temporder.fuel[fueltype].priceconfig.price = Number(value[fueltype]);
           // this.temporder.fuel[fueltype].priceconfig.retailprice = this.tempsellingprices[fueltype];
@@ -253,7 +232,7 @@ export class CreateOrderComponent implements OnDestroy {
    * Decimal resolution depends on the qty, as above 10000l the point affects significant amount, but at the same time we
    * Dont want decimals at lower quantities
    */
-  deriveprice(priceinclusivevat: number, fueltype: FuelType, decimalResolution: number): { pricewithoutvat: number, amountdeducted: number, taxablePrice: number } {
+  deriveprice(priceinclusivevat: number, fueltype: fuelTypes, decimalResolution: number): { pricewithoutvat: number, amountdeducted: number, taxablePrice: number } {
     const pricewithoutvat = Number(((priceinclusivevat + (0.08 * this.configService.getEnvironment().fuelconfig[fueltype].tax.nonTax)) / 1.08).toFixed(decimalResolution));
     const amountdeducted = priceinclusivevat - pricewithoutvat;
     const taxablePrice = Number((pricewithoutvat - this.configService.getEnvironment()[fueltype].tax.nonTax).toFixed(decimalResolution));
@@ -291,7 +270,7 @@ export class CreateOrderComponent implements OnDestroy {
 
   initfuelprices() {
     if (!this.discApproval) {
-      this.fuelNamesArray.forEach((fueltype) => {
+      this.fueltypesArray.forEach((fueltype) => {
         // this.temporder.fuel[fueltype].priceconfig.taxQbId = this.currentdepotconfig.taxconfig[fueltype].QbId ? this.currentdepotconfig.taxconfig[fueltype].QbId : null;
         // this.temporder.fuel[fueltype].priceconfig.nonTax = this.currentdepotconfig.taxconfig[fueltype].nonTax ? Number(this.currentdepotconfig.taxconfig[fueltype].nonTax) : null;
         /**
@@ -314,13 +293,13 @@ export class CreateOrderComponent implements OnDestroy {
         /**
          * Initialise these variables default as false for sandbox environment
          */
-        sms: this.configService.environment.value === Environment.sandbox ? false : true,
-        email: this.configService.environment.value === Environment.sandbox ? false : true
+        sms: this.configService.environment.value === "sandbox" ? false : true,
+        email: this.configService.environment.value === "sandbox" ? false : true
       };
       /**
        * @todo finish min price calculation logic
        */
-      this.fuelNamesArray.forEach((fueltype) => {
+      this.fueltypesArray.forEach((fueltype: fuelTypes) => {
         /**
          * Make sure that the current selling price is lower than the min selling price for the most recent entry
          */
@@ -339,7 +318,7 @@ export class CreateOrderComponent implements OnDestroy {
         // this.orderform.controls[fueltype].setValidators(Validators.compose([Validators.min(this.currentdepotconfig.minpriceconfig[fueltype].price), Validators.required]));
       });
     } else {
-      this.fuelNamesArray.forEach((fueltype) => {
+      this.fueltypesArray.forEach((fueltype) => {
         this.orderform.controls[fueltype].setValue(this.temporder.fuel[fueltype].priceconfig.price = this.tempsellingprices[fueltype]);
         // this.orderform.controls[fueltype].setValidators(Validators.compose([Validators.min(this.currentdepotconfig.minpriceconfig[fueltype].price), Validators.required]));
       });

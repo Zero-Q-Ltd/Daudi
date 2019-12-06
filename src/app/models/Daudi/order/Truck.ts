@@ -1,6 +1,5 @@
 import { firestore } from "firebase";
 import { AssociatedUser } from "../admin/AssociatedUser";
-import { TruckStages } from "./TruckStages";
 
 interface Compartment {
   fueltype: string;
@@ -35,7 +34,7 @@ export interface Truck {
    * This design allows complex queries on the map, as opposed to the limitations of an array
    */
   stagedata: {
-    [key in TruckStages]: StageData
+    [key in truckStages]: StageData
   };
   compartments: Array<Compartment>;
 }
@@ -74,4 +73,5 @@ export const emptytruck: Truck = {
   compartments: []
 };
 
+export type truckStages = "0" | "1" | "2" | "3" | "4" | "5";
 export let truckStagesarray = ["0", "1", "2", "3", "4", "5"];
