@@ -3,7 +3,7 @@ import { Entry, emptybatches } from "../../models/Daudi/fuel/Entry";
 import { BehaviorSubject } from "rxjs";
 import { AngularFirestore } from "@angular/fire/firestore";
 import { DepotService } from "./core/depot.service";
-import { fuelTypes } from "../../models/Daudi/fuel/fuelTypes";
+import { FuelType, FuelNamesArray } from "../../models/Daudi/fuel/FuelType";
 import { OmcService } from "./core/omc.service";
 import { skipWhile } from "rxjs/operators";
 
@@ -25,7 +25,7 @@ export class BatchesService {
    * this keeps a local copy of all the subscriptions within this service
    */
   subscriptions: Map<string, any> = new Map<string, any>();
-  fueltypesArray = Object.keys(fuelTypes);
+  fueltypesArray = FuelNamesArray;
 
   constructor(
     private db: AngularFirestore,
@@ -70,7 +70,7 @@ export class BatchesService {
     });
   }
 
-  getbatches(type: fuelTypes) {
+  getbatches(type: FuelType) {
 
     return this.db.firestore.collection("depots")
       .doc(this.depotsservice.activedepot.value.depot.Id)

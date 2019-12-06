@@ -11,7 +11,7 @@ import { OrdersService } from "../../services/orders.service";
 import { orderStagesarray } from "../../../models/Daudi/order/Order";
 import { truckStagesarray } from "../../../models/Daudi/order/Truck";
 import { PricesService } from "../../services/prices.service";
-import { fuelTypes } from "../../../models/Daudi/fuel/fuelTypes";
+import { FuelType, FuelNamesArray } from "../../../models/Daudi/fuel/FuelType";
 import { Price } from "../../../models/Daudi/depot/Price";
 import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
@@ -60,7 +60,7 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
   };
 
   avgprices: {
-    [key in fuelTypes]: {
+    [key in FuelType]: {
       total: number,
       prices: Array<Price>
     }
@@ -79,7 +79,7 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
       }
     };
 
-  fueltypesArray = Object.keys(fuelTypes);
+  fueltypesArray = FuelNamesArray;
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
   environment: Environment;
   constructor(
@@ -137,7 +137,7 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
     this.adminservice.logoutsequence();
   }
   changeEnvironment(change: MatSlideToggleChange) {
-    this.environment = change.checked ? "sandbox" : "live";
+    this.environment = change.checked ? Environment.sandbox : Environment.live;
     this.config.environment.next(this.environment);
     const tempappconfig = { ...APPCONFIG };
     tempappconfig.colorOption = change.checked ? "2" : "32";
