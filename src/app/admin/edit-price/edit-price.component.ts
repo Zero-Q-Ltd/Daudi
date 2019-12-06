@@ -4,7 +4,7 @@ import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { AngularFirestore } from "@angular/fire/firestore";
 import { NotificationService } from "../../shared/services/notification.service";
 import { ConfirmDialogComponent } from "../confirm-dialog/confirm-dialog.component";
-import { FuelType } from "../../models/Daudi/fuel/fuelTypes";
+import { fuelTypes } from "../../models/Daudi/fuel/fuelTypes";
 import { Price } from "../../models/Daudi/depot/Price";
 import { Depot, emptydepot } from "../../models/Daudi/depot/Depot";
 import { AdminService } from "../services/core/admin.service";
@@ -29,7 +29,7 @@ export class EditPriceComponent implements OnInit, OnDestroy {
   position3 = "right";
 
   avgprices: {
-    [key in keyof typeof FuelType]: {
+    [key in fuelTypes]: {
       total: number,
       prices: Array<AvgPrice>
     }
@@ -65,7 +65,7 @@ export class EditPriceComponent implements OnInit, OnDestroy {
     ago: new FormControl("", []),
     ik: new FormControl("", [])
   });
-  fueltypesArray = Object.keys(FuelType);
+  fueltypesArray = Object.keys(fuelTypes);
   saving = false;
   depotsdataSource = new MatTableDataSource<Depot>();
   priceColumns = ["depot", "pms_price", "pms_avgprice", "ago_price", "ago_avgprice", "ik_price", "ik_avgprice"];
@@ -127,7 +127,7 @@ export class EditPriceComponent implements OnInit, OnDestroy {
     return omc ? omc.name : undefined;
   }
 
-  addprice(fueltype: FuelType) {
+  addprice(fueltype: fuelTypes) {
 
     if (this.spPricesform.controls[fueltype].valid) {
       this.saving = true;
@@ -169,7 +169,7 @@ export class EditPriceComponent implements OnInit, OnDestroy {
     }
   }
 
-  addavgprice(fueltype: FuelType) {
+  addavgprice(fueltype: fuelTypes) {
     this.saving = true;
     console.log(this.avgpricesform.value);
     if (!this.selectedOMC) {

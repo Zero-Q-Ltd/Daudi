@@ -1,8 +1,8 @@
 import { AdminType } from "../admin/AdminType";
-import { FuelType } from "../fuel/fuelTypes";
+import { fuelTypes } from "../fuel/fuelTypes";
 import { Metadata } from "../universal/Metadata";
-import { firestore } from "firebase";
-
+import { firestore } from 'firebase';
+;
 import { Meta } from "../universal/Meta";
 import { DepotConfig } from "../depot/DepotConfig";
 import { FuelConfig, emptyFuelConfig } from "./FuelConfig";
@@ -11,27 +11,26 @@ import { QBOAuthCOnfig } from "./QboAuthConfig";
 import { TaxConfig } from "./TaxConfig";
 
 export interface Config {
-    source: "db" | "init";
     adminTypes: Array<AdminType>;
     Qbo: {
         /**
          * Every company has a sandbox and a live config
          */
-        [key in keyof typeof Environment]: QboEnvironment
+        [key in Environment]: QboEnvironment
     };
     /**
      * Depot configurations remains constant across different environments
      */
     depotconfig: {
-        [key in keyof typeof Environment]: Array<DepotConfig> };
+        [key in Environment]: Array<DepotConfig> };
 }
 
 export interface QboEnvironment {
     auth: QBOAuthCOnfig;
     fuelconfig: {
-        [key in keyof typeof FuelType]: FuelConfig
+        [key in fuelTypes]: FuelConfig
     };
-    taxConfig: TaxConfig;
+    taxConfig: TaxConfig
 }
 /**
  * This is an initialization variable for the undeletable level for System Admins
@@ -65,8 +64,6 @@ export const emptyqboAuth: QBOAuthCOnfig = {
 
 
 export const emptyConfig: Config = {
-    source: "init",
-
     depotconfig: {
         live: [],
         sandbox: []

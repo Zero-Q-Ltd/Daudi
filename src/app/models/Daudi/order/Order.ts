@@ -1,4 +1,4 @@
-import { FuelType } from "../fuel/fuelTypes";
+import { fuelTypes } from "../fuel/fuelTypes";
 import { Contact } from "../customer/Contact";
 import { Truck, emptytruck } from "./Truck";
 import { FuelConfig } from "./FuelConfig";
@@ -49,7 +49,7 @@ export interface Order {
   truck: Truck;
   loaded: boolean;
   fuel: {
-    [key in keyof typeof FuelType]: FuelConfig
+    [key in fuelTypes]: FuelConfig
   };
   discount?: {
     approved: {
@@ -58,7 +58,7 @@ export interface Order {
       data: {},
     },
     request: {
-      [key in FuelType]: number;
+      [key in fuelTypes]: number;
     }
   };
   stagedata: {
@@ -132,7 +132,7 @@ export const emptyorder: Order = {
     3: { ...initstages },
     4: { ...initstages },
     5: { ...initstages },
-    6: { ...initstages },
+    6: { ...initstages }
   },
 
 
@@ -142,3 +142,5 @@ export const emptyorder: Order = {
     ik: { ...initorderfuel }
   }
 };
+export let orderStagesarray = ["1", "2", "3", "4", "5", "6"];
+
