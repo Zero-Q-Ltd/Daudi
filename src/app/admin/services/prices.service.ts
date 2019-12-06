@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { fuelTypes } from "../../models/Daudi/fuel/fuelTypes";
+import { FuelType, FuelNamesArray } from "../../models/Daudi/fuel/FuelType";
 import * as moment from "moment";
 import { AngularFirestore } from "@angular/fire/firestore";
 import { Depot } from "../../models/Daudi/depot/Depot";
@@ -14,7 +14,7 @@ export class PricesService {
   activedepot: Depot;
 
   avgprices: {
-    [key in fuelTypes]: {
+    [key in FuelType]: {
       total: BehaviorSubject<number>,
       avg: BehaviorSubject<number>,
       prices: BehaviorSubject<Array<Price>>
@@ -40,7 +40,7 @@ export class PricesService {
    * this keeps a local copy of all the subscriptions within this service
    */
   subscriptions: Map<string, any> = new Map<string, any>();
-  fueltypesArray = Object.keys(fuelTypes);
+  fueltypesArray = FuelNamesArray;
 
   constructor(private db: AngularFirestore, private depotservice: DepotService) {
     depotservice.activedepot.subscribe(depot => {
@@ -85,7 +85,7 @@ export class PricesService {
   }
 
 
-  getavgprices(fueltye: fuelTypes) {
+  getavgprices(fueltye: FuelType) {
     if (!this.activedepot.Id) {
       return;
     }

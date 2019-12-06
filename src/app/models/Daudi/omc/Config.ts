@@ -1,8 +1,8 @@
 import { AdminType } from "../admin/AdminType";
-import { fuelTypes } from "../fuel/fuelTypes";
+import { FuelType } from "../fuel/FuelType";
 import { Metadata } from "../universal/Metadata";
-import { firestore } from 'firebase';
-;
+import { firestore } from "firebase";
+
 import { Meta } from "../universal/Meta";
 import { DepotConfig } from "../depot/DepotConfig";
 import { FuelConfig, emptyFuelConfig } from "./FuelConfig";
@@ -28,9 +28,9 @@ export interface Config {
 export interface QboEnvironment {
     auth: QBOAuthCOnfig;
     fuelconfig: {
-        [key in fuelTypes]: FuelConfig
+        [key in FuelType]: FuelConfig
     };
-    taxConfig: TaxConfig
+    taxConfig: TaxConfig;
 }
 /**
  * This is an initialization variable for the undeletable level for System Admins

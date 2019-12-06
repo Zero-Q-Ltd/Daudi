@@ -20,7 +20,7 @@ import { singleFuelpricestat } from "../charts/prices";
 import "echarts/theme/macarons.js";
 import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
-import { fuelTypes } from "../../../models/Daudi/fuel/fuelTypes";
+import { FuelType, FuelNamesArray } from "../../../models/Daudi/fuel/FuelType";
 
 @Component({
   selector: "app-stats",
@@ -44,7 +44,7 @@ export class StatsComponent implements OnInit, OnDestroy {
     ik: this.assignvalues("ik")
   };
 
-  fueltypesArray = Object.keys(fuelTypes);
+  fueltypesArray = FuelNamesArray;
   emptystats = {
     thisweek: { ...emptystat },
     lastweek: { ...emptystat },

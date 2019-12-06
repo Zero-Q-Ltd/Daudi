@@ -1,4 +1,4 @@
-import { fuelTypes } from "../fuel/fuelTypes";
+import { FuelType } from "../fuel/FuelType";
 import { DepotPrice } from "./DepotPrice";
 import { inituser } from "../admin/AssociatedUser";
 export interface DepotConfig {
@@ -8,14 +8,14 @@ export interface DepotConfig {
         name: null;
     };
     price: {
-        [key in fuelTypes]: DepotPrice;
+        [key in FuelType]: DepotPrice;
     };
     hospitality: {
         amnt: number;
     };
 }
 const initPrice = {
-    price: null,
+    price: 0,
     user: { ...inituser }
 };
 export const emptyDepotConfig: DepotConfig = {
