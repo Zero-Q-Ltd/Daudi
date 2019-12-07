@@ -14,8 +14,9 @@ export interface DepotConfig {
         amnt: number;
     };
 }
-const initPrice = {
+const initPrice: DepotPrice = {
     price: 0,
+    minPrice: 0,
     user: { ...inituser }
 };
 export const emptyDepotConfig: DepotConfig = {

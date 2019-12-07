@@ -1,6 +1,6 @@
 import { AdminType } from "../admin/AdminType";
 import { FuelType } from "../fuel/FuelType";
-import { Metadata } from "../universal/Metadata";
+import { Metadata, emptymetadata } from "../universal/Metadata";
 import { firestore } from "firebase";
 
 import { Meta } from "../universal/Meta";
@@ -23,6 +23,10 @@ export interface Config {
      */
     depotconfig: {
         [key in Environment]: Array<DepotConfig> };
+    taxExempt: {
+        [key in Environment]: {
+            [key in FuelType]: TaxExempt
+        } };
 }
 
 export interface QboEnvironment {
@@ -31,6 +35,11 @@ export interface QboEnvironment {
         [key in FuelType]: FuelConfig
     };
     taxConfig: TaxConfig;
+}
+
+interface TaxExempt {
+    amount: number;
+    metadata: Metadata;
 }
 /**
  * This is an initialization variable for the undeletable level for System Admins
@@ -61,12 +70,27 @@ export const emptyqboAuth: QBOAuthCOnfig = {
         time: firestore.Timestamp.fromDate(new Date())
     }
 };
-
+const emptytaxExempt: TaxExempt = {
+    amount: 0,
+    metadata: { ...emptymetadata }
+};
 
 export const emptyConfig: Config = {
     depotconfig: {
         live: [],
         sandbox: []
+    },
+    taxExempt: {
+        live: {
+            ago: { ...emptytaxExempt },
+            ik: { ...emptytaxExempt },
+            pms: { ...emptytaxExempt }
+        },
+        sandbox: {
+            ago: { ...emptytaxExempt },
+            ik: { ...emptytaxExempt },
+            pms: { ...emptytaxExempt }
+        }
     },
     Qbo: {
         live: {

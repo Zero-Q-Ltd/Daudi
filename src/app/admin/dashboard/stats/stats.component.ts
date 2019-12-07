@@ -19,7 +19,7 @@ import { saleStats } from "../charts/sales";
 import { singleFuelpricestat } from "../charts/prices";
 import "echarts/theme/macarons.js";
 import { ReplaySubject } from "rxjs";
-import { takeUntil } from "rxjs/operators";
+import { takeUntil, skipWhile } from "rxjs/operators";
 import { FuelType, FuelNamesArray } from "../../../models/Daudi/fuel/FuelType";
 
 @Component({
@@ -86,50 +86,55 @@ export class StatsComponent implements OnInit, OnDestroy {
     private batcheservice: BatchesService,
     private statservice: StatsService,
     private priceservice: PricesService) {
-    this.depotservice.activedepot.pipe(takeUntil(this.comopnentDestroyed)).subscribe(depot => {
-      this.dateControl.valueChanges.pipe(takeUntil(this.comopnentDestroyed)).subscribe(value => {
-        const a = moment(value.begin);
-        const b = moment(value.end);
-        this.getstats(Math.abs(a.diff(b, "days")));
-      });
-      if (depot.depot.Id) {
-        /**
-         * reset loading every time the depot is changed
-         */
-        this.isLoadingsalesStats = true;
-        this.isLoadingPrices = true;
-        this.isLoadingFuelqty = {
-          pms: true,
-          ago: true,
-          ik: true
-        };
-        /**
-         * Load data for the last 1 months by default, dont forget to reset the FormControl every time the depot changes
-         */
-        this.dateControl.reset({ begin: new Date(moment().subtract(1, "M").startOf("day").toDate()), end: new Date() });
-        this.fueltypesArray.forEach(fueltype => {
-          this.batcheservice.depotbatches[fueltype].pipe(takeUntil(this.comopnentDestroyed)).subscribe((batches: Array<Entry>) => {
-            /**
-             * Reset the values every time the batches change
-             */
-            this.fuelgauge[fueltype].series[0].max = 0;
-            this.fuelgauge[fueltype].series[0].data[0].value = 0;
-            this.fuelgauge[fueltype] = { ...fuelgauge[fueltype] };
-
-            batches.forEach(batch => {
-              /**
-               * force change detection in the charts directive
-               */
-              this.fuelgauge[fueltype] = { ...fuelgauge[fueltype] };
-              // this.fuelgauge[fueltype].series[0].max += Math.round(batch.qty / 1000);
-              const available = this.getTotalAvailable(batch);
-              this.fuelgauge[fueltype].series[0].data[0].value += Math.round(available / 1000);
-            });
+    this.depotservice.activedepot.pipe(
+      skipWhile(d => !d.depot.Id),
+      takeUntil(this.comopnentDestroyed))
+      .subscribe(depot => {
+        this.dateControl.valueChanges.pipe(
+          takeUntil(this.comopnentDestroyed))
+          .subscribe(value => {
+            const a = moment(value.begin);
+            const b = moment(value.end);
+            this.getstats(Math.abs(a.diff(b, "days")));
           });
-          this.isLoadingFuelqty[fueltype] = false;
-        });
-      }
-    });
+        if (depot.depot.Id) {
+          /**
+           * reset loading every time the depot is changed
+           */
+          this.isLoadingsalesStats = true;
+          this.isLoadingPrices = true;
+          this.isLoadingFuelqty = {
+            pms: true,
+            ago: true,
+            ik: true
+          };
+          /**
+           * Load data for the last 1 months by default, dont forget to reset the FormControl every time the depot changes
+           */
+          this.dateControl.reset({ begin: new Date(moment().subtract(1, "M").startOf("day").toDate()), end: new Date() });
+          this.fueltypesArray.forEach(fueltype => {
+            this.batcheservice.depotbatches[fueltype].pipe(takeUntil(this.comopnentDestroyed)).subscribe((batches: Array<Entry>) => {
+              /**
+               * Reset the values every time the batches change
+               */
+              this.fuelgauge[fueltype].series[0].max = 0;
+              this.fuelgauge[fueltype].series[0].data[0].value = 0;
+              this.fuelgauge[fueltype] = { ...fuelgauge[fueltype] };
+
+              batches.forEach(batch => {
+                /**
+                 * force change detection in the charts directive
+                 */
+                this.fuelgauge[fueltype] = { ...fuelgauge[fueltype] };
+                // this.fuelgauge[fueltype].series[0].max += Math.round(batch.qty / 1000);
+                const available = this.getTotalAvailable(batch);
+                this.fuelgauge[fueltype].series[0].data[0].value += Math.round(available / 1000);
+              });
+            });
+            this.isLoadingFuelqty[fueltype] = false;
+          });
+        }
+      });
   }
 
   ngOnDestroy(): void {

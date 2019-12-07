@@ -34,7 +34,7 @@ export class CreateOrderComponent implements OnDestroy {
   position = "before";
   position1 = "above";
   // for KRA mask
-  temporder: Order = Object.assign({}, emptyorder);
+  temporder: Order = { ...emptyorder };
   discApproval = false;
   depotsdataSource = new MatTableDataSource<Depot>();
   priceColumns = ["depot", "pms_price", "pms_avgprice", "ago_price", "ago_avgprice", "ik_price", "ik_avgprice"];
@@ -202,29 +202,31 @@ export class CreateOrderComponent implements OnDestroy {
     this.orderform.valueChanges
       .pipe(takeUntil(this.comopnentDestroyed))
       .subscribe((value) => {
+        console.log(value);
         if (value.pmsqtyControl >= 1000 || value.agoqtyControl >= 1000 || value.ikqtyControl >= 1000) {
           this.orderform.controls.pmsqtyControl.setErrors(null);
           this.orderform.controls.agoqtyControl.setErrors(null);
           this.orderform.controls.ikqtyControl.setErrors(null);
         }
         this.fueltypesArray.forEach((fueltype) => {
-          // this.temporder.fuel[fueltype].qty = Number(value[fueltype + "qtyControl"]);
-          // this.temporder.fuel[fueltype].priceconfig.price = Number(value[fueltype]);
-          // this.temporder.fuel[fueltype].priceconfig.retailprice = this.tempsellingprices[fueltype];
-          // this.temporder.fuel[fueltype].priceconfig.minsp = this.currentdepotconfig.minpriceconfig[fueltype].price;
-          // const decimamlResolution = value[`${fueltype}qtyControl`] >= 10000 ? 4 : 3;
-          // const calculatedpirces = this.deriveprice(this.temporder.fuel[fueltype].priceconfig.price, fueltype as fuelTypes, decimamlResolution);
-          // this.temporder.fuel[fueltype].priceconfig.taxablePrice = calculatedpirces.taxablePrice;
-          // this.temporder.fuel[fueltype].priceconfig.nonTaxprice = calculatedpirces.pricewithoutvat;
+          this.temporder.fuel[fueltype].qty = Number(value[fueltype + "qtyControl"]);
+          this.temporder.fuel[fueltype].priceconfig.price = Number(value[fueltype]);
+          this.temporder.fuel[fueltype].priceconfig.retailprice = this.tempsellingprices[fueltype];
+          this.temporder.fuel[fueltype].priceconfig.minsp = this.currentdepot.config.price[fueltype].minPrice;
+          const decimamlResolution = value[`${fueltype}qtyControl`] >= 10000 ? 4 : 3;
+          const calculatedpirces = this.deriveprice(this.temporder.fuel[fueltype].priceconfig.price, fueltype, decimamlResolution);
+          this.temporder.fuel[fueltype].priceconfig.taxablePrice = calculatedpirces.taxablePrice;
+          this.temporder.fuel[fueltype].priceconfig.nonTaxprice = calculatedpirces.pricewithoutvat;
 
-          // const taxcalculations = this.calculatevatamount(this.temporder.fuel[fueltype].priceconfig.taxablePrice, this.temporder.fuel[fueltype].qty);
-          // this.temporder.fuel[fueltype].priceconfig.taxAmnt = taxcalculations.taxamount;
-          // this.temporder.fuel[fueltype].priceconfig.taxableAmnt = taxcalculations.taxableamount;
+          const taxcalculations = this.calculatevatamount(this.temporder.fuel[fueltype].priceconfig.taxablePrice, this.temporder.fuel[fueltype].qty);
+          this.temporder.fuel[fueltype].priceconfig.taxAmnt = taxcalculations.taxamount;
+          this.temporder.fuel[fueltype].priceconfig.taxableAmnt = taxcalculations.taxableamount;
 
-          // const totalwithouttax = this.totalswithouttax(this.temporder.fuel[fueltype].priceconfig.nonTaxprice, this.temporder.fuel[fueltype].qty);
-          // this.temporder.fuel[fueltype].priceconfig.nonTaxtotal = totalwithouttax;
-          // this.temporder.fuel[fueltype].priceconfig.total = taxcalculations.taxamount + totalwithouttax;
-          // this.temporder.fuel[fueltype].priceconfig.difference = this.calculateupmark(this.temporder.fuel[fueltype].priceconfig.price, this.temporder.fuel[fueltype].priceconfig.retailprice, this.temporder.fuel[fueltype].qty);
+          const totalwithouttax = this.totalswithouttax(this.temporder.fuel[fueltype].priceconfig.nonTaxprice, this.temporder.fuel[fueltype].qty);
+          this.temporder.fuel[fueltype].priceconfig.nonTaxtotal = totalwithouttax;
+          this.temporder.fuel[fueltype].priceconfig.total = taxcalculations.taxamount + totalwithouttax;
+          this.temporder.fuel[fueltype].priceconfig.difference =
+            this.calculateupmark(this.temporder.fuel[fueltype].priceconfig.price, this.temporder.fuel[fueltype].priceconfig.retailprice, this.temporder.fuel[fueltype].qty);
 
           this.validateandcorrect();
         });
@@ -250,9 +252,9 @@ export class CreateOrderComponent implements OnDestroy {
    * Dont want decimals at lower quantities
    */
   deriveprice(priceinclusivevat: number, fueltype: FuelType, decimalResolution: number): { pricewithoutvat: number, amountdeducted: number, taxablePrice: number } {
-    const pricewithoutvat = Number(((priceinclusivevat + (0.08 * this.configService.getEnvironment().fuelconfig[fueltype].tax.nonTax)) / 1.08).toFixed(decimalResolution));
+    const pricewithoutvat = Number(((priceinclusivevat + (0.08 * this.omcConfig.taxExempt[this.env][fueltype].amount)) / 1.08).toFixed(decimalResolution));
     const amountdeducted = priceinclusivevat - pricewithoutvat;
-    const taxablePrice = Number((pricewithoutvat - this.configService.getEnvironment()[fueltype].tax.nonTax).toFixed(decimalResolution));
+    const taxablePrice = Number((pricewithoutvat - this.omcConfig.taxExempt[this.env][fueltype].amount).toFixed(decimalResolution));
     return { pricewithoutvat, amountdeducted, taxablePrice };
   }
 
@@ -288,8 +290,8 @@ export class CreateOrderComponent implements OnDestroy {
   initfuelprices() {
     if (!this.discApproval) {
       this.fueltypesArray.forEach((fueltype) => {
-        // this.temporder.fuel[fueltype].priceconfig.taxQbId = this.currentdepotconfig.taxconfig[fueltype].QbId ? this.currentdepotconfig.taxconfig[fueltype].QbId : null;
-        // this.temporder.fuel[fueltype].priceconfig.nonTax = this.currentdepotconfig.taxconfig[fueltype].nonTax ? Number(this.currentdepotconfig.taxconfig[fueltype].nonTax) : null;
+        this.temporder.fuel[fueltype].priceconfig.taxQbId = this.omcConfig.Qbo[this.env].taxConfig.taxCode.Id;
+        this.temporder.fuel[fueltype].priceconfig.nonTax = this.omcConfig.taxExempt[this.env][fueltype].amount;
         /**
          * force the form to detect a change so that calculations are redone
          */
@@ -331,13 +333,13 @@ export class CreateOrderComponent implements OnDestroy {
         //     body: `The current selling price for ${fueltype} is lower than the Min selling price, hence the Min selling price has been used`
         //   });
         // }
-        // this.orderform.controls[fueltype].setValue(this.temporder.fuel[fueltype].priceconfig.price = this.tempsellingprices[fueltype]);
-        // this.orderform.controls[fueltype].setValidators(Validators.compose([Validators.min(this.currentdepotconfig.minpriceconfig[fueltype].price), Validators.required]));
+        this.orderform.controls[fueltype].setValue(this.temporder.fuel[fueltype].priceconfig.price = this.tempsellingprices[fueltype]);
+        this.orderform.controls[fueltype].setValidators(Validators.compose([Validators.min(this.currentdepot.config.price[fueltype].minPrice), Validators.required]));
       });
     } else {
       this.fueltypesArray.forEach((fueltype) => {
         this.orderform.controls[fueltype].setValue(this.temporder.fuel[fueltype].priceconfig.price = this.tempsellingprices[fueltype]);
-        // this.orderform.controls[fueltype].setValidators(Validators.compose([Validators.min(this.currentdepotconfig.minpriceconfig[fueltype].price), Validators.required]));
+        this.orderform.controls[fueltype].setValidators(Validators.compose([Validators.min(this.currentdepot.config.price[fueltype].price), Validators.required]));
       });
     }
   }
