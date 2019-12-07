@@ -6,12 +6,12 @@ import { Depot } from "../../models/Daudi/depot/Depot";
 import { DepotService } from "./core/depot.service";
 import { BehaviorSubject } from "rxjs";
 import { Price } from "../../models/Daudi/depot/Price";
+import { skipWhile } from "rxjs/operators";
 
 @Injectable({
   providedIn: "root"
 })
 export class PricesService {
-  activedepot: Depot;
 
   avgprices: {
     [key in FuelType]: {
@@ -43,9 +43,11 @@ export class PricesService {
   fueltypesArray = FuelNamesArray;
 
   constructor(private db: AngularFirestore, private depotservice: DepotService) {
-    depotservice.activedepot.subscribe(depot => {
-      // this.activedepot = depot;
-      if (depot.depot.Id) {
+    depotservice.activedepot.pipe(
+      skipWhile(t => !t.depot.Id)
+    )
+      .subscribe(depot => {
+        // this.activedepot = depot;
         this.unsubscribeAll();
         this.fueltypesArray.forEach(fueltyp => {
           const subscriprion = this.getavgprices(fueltyp as any)
@@ -66,8 +68,7 @@ export class PricesService {
             });
           this.subscriptions.set(`${fueltyp}prices`, subscriprion);
         });
-      }
-    });
+      });
   }
 
   unsubscribeAll() {
@@ -77,20 +78,23 @@ export class PricesService {
   }
 
   createavgprice() {
-    return this.db.firestore.collection("depots").doc(this.activedepot.Id).collection(`avgprices`).doc(this.db.createId());
+    return this.db.firestore.collection("depots")
+      .doc(this.depotservice.activedepot.value.depot.Id)
+      .collection(`avgprices`)
+      .doc(this.db.createId());
   }
 
   deleteavgprice(id: string) {
-    return this.db.firestore.collection("depots").doc(this.activedepot.Id).collection(`avgprices`).doc(id);
+    return this.db.firestore.collection("depots")
+      .doc(this.depotservice.activedepot.value.depot.Id)
+      .collection(`avgprices`)
+      .doc(id);
   }
 
 
   getavgprices(fueltye: FuelType) {
-    if (!this.activedepot.Id) {
-      return;
-    }
     return this.db.firestore.collection("depots")
-      .doc(this.activedepot.Id)
+      .doc(this.depotservice.activedepot.value.depot.Id)
       .collection("avgprices")
       .where("fueltytype", "==", fueltye)
       /**
@@ -102,13 +106,16 @@ export class PricesService {
 
   getAvgpricesrange(start, stop) {
     return this.db.firestore.collection("depots")
-      .doc(this.activedepot.Id)
+      .doc(this.depotservice.activedepot.value.depot.Id)
       .collection(`avgprices`)
       .where("user.time", ">=", start)
       .where("user.time", "<=", stop);
   }
 
   createprice() {
-    return this.db.firestore.collection("depots").doc(this.activedepot.Id).collection(`prices`).doc(this.db.createId());
+    return this.db.firestore.collection("depots")
+      .doc(this.depotservice.activedepot.value.depot.Id)
+      .collection(`prices`)
+      .doc(this.db.createId());
   }
 }

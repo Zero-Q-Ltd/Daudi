@@ -31,7 +31,7 @@ export class ConfigService {
           this.initConfig(admin);
           return;
         }
-        this.omcconfig.next(Object.assign({}, { ...emptyConfig }, { id: companydata.id }, companydata.data()));
+        this.omcconfig.next({ ...emptyConfig, ...{ id: companydata.id }, ...companydata.data() });
       });
   }
   /**
