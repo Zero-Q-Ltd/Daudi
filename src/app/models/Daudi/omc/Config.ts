@@ -9,6 +9,7 @@ import { FuelConfig, emptyFuelConfig } from "./FuelConfig";
 import { Environment } from "./Environments";
 import { QBOAuthCOnfig } from "./QboAuthConfig";
 import { TaxConfig } from "./TaxConfig";
+import { deepCopy } from "../../utils/deepCopy";
 
 export interface Config {
     adminTypes: Array<AdminType>;
@@ -72,7 +73,7 @@ export const emptyqboAuth: QBOAuthCOnfig = {
 };
 const emptytaxExempt: TaxExempt = {
     amount: 0,
-    metadata: { ...emptymetadata }
+    metadata: deepCopy<Metadata>(emptymetadata)
 };
 
 export const emptyConfig: Config = {
@@ -82,23 +83,23 @@ export const emptyConfig: Config = {
     },
     taxExempt: {
         live: {
-            ago: { ...emptytaxExempt },
-            ik: { ...emptytaxExempt },
-            pms: { ...emptytaxExempt }
+            ago: deepCopy<TaxExempt>(emptytaxExempt),
+            ik: deepCopy<TaxExempt>(emptytaxExempt),
+            pms: deepCopy<TaxExempt>(emptytaxExempt)
         },
         sandbox: {
-            ago: { ...emptytaxExempt },
-            ik: { ...emptytaxExempt },
-            pms: { ...emptytaxExempt }
+            ago: deepCopy<TaxExempt>(emptytaxExempt),
+            ik: deepCopy<TaxExempt>(emptytaxExempt),
+            pms: deepCopy<TaxExempt>(emptytaxExempt)
         }
     },
     Qbo: {
         live: {
-            auth: { ...emptyqboAuth },
+            auth: deepCopy<QBOAuthCOnfig>(emptyqboAuth),
             fuelconfig: {
-                pms: { ...emptyFuelConfig },
-                ago: { ...emptyFuelConfig },
-                ik: { ...emptyFuelConfig }
+                pms: deepCopy<FuelConfig>(emptyFuelConfig),
+                ago: deepCopy<FuelConfig>(emptyFuelConfig),
+                ik: deepCopy<FuelConfig>(emptyFuelConfig)
             },
             taxConfig: {
                 taxAgency: {
@@ -113,11 +114,11 @@ export const emptyConfig: Config = {
             }
         },
         sandbox: {
-            auth: { ...emptyqboAuth },
+            auth: deepCopy<QBOAuthCOnfig>(emptyqboAuth),
             fuelconfig: {
-                pms: { ...emptyFuelConfig },
-                ago: { ...emptyFuelConfig },
-                ik: { ...emptyFuelConfig }
+                pms: deepCopy<FuelConfig>(emptyFuelConfig),
+                ago: deepCopy<FuelConfig>(emptyFuelConfig),
+                ik: deepCopy<FuelConfig>(emptyFuelConfig)
             },
             taxConfig: {
                 taxAgency: {
@@ -139,12 +140,12 @@ export const emptyConfig: Config = {
     adminTypes: [
         {
             description: "Zero-Q IT Development Team",
-            metadata: { ...InfoMetadata },
+            metadata: deepCopy<Metadata>(InfoMetadata),
             name: "System Admins", levels: [
                 {
                     description: "System Developers",
                     name: "Developers",
-                    metadata: { ...InfoMetadata }
+                    metadata: deepCopy<Metadata>(InfoMetadata)
                 }
             ]
         }

@@ -5,6 +5,7 @@ import { FuelConfig } from "./FuelConfig";
 import { OrderStages } from "./OrderStages";
 import { Environment } from "../omc/Environments";
 import { AssociatedUser } from "../admin/AssociatedUser";
+import { deepCopy } from "../../utils/deepCopy";
 
 export interface Order {
   Id: string; // used to temporarily store the key, used later for looping
@@ -62,16 +63,16 @@ export interface Order {
     }
   };
   stagedata: {
-    [key in OrderStages]: {
-      user: AssociatedUser,
-      data: any,
-    }
+    [key in OrderStages]: StageData
   };
 }
 
+export interface StageData {
+  user: AssociatedUser;
+  data: any;
+}
 
-
-const initorderfuel = {
+const initorderfuel: FuelConfig = {
   qty: 0,
   priceconfig: {
     price: 0,
@@ -91,7 +92,7 @@ const initorderfuel = {
   batches: []
 };
 
-const initstages = {
+const initstages: StageData = {
   data: null,
   user: {
     name: null,
@@ -111,7 +112,7 @@ export const emptyorder: Order = {
     krapin: null
   },
   QbConfig: null,
-  truck: { ...emptytruck },
+  truck: deepCopy<Truck>(emptytruck),
   notifications: {
     sms: null,
     email: null
@@ -127,20 +128,18 @@ export const emptyorder: Order = {
   stage: null,
   loaded: null,
   stagedata: {
-    1: { ...initstages },
-    2: { ...initstages },
-    3: { ...initstages },
-    4: { ...initstages },
-    5: { ...initstages },
-    6: { ...initstages }
+    1: deepCopy<StageData>(initstages),
+    2: deepCopy<StageData>(initstages),
+    3: deepCopy<StageData>(initstages),
+    4: deepCopy<StageData>(initstages),
+    5: deepCopy<StageData>(initstages),
+    6: deepCopy<StageData>(initstages)
   },
 
 
   fuel: {
-    pms: { ...initorderfuel },
-    ago: { ...initorderfuel },
-    ik: { ...initorderfuel }
+    pms: deepCopy<FuelConfig>(initorderfuel),
+    ago: deepCopy<FuelConfig>(initorderfuel),
+    ik: deepCopy<FuelConfig>(initorderfuel)
   }
 };
-export let orderStagesarray = ["1", "2", "3", "4", "5", "6"];
-

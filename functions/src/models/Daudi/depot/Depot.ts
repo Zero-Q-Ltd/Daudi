@@ -1,6 +1,7 @@
 import { firestore } from "firebase-admin";
 import { Metadata, emptymetadata } from "../universal/Metadata";
 import { DepotCreator } from './DepotCreator';
+import { deepCopy } from 'src/app/models/utils/deepCopy';
 
 export interface Depot {
   Id: string;
@@ -28,7 +29,7 @@ export interface Depot {
 
 export const emptydepot: Depot = {
   Id: null,
-  MetaData: { ...emptymetadata },
+  MetaData: deepCopy<Metadata>(emptymetadata),
   Name: null,
   Contact: {
     phone: null,

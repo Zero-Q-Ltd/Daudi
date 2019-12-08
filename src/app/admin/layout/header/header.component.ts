@@ -8,7 +8,6 @@ import { AdminService } from "../../services/core/admin.service";
 import { DepotService } from "../../services/core/depot.service";
 import { Admin, emptyadmin } from "../../../models/Daudi/admin/Admin";
 import { OrdersService } from "../../services/orders.service";
-import { orderStagesarray } from "../../../models/Daudi/order/Order";
 import { truckStagesarray } from "../../../models/Daudi/order/Truck";
 import { PricesService } from "../../services/prices.service";
 import { FuelType, FuelNamesArray } from "../../../models/Daudi/fuel/FuelType";
@@ -21,6 +20,7 @@ import { MatSlideToggleChange } from "@angular/material";
 import { Environment } from "../../../models/Daudi/omc/Environments";
 import { ConfigService } from "../../services/core/config.service";
 import { DepotConfig, emptyDepotConfig } from "../../../models/Daudi/depot/DepotConfig";
+import { OrderStageIds } from "../../../models/Daudi/order/OrderStages";
 
 @Component({
   selector: "my-app-header",
@@ -97,7 +97,7 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
     this.depotservice.alldepots.pipe(takeUntil(this.comopnentDestroyed)).subscribe((alldepots: Array<Depot>) => {
       this.alldepots = alldepots;
     });
-    orderStagesarray.forEach(stage => {
+    OrderStageIds.forEach(stage => {
       this.orderservice.orders[stage].pipe(takeUntil(this.comopnentDestroyed)).subscribe(orders => this.orderscount[stage] = orders.length);
     });
     truckStagesarray.forEach(stage => {

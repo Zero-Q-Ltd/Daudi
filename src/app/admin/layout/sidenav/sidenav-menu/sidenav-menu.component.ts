@@ -1,11 +1,11 @@
 import { Component, OnDestroy } from "@angular/core";
-import { orderStagesarray } from "../../../../models/Daudi/order/Order";
 import { truckStagesarray } from "../../../../models/Daudi/order/Truck";
 import { OrdersService } from "../../../services/orders.service";
 import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators"; // get our service
 import { DepotService } from "../../../services/core/depot.service";
 import { Depot, emptydepot } from "../../../../models/Daudi/depot/Depot";
+import { OrderStageIds } from "../../../../models/Daudi/order/OrderStages";
 
 @Component({
   selector: "my-app-sidenav-menu",
@@ -34,7 +34,7 @@ export class AppSidenavMenuComponent implements OnDestroy {
 
   constructor(private orderservice: OrdersService,
     private depotservice: DepotService) {
-    orderStagesarray.forEach(stage => {
+    OrderStageIds.forEach(stage => {
       this.orderservice.orders[stage].pipe(takeUntil(this.comopnentDestroyed)).subscribe(orders => this.orderscount[stage] = orders.length);
     });
     truckStagesarray.forEach(stage => {

@@ -16,6 +16,7 @@ import { Meta } from "../../../../models/Daudi/universal/Meta";
 import { Metadata } from "../../../../models/Daudi/universal/Metadata";
 import { AdminService } from "../../../services/core/admin.service";
 import { ConfirmDialogComponent } from "../../../confirm-dialog/confirm-dialog.component";
+import { deepCopy } from "../../../../models/utils/deepCopy";
 
 @Component({
   selector: "app-admin-levels",
@@ -25,8 +26,8 @@ import { ConfirmDialogComponent } from "../../../confirm-dialog/confirm-dialog.c
 export class AdminLevelsComponent implements OnInit, OnDestroy {
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
   newadminform: FormGroup<NewAdminType>;
-  originalCompany: OMC = { ...emptyomc };
-  tempcompany: OMC = { ...emptyomc };
+  originalCompany: OMC = deepCopy<OMC>(emptyomc);
+  tempcompany: OMC = deepCopy<OMC>(emptyomc);
 
   constructor(
     private companyservice: ConfigService,

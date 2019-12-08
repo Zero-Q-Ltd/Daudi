@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
-import { Order, orderStagesarray } from "../../models/Daudi/order/Order";
-import { OrderStages } from "../../models/Daudi/order/OrderStages";
+import { Order } from "../../models/Daudi/order/Order";
+import { OrderStages, OrderStageIds } from "../../models/Daudi/order/OrderStages";
 import { firestore } from "firebase";
 import * as moment from "moment";
 import { BehaviorSubject } from "rxjs";
@@ -168,7 +168,7 @@ export class OrdersService {
     this.orders["5"].next([]);
     this.orders["6"].next([]);
 
-    orderStagesarray.forEach(stage => {
+    OrderStageIds.forEach(stage => {
 
       const subscriprion = this.db.firestore.collection("omc")
         .doc(this.omc.currentOmc.value.Id)

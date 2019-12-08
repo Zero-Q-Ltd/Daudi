@@ -1,6 +1,7 @@
 import { FuelType } from "../fuel/FuelType";
 import { DepotPrice } from "./DepotPrice";
-import { inituser } from "../admin/AssociatedUser";
+import { inituser, AssociatedUser } from "../admin/AssociatedUser";
+import { deepCopy } from "../../utils/deepCopy";
 export interface DepotConfig {
     depotId: string;
     CompanyRep: {
@@ -17,7 +18,7 @@ export interface DepotConfig {
 const initPrice: DepotPrice = {
     price: 0,
     minPrice: 0,
-    user: { ...inituser }
+    user: deepCopy<AssociatedUser>(inituser)
 };
 export const emptyDepotConfig: DepotConfig = {
     depotId: null,
@@ -29,8 +30,8 @@ export const emptyDepotConfig: DepotConfig = {
         amnt: 0
     },
     price: {
-        ago: { ...initPrice },
-        pms: { ...initPrice },
-        ik: { ...initPrice }
+        ago: deepCopy<DepotPrice>(initPrice),
+        pms: deepCopy<DepotPrice>(initPrice),
+        ik: deepCopy<DepotPrice>(initPrice)
     }
 };

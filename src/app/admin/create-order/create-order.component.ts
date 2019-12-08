@@ -202,7 +202,6 @@ export class CreateOrderComponent implements OnDestroy {
     this.orderform.valueChanges
       .pipe(takeUntil(this.comopnentDestroyed))
       .subscribe((value) => {
-        console.log(value);
         if (value.pmsqtyControl >= 1000 || value.agoqtyControl >= 1000 || value.ikqtyControl >= 1000) {
           this.orderform.controls.pmsqtyControl.setErrors(null);
           this.orderform.controls.agoqtyControl.setErrors(null);
@@ -230,6 +229,7 @@ export class CreateOrderComponent implements OnDestroy {
 
           this.validateandcorrect();
         });
+        console.log(this.temporder.fuel);
       });
   }
 

@@ -36,6 +36,7 @@
     "intro.js": "^2.9.3",
     "jquery": "^3.4.1",
     "jquery-slimscroll": "^1.3.8",
+    "lodash": "^4.17.15",
     "moment": "^2.24.0",
     "ng5-slider": "^1.2.4",
     "ngx-echarts": "^4.2.1",
