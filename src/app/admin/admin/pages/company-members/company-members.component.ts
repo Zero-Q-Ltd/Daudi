@@ -1,6 +1,6 @@
-import {Component, Inject, OnInit} from "@angular/core";
+import { Component, Inject, OnInit } from "@angular/core";
 import * as moment from "moment";
-import {MAT_DIALOG_DATA, MatDialog} from "@angular/material"; //added dialog data receive
+import { MAT_DIALOG_DATA, MatDialog } from "@angular/material"; //added dialog data receive
 
 @Component({
   selector: "company-members",
@@ -14,13 +14,13 @@ export class CompanyMembersComponent implements OnInit {
 
   constructor(@Inject(MAT_DIALOG_DATA) private companyId: string, private dialog: MatDialog) {
     // console.log(companyId);
-    // this.firestore.getCompanyUsers(companyId).subscribe(member=>{
+    // this.getCompanyUsers(companyId).subscribe(member=>{
     //   this.members = member;
     //  // console.log(this.members)
     //   //get specific info
 
     //   for(var i=0; i<this.members.length ; i++){
-    //     this.firestore.getSpecificFamily(this.members[i].email).subscribe(family_old=>{
+    //     this.getSpecificFamily(this.members[i].email).subscribe(family_old=>{
     //      this.family_old.push(family_old)
     //   })
 

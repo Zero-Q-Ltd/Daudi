@@ -1,8 +1,8 @@
-import {Component, ElementRef, Inject, NgZone, OnInit, Optional, ViewChild} from "@angular/core";
-import {MAT_DIALOG_DATA} from "@angular/material"; //added dialog data receive
-import {FormControl} from "@angular/forms";
+import { Component, ElementRef, Inject, NgZone, OnInit, Optional, ViewChild } from "@angular/core";
+import { MAT_DIALOG_DATA } from "@angular/material"; // added dialog data receive
+import { FormControl } from "@angular/forms";
 import * as firebase from "firebase";
-import {MapsAPILoader} from "@agm/core";
+import { MapsAPILoader } from "@agm/core";
 
 // import * as maps from 'googlemaps';
 
@@ -19,15 +19,15 @@ export class MapsComponent implements OnInit {
   public zoom: number;
   public draggable: boolean;
 
-  @ViewChild("search", {static: true})
+  @ViewChild("search", { static: true })
   public searchElementRef: ElementRef;
   points: marker[] = [
     {
-      location: new firebase.firestore.GeoPoint(-1.305308, 36.872919),
+      location: new GeoPoint(-1.305308, 36.872919),
       label: "Oilcom"
     },
     {
-      location: new firebase.firestore.GeoPoint(-4.058972, 39.671766),
+      location: new GeoPoint(-4.058972, 39.671766),
       label: "Oilcom"
     }
   ];
@@ -36,15 +36,15 @@ export class MapsComponent implements OnInit {
     label: ""
   };
   // initial center position for the map
-  lat: number = -1.287666;
-  lng: number = 36.821434;
+  lat = -1.287666;
+  lng = 36.821434;
 
   // google maps zoom level
   // zoom: number = 7;
 
   constructor(private mapsAPILoader: MapsAPILoader,
-              private ngZone: NgZone, @Optional() @Inject(MAT_DIALOG_DATA) private data?: object) {
-    if (data && data["points"]) {
+    private ngZone: NgZone, @Optional() @Inject(MAT_DIALOG_DATA) private data?: object) {
+    if (data && data.points) {
 
     }
 
@@ -55,13 +55,13 @@ export class MapsComponent implements OnInit {
     this.latitude = -1.28333;
     this.longitude = 36.81667;
 
-    //create search FormControl
+    // create search FormControl
     this.searchControl = new FormControl();
 
-    //set current position
+    // set current position
     this.setCurrentPosition();
 
-    //load Places Autocomplete
+    // load Places Autocomplete
     this.mapsAPILoader.load().then(() => {
       // let autocomplete = new google.maps.places.Autocomplete(this.searchElementRef.nativeElement, {
       //   componentRestrictions: { country: 'ke' },
@@ -135,10 +135,10 @@ export class MapsComponent implements OnInit {
 
   mapClicked(event) {
     // console.log(event)
-    this.clickedlocation.location = new firebase.firestore.GeoPoint(event.coords.lat, event.coords.lng);
+    this.clickedlocation.location = new GeoPoint(event.coords.lat, event.coords.lng);
     // console.log(this.clickedlocation)
 
-    //Reset the array first
+    // Reset the array first
     // this.depotmarkers = []
     // this.depotmarkers.
   }
@@ -161,6 +161,6 @@ export class MapsComponent implements OnInit {
 
 // just an interface for exampledata safety.
 interface marker {
-  location: firebase.firestore.GeoPoint;
+  location: GeoPoint;
   label: string;
 }

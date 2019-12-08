@@ -142,7 +142,7 @@ export class OrdersTableComponent implements OnInit, OnDestroy {
         delivered: false,
         sent: false
       },
-      timestamp: firestore.Timestamp.now()
+      timestamp: Timestamp.now()
     };
     this.dialog.open(SendMsgComponent, {
       role: "dialog",
@@ -253,7 +253,7 @@ export class OrdersTableComponent implements OnInit, OnDestroy {
       if (!result) {
         return;
       }
-      const batchaction = this.db.firestore.batch();
+      const batchaction = this.db.batch();
       // batchaction.set(this.truckservice.createTruck(result.truck.Id), result.truck);
       // batchaction.update(this.orderservice.updateorder(result.order.Id), result.order);
       // batchaction.commit().then(result => {

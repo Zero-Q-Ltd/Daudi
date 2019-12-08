@@ -1,7 +1,6 @@
 import { AdminType } from "../admin/AdminType";
 import { FuelType } from "../fuel/FuelType";
 import { Metadata, emptymetadata } from "../universal/Metadata";
-import { firestore } from "firebase";
 
 import { Meta } from "../universal/Meta";
 import { DepotConfig } from "../depot/DepotConfig";
@@ -10,6 +9,7 @@ import { Environment } from "./Environments";
 import { QBOAuthCOnfig } from "./QboAuthConfig";
 import { TaxConfig } from "./TaxConfig";
 import { deepCopy } from "../../utils/deepCopy";
+import { Timestamp } from "@google-cloud/firestore";
 
 export interface Config {
     adminTypes: Array<AdminType>;
@@ -48,7 +48,7 @@ interface TaxExempt {
  */
 const happy: Meta = {
     adminId: "oSGSG2uCQJd3SqpZf6TXObrbDo73",
-    date: firestore.Timestamp.fromDate(new Date("Aug 29, 2019"))
+    date: Timestamp.fromDate(new Date("Aug 29, 2019"))
 };
 
 const InfoMetadata: Metadata = {
@@ -63,12 +63,12 @@ export const emptyqboAuth: QBOAuthCOnfig = {
     webhooksVerifier: "",
     isSandbox: true,
     authConfig: {
-        previousDCT: firestore.Timestamp.fromDate(new Date()),
+        previousDCT: Timestamp.fromDate(new Date()),
         accessToken: "",
         refreshToken: "",
-        accesstokenExpiry: firestore.Timestamp.fromDate(new Date()),
-        refreshtokenExpiry: firestore.Timestamp.fromDate(new Date()),
-        time: firestore.Timestamp.fromDate(new Date())
+        accesstokenExpiry: Timestamp.fromDate(new Date()),
+        refreshtokenExpiry: Timestamp.fromDate(new Date()),
+        time: Timestamp.fromDate(new Date())
     }
 };
 const emptytaxExempt: TaxExempt = {

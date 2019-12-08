@@ -2,7 +2,6 @@ import { Component, Inject, OnDestroy, OnInit, Optional, ViewChild } from "@angu
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef, MatPaginator, MatSnackBar, MatSort, MatTableDataSource } from "@angular/material";
 import { CompanyMembersComponent } from "../company-members/company-members.component";
 import { SendMsgComponent } from "../../../send-msg/send-msg.component";
-import { firestore } from "firebase";
 import { Customer } from "../../../../models/Daudi/customer/Customer";
 import { SMS } from "../../../../models/Daudi/sms/sms";
 import { NotificationService } from "../../../../shared/services/notification.service";
@@ -124,7 +123,7 @@ export class CustomerManagementComponent implements OnInit, OnDestroy {
             delivered: false,
             sent: false
           },
-          timestamp: firestore.Timestamp.now()
+          timestamp: Timestamp.now()
         };
         return sms;
       });
@@ -152,7 +151,7 @@ export class CustomerManagementComponent implements OnInit, OnDestroy {
 
     const syncobject: SyncRequest = {
       companyid: this.config.getEnvironment().auth.companyId,
-      time: firestore.Timestamp.now(),
+      time: Timestamp.now(),
       synctype: ["Customer"]
     };
 
@@ -215,7 +214,7 @@ export class CustomerManagementComponent implements OnInit, OnDestroy {
     // company.verifiedByUid = this.authService.getUser().uid;
     // company.verifiedByUser = this.authService.getUser().displayName;
     // update company
-    // this.firestore.updateCompanies(company.$key, company)
+    // this.updateCompanies(company.$key, company)
     this.snackBar.open("Company details updated!", "Emkay Now ", { duration: 4000 });
 
   }
@@ -223,7 +222,7 @@ export class CustomerManagementComponent implements OnInit, OnDestroy {
   saveChanges(company: Customer) {
     console.log(company);
     // update company
-    // this.firestore.updateCompanies(company.$key, company)
+    // this.updateCompanies(company.$key, company)
     this.snackBar.open("Company details updated!", "Emkay Now ", { duration: 4000 });
   }
 }

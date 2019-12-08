@@ -69,7 +69,7 @@ export class AdminService {
     return {
       name: this.userdata.profile.name,
       uid: this.userdata.profile.uid,
-      time: firestore.Timestamp.now()
+      time: Timestamp.now()
     };
   }
 

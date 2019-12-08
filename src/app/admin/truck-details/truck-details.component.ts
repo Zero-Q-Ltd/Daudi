@@ -13,7 +13,6 @@ import { MatDialog } from "@angular/material";
 import { AngularFirestore } from "@angular/fire/firestore";
 import { takeUntil } from "rxjs/operators";
 import { ReplaySubject } from "rxjs";
-import { firestore } from "firebase";
 
 
 @Component({
@@ -137,7 +136,7 @@ export class TruckDetailsComponent implements OnInit, OnDestroy {
   }
 
   expired(timestamp) {
-    if (!timestamp || !(timestamp instanceof firestore.Timestamp)) {
+    if (!timestamp || !(timestamp instanceof Timestamp)) {
       return;
     }
     return timestamp.toDate() < moment().toDate();
@@ -265,8 +264,8 @@ export class TruckDetailsComponent implements OnInit, OnDestroy {
         truck.stagedata[1].expiry = [
           // {
           //   duration: "00:45:00",
-          //   timeCreated: firestore.Timestamp.now(),
-          //   expiry: firestore.Timestamp.fromDate(moment().add(45, "minutes").toDate())
+          //   timeCreated: Timestamp.now(),
+          //   expiry: Timestamp.fromDate(moment().add(45, "minutes").toDate())
           // }
         ];
         truck.stagedata[2].expiry = [];

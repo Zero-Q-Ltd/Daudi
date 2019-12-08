@@ -4,7 +4,6 @@ import { Depot, emptydepot } from "../../../../models/Daudi/depot/Depot";
 import { NotificationService } from "../../../../shared/services/notification.service";
 import { AdminService } from "../../../services/core/admin.service";
 import { DepotService } from "../../../services/core/depot.service";
-import { firestore } from "firebase";
 import { MapsComponent } from "../../../maps/maps.component";
 import { AngularFireFunctions } from "@angular/fire/functions";
 import { ReplaySubject } from "rxjs";
@@ -79,7 +78,7 @@ export class DepotManagementComponent implements OnInit, OnDestroy {
     this.creatingsync = true;
     const syncobject: SyncRequest = {
       companyid: this.config.getEnvironment().auth.companyId,
-      time: firestore.Timestamp.now(),
+      time: Timestamp.now(),
       synctype: ["Item"]
     };
 

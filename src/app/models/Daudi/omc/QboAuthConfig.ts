@@ -1,18 +1,18 @@
-import { firestore } from 'firebase';
-;
+import { Timestamp } from "@google-cloud/firestore";
+
 export interface QBOAuthCOnfig {
     companyId: number;
     clientId: string;
     clientSecret: string;
     webhooksVerifier: string;
     isSandbox: boolean;
-    authConfig: AuthConfig
+    authConfig: AuthConfig;
 }
 export interface AuthConfig {
-    previousDCT: firestore.Timestamp;
+    previousDCT: Timestamp;
     accessToken: string;
     refreshToken: string;
-    accesstokenExpiry: firestore.Timestamp;
-    refreshtokenExpiry: firestore.Timestamp;
-    time: firestore.Timestamp;
-};
+    accesstokenExpiry: Timestamp;
+    refreshtokenExpiry: Timestamp;
+    time: Timestamp;
+}

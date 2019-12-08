@@ -120,7 +120,7 @@ export class TrucksTableComponent implements OnInit {
         delivered: false,
         sent: false
       },
-      timestamp: firestore.Timestamp.now()
+      timestamp: Timestamp.now()
     };
     const dialogRef = this.dialog.open(SendMsgComponent, {
       role: "dialog",

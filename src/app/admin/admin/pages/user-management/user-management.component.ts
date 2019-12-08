@@ -113,7 +113,7 @@ export class UserManagementComponent implements OnInit, OnDestroy {
 
     const syncobject: SyncRequest = {
       companyid: this.config.getEnvironment().auth.companyId,
-      time: firestore.Timestamp.now(),
+      time: Timestamp.now(),
       synctype: ["Employee"]
     };
     this.functions.httpsCallable("requestsync")(syncobject).pipe(takeUntil(this.comopnentDestroyed)).subscribe(res => {

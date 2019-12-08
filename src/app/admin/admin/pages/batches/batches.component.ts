@@ -3,7 +3,6 @@ import { MatPaginator, MatTableDataSource } from "@angular/material";
 import { Entry, emptybatches } from "../../../../models/Daudi/fuel/Entry";
 import { DepotService } from "../../../services/core/depot.service";
 import { BatchesService } from "../../../services/batches.service";
-import { firestore } from "firebase";
 import { NotificationService } from "../../../../shared/services/notification.service";
 import { AngularFireFunctions } from "@angular/fire/functions";
 import { ReplaySubject } from "rxjs";
@@ -119,7 +118,7 @@ export class BatchesComponent implements OnInit {
     this.creatingsync = true;
     const syncobject: SyncRequest = {
       companyid: this.config.getEnvironment().auth.companyId,
-      time: firestore.Timestamp.now(),
+      time: Timestamp.now(),
       synctype: ["BillPayment"]
     };
 

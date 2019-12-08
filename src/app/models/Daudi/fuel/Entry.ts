@@ -1,11 +1,11 @@
-import { firestore } from "firebase";
 
 import { FuelType } from "./FuelType";
+import { Timestamp } from "@google-cloud/firestore";
 
 export interface Entry {
 
   Amount: number;
-  date: firestore.Timestamp | Date;
+  date: Timestamp | Date;
   batch: string;
   depot: {
     name: string
@@ -63,5 +63,5 @@ export const emptybatches: Entry = {
     Id: null
   },
   active: 1,
-  date: new firestore.Timestamp(0, 0)
+  date: new Timestamp(0, 0)
 };

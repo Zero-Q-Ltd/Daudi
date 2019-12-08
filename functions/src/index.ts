@@ -1,6 +1,5 @@
 import * as functions from 'firebase-functions';
 import * as admin from "firebase-admin";
-import Timestamp = admin.firestore.Timestamp;
 import { sendsms } from './tasks/sms/sms';
 import { SMS } from './models/Daudi/sms/sms';
 import { initCompanyInfo } from './tasks/crud/qbo/CompanyInfo/init';

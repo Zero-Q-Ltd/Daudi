@@ -1,12 +1,12 @@
-import { firestore } from "firebase";
+import { Timestamp } from "@google-cloud/firestore";
 
 
 export interface Meta {
-    date: firestore.Timestamp;
+    date: Timestamp;
     adminId: string;
 }
 
 export const emptyMeta: Meta = {
     adminId: null,
-    date: firestore.Timestamp.now()
+    date: Timestamp.now()
 };
