@@ -14,9 +14,9 @@ import { MyTimestamp } from "../../../../models/firestore/firestoreTypes";
 
 
 @Component({
-  selector: "app-batches",
-  templateUrl: "./batches.component.html",
-  styleUrls: ["./batches.component.scss"]
+  selector: "app-entries",
+  templateUrl: "./entries.component.html",
+  styleUrls: ["./entries.component.scss"]
 })
 export class BatchesComponent implements OnInit {
   fueltypesArray = FuelNamesArray;

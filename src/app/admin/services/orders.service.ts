@@ -90,7 +90,10 @@ export class OrdersService {
   }
 
   updateorder(orderid: string, order: Order) {
-    return this.db.firestore.collection("depots").doc(this.depotsservice.activedepot.value.depot.Id).collection(`orders`).doc(orderid).update(order);
+    return this.db.firestore.collection("omc")
+      .doc(this.omc.currentOmc.value.Id)
+      .collection("orders")
+      .doc(orderid).update(order);
   }
 
   getorder(orderid: string) {
@@ -101,8 +104,8 @@ export class OrdersService {
   }
 
   orderquery(query: any) {
-    let queryvalue: any = this.db.firestore.collection("depots")
-      .doc(this.depotsservice.activedepot.value.depot.Id)
+    let queryvalue: any = this.db.firestore.collection("omc")
+      .doc(this.omc.currentOmc.value.Id)
       .collection("orders");
     if (query.stagedata.status) {
       if (query.stagedata.invoiceno.status) {
@@ -221,7 +224,9 @@ export class OrdersService {
     /**
      * Fetch completed orders
      */
-    const stage5subscription = this.db.firestore.collection("depots").doc(this.depotsservice.activedepot.value.depot.Id).collection("orders")
+    const stage5subscription = this.db.firestore.collection("omc")
+      .doc(this.omc.currentOmc.value.Id)
+      .collection("orders")
       .where("stage", "==", 5)
       .where("stagedata.5.user.time", ">=", startofweek)
       .orderBy("stagedata.5.user.time", "desc")

@@ -67,7 +67,7 @@ import { PrivateChatComponent } from "./layout/private-chat/private-chat.compone
 import { LayoutModule } from "./layout/layout.module";
 import { LayoutService } from "./layout/layout.service";
 import { UsersGuard } from "./guards/users.guard";
-import { BatchesSelectorComponent } from "./batches-selector/batches-selector.component";
+import { BatchesSelectorComponent } from "./entries-selector/entries-selector.component";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { PreloaderDirective } from "./layout/preloader.directive";
 import { PaymentsComponent } from "./admin/pages/payments/payments.component";
@@ -84,7 +84,7 @@ import { OrdersService } from "./services/orders.service";
 import { PricesService } from "./services/prices.service";
 import { OmcService } from "./services/core/omc.service";
 import { OmcManagementComponent } from "./admin/pages/omc-management/omc-management.component";
-import { BatchesComponent } from "./admin/pages/batches/batches.component";
+import { BatchesComponent } from "./admin/pages/entries/entries.component";
 import { NgxEchartsModule } from "ngx-echarts";
 import { SatDatepickerModule, SatNativeDateModule } from "saturn-datepicker";
 import { CalendarRangesComponent } from "./dashboard/calendar-ranges/calendar-ranges.component";

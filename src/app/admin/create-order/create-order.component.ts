@@ -398,37 +398,39 @@ export class CreateOrderComponent implements OnDestroy {
     const dialogRef = this.dialog.open(ConfirmDepotComponent,
       {
         role: "dialog",
-        data: this.depotService.activedepot.value.depot.Name
+        data: this.activedepot.depot.Name
       });
-    dialogRef.afterClosed().pipe(takeUntil(this.comopnentDestroyed)).subscribe(result => {
-      if (result) {
-        if (this.discApproval) {
-          if (this.userAuthenticated()) {
-            this.saveOrder(redirect, 2);
+    dialogRef.afterClosed()
+      .pipe(takeUntil(this.comopnentDestroyed))
+      .subscribe(result => {
+        if (result) {
+          if (this.discApproval) {
+            if (this.userAuthenticated()) {
+              this.saveOrder(redirect, 2);
+            } else {
+              this.notificationService.notify({
+                alert_type: "warning",
+                body: "You cannot perform this action",
+                duration: 2000,
+                title: "Not Authenticated"
+              });
+            }
           } else {
-            this.notificationService.notify({
-              alert_type: "warning",
-              body: "You cannot perform this action",
-              duration: 2000,
-              title: "Not Authenticated"
-            });
+            /**
+             * Check if there is a discount request
+             * Discount has a -ve value
+             */
+            if (this.temporder.fuel.pms.priceconfig.difference < 0
+              || this.temporder.fuel.ago.priceconfig.difference < 0
+              || this.temporder.fuel.ik.priceconfig.difference < 0) {
+              this.saveOrder(redirect, this.userAuthenticated() ? 2 : 1);
+            } else {
+              this.saveOrder(redirect, 2);
+            }
           }
-        } else {
-          /**
-           * Check if there is a discount request
-           * Discount has a -ve value
-           */
-          if (this.temporder.fuel.pms.priceconfig.difference < 0
-            || this.temporder.fuel.ago.priceconfig.difference < 0
-            || this.temporder.fuel.ik.priceconfig.difference < 0) {
-            this.saveOrder(redirect, this.userAuthenticated() ? 2 : 1);
-          } else {
-            this.saveOrder(redirect, 2);
-          }
-        }
 
-      }
-    });
+        }
+      });
   }
 
   userAuthenticated(): boolean {
