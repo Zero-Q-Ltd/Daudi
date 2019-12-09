@@ -62,7 +62,7 @@ export class DepotService {
        */
 
       const alldepots = snapshot.docs.map(doc => {
-        const value = Object.assign({}, emptydepot, doc.data());
+        const value = { ...emptydepot, ...doc.data() };
         value.Id = doc.id;
         return value as Depot;
       });
@@ -89,11 +89,14 @@ export class DepotService {
    */
   changeactivedepot(depot: Depot) {
     if (JSON.stringify(depot) !== JSON.stringify(this.activedepot.value)) {
-      console.log("changing");
-      const config = this.config.omcconfig.value.depotconfig[this.config.environment.value].filter(t => {
+      const config = this.config.omcconfig.value.depotconfig[this.config.environment.value].find(t => {
+        // console.log(t.depotId);
+        // console.log(depot.Id);
+        // console.log(t.depotId === depot.Id);
         return t.depotId === depot.Id;
-      })[0] || { ...emptyDepotConfig };
-      this.activedepot.next({ depot, config });
+      }) || { ...emptyDepotConfig };
+      console.log("changing to:", depot, config);
+      this.activedepot.next({ depot, config: { ...emptyDepotConfig, ...config } });
     } else {
       return;
     }

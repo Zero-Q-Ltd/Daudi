@@ -13,7 +13,7 @@ import { PricesService } from "../../services/prices.service";
 import { FuelType, FuelNamesArray } from "../../../models/Daudi/fuel/FuelType";
 import { Price } from "../../../models/Daudi/depot/Price";
 import { ReplaySubject } from "rxjs";
-import { takeUntil } from "rxjs/operators";
+import { takeUntil, skipWhile } from "rxjs/operators";
 import { StatusService } from "../../services/core/status.service";
 import { Config, emptyConfig } from "../../../models/Daudi/omc/Config";
 import { MatSlideToggleChange } from "@angular/material";
@@ -90,33 +90,46 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
     private priceservice: PricesService,
     private config: ConfigService,
     private status: StatusService) {
-    this.depotservice.activedepot.pipe(takeUntil(this.comopnentDestroyed)).subscribe((depot) => {
-      console.log(depot);
-      this.activedepot = depot;
-    });
-    this.depotservice.alldepots.pipe(takeUntil(this.comopnentDestroyed)).subscribe((alldepots: Array<Depot>) => {
-      this.alldepots = alldepots;
-    });
+    this.depotservice.activedepot.pipe(
+      skipWhile(t => !t.depot.Id),
+      takeUntil(this.comopnentDestroyed))
+      .subscribe((depot) => {
+        this.activedepot = depot;
+      });
+    this.depotservice.alldepots
+      .pipe(takeUntil(this.comopnentDestroyed)).subscribe((alldepots: Array<Depot>) => {
+        this.alldepots = alldepots;
+      });
     OrderStageIds.forEach(stage => {
-      this.orderservice.orders[stage].pipe(takeUntil(this.comopnentDestroyed)).subscribe(orders => this.orderscount[stage] = orders.length);
+      this.orderservice.orders[stage]
+        .pipe(takeUntil(this.comopnentDestroyed))
+        .subscribe(orders => this.orderscount[stage] = orders.length);
     });
     truckStagesarray.forEach(stage => {
       // this.truckservice.trucks[stage].pipe(takeUntil(this.comopnentDestroyed)).subscribe(trucks => this.truckscount[stage] = trucks.length);
     });
-    this.adminservice.observableuserdata.pipe(takeUntil(this.comopnentDestroyed)).subscribe(admin => {
-      this.currentuser = admin;
-    });
-    this.status.connectionStatus.pipe(takeUntil(this.comopnentDestroyed)).subscribe(status => {
-      this.connectionStatus = status;
-    });
+    this.adminservice.observableuserdata
+      .pipe(takeUntil(this.comopnentDestroyed))
+      .subscribe(admin => {
+        this.currentuser = admin;
+      });
+    this.status.connectionStatus
+      .pipe(takeUntil(this.comopnentDestroyed))
+      .subscribe(statuss => {
+        this.connectionStatus = statuss;
+      });
 
     this.fueltypesArray.forEach(fueltyp => {
-      this.priceservice.avgprices[fueltyp].total.pipe(takeUntil(this.comopnentDestroyed)).subscribe(total => {
-        this.avgprices[fueltyp].total = total;
-      });
-      this.priceservice.avgprices[fueltyp].prices.pipe(takeUntil(this.comopnentDestroyed)).subscribe(prices => {
-        this.avgprices[fueltyp].prices = prices;
-      });
+      this.priceservice.avgprices[fueltyp].total
+        .pipe(takeUntil(this.comopnentDestroyed))
+        .subscribe(total => {
+          this.avgprices[fueltyp].total = total;
+        });
+      this.priceservice.avgprices[fueltyp].prices
+        .pipe(takeUntil(this.comopnentDestroyed))
+        .subscribe(prices => {
+          this.avgprices[fueltyp].prices = prices;
+        });
     });
   }
 
