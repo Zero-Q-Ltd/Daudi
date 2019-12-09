@@ -218,13 +218,15 @@ export class CreateOrderComponent implements OnDestroy {
           this.temporder.fuel[fueltype].priceconfig.taxablePrice = calculatedpirces.taxablePrice;
           this.temporder.fuel[fueltype].priceconfig.nonTaxprice = calculatedpirces.pricewithoutvat;
 
-          const taxcalculations = this.calculatevatamount(this.temporder.fuel[fueltype].priceconfig.taxablePrice, this.temporder.fuel[fueltype].qty);
-          this.temporder.fuel[fueltype].priceconfig.taxAmnt = taxcalculations.taxamount;
-          this.temporder.fuel[fueltype].priceconfig.taxableAmnt = taxcalculations.taxableamount;
-
           const totalwithouttax = this.totalswithouttax(this.temporder.fuel[fueltype].priceconfig.nonTaxprice, this.temporder.fuel[fueltype].qty);
           this.temporder.fuel[fueltype].priceconfig.nonTaxtotal = totalwithouttax;
-          this.temporder.fuel[fueltype].priceconfig.total = taxcalculations.taxamount + totalwithouttax;
+
+          // this.temporder.fuel[fueltype].priceconfig.total = taxcalculations.taxamount + totalwithouttax;
+          this.temporder.fuel[fueltype].priceconfig.total = this.temporder.fuel[fueltype].priceconfig.price * this.temporder.fuel[fueltype].qty;
+
+          this.temporder.fuel[fueltype].priceconfig.taxAmnt = this.temporder.fuel[fueltype].priceconfig.total - totalwithouttax;
+          this.temporder.fuel[fueltype].priceconfig.taxableAmnt = totalwithouttax;
+
           this.temporder.fuel[fueltype].priceconfig.difference =
             this.calculateupmark(this.temporder.fuel[fueltype].priceconfig.price, this.temporder.fuel[fueltype].priceconfig.retailprice, this.temporder.fuel[fueltype].qty);
           this.validateandcorrect();
@@ -255,17 +257,6 @@ export class CreateOrderComponent implements OnDestroy {
     const amountdeducted = priceinclusivevat - pricewithoutvat;
     const taxablePrice = Number((pricewithoutvat - this.omcConfig.taxExempt[this.env][fueltype].amount).toFixed(decimalResolution));
     return { pricewithoutvat, amountdeducted, taxablePrice };
-  }
-
-  /**
-   * calculates the amount of total vat amount
-   * @param price price inclusive of VAT
-   * @param quantity fuel quantity
-   */
-  calculatevatamount(price: number, quantity: number): { taxamount: number, taxableamount: number } {
-    const taxableamount = Math.round(price * quantity);
-    const taxamount = Math.round(taxableamount * .08);
-    return { taxamount, taxableamount };
   }
 
   /**
