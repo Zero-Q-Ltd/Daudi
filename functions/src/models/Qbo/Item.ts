@@ -1,8 +1,8 @@
-import { fuelTypes } from "../Daudi/fuel/fuelTypes";
 import { ItemType } from "./enums/ItemType";
+import { FuelType } from '../Daudi/fuel/FuelType';
 
 export interface Item {
-  Name: fuelTypes;
+  Name: FuelType;
   Description: string;
   Active: boolean;
   FullyQualifiedName?: string;
