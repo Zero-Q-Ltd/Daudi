@@ -1,5 +1,6 @@
-import { firestore } from 'firebase';
-;
+import { MyTimestamp } from "../../firestore/firestoreTypes";
+
+
 export interface SMS {
   Id: string;
   type: {
@@ -15,7 +16,7 @@ export interface SMS {
   phone: string;
   msg: string;
   greeting: string;
-  timestamp: firestore.Timestamp;
+  timestamp: MyTimestamp;
   status: {
     sent: boolean,
     delivered: boolean
@@ -37,7 +38,7 @@ export const emptysms: SMS = {
   phone: null,
   msg: null,
   greeting: null,
-  timestamp: new firestore.Timestamp(0, 0),
+  timestamp: new MyTimestamp(0, 0),
   status: {
     sent: null,
     delivered: null

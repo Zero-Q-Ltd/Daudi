@@ -1,4 +1,5 @@
 import { Meta, emptyMeta } from "./Meta";
+import { deepCopy } from "../../utils/deepCopy";
 export interface Metadata {
     /**
      * Sometimes we may just want to modify the last edited date
@@ -7,6 +8,6 @@ export interface Metadata {
     edited: Meta;
 }
 export const emptymetadata: Metadata = {
-    created: { ...emptyMeta },
-    edited: { ...emptyMeta },
+    created: deepCopy<Meta>(emptyMeta),
+    edited: deepCopy<Meta>(emptyMeta),
 };

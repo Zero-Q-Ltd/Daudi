@@ -1,2 +1,4 @@
-export type Environment = "sandbox" | "live";
-export let EnvironmetsArray = ["sandbox", "live"];
+export enum Environment {
+    sandbox = "sandbox",
+    live = "live"
+}

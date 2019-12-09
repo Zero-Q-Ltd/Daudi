@@ -9,6 +9,7 @@ import { OMC, emptyomc } from "../../../../models/Daudi/omc/OMC";
 import { NotificationService } from "../../../../shared/services/notification.service";
 import * as firebase from "firebase";
 import { ConfirmDialogComponent } from "../../../confirm-dialog/confirm-dialog.component";
+import { deepCopy } from "../../../../models/utils/deepCopy";
 @Component({
   selector: "app-company",
   templateUrl: "./config.component.html",
@@ -23,8 +24,8 @@ export class ConfigComponent implements OnInit, OnDestroy {
   defaultlat = -1.3373943;
   defaultlng = 36.7208522;
   zoom = 15;
-  tempcompany: OMC = { ...emptyomc };
-  originalCompany: OMC = { ...emptyomc };
+  tempcompany: OMC = deepCopy<OMC>(emptyomc);
+  originalCompany: OMC = deepCopy<OMC>(emptyomc);
   // paymentchannels: Array<PaymentChannel> = [];
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
 
@@ -62,7 +63,7 @@ export class ConfigComponent implements OnInit, OnDestroy {
 
   mapClicked($event: MouseEvent): void {
     // @ts-ignore
-    this.tempcompany.location = new firebase.firestore.GeoPoint($event.coords.lat, $event.coords.lng);
+    this.tempcompany.location = new MyGeoPoint($event.coords.lat, $event.coords.lng);
   }
 
   ngOnInit(): void {

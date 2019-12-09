@@ -1,6 +1,6 @@
 import { Contact } from "./Contact";
-import { firestore } from "firebase";
 import { AssociatedUser } from "../admin/AssociatedUser";
+import { MyGeoPoint } from "../../firestore/firestoreTypes";
 
 export interface Customer {
   Active: boolean;
@@ -12,7 +12,7 @@ export interface Customer {
   QbId: string;
   sandbox: boolean;
   Id: string;
-  location: firestore.GeoPoint;
+  location: MyGeoPoint;
   krapin: string;
   kraverified: {
     status: boolean
@@ -33,7 +33,7 @@ export const emptycompany: Customer = {
   /**
    * make default location Somewhere in nbi
    */
-  location: new firestore.GeoPoint(-1.3088567, 36.7752539),
+  location: new MyGeoPoint(-1.3088567, 36.7752539),
   krapin: null,
   kraverified: {
     status: null,

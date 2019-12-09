@@ -1,9 +1,18 @@
 {
   "extends": "../tsconfig.json",
+  "compileOnSave": true,
   "compilerOptions": {
     "outDir": "../out-tsc/app",
     "types": [],
-    "baseUrl": ""
+    "baseUrl": "",
+    "typeRoots": [
+      "../../node_modules/@firebase/firestore-types"
+    ],
+    "paths": {
+      "*": [
+        "../../node_modules/@firebase/firestore-types"
+      ]
+    }
   },
   "exclude": [
     "test.ts",

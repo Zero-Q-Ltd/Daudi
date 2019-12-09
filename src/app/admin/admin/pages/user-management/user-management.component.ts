@@ -15,6 +15,8 @@ import { takeUntil } from "rxjs/operators";
 import { OMC, emptyomc } from "../../../../models/Daudi/omc/OMC";
 import { ConfigService } from "../../../services/core/config.service";
 import { SyncRequest } from "../../../../models/Cloud/Sync";
+import { MyTimestamp } from "../../../../models/firestore/firestoreTypes";
+
 
 @Component({
   selector: "user-management",
@@ -113,7 +115,7 @@ export class UserManagementComponent implements OnInit, OnDestroy {
 
     const syncobject: SyncRequest = {
       companyid: this.config.getEnvironment().auth.companyId,
-      time: firestore.Timestamp.now(),
+      time: MyTimestamp.now(),
       synctype: ["Employee"]
     };
     this.functions.httpsCallable("requestsync")(syncobject).pipe(takeUntil(this.comopnentDestroyed)).subscribe(res => {
@@ -160,9 +162,9 @@ export class UserManagementComponent implements OnInit, OnDestroy {
     return level;
   }
 
-  converttime(timestamp) {
-    if (timestamp) {
-      return `Last Seen ${moment(timestamp).fromNow()}`;
+  converttime(MyTimestamp) {
+    if (MyTimestamp) {
+      return `Last Seen ${moment(MyTimestamp).fromNow()}`;
     } else {
       return "Uknown Last Seen";
     }

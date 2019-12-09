@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
-import { Order, orderStagesarray } from "../../models/Daudi/order/Order";
-import { OrderStages } from "../../models/Daudi/order/OrderStages";
+import { Order } from "../../models/Daudi/order/Order";
+import { OrderStages, OrderStageIds } from "../../models/Daudi/order/OrderStages";
 import { firestore } from "firebase";
 import * as moment from "moment";
 import { BehaviorSubject } from "rxjs";
@@ -11,6 +11,8 @@ import { MatTreeNestedDataSource } from "@angular/material";
 import { AngularFireFunctions } from "@angular/fire/functions";
 import { OmcService } from "./core/omc.service";
 import { skipWhile } from "rxjs/operators";
+import { MyTimestamp } from "../../models/firestore/firestoreTypes";
+
 
 @Injectable({
   providedIn: "root"
@@ -168,7 +170,7 @@ export class OrdersService {
     this.orders["5"].next([]);
     this.orders["6"].next([]);
 
-    orderStagesarray.forEach(stage => {
+    OrderStageIds.forEach(stage => {
 
       const subscriprion = this.db.firestore.collection("omc")
         .doc(this.omc.currentOmc.value.Id)
@@ -195,7 +197,7 @@ export class OrdersService {
           this.orders[stage].next(snapshot.docs.filter(doc => {
             const value = doc.data() as Order;
             value.Id = doc.id;
-            if (value.stage === 6 && (value.stagedata["1"].user.time instanceof firestore.Timestamp) && value.stagedata["1"].user.time.toDate() < moment().subtract(2, "w").toDate()) {
+            if (value.stage === 6 && (value.stagedata["1"].user.time instanceof MyTimestamp) && value.stagedata["1"].user.time.toDate() < moment().subtract(2, "w").toDate()) {
               doc.ref.delete();
               return false;
             } else {

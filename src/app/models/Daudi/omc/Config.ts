@@ -1,7 +1,6 @@
 import { AdminType } from "../admin/AdminType";
 import { FuelType } from "../fuel/FuelType";
 import { Metadata, emptymetadata } from "../universal/Metadata";
-import { firestore } from "firebase";
 
 import { Meta } from "../universal/Meta";
 import { DepotConfig } from "../depot/DepotConfig";
@@ -9,6 +8,9 @@ import { FuelConfig, emptyFuelConfig } from "./FuelConfig";
 import { Environment } from "./Environments";
 import { QBOAuthCOnfig } from "./QboAuthConfig";
 import { TaxConfig } from "./TaxConfig";
+import { deepCopy } from "../../utils/deepCopy";
+import { MyTimestamp } from "../../firestore/firestoreTypes";
+
 
 export interface Config {
     adminTypes: Array<AdminType>;
@@ -47,7 +49,7 @@ interface TaxExempt {
  */
 const happy: Meta = {
     adminId: "oSGSG2uCQJd3SqpZf6TXObrbDo73",
-    date: firestore.Timestamp.fromDate(new Date("Aug 29, 2019"))
+    date: MyTimestamp.fromDate(new Date("Aug 29, 2019"))
 };
 
 const InfoMetadata: Metadata = {
@@ -62,17 +64,17 @@ export const emptyqboAuth: QBOAuthCOnfig = {
     webhooksVerifier: "",
     isSandbox: true,
     authConfig: {
-        previousDCT: firestore.Timestamp.fromDate(new Date()),
+        previousDCT: MyTimestamp.fromDate(new Date()),
         accessToken: "",
         refreshToken: "",
-        accesstokenExpiry: firestore.Timestamp.fromDate(new Date()),
-        refreshtokenExpiry: firestore.Timestamp.fromDate(new Date()),
-        time: firestore.Timestamp.fromDate(new Date())
+        accesstokenExpiry: MyTimestamp.fromDate(new Date()),
+        refreshtokenExpiry: MyTimestamp.fromDate(new Date()),
+        time: MyTimestamp.fromDate(new Date())
     }
 };
 const emptytaxExempt: TaxExempt = {
     amount: 0,
-    metadata: { ...emptymetadata }
+    metadata: deepCopy<Metadata>(emptymetadata)
 };
 
 export const emptyConfig: Config = {
@@ -82,23 +84,23 @@ export const emptyConfig: Config = {
     },
     taxExempt: {
         live: {
-            ago: { ...emptytaxExempt },
-            ik: { ...emptytaxExempt },
-            pms: { ...emptytaxExempt }
+            ago: deepCopy<TaxExempt>(emptytaxExempt),
+            ik: deepCopy<TaxExempt>(emptytaxExempt),
+            pms: deepCopy<TaxExempt>(emptytaxExempt)
         },
         sandbox: {
-            ago: { ...emptytaxExempt },
-            ik: { ...emptytaxExempt },
-            pms: { ...emptytaxExempt }
+            ago: deepCopy<TaxExempt>(emptytaxExempt),
+            ik: deepCopy<TaxExempt>(emptytaxExempt),
+            pms: deepCopy<TaxExempt>(emptytaxExempt)
         }
     },
     Qbo: {
         live: {
-            auth: { ...emptyqboAuth },
+            auth: deepCopy<QBOAuthCOnfig>(emptyqboAuth),
             fuelconfig: {
-                pms: { ...emptyFuelConfig },
-                ago: { ...emptyFuelConfig },
-                ik: { ...emptyFuelConfig }
+                pms: deepCopy<FuelConfig>(emptyFuelConfig),
+                ago: deepCopy<FuelConfig>(emptyFuelConfig),
+                ik: deepCopy<FuelConfig>(emptyFuelConfig)
             },
             taxConfig: {
                 taxAgency: {
@@ -113,11 +115,11 @@ export const emptyConfig: Config = {
             }
         },
         sandbox: {
-            auth: { ...emptyqboAuth },
+            auth: deepCopy<QBOAuthCOnfig>(emptyqboAuth),
             fuelconfig: {
-                pms: { ...emptyFuelConfig },
-                ago: { ...emptyFuelConfig },
-                ik: { ...emptyFuelConfig }
+                pms: deepCopy<FuelConfig>(emptyFuelConfig),
+                ago: deepCopy<FuelConfig>(emptyFuelConfig),
+                ik: deepCopy<FuelConfig>(emptyFuelConfig)
             },
             taxConfig: {
                 taxAgency: {
@@ -139,12 +141,12 @@ export const emptyConfig: Config = {
     adminTypes: [
         {
             description: "Zero-Q IT Development Team",
-            metadata: { ...InfoMetadata },
+            metadata: deepCopy<Metadata>(InfoMetadata),
             name: "System Admins", levels: [
                 {
                     description: "System Developers",
                     name: "Developers",
-                    metadata: { ...InfoMetadata }
+                    metadata: deepCopy<Metadata>(InfoMetadata)
                 }
             ]
         }

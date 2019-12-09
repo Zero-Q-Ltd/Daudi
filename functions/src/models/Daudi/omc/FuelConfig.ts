@@ -4,11 +4,7 @@ export interface FuelConfig {
         qty: number;
     };
     QbId: number;
-    tax: {
-        QbId: number;
-        nonTax: number;
-        metadata: Metadata;
-    };
+
 }
 
 export const emptyFuelConfig: FuelConfig = {
@@ -16,9 +12,4 @@ export const emptyFuelConfig: FuelConfig = {
         qty: 0
     },
     QbId: null,
-    tax: {
-        QbId: null,
-        metadata: { ...emptymetadata },
-        nonTax: 0
-    },
 };

@@ -1,13 +1,16 @@
 import { AdminType } from "../admin/AdminType";
-import { fuelTypes } from "../fuel/fuelTypes";
-import { Metadata } from "../universal/Metadata";
-import { firestore } from "firebase-admin";
+import { FuelType } from "../fuel/FuelType";
+import { Metadata, emptymetadata } from "../universal/Metadata";
+
 import { Meta } from "../universal/Meta";
 import { DepotConfig } from "../depot/DepotConfig";
 import { FuelConfig, emptyFuelConfig } from "./FuelConfig";
 import { Environment } from "./Environments";
 import { QBOAuthCOnfig } from "./QboAuthConfig";
 import { TaxConfig } from "./TaxConfig";
+import { deepCopy } from "../../utils/deepCopy";
+import { MyTimestamp } from "../../firestore/firestoreTypes";
+
 
 export interface Config {
     adminTypes: Array<AdminType>;
@@ -22,14 +25,23 @@ export interface Config {
      */
     depotconfig: {
         [key in Environment]: Array<DepotConfig> };
+    taxExempt: {
+        [key in Environment]: {
+            [key in FuelType]: TaxExempt
+        } };
 }
 
 export interface QboEnvironment {
     auth: QBOAuthCOnfig;
     fuelconfig: {
-        [key in fuelTypes]: FuelConfig
+        [key in FuelType]: FuelConfig
     };
-    taxConfig: TaxConfig
+    taxConfig: TaxConfig;
+}
+
+interface TaxExempt {
+    amount: number;
+    metadata: Metadata;
 }
 /**
  * This is an initialization variable for the undeletable level for System Admins
@@ -37,7 +49,7 @@ export interface QboEnvironment {
  */
 const happy: Meta = {
     adminId: "oSGSG2uCQJd3SqpZf6TXObrbDo73",
-    date: firestore.Timestamp.fromDate(new Date("Aug 29, 2019"))
+    date: MyTimestamp.fromDate(new Date("Aug 29, 2019"))
 };
 
 const InfoMetadata: Metadata = {
@@ -52,28 +64,43 @@ export const emptyqboAuth: QBOAuthCOnfig = {
     webhooksVerifier: "",
     isSandbox: true,
     authConfig: {
-        previousDCT: firestore.Timestamp.fromDate(new Date()),
+        previousDCT: MyTimestamp.fromDate(new Date()),
         accessToken: "",
         refreshToken: "",
-        accesstokenExpiry: firestore.Timestamp.fromDate(new Date()),
-        refreshtokenExpiry: firestore.Timestamp.fromDate(new Date()),
-        time: firestore.Timestamp.fromDate(new Date())
+        accesstokenExpiry: MyTimestamp.fromDate(new Date()),
+        refreshtokenExpiry: MyTimestamp.fromDate(new Date()),
+        time: MyTimestamp.fromDate(new Date())
     }
 };
-
+const emptytaxExempt: TaxExempt = {
+    amount: 0,
+    metadata: deepCopy<Metadata>(emptymetadata)
+};
 
 export const emptyConfig: Config = {
     depotconfig: {
         live: [],
         sandbox: []
     },
+    taxExempt: {
+        live: {
+            ago: deepCopy<TaxExempt>(emptytaxExempt),
+            ik: deepCopy<TaxExempt>(emptytaxExempt),
+            pms: deepCopy<TaxExempt>(emptytaxExempt)
+        },
+        sandbox: {
+            ago: deepCopy<TaxExempt>(emptytaxExempt),
+            ik: deepCopy<TaxExempt>(emptytaxExempt),
+            pms: deepCopy<TaxExempt>(emptytaxExempt)
+        }
+    },
     Qbo: {
         live: {
-            auth: { ...emptyqboAuth },
+            auth: deepCopy<QBOAuthCOnfig>(emptyqboAuth),
             fuelconfig: {
-                pms: { ...emptyFuelConfig },
-                ago: { ...emptyFuelConfig },
-                ik: { ...emptyFuelConfig }
+                pms: deepCopy<FuelConfig>(emptyFuelConfig),
+                ago: deepCopy<FuelConfig>(emptyFuelConfig),
+                ik: deepCopy<FuelConfig>(emptyFuelConfig)
             },
             taxConfig: {
                 taxAgency: {
@@ -88,11 +115,11 @@ export const emptyConfig: Config = {
             }
         },
         sandbox: {
-            auth: { ...emptyqboAuth },
+            auth: deepCopy<QBOAuthCOnfig>(emptyqboAuth),
             fuelconfig: {
-                pms: { ...emptyFuelConfig },
-                ago: { ...emptyFuelConfig },
-                ik: { ...emptyFuelConfig }
+                pms: deepCopy<FuelConfig>(emptyFuelConfig),
+                ago: deepCopy<FuelConfig>(emptyFuelConfig),
+                ik: deepCopy<FuelConfig>(emptyFuelConfig)
             },
             taxConfig: {
                 taxAgency: {
@@ -114,12 +141,12 @@ export const emptyConfig: Config = {
     adminTypes: [
         {
             description: "Zero-Q IT Development Team",
-            metadata: { ...InfoMetadata },
+            metadata: deepCopy<Metadata>(InfoMetadata),
             name: "System Admins", levels: [
                 {
                     description: "System Developers",
                     name: "Developers",
-                    metadata: { ...InfoMetadata }
+                    metadata: deepCopy<Metadata>(InfoMetadata)
                 }
             ]
         }

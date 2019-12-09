@@ -13,7 +13,8 @@ import { BatchesService } from "../services/batches.service";
 import { OrdersService } from "../services/orders.service";
 import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
-import { firestore } from "firebase";
+import { MyTimestamp } from "../../models/firestore/firestoreTypes";
+
 
 interface batchContent {
   id: string;
@@ -366,8 +367,8 @@ export class BatchesSelectorComponent implements OnInit, OnDestroy {
         user: this.adminservice.createuserobject(),
         expiry: [
           {
-            timeCreated: firestore.Timestamp.now(),
-            expiry: firestore.Timestamp.fromDate(moment().add(45, "minutes").toDate()),
+            timeCreated: MyTimestamp.now(),
+            expiry: MyTimestamp.fromDate(moment().add(45, "minutes").toDate()),
           }],
       };
       this.order.stage = 4;

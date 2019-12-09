@@ -1,6 +1,5 @@
 import * as functions from 'firebase-functions';
 import * as admin from "firebase-admin";
-import Timestamp = admin.firestore.Timestamp;
 import { sendsms } from './tasks/sms/sms';
 import { SMS } from './models/Daudi/sms/sms';
 import { initCompanyInfo } from './tasks/crud/qbo/CompanyInfo/init';
@@ -17,6 +16,7 @@ import { Order } from './models/Daudi/order/Order';
 import { createEstimate } from './tasks/crud/qbo/Estimate/create';
 import { ordersms } from './tasks/sms/smscompose';
 import { validorderupdate } from './validators/orderupdate';
+import { MyTimestamp } from './models/firestore/firestoreTypes';
 
 admin.initializeApp(functions.config().firebase);
 admin.firestore().settings({ timestampsInSnapshots: true });
@@ -124,7 +124,7 @@ exports.onUserStatusChanged = functions.database
         return userStatusFirestoreRef.update({
           status: {
             online: status.online,
-            time: Timestamp.now()
+            time: MyTimestamp.now()
           }
         });
       });

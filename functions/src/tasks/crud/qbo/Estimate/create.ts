@@ -12,12 +12,12 @@ import { TxnStatus } from "../../../../models/Qbo/enums/TxnStatus";
 import { EmailStatus } from "../../../../models/Qbo/enums/EmailStatus";
 import { Line } from "../../../../models/Qbo/subTypes/Line";
 import { LineDetailType } from "../../../../models/Qbo/enums/LineDetailType";
-import { fuelTypes } from "../../../../models/Daudi/fuel/fuelTypes";
+import { FuelType } from '../../../../models/Daudi/fuel/FuelType';
 
 function syncfueltypes(orderdata: Order, TxnTaxCodeRef: string): Array<any> {
     const values: Array<Line> = [];
-    Object.keys(fuelTypes).forEach(key => {
-        const fuel: fuelTypes = fuelTypes[key]
+    Object.keys(FuelType).forEach(key => {
+        const fuel: FuelType = FuelType[key]
         if (orderdata.fuel[fuel].qty > 0) {
             values.push({
                 Amount: orderdata.fuel[fuel].priceconfig.nonTaxprice * orderdata.fuel[fuel].qty,

@@ -9,6 +9,8 @@ import { Router } from "@angular/router";
 import { AngularFireDatabase } from "@angular/fire/database";
 import { take } from "rxjs/operators";
 import { AssociatedUser } from "../../../models/Daudi/admin/AssociatedUser";
+import { MyTimestamp } from "../../../models/firestore/firestoreTypes";
+
 
 @Injectable({
   providedIn: "root"
@@ -23,7 +25,6 @@ export class AdminService {
    */
 
   userdata: Admin = { ...emptyadmin };
-
 
   constructor(private db: AngularFirestore, private afAuth: AngularFireAuth, router: Router) {
     afAuth.authState.subscribe(state => {
@@ -69,7 +70,7 @@ export class AdminService {
     return {
       name: this.userdata.profile.name,
       uid: this.userdata.profile.uid,
-      time: firestore.Timestamp.now()
+      time: MyTimestamp.now()
     };
   }
 

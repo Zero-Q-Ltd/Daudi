@@ -14,6 +14,8 @@ import { ReplaySubject } from "rxjs";
 import { switchMap, takeUntil } from "rxjs/operators";
 import { OrdersService as OrderService } from "../services/orders.service";
 import { Order } from "../../models/Daudi/order/Order";
+import { MyTimestamp } from "../../models/firestore/firestoreTypes";
+
 
 @Component({
   selector: "trucks-table",
@@ -120,7 +122,7 @@ export class TrucksTableComponent implements OnInit {
         delivered: false,
         sent: false
       },
-      timestamp: firestore.Timestamp.now()
+      timestamp: MyTimestamp.now()
     };
     const dialogRef = this.dialog.open(SendMsgComponent, {
       role: "dialog",
@@ -130,8 +132,8 @@ export class TrucksTableComponent implements OnInit {
     // this.dialog.open(SendMsgComponent);
   }
 
-  resolvetime(timestamp) {
-    return moment(timestamp.toDate()).fromNow();
+  resolvetime(MyTimestamp) {
+    return moment(MyTimestamp.toDate()).fromNow();
   }
 
 

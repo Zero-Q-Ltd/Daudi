@@ -1,6 +1,6 @@
-import {Injectable} from "@angular/core";
+import { Injectable } from "@angular/core";
 import * as firebase from "firebase";
-import {AngularFirestore} from "@angular/fire/firestore";
+import { AngularFirestore } from "@angular/fire/firestore";
 
 @Injectable()
 export class LoggingService {
@@ -11,7 +11,7 @@ export class LoggingService {
 
   log(params: Object) {
     console.log(params);
-    params["time"] = firebase.database.ServerValue.TIMESTAMP;
+    params["time"] = firebase.database.ServerValue.MyTimestamp;
     params["status"] = "new";
     if (!this.testing) {
       // this.af.doc(`Errors`). (params);
