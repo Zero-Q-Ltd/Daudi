@@ -1,6 +1,6 @@
-import { fuelTypes } from "../fuel/fuelTypes";
-import { firestore } from "firebase-admin";
 import { AssociatedUser } from "../admin/AssociatedUser";
+import { TruckStages } from "./TruckStages";
+import { MyTimestamp } from "../../firestore/firestoreTypes";
 
 
 interface Compartment {
@@ -9,8 +9,8 @@ interface Compartment {
 }
 
 interface Expiry {
-  timeCreated: firestore.Timestamp;
-  expiry: firestore.Timestamp;
+  timeCreated: MyTimestamp;
+  expiry: MyTimestamp;
 }
 
 export interface Batch {
@@ -36,7 +36,7 @@ export interface Truck {
    * This design allows complex queries on the map, as opposed to the limitations of an array
    */
   stagedata: {
-    [key in truckStages]: StageData
+    [key in TruckStages]: StageData
   };
   compartments: Array<Compartment>;
 }
@@ -47,7 +47,7 @@ export interface StageData {
    */
   print?: {
     status: boolean,
-    timestamp: firestore.Timestamp | Date;
+    MyTimestamp: MyTimestamp | Date;
   };
   expiry: Array<Expiry>;
   /**
@@ -75,5 +75,4 @@ export const emptytruck: Truck = {
   compartments: []
 };
 
-export type truckStages = "0" | "1" | "2" | "3" | "4" | "5";
 export let truckStagesarray = ["0", "1", "2", "3", "4", "5"];

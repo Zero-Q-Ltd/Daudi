@@ -1,17 +1,19 @@
-import { firestore } from "firebase-admin";
+import { MyTimestamp } from "../../firestore/firestoreTypes";
+
+
 export interface QBOAuthCOnfig {
     companyId: number;
     clientId: string;
     clientSecret: string;
     webhooksVerifier: string;
     isSandbox: boolean;
-    authConfig: AuthConfig
+    authConfig: AuthConfig;
 }
 export interface AuthConfig {
-    previousDCT: firestore.Timestamp;
+    previousDCT: MyTimestamp;
     accessToken: string;
     refreshToken: string;
-    accesstokenExpiry: firestore.Timestamp;
-    refreshtokenExpiry: firestore.Timestamp;
-    time: firestore.Timestamp;
-};
+    accesstokenExpiry: MyTimestamp;
+    refreshtokenExpiry: MyTimestamp;
+    time: MyTimestamp;
+}

@@ -1,9 +1,10 @@
 import { Metadata, emptymetadata } from "../universal/Metadata";
 import { ContactPerson } from "./ContactPerson";
-import { firestore } from "firebase-admin";
+import { deepCopy } from "../../utils/deepCopy";
+import { MyGeoPoint } from "../../firestore/firestoreTypes";
 export interface OMC {
     license: string;
-    location: firestore.GeoPoint;
+    location: MyGeoPoint;
     name: string;
     userid: string;
     Id: string;
@@ -26,12 +27,12 @@ export const emptyomc: OMC = {
     /**
      * make default location Somewhere in nbi
      */
-    location: new firestore.GeoPoint(-1.3373943, 36.7208522),
+    location: new MyGeoPoint(-1.3373943, 36.7208522),
     name: null,
     Id: null,
     userid: null,
     description: null,
-    metadata: { ...emptymetadata },
+    metadata: deepCopy<Metadata>(emptymetadata),
 
 };
 

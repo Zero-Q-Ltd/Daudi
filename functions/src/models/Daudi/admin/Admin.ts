@@ -1,5 +1,5 @@
 import { inituser, AssociatedUser } from "./AssociatedUser";
-import { deepCopy } from 'src/app/models/utils/deepCopy';
+import { deepCopy } from "../../utils/deepCopy";
 
 export interface Admin {
   Active: boolean;
