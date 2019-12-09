@@ -5,7 +5,7 @@ import * as moment from "moment";
 import { ConfirmDialogComponent } from "../confirm-dialog/confirm-dialog.component";
 import { Options } from "ng5-slider";
 import { NotificationService } from "../../shared/services/notification.service";
-import { BatchesSelectorComponent } from "../batches-selector/batches-selector.component";
+import { BatchesSelectorComponent } from "../entries-selector/entries-selector.component";
 import { OrdersService } from "../services/orders.service";
 import { AdminService } from "../services/core/admin.service";
 import { ComponentCommunicationService } from "../services/component-communication.service";

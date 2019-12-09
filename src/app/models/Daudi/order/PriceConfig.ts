@@ -37,6 +37,7 @@ export interface PriceConfig {
     taxablePrice: number;
     /**
      * @description total amount on which tax is calculated on
+     * it is the price on which the tax percentage is applied.
      */
     taxableAmnt: number;
     /**

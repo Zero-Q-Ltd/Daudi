@@ -11,8 +11,8 @@ export class LoggingService {
 
   log(params: Object) {
     console.log(params);
-    params["time"] = firebase.database.ServerValue.MyTimestamp;
-    params["status"] = "new";
+    params.time = firebase.database.ServerValue.Timestamp;
+    params.status = "new";
     if (!this.testing) {
       // this.af.doc(`Errors`). (params);
     }

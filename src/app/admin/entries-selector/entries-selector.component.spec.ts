@@ -1,6 +1,6 @@
-import {async, ComponentFixture, TestBed} from "@angular/core/testing";
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 
-import {BatchesSelectorComponent} from "./batches-selector.component";
+import { BatchesSelectorComponent } from "./entries-selector.component";
 
 describe("BatchesSelectorComponent", () => {
   let component: BatchesSelectorComponent;

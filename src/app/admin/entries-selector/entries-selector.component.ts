@@ -29,9 +29,9 @@ interface batchContent {
 }
 
 @Component({
-  selector: "app-batches-selector",
-  templateUrl: "./batches-selector.component.html",
-  styleUrls: ["./batches-selector.component.scss"]
+  selector: "app-entries-selector",
+  templateUrl: "./entries-selector.component.html",
+  styleUrls: ["./entries-selector.component.scss"]
 })
 
 

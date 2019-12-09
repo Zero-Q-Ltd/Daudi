@@ -72,14 +72,17 @@ export class BatchesService {
 
   getbatches(type: FuelType) {
 
-    return this.db.firestore.collection("depots")
-      .doc(this.depotsservice.activedepot.value.depot.Id)
-      .collection("batches")
+    return this.db.firestore.collection("omc")
+      .doc(this.omc.currentOmc.value.Id)
+      .collection("entries")
       .where("type", "==", type)
       .orderBy("status", "desc");
   }
 
   updatebatch(batchid: string) {
-    return this.db.firestore.collection("depots").doc(this.depotsservice.activedepot.value.depot.Id).collection(`batches`).doc(batchid);
+    return this.db.firestore.collection("omc")
+      .doc(this.omc.currentOmc.value.Id)
+      .collection("entries")
+      .doc(batchid);
   }
 }

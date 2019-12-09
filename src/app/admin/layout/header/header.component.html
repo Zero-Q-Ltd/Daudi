@@ -27,6 +27,7 @@
         <span>{{depot.Name}}</span>
       </button>
     </mat-menu>
+
     <div class="top-nav-left hidden-md-down deskContent" style="margin-top: 20px;">
       <ul class="list-inline">
         <li class="list-inline-item">
@@ -60,10 +61,10 @@
                     <i *ngIf="connectionStatus" class="fa fa-circle color-{{pricetype}}"></i>
                     <i *ngIf="!connectionStatus" class="fa fa-circle color-light-grey"></i>
                     <span class="label" matTooltip="{{pricetype}} SP">
-                      <!-- {{activedepot.config[pricetype]?.price | number : '1.0-2'}} -->
+                      {{activedepot.config.price[pricetype].price | number : '1.0-2'}}
                     </span>
-                    <span class="label color-light-grey nafasi-k" matTooltip="{{pricetype}} AvgSP">
-                      <!--<small>{{activedepot.minpriceconfig[pricetype]?.price | number : '1.0-2'}}</small>-->
+                    <span class="label color-light-grey nafasi-k" matTooltip="{{pricetype}} MinSP">
+                      <small>{{activedepot.config.price[pricetype].minPrice | number : '1.0-2'}}</small>
                       <!-- <small>{{avgprices[pricetype].total / avgprices[pricetype]?.prices.length | number : '1.2-2'}}</small> -->
                     </span>
                   </span>

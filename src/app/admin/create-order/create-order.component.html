@@ -5,9 +5,9 @@
         <mat-expansion-panel>
           <mat-expansion-panel-header>
             <mat-panel-title>
-              <span *ngIf="currentdepot" class="expansion-depot">
+              <span class="expansion-depot">
                 <i class="material-icons color-blue">local_gas_station</i>
-                {{currentdepot.depot.Name}}
+                {{activedepot.depot.Name}}
               </span>
               <span class="expansion-title">PRICE COMPARISON</span>
             </mat-panel-title>
@@ -160,9 +160,9 @@
                   <td>
                     <mat-form-field class="full-width">
                       <input [formControl]="orderform.controls[pricetype]" matInput name="{{pricetype}}Sp"
-                        placeholder="{{pricetype}} Selling Price (min: {{currentdepot.config.price[pricetype].minPrice | number : '1.0-2'}})">
+                        placeholder="{{pricetype}} Selling Price (min: {{activedepot.config.price[pricetype].minPrice | number : '1.0-2'}})">
                       <mat-error *ngIf="orderform.controls[pricetype]?.invalid">Min allowed price is
-                        {{currentdepot.config.price[pricetype].minPrice | number : '1.0-2'}}
+                        {{activedepot.config.price[pricetype].minPrice | number : '1.0-2'}}
                       </mat-error>
                       <!-- <mat-hint class="text-danger" align="start">
                     <i>Requested price: {{temporder.discountRequest.pms}}</i>

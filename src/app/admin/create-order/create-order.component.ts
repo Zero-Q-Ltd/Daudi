@@ -87,7 +87,7 @@ export class CreateOrderComponent implements OnDestroy {
    */
   subscriptions: Map<string, any> = new Map<string, any>();
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
-  currentdepot: { depot: Depot, config: DepotConfig } = { depot: { ...emptydepot }, config: { ...emptyDepotConfig } };
+  activedepot: { depot: Depot, config: DepotConfig } = { depot: { ...emptydepot }, config: { ...emptyDepotConfig } };
   omcConfig: Config = { ...emptyConfig };
   env: Environment = Environment.sandbox;
   constructor(
@@ -119,6 +119,8 @@ export class CreateOrderComponent implements OnDestroy {
               /**
                * This must execute in this exact order
                */
+              this.activedepot = value;
+
               this.initfuelprices();
               this.initordersform();
             });
@@ -140,13 +142,12 @@ export class CreateOrderComponent implements OnDestroy {
                 takeUntil(this.comopnentDestroyed),
                 skipWhile(t => !t.depot.Id)
               ).subscribe((value) => {
-                if (!value.depot.Id) {
-                  return;
-                }
+                console.log(value);
                 /**
                  * This must execute in this exact order
                  */
-                this.currentdepot = value;
+
+                this.activedepot = value;
                 this.initfuelprices();
                 this.initordersform();
               });
@@ -211,25 +212,25 @@ export class CreateOrderComponent implements OnDestroy {
           this.temporder.fuel[fueltype].qty = Number(value[fueltype + "qtyControl"]);
           this.temporder.fuel[fueltype].priceconfig.price = Number(value[fueltype]);
           this.temporder.fuel[fueltype].priceconfig.retailprice = this.tempsellingprices[fueltype];
-          this.temporder.fuel[fueltype].priceconfig.minsp = this.currentdepot.config.price[fueltype].minPrice;
+          this.temporder.fuel[fueltype].priceconfig.minsp = this.activedepot.config.price[fueltype].minPrice;
           const decimamlResolution = value[`${fueltype}qtyControl`] >= 10000 ? 4 : 3;
           const calculatedpirces = this.deriveprice(this.temporder.fuel[fueltype].priceconfig.price, fueltype, decimamlResolution);
           this.temporder.fuel[fueltype].priceconfig.taxablePrice = calculatedpirces.taxablePrice;
           this.temporder.fuel[fueltype].priceconfig.nonTaxprice = calculatedpirces.pricewithoutvat;
 
-          const taxcalculations = this.calculatevatamount(this.temporder.fuel[fueltype].priceconfig.taxablePrice, this.temporder.fuel[fueltype].qty);
-          this.temporder.fuel[fueltype].priceconfig.taxAmnt = taxcalculations.taxamount;
-          this.temporder.fuel[fueltype].priceconfig.taxableAmnt = taxcalculations.taxableamount;
-
           const totalwithouttax = this.totalswithouttax(this.temporder.fuel[fueltype].priceconfig.nonTaxprice, this.temporder.fuel[fueltype].qty);
           this.temporder.fuel[fueltype].priceconfig.nonTaxtotal = totalwithouttax;
-          this.temporder.fuel[fueltype].priceconfig.total = taxcalculations.taxamount + totalwithouttax;
+
+          // this.temporder.fuel[fueltype].priceconfig.total = taxcalculations.taxamount + totalwithouttax;
+          this.temporder.fuel[fueltype].priceconfig.total = this.temporder.fuel[fueltype].priceconfig.price * this.temporder.fuel[fueltype].qty;
+
+          this.temporder.fuel[fueltype].priceconfig.taxAmnt = this.temporder.fuel[fueltype].priceconfig.total - totalwithouttax;
+          this.temporder.fuel[fueltype].priceconfig.taxableAmnt = totalwithouttax;
+
           this.temporder.fuel[fueltype].priceconfig.difference =
             this.calculateupmark(this.temporder.fuel[fueltype].priceconfig.price, this.temporder.fuel[fueltype].priceconfig.retailprice, this.temporder.fuel[fueltype].qty);
-
           this.validateandcorrect();
         });
-        console.log(this.temporder.fuel);
       });
   }
 
@@ -256,17 +257,6 @@ export class CreateOrderComponent implements OnDestroy {
     const amountdeducted = priceinclusivevat - pricewithoutvat;
     const taxablePrice = Number((pricewithoutvat - this.omcConfig.taxExempt[this.env][fueltype].amount).toFixed(decimalResolution));
     return { pricewithoutvat, amountdeducted, taxablePrice };
-  }
-
-  /**
-   * calculates the amount of total vat amount
-   * @param price price inclusive of VAT
-   * @param quantity fuel quantity
-   */
-  calculatevatamount(price: number, quantity: number): { taxamount: number, taxableamount: number } {
-    const taxableamount = Math.round(price * quantity);
-    const taxamount = Math.round(taxableamount * .08);
-    return { taxamount, taxableamount };
   }
 
   /**
@@ -322,24 +312,24 @@ export class CreateOrderComponent implements OnDestroy {
         /**
          * Make sure that the current selling price is lower than the min selling price for the most recent entry
          */
-        // if (this.currentdepotconfig.fuelconfig[fueltype].price >= this.currentdepotconfig.minpriceconfig[fueltype].price) {
-        //   this.tempsellingprices[fueltype] = this.currentdepotconfig.currentpriceconfig[fueltype].price;
-        // } else {
-        //   this.tempsellingprices[fueltype] = this.currentdepotconfig.minpriceconfig[fueltype].price;
-        //   this.notificationService.notify({
-        //     alert_type: "notify",
-        //     duration: 20000,
-        //     title: "Invalid Prices",
-        //     body: `The current selling price for ${fueltype} is lower than the Min selling price, hence the Min selling price has been used`
-        //   });
-        // }
+        if (this.activedepot.config.price[fueltype].price >= this.activedepot.config.price[fueltype].minPrice) {
+          this.tempsellingprices[fueltype] = this.activedepot.config.price[fueltype].minPrice;
+        } else {
+          this.tempsellingprices[fueltype] = this.activedepot.config.price[fueltype].price;
+          this.notificationService.notify({
+            alert_type: "notify",
+            duration: 20000,
+            title: "Invalid Prices",
+            body: `The current selling price for ${fueltype} is lower than the Min selling price, hence the Min selling price has been used`
+          });
+        }
         this.orderform.controls[fueltype].setValue(this.temporder.fuel[fueltype].priceconfig.price = this.tempsellingprices[fueltype]);
-        this.orderform.controls[fueltype].setValidators(Validators.compose([Validators.min(this.currentdepot.config.price[fueltype].minPrice), Validators.required]));
+        this.orderform.controls[fueltype].setValidators(Validators.compose([Validators.min(this.activedepot.config.price[fueltype].minPrice), Validators.required]));
       });
     } else {
       this.fueltypesArray.forEach((fueltype) => {
         this.orderform.controls[fueltype].setValue(this.temporder.fuel[fueltype].priceconfig.price = this.tempsellingprices[fueltype]);
-        this.orderform.controls[fueltype].setValidators(Validators.compose([Validators.min(this.currentdepot.config.price[fueltype].price), Validators.required]));
+        this.orderform.controls[fueltype].setValidators(Validators.compose([Validators.min(this.activedepot.config.price[fueltype].price), Validators.required]));
       });
     }
   }
@@ -408,37 +398,39 @@ export class CreateOrderComponent implements OnDestroy {
     const dialogRef = this.dialog.open(ConfirmDepotComponent,
       {
         role: "dialog",
-        data: this.depotService.activedepot.value.depot.Name
+        data: this.activedepot.depot.Name
       });
-    dialogRef.afterClosed().pipe(takeUntil(this.comopnentDestroyed)).subscribe(result => {
-      if (result) {
-        if (this.discApproval) {
-          if (this.userAuthenticated()) {
-            this.saveOrder(redirect, 2);
+    dialogRef.afterClosed()
+      .pipe(takeUntil(this.comopnentDestroyed))
+      .subscribe(result => {
+        if (result) {
+          if (this.discApproval) {
+            if (this.userAuthenticated()) {
+              this.saveOrder(redirect, 2);
+            } else {
+              this.notificationService.notify({
+                alert_type: "warning",
+                body: "You cannot perform this action",
+                duration: 2000,
+                title: "Not Authenticated"
+              });
+            }
           } else {
-            this.notificationService.notify({
-              alert_type: "warning",
-              body: "You cannot perform this action",
-              duration: 2000,
-              title: "Not Authenticated"
-            });
+            /**
+             * Check if there is a discount request
+             * Discount has a -ve value
+             */
+            if (this.temporder.fuel.pms.priceconfig.difference < 0
+              || this.temporder.fuel.ago.priceconfig.difference < 0
+              || this.temporder.fuel.ik.priceconfig.difference < 0) {
+              this.saveOrder(redirect, this.userAuthenticated() ? 2 : 1);
+            } else {
+              this.saveOrder(redirect, 2);
+            }
           }
-        } else {
-          /**
-           * Check if there is a discount request
-           * Discount has a -ve value
-           */
-          if (this.temporder.fuel.pms.priceconfig.difference < 0
-            || this.temporder.fuel.ago.priceconfig.difference < 0
-            || this.temporder.fuel.ik.priceconfig.difference < 0) {
-            this.saveOrder(redirect, this.userAuthenticated() ? 2 : 1);
-          } else {
-            this.saveOrder(redirect, 2);
-          }
-        }
 
-      }
-    });
+        }
+      });
   }
 
   userAuthenticated(): boolean {
