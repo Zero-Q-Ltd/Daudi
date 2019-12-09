@@ -10,6 +10,8 @@ import { takeUntil } from "rxjs/operators";
 import { ConfigService } from "../../../services/core/config.service";
 import { FuelType, FuelNamesArray } from "../../../../models/Daudi/fuel/FuelType";
 import { SyncRequest } from "../../../../models/Cloud/Sync";
+import { MyTimestamp } from "../../../../models/firestore/firestoreTypes";
+
 
 @Component({
   selector: "app-batches",
@@ -82,7 +84,6 @@ export class BatchesComponent implements OnInit {
               });
             });
           this.subscriptions.set(`batches`, subscription);
-
           /**
            * Because all these batches might take time to load, take the totals
            * from the already loaded batches within that depot
@@ -118,7 +119,7 @@ export class BatchesComponent implements OnInit {
     this.creatingsync = true;
     const syncobject: SyncRequest = {
       companyid: this.config.getEnvironment().auth.companyId,
-      time: Timestamp.now(),
+      time: MyTimestamp.now(),
       synctype: ["BillPayment"]
     };
 

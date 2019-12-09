@@ -15,6 +15,7 @@ import { takeUntil } from "rxjs/operators";
 import { ReplaySubject } from "rxjs";
 
 
+
 @Component({
   selector: "truck-details",
   templateUrl: "./truck-details.component.html",
@@ -135,11 +136,11 @@ export class TruckDetailsComponent implements OnInit, OnDestroy {
     return `${totalhours}:${totalmins}:00`;
   }
 
-  expired(timestamp) {
-    if (!timestamp || !(timestamp instanceof Timestamp)) {
+  expired(MyTimestamp) {
+    if (!MyTimestamp || !(MyTimestamp instanceof MyTimestamp)) {
       return;
     }
-    return timestamp.toDate() < moment().toDate();
+    return MyTimestamp.toDate() < moment().toDate();
   }
 
   /**
@@ -166,9 +167,9 @@ export class TruckDetailsComponent implements OnInit, OnDestroy {
     });
   }
 
-  resolvetime(timestamp) {
-    if (timestamp) {
-      return moment(timestamp.toDate()).fromNow();
+  resolvetime(MyTimestamp) {
+    if (MyTimestamp) {
+      return moment(MyTimestamp.toDate()).fromNow();
     }
   }
 
@@ -264,8 +265,8 @@ export class TruckDetailsComponent implements OnInit, OnDestroy {
         truck.stagedata[1].expiry = [
           // {
           //   duration: "00:45:00",
-          //   timeCreated: Timestamp.now(),
-          //   expiry: Timestamp.fromDate(moment().add(45, "minutes").toDate())
+          //   timeCreated: MyTimestamp.now(),
+          //   expiry: MyTimestamp.fromDate(moment().add(45, "minutes").toDate())
           // }
         ];
         truck.stagedata[2].expiry = [];

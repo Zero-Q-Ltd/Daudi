@@ -1,4 +1,5 @@
-import { Timestamp } from "@google-cloud/firestore";
+import { MyTimestamp } from "../../firestore/firestoreTypes";
+
 
 export interface QBOAuthCOnfig {
     companyId: number;
@@ -9,10 +10,10 @@ export interface QBOAuthCOnfig {
     authConfig: AuthConfig;
 }
 export interface AuthConfig {
-    previousDCT: Timestamp;
+    previousDCT: MyTimestamp;
     accessToken: string;
     refreshToken: string;
-    accesstokenExpiry: Timestamp;
-    refreshtokenExpiry: Timestamp;
-    time: Timestamp;
+    accesstokenExpiry: MyTimestamp;
+    refreshtokenExpiry: MyTimestamp;
+    time: MyTimestamp;
 }

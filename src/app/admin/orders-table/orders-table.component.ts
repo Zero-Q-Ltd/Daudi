@@ -9,7 +9,6 @@ import { animate, sequence, state, style, transition, trigger } from "@angular/a
 import { Truck } from "../../models/Daudi/order/Truck";
 import { Order } from "../../models/Daudi/order/Order";
 import { SMS } from "../../models/Daudi/sms/sms";
-import { firestore } from "firebase";
 import { ReasonComponent } from "../reason/reason.component";
 import { ExcelService } from "../services/excel-service.service";
 import { ColumnsCustomizerComponent } from "../columns-customizer/columns-customizer.component";
@@ -18,6 +17,8 @@ import { OrdersService } from "../services/orders.service";
 import { ComponentCommunicationService } from "../services/component-communication.service";
 import { switchMap, takeUntil } from "rxjs/operators";
 import { ReplaySubject } from "rxjs";
+import { MyTimestamp } from "../../models/firestore/firestoreTypes";
+
 
 const EXCEL_TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
 const EXCEL_EXTENSION = ".xlsx";
@@ -142,7 +143,7 @@ export class OrdersTableComponent implements OnInit, OnDestroy {
         delivered: false,
         sent: false
       },
-      timestamp: Timestamp.now()
+      timestamp: MyTimestamp.now()
     };
     this.dialog.open(SendMsgComponent, {
       role: "dialog",
@@ -253,7 +254,7 @@ export class OrdersTableComponent implements OnInit, OnDestroy {
       if (!result) {
         return;
       }
-      const batchaction = this.db.batch();
+      const batchaction = this.db.firestore.batch();
       // batchaction.set(this.truckservice.createTruck(result.truck.Id), result.truck);
       // batchaction.update(this.orderservice.updateorder(result.order.Id), result.order);
       // batchaction.commit().then(result => {

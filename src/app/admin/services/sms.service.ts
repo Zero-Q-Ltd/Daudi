@@ -1,12 +1,12 @@
-import {Injectable} from '@angular/core';
-import {AngularFirestore} from "@angular/fire/firestore";
+import { Injectable } from '@angular/core';
+import { AngularFirestore } from "@angular/fire/firestore";
 
 @Injectable({
   providedIn: 'root'
 })
 export class SmsService {
 
-  constructor(private db: AngularFirestore,) {
+  constructor(private db: AngularFirestore, ) {
   }
 
   createsms() {
@@ -16,7 +16,7 @@ export class SmsService {
 
   getsmslogs() {
     return this.db.firestore.collection("sms")
-      .orderBy("timestamp", "desc")
+      .orderBy("MyTimestamp", "desc")
       .limit(1000);
   }
 }

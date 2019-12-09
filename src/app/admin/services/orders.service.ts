@@ -11,6 +11,8 @@ import { MatTreeNestedDataSource } from "@angular/material";
 import { AngularFireFunctions } from "@angular/fire/functions";
 import { OmcService } from "./core/omc.service";
 import { skipWhile } from "rxjs/operators";
+import { MyTimestamp } from "../../models/firestore/firestoreTypes";
+
 
 @Injectable({
   providedIn: "root"
@@ -195,53 +197,53 @@ export class OrdersService {
           this.orders[stage].next(snapshot.docs.filter(doc => {
             const value = doc.data() as Order;
             value.Id = doc.id;
-            if (value.stage === 6 && (value.stagedata["1"].user.time instanceofTimestamp) && value.stagedata["1"].user.time.toDate() < moment().subtract(2, "w").toDate()) {
-            doc.ref.delete();
-            return false;
-          } else {
-            return true;
-          }
-        }).map(doc => {
-          const value = doc.data() as Order;
-          value.Id = doc.id;
+            if (value.stage === 6 && (value.stagedata["1"].user.time instanceof MyTimestamp) && value.stagedata["1"].user.time.toDate() < moment().subtract(2, "w").toDate()) {
+              doc.ref.delete();
+              return false;
+            } else {
+              return true;
+            }
+          }).map(doc => {
+            const value = doc.data() as Order;
+            value.Id = doc.id;
 
-          return value;
-        }));
-  }, err => {
-  console.log(`Encountered error: ${err}`);
-});
-this.subscriptions.set(`orders${stage}`, subscriprion);
+            return value;
+          }));
+        }, err => {
+          console.log(`Encountered error: ${err}`);
+        });
+      this.subscriptions.set(`orders${stage}`, subscriprion);
 
     });
 
-const startofweek = moment().startOf("week").toDate();
+    const startofweek = moment().startOf("week").toDate();
 
-/**
- * Fetch completed orders
- */
-const stage5subscription = this.db.firestore.collection("depots").doc(this.depotsservice.activedepot.value.depot.Id).collection("orders")
-  .where("stage", "==", 5)
-  .where("stagedata.5.user.time", ">=", startofweek)
-  .orderBy("stagedata.5.user.time", "desc")
-  .onSnapshot(snapshot => {
     /**
-     * dont assign a value in case the query delayed and the depot changed before it returned a value
+     * Fetch completed orders
      */
-    if (snapshot.empty || snapshot.docs[0].data().config.depot.Id !== this.depotsservice.activedepot.value.depot.Id) {
-      if (snapshot.empty) {
-        this.loadingorders.next(false);
-      }
-      return;
-    }
-    this.orders["5"].next(snapshot.docs.map(doc => {
-      const value = doc.data();
-      value.Id = doc.id;
-      return value as Order;
-    }));
-  }, err => {
-    console.log(`Encountered error: ${err}`);
-  });
-this.subscriptions.set(`orders5`, stage5subscription);
+    const stage5subscription = this.db.firestore.collection("depots").doc(this.depotsservice.activedepot.value.depot.Id).collection("orders")
+      .where("stage", "==", 5)
+      .where("stagedata.5.user.time", ">=", startofweek)
+      .orderBy("stagedata.5.user.time", "desc")
+      .onSnapshot(snapshot => {
+        /**
+         * dont assign a value in case the query delayed and the depot changed before it returned a value
+         */
+        if (snapshot.empty || snapshot.docs[0].data().config.depot.Id !== this.depotsservice.activedepot.value.depot.Id) {
+          if (snapshot.empty) {
+            this.loadingorders.next(false);
+          }
+          return;
+        }
+        this.orders["5"].next(snapshot.docs.map(doc => {
+          const value = doc.data();
+          value.Id = doc.id;
+          return value as Order;
+        }));
+      }, err => {
+        console.log(`Encountered error: ${err}`);
+      });
+    this.subscriptions.set(`orders5`, stage5subscription);
 
   }
 

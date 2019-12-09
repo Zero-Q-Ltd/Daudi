@@ -9,7 +9,8 @@ import { Environment } from "./Environments";
 import { QBOAuthCOnfig } from "./QboAuthConfig";
 import { TaxConfig } from "./TaxConfig";
 import { deepCopy } from "../../utils/deepCopy";
-import { Timestamp } from "@google-cloud/firestore";
+import { MyTimestamp } from "../../firestore/firestoreTypes";
+
 
 export interface Config {
     adminTypes: Array<AdminType>;
@@ -48,7 +49,7 @@ interface TaxExempt {
  */
 const happy: Meta = {
     adminId: "oSGSG2uCQJd3SqpZf6TXObrbDo73",
-    date: Timestamp.fromDate(new Date("Aug 29, 2019"))
+    date: MyTimestamp.fromDate(new Date("Aug 29, 2019"))
 };
 
 const InfoMetadata: Metadata = {
@@ -63,12 +64,12 @@ export const emptyqboAuth: QBOAuthCOnfig = {
     webhooksVerifier: "",
     isSandbox: true,
     authConfig: {
-        previousDCT: Timestamp.fromDate(new Date()),
+        previousDCT: MyTimestamp.fromDate(new Date()),
         accessToken: "",
         refreshToken: "",
-        accesstokenExpiry: Timestamp.fromDate(new Date()),
-        refreshtokenExpiry: Timestamp.fromDate(new Date()),
-        time: Timestamp.fromDate(new Date())
+        accesstokenExpiry: MyTimestamp.fromDate(new Date()),
+        refreshtokenExpiry: MyTimestamp.fromDate(new Date()),
+        time: MyTimestamp.fromDate(new Date())
     }
 };
 const emptytaxExempt: TaxExempt = {

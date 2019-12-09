@@ -1,6 +1,7 @@
 import { AssociatedUser } from "../admin/AssociatedUser";
 import { TruckStages } from "./TruckStages";
-import { Timestamp } from "@google-cloud/firestore";
+import { MyTimestamp } from "../../firestore/firestoreTypes";
+
 
 interface Compartment {
   fueltype: string;
@@ -8,8 +9,8 @@ interface Compartment {
 }
 
 interface Expiry {
-  timeCreated: Timestamp;
-  expiry: Timestamp;
+  timeCreated: MyTimestamp;
+  expiry: MyTimestamp;
 }
 
 export interface Batch {
@@ -46,7 +47,7 @@ export interface StageData {
    */
   print?: {
     status: boolean,
-    timestamp: Timestamp | Date;
+    MyTimestamp: MyTimestamp | Date;
   };
   expiry: Array<Expiry>;
   /**

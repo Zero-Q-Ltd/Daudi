@@ -13,6 +13,8 @@ import { BatchesService } from "../services/batches.service";
 import { OrdersService } from "../services/orders.service";
 import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
+import { MyTimestamp } from "../../models/firestore/firestoreTypes";
+
 
 interface batchContent {
   id: string;
@@ -365,8 +367,8 @@ export class BatchesSelectorComponent implements OnInit, OnDestroy {
         user: this.adminservice.createuserobject(),
         expiry: [
           {
-            timeCreated: Timestamp.now(),
-            expiry: Timestamp.fromDate(moment().add(45, "minutes").toDate()),
+            timeCreated: MyTimestamp.now(),
+            expiry: MyTimestamp.fromDate(moment().add(45, "minutes").toDate()),
           }],
       };
       this.order.stage = 4;
@@ -378,7 +380,7 @@ export class BatchesSelectorComponent implements OnInit, OnDestroy {
       // this.truck.stagedata["1"].user = this.adminservice.createuserobject();
       // this.truck.stage = 1;
 
-      const batchaction = this.db.batch();
+      const batchaction = this.db.firestore.batch();
       // batchaction.update(this.ordersservice.updateorder(this.orderid, this.order);
       // fueltypesArray.forEach((fueltype: fuelTypes) => {
       //   /**

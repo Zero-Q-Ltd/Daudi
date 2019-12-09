@@ -63,7 +63,7 @@ export class ConfigComponent implements OnInit, OnDestroy {
 
   mapClicked($event: MouseEvent): void {
     // @ts-ignore
-    this.tempcompany.location = new GeoPoint($event.coords.lat, $event.coords.lng);
+    this.tempcompany.location = new MyGeoPoint($event.coords.lat, $event.coords.lng);
   }
 
   ngOnInit(): void {

@@ -1,7 +1,7 @@
 import { Metadata, emptymetadata } from "../universal/Metadata";
 import { DepotCreator } from "./DepotCreator";
 import { deepCopy } from "../../utils/deepCopy";
-import { GeoPoint, Timestamp } from "@google-cloud/firestore";
+import { MyTimestamp, MyGeoPoint } from "../../firestore/firestoreTypes";
 
 export interface Depot {
   Id: string;
@@ -11,7 +11,7 @@ export interface Depot {
     phone: string,
     name: string
   };
-  Location: GeoPoint;
+  Location: MyGeoPoint;
   config: {
     /**
      * indicates whether it's part of KPC or not
@@ -40,14 +40,14 @@ export const emptydepot: Depot = {
     externalVisibility: false,
     creator: {
       adminId: null,
-      date: Timestamp.now(),
+      date: MyTimestamp.now(),
       omcId: null,
     }
   },
   /**
    * make default location Somewhere in nbi
    */
-  Location: new GeoPoint(-1.3088567, 36.7752539)
+  Location: new MyGeoPoint(-1.3088567, 36.7752539)
 };
 
 

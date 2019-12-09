@@ -1,14 +1,16 @@
+import { MyTimestamp } from "../../firestore/firestoreTypes";
+
 
 export interface AssociatedUser {
     uid: string;
     name: string;
-    time: Timestamp;
+    time: MyTimestamp;
 }
 
 
 export const inituser: AssociatedUser = {
     name: "",
-    time: Timestamp.fromDate(new Date()),
+    time: MyTimestamp.fromDate(new Date()),
     uid: ""
 };
 

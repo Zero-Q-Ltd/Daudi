@@ -43,7 +43,7 @@ export interface Order {
     status: boolean,
     errorCode: string,
     origin: string,
-    timestamp: Date,
+    MyTimestamp: Date,
     errorDetail: string
   };
 

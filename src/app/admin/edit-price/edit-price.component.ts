@@ -138,7 +138,7 @@ export class EditPriceComponent implements OnInit, OnDestroy {
         });
       dialogRef.afterClosed().pipe(takeUntil(this.comopnentDestroyed)).subscribe(result => {
         if (result) {
-          const batchaction = this.db.batch();
+          const batchaction = this.db.firestore.batch();
           const tempprice: Price = {
             user: this.adminservice.createuserobject(),
             price: this.spPricesform.controls[fueltype].value,

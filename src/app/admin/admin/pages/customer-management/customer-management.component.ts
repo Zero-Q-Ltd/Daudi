@@ -14,6 +14,8 @@ import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { ConfigService } from "../../../services/core/config.service";
 import { SyncRequest } from "../../../../models/Cloud/Sync";
+import { MyTimestamp } from "../../../../models/firestore/firestoreTypes";
+
 
 @Component({
   selector: "customer-management",
@@ -123,7 +125,7 @@ export class CustomerManagementComponent implements OnInit, OnDestroy {
             delivered: false,
             sent: false
           },
-          timestamp: Timestamp.now()
+          timestamp: MyTimestamp.now()
         };
         return sms;
       });
@@ -151,7 +153,7 @@ export class CustomerManagementComponent implements OnInit, OnDestroy {
 
     const syncobject: SyncRequest = {
       companyid: this.config.getEnvironment().auth.companyId,
-      time: Timestamp.now(),
+      time: MyTimestamp.now(),
       synctype: ["Customer"]
     };
 

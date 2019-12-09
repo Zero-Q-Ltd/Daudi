@@ -3,6 +3,7 @@ import { MAT_DIALOG_DATA } from "@angular/material"; // added dialog data receiv
 import { FormControl } from "@angular/forms";
 import * as firebase from "firebase";
 import { MapsAPILoader } from "@agm/core";
+import { MyGeoPoint } from "../../models/firestore/firestoreTypes";
 
 // import * as maps from 'googlemaps';
 
@@ -23,11 +24,11 @@ export class MapsComponent implements OnInit {
   public searchElementRef: ElementRef;
   points: marker[] = [
     {
-      location: new GeoPoint(-1.305308, 36.872919),
+      location: new MyGeoPoint(-1.305308, 36.872919),
       label: "Oilcom"
     },
     {
-      location: new GeoPoint(-4.058972, 39.671766),
+      location: new MyGeoPoint(-4.058972, 39.671766),
       label: "Oilcom"
     }
   ];
@@ -44,9 +45,9 @@ export class MapsComponent implements OnInit {
 
   constructor(private mapsAPILoader: MapsAPILoader,
     private ngZone: NgZone, @Optional() @Inject(MAT_DIALOG_DATA) private data?: object) {
-    if (data && data.points) {
+    // if (data && data.points) {
 
-    }
+    // }
 
   }
 
@@ -135,7 +136,7 @@ export class MapsComponent implements OnInit {
 
   mapClicked(event) {
     // console.log(event)
-    this.clickedlocation.location = new GeoPoint(event.coords.lat, event.coords.lng);
+    this.clickedlocation.location = new MyGeoPoint(event.coords.lat, event.coords.lng);
     // console.log(this.clickedlocation)
 
     // Reset the array first
@@ -161,6 +162,6 @@ export class MapsComponent implements OnInit {
 
 // just an interface for exampledata safety.
 interface marker {
-  location: GeoPoint;
+  location: MyGeoPoint;
   label: string;
 }

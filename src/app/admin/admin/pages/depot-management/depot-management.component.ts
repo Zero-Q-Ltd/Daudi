@@ -11,6 +11,8 @@ import { takeUntil } from "rxjs/operators";
 import { OMC, emptyomc } from "../../../../models/Daudi/omc/OMC";
 import { ConfigService } from "../../../services/core/config.service";
 import { SyncRequest } from "../../../../models/Cloud/Sync";
+import { MyTimestamp } from "../../../../models/firestore/firestoreTypes";
+
 
 @Component({
   selector: "depot-management",
@@ -78,7 +80,7 @@ export class DepotManagementComponent implements OnInit, OnDestroy {
     this.creatingsync = true;
     const syncobject: SyncRequest = {
       companyid: this.config.getEnvironment().auth.companyId,
-      time: Timestamp.now(),
+      time: MyTimestamp.now(),
       synctype: ["Item"]
     };
 
