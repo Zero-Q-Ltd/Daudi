@@ -24,6 +24,7 @@ import { readConfig } from './tasks/crud/daudi/readConfig';
 import { DaudiCustomer } from './models/Daudi/customer/Customer';
 import { updateCustomer } from './tasks/crud/qbo/customer/update';
 import { OrderCreate } from './models/Cloud/OrderCreate';
+import { creteOrder } from './tasks/crud/daudi/Order';
 
 admin.initializeApp(functions.config().firebase);
 admin.firestore().settings({ timestampsInSnapshots: true });
@@ -51,7 +52,10 @@ exports.createEstimate = functions.https.onCall((data: OrderCreate, context) => 
        * Only send sn SMS when estimate creation is complete
        * Make the two processes run parallel so that none is blocking
        */
-      return Promise.all([ordersms(data.order), validorderupdate(data.order, result)]);
+      return Promise.all([ordersms(data.order), validorderupdate(data.order, result)])
+        .then(() => {
+          return creteOrder(data.order, data.omcId)
+        });
     });
   })
 

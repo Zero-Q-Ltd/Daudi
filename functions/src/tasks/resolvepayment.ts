@@ -173,7 +173,7 @@
 //                           firestore()
 //                             .collection("depots")
 //                             .doc(idsobject.depotid)
-//                             .collection("orders")
+//                             .collection("order")
 //                             .doc(idsobject.orderid),
 //                           {
 //                             stage: idsobject.stage,

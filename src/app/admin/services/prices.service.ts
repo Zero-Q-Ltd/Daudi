@@ -4,7 +4,7 @@ import * as moment from "moment";
 import { AngularFirestore } from "@angular/fire/firestore";
 import { Depot } from "../../models/Daudi/depot/Depot";
 import { DepotService } from "./core/depot.service";
-import { BehaviorSubject } from "rxjs";
+import { BehaviorSubject, combineLatest } from "rxjs";
 import { Price } from "../../models/Daudi/depot/Price";
 import { skipWhile } from "rxjs/operators";
 import { OmcService } from "./core/omc.service";
@@ -47,10 +47,10 @@ export class PricesService {
     private db: AngularFirestore,
     private omc: OmcService,
     private depotservice: DepotService) {
-    depotservice.activedepot.pipe(
-      skipWhile(t => !t.depot.Id)
-    )
-      .subscribe(depot => {
+    combineLatest([this.depotservice.activedepot, this.omc.currentOmc])
+      .pipe(
+        skipWhile(t => !t[0].depot.Id || !t[1].Id)
+      ).subscribe(() => {
         // this.activedepot = depot;
         this.unsubscribeAll();
         this.fueltypesArray.forEach(fueltyp => {
@@ -59,7 +59,6 @@ export class PricesService {
               /**
                * calculate the average whenever there is a change in the data
                */
-              // console.log(avgarray.docs[0].data());
               // console.log(this.avgprices[fueltyp].total.value);
               this.avgprices[fueltyp].total.next(0);
               this.avgprices[fueltyp].prices.next(avgarray.docs.map(doc => {

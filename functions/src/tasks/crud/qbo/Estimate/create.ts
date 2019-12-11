@@ -40,9 +40,7 @@ export class createEstimate {
                 values.push({
                     Amount: this.orderdata.fuel[fuel].priceconfig.nonTaxprice * this.orderdata.fuel[fuel].qty,
                     DetailType: LineDetailType.GroupLineDetail,
-                    Description: `VAT-Exempt : ${this.orderdata.fuel[fuel].priceconfig.nonTax} \t,
-                    Taxable Amount: ${this.orderdata.fuel[fuel].priceconfig.taxableAmnt} \t ,
-                    VAT Total : ${this.orderdata.fuel[fuel].priceconfig.taxAmnt} \t`,
+                    Description: `VAT-Exempt : ${this.orderdata.fuel[fuel].priceconfig.nonTax} \t Taxable Amount: ${this.orderdata.fuel[fuel].priceconfig.taxableAmnt} \t VAT Total : ${this.orderdata.fuel[fuel].priceconfig.taxAmnt} \t`,
                     Id: this.config.Qbo[this.environment].fuelconfig[fuel].groupId,
                     GroupLineDetail: {
                         Quantity: this.orderdata.fuel[fuel].qty,
