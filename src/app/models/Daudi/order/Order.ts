@@ -19,6 +19,7 @@ export interface Order {
   };
   QbConfig: {
     InvoiceId: string,
+    EstimateId: string,
     QbId: string,
     /**
      * depots are created in qbo as departments
@@ -111,6 +112,7 @@ export const emptyorder: Order = {
     krapin: null
   },
   QbConfig: {
+    EstimateId: null,
     InvoiceId: null,
     QbId: null,
     departmentId: null

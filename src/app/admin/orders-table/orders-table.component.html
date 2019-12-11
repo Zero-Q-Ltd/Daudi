@@ -17,27 +17,27 @@
             <!-- ID Column -->
             <ng-container matColumnDef="Id">
               <th *matHeaderCellDef mat-header-cell mat-sort-header>ID</th>
-              <td *matCellDef="let order" mat-cell> {{order.InvoiceId}}</td>
+              <td *matCellDef="let order" mat-cell> {{order.QbConfig.InvoiceId}}</td>
             </ng-container>
             <!-- Company Column -->
             <ng-container matColumnDef="Company">
               <th *matHeaderCellDef mat-header-cell mat-sort-header>Designation</th>
               <td *matCellDef="let order" mat-cell>
-                <small>{{order.company.QbId}}</small>
-                | {{order.company.name}}
+                <small>{{order.customer.QbId}}</small>
+                | {{order.customer.name}}
               </td>
             </ng-container>
             <!-- Contact Column -->
             <ng-container matColumnDef="Contact">
               <th *matHeaderCellDef mat-header-cell mat-sort-header>Contact</th>
-              <td *matCellDef="let order" mat-cell> {{order.company.contact.name}}</td>
+              <td *matCellDef="let order" mat-cell> {{order.customer.contact[0].name}}</td>
             </ng-container>
             <!-- Phone Column -->
             <ng-container matColumnDef="Phone">
               <th *matHeaderCellDef mat-header-cell mat-sort-header>Phone</th>
               <td *matCellDef="let order " mat-cell>
                 <button (click)="sendSMS(order)" class="btn btn-outline-primary">
-                  {{order.company.phone}}
+                  {{order.customer.phone}}
                 </button>
               </td>
             </ng-container>
