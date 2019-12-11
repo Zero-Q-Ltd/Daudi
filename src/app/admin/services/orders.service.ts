@@ -3,7 +3,7 @@ import { Order } from "../../models/Daudi/order/Order";
 import { OrderStages, OrderStageIds } from "../../models/Daudi/order/OrderStages";
 import { firestore } from "firebase";
 import * as moment from "moment";
-import { BehaviorSubject } from "rxjs";
+import { BehaviorSubject, combineLatest } from "rxjs";
 import { AngularFirestore } from "@angular/fire/firestore";
 import { DepotService } from "./core/depot.service";
 import { Depot } from "../../models/Daudi/depot/Depot";
@@ -44,10 +44,9 @@ export class OrdersService {
     private omc: OmcService,
     private config: ConfigService,
     private functions: AngularFireFunctions) {
-
-    this.omc.currentOmc
+    combineLatest([this.depotsservice.activedepot, this.omc.currentOmc])
       .pipe(
-        skipWhile(t => !t.Id)
+        skipWhile(t => !t[0].depot.Id || !t[1].Id)
       ).subscribe(depot => {
         this.unsubscribeAll();
         this.getpipeline();
@@ -69,7 +68,7 @@ export class OrdersService {
     this.queuedorders.value.push(order.Id);
     console.log(orderdata);
 
-    if (order.stage === 2) {
+    if (order.stage === 1) {
       return this.functions.httpsCallable("createEstimate")(orderdata).toPromise().then(value => {
         /**
          * delete the orderid after the operation is complete
@@ -78,6 +77,11 @@ export class OrdersService {
         if (index > -1) {
           this.queuedorders.value.splice(index, 1);
         }
+        return this.db.firestore.collection("omc")
+          .doc(this.omc.currentOmc.value.Id)
+          .collection("order")
+          .doc(order.Id)
+          .set(order);
       }).catch(reason => {
         /**
          * delete the orderid after the operation is complete
@@ -93,8 +97,8 @@ export class OrdersService {
       });
     } else {
       return this.db.firestore.collection("omc")
-        .doc(this.depotsservice.activedepot.value.depot.Id)
-        .collection("orders")
+        .doc(this.omc.currentOmc.value.Id)
+        .collection("order")
         .doc(order.Id)
         .set(order);
     }
@@ -178,9 +182,6 @@ export class OrdersService {
    * Fetches all orders and trucks Relevant to the header
    */
   getpipeline() {
-    if (!this.depotsservice.activedepot.value.depot.Id) {
-      return;
-    }
     /**
      * reset the trucks and orders array when this function is invoked
      */
@@ -196,12 +197,12 @@ export class OrdersService {
 
       const subscriprion = this.db.firestore.collection("omc")
         .doc(this.omc.currentOmc.value.Id)
-        .collection("orders")
+        .collection("order")
         .where("stage", "==", Number(stage))
         .where("config.depot.Id", "==", this.depotsservice.activedepot.value.depot.Id)
         .orderBy("stagedata.1.user.time", "asc")
         .onSnapshot(snapshot => {
-
+          console.log(snapshot.docs);
           /**
            * reset the array at the postion when data changes
            */
