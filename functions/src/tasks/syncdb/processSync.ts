@@ -16,9 +16,11 @@ export function processSync(sync: SyncRequest, qbo: QuickBooks) {
                 // return await syncAdmins(qbo);
                 case "Item":
                     console.log("Syncing Items zote");
+                    return true;
                 // return await syncItems(qbo);
                 case "BillPayment":
                     console.log("Syncing batches");
+                    return true;
                 // return await syncBatches(qbo, sync.time);
                 default:
                     console.log("Unrecognized object for syncdetected, breaking");

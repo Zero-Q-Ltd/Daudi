@@ -96,6 +96,7 @@ exports.smscreated = functions.firestore
     markAsRunning(eventID);
     return sendsms(data.data() as SMS, context.params.smsID);
   });
+
 exports.requestsync = functions.https.onCall(((data: { omc: OMC, config: Config, environment: Environment, sync: SyncRequest }, _) => {
   return createQbo(data.omc.Id, data.config, data.environment)
     .then((qbo: QuickBooks) => {

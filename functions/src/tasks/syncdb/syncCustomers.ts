@@ -1,5 +1,6 @@
 import { QuickBooks } from "../../libs/qbmain";
 import { firestore } from "firebase-admin";
+import { DaudiCustomer, emptyDaudiCustomer } from '../../models/Daudi/customer/Customer';
 import { Customer } from "../../models/Qbo/Customer";
 
 /**
@@ -15,7 +16,7 @@ export function syncCustomers(qbo: QuickBooks) {
         const batchwrite = firestore().batch();
         return getallcompanies().then(allcompanies => {
             const companiesarray =
-                allcompanies.docs.map(doc => doc.data() as Company) || [];
+                allcompanies.docs.map(doc => doc.data() as DaudiCustomer) || [];
             allcustomers.forEach(customer => {
                 /**
                  * Overwrite sandbox companies that conflict id with live, but ignore sandbox companies that conflict with live
@@ -41,7 +42,7 @@ export function syncCustomers(qbo: QuickBooks) {
                             co
                         );
                     } else {
-                        co = Object.assign({}, emptycompany, co);
+                        co = { ...emptyDaudiCustomer, ...co };
                         // console.log('creating company');
                         // console.log(co);
                         batchwrite.set(
@@ -62,12 +63,12 @@ function convertToDaudicustomer(
     customer: Customer,
     sandbox: boolean,
     companyid: string
-): Company {
-    let daudicompany: Company;
+): DaudiCustomer {
+    let daudicompany: DaudiCustomer;
     daudicompany = {
         sandbox: sandbox,
         balance: customer.Balance || 0,
-        contact: {
+        contact: [{
             email: customer.PrimaryEmailAddr
                 ? customer.PrimaryEmailAddr.Address
                 : '',
@@ -80,7 +81,7 @@ function convertToDaudicustomer(
                     customer.PrimaryPhone.FreeFormNumber.length - 9
                 )
                 : ''
-        },
+        }],
         Active: customer.Active || false,
         /**
          * A firebase id cannot contain '/' hence we use it as the separator
@@ -89,6 +90,10 @@ function convertToDaudicustomer(
         name: customer.FullyQualifiedName.toUpperCase(),
         QbId: customer.Id || '',
         krapin: customer.Notes ? customer.Notes.substring(0, 13) : '',
+        kraverified: {
+            status: false,
+            user: null
+        },
         companyId: companyid,
         location: new firestore.GeoPoint(0, 0)
     };
