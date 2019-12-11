@@ -15,7 +15,6 @@ export interface EquityBulk {
     username: string;
     transactionDate: Date;
     daudiFields: {
-        companyid: string;
         environment: Environment;
         /**
          * 0 : empty company

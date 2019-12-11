@@ -19,14 +19,12 @@ export interface DaudiCustomer {
     status: boolean
     user: AssociatedUser,
   };
-  companyId: string;
   balance: number;
 }
 
 export const emptyDaudiCustomer: DaudiCustomer = {
   Active: null,
   contact: [],
-  companyId: null,
   Id: null,
   name: null,
   QbId: null,

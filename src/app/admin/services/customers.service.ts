@@ -98,7 +98,6 @@ export class CustomerService {
   }
 
   createcompany(company: DaudiCustomer): Observable<any> {
-    company.companyId = this.db.createId();
     return this.functions.httpsCallable("createcustomer")(company);
   }
 

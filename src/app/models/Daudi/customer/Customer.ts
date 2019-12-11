@@ -1,7 +1,7 @@
 import { Contact } from "./Contact";
 import { AssociatedUser } from "../admin/AssociatedUser";
 import { MyGeoPoint } from "../../firestore/firestoreTypes";
-import { Environment } from '../omc/Environments';
+import { Environment } from "../omc/Environments";
 
 export interface DaudiCustomer {
   Active: boolean;
@@ -19,14 +19,12 @@ export interface DaudiCustomer {
     status: boolean
     user: AssociatedUser,
   };
-  companyId: string;
   balance: number;
 }
 
 export const emptyDaudiCustomer: DaudiCustomer = {
   Active: null,
   contact: [],
-  companyId: null,
   Id: null,
   name: null,
   QbId: null,
