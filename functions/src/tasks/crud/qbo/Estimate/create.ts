@@ -41,8 +41,9 @@ export class createEstimate {
                     Amount: this.orderdata.fuel[fuel].priceconfig.nonTaxprice * this.orderdata.fuel[fuel].qty,
                     DetailType: LineDetailType.GroupLineDetail,
                     Description: `VAT-Exempt : ${this.orderdata.fuel[fuel].priceconfig.nonTax} \t,
-                     Taxable Amount: ${this.orderdata.fuel[fuel].priceconfig.taxableAmnt} \t ,
-                      VAT Total : ${this.orderdata.fuel[fuel].priceconfig.taxAmnt} \t`,
+                    Taxable Amount: ${this.orderdata.fuel[fuel].priceconfig.taxableAmnt} \t ,
+                    VAT Total : ${this.orderdata.fuel[fuel].priceconfig.taxAmnt} \t`,
+                    Id: this.config.Qbo[this.environment].fuelconfig[fuel].groupId,
                     GroupLineDetail: {
                         Quantity: this.orderdata.fuel[fuel].qty,
                         GroupItemRef: {
@@ -57,14 +58,36 @@ export class createEstimate {
                             {
                                 Amount: this.orderdata.fuel[fuel].priceconfig.nonTaxprice * this.orderdata.fuel[fuel].qty,
                                 Description: "",
-                                DetailType: LineDetailType.GroupLineDetail,
-                                Id: this.config.Qbo[this.environment].fuelconfig[fuel].aseId
+                                DetailType: LineDetailType.SalesItemLineDetail,
+                                Id: this.config.Qbo[this.environment].fuelconfig[fuel].aseId,
+                                SalesItemLineDetail: {
+                                    ItemRef: {
+                                        name: fuel,
+                                        value: this.config.Qbo[this.environment].fuelconfig[fuel].aseId
+                                    },
+                                    Qty: this.orderdata.fuel[fuel].qty,
+                                    TaxCodeRef: {
+                                        value: this.config.Qbo[this.environment].taxConfig.taxCode.Id
+                                    },
+                                    UnitPrice: this.orderdata.fuel[fuel].priceconfig.nonTaxprice
+                                }
                             },
                             {
                                 Amount: 0,
                                 Description: "",
-                                DetailType: LineDetailType.GroupLineDetail,
-                                Id: this.config.Qbo[this.environment].fuelconfig[fuel].entryId
+                                DetailType: LineDetailType.SalesItemLineDetail,
+                                Id: this.config.Qbo[this.environment].fuelconfig[fuel].entryId,
+                                SalesItemLineDetail: {
+                                    ItemRef: {
+                                        name: fuel,
+                                        value: this.config.Qbo[this.environment].fuelconfig[fuel].aseId
+                                    },
+                                    Qty: this.orderdata.fuel[fuel].qty,
+                                    TaxCodeRef: {
+                                        value: this.config.Qbo[this.environment].taxConfig.taxCode.Id
+                                    },
+                                    UnitPrice: this.orderdata.fuel[fuel].priceconfig.nonTaxprice
+                                }
                             },
 
                         ]
@@ -113,8 +136,9 @@ export class createEstimate {
             PrintStatus: PrintStatus.NeedToPrint,
             DepartmentRef: {
                 name: this.orderdata.config.depot.name,
-                value: this.orderdata.QbConfig.classId
+                value: this.orderdata.QbConfig.departmentId
             },
+
             Line: this.syncfueltypes()
         };
 

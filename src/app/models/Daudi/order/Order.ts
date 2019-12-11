@@ -21,10 +21,10 @@ export interface Order {
     InvoiceId: string,
     QbId: string,
     /**
-     * depots are created in qbo as classes
-     * The class Id's must be referenced
+     * depots are created in qbo as departments
+     * The departments Id's must be referenced
      */
-    classId: string,
+    departmentId: string,
   };
   stage: number;
   origin: string;
@@ -110,7 +110,11 @@ export const emptyorder: Order = {
     QbId: null,
     krapin: null
   },
-  QbConfig: null,
+  QbConfig: {
+    InvoiceId: null,
+    QbId: null,
+    departmentId: null
+  },
   truck: deepCopy<Truck>(emptytruck),
   notifications: {
     sms: null,

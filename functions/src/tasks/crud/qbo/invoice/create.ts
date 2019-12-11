@@ -44,6 +44,7 @@ export class createInvoice {
                     Description: `VAT-Exempt : ${this.orderdata.fuel[fuel].priceconfig.nonTax} \t,
                      Taxable Amount: ${this.orderdata.fuel[fuel].priceconfig.taxableAmnt} \t ,
                       VAT Total : ${this.orderdata.fuel[fuel].priceconfig.taxAmnt} \t`,
+                    Id: this.config.Qbo[this.environment].fuelconfig[fuel].groupId,
                     GroupLineDetail: {
                         Quantity: this.orderdata.fuel[fuel].qty,
                         GroupItemRef: {
@@ -112,7 +113,7 @@ export class createInvoice {
             domain: "QBO",
             ClassRef: {
                 name: this.orderdata.config.depot.name,
-                value: this.orderdata.QbConfig.classId
+                value: this.orderdata.QbConfig.departmentId
             },
             // TxnStatus: TxnStatus.Pending,
             PrintStatus: PrintStatus.NeedToPrint,

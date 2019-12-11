@@ -61,7 +61,7 @@ export interface Estimate {
      */
     PrivateNote?: string
     DepartmentRef?: ReferenceType,
-    ClassRef: ReferenceType,
+    ClassRef?: ReferenceType,
 
 }
 

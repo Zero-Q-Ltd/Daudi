@@ -439,7 +439,7 @@ export class CreateOrderComponent implements OnDestroy {
   saveOrder(redirect: boolean, stage: number) {
     this.temporder.stage = stage;
     this.temporder.origin = "backend";
-    this.temporder.QbConfig.classId = this.activedepot.config.QbId;
+    this.temporder.QbConfig.departmentId = this.activedepot.config.QbId;
     this.temporder.customer.krapin = this.temporder.customer.krapin.toLocaleUpperCase();
     this.temporder.stagedata["1"] = {
       user: this.adminservice.createuserobject(),

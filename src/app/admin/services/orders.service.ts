@@ -67,8 +67,10 @@ export class OrdersService {
       order
     };
     this.queuedorders.value.push(order.Id);
+    console.log(orderdata);
+
     if (order.stage === 2) {
-      return this.functions.httpsCallable("createorder")(orderdata).toPromise().then(value => {
+      return this.functions.httpsCallable("createEstimate")(orderdata).toPromise().then(value => {
         /**
          * delete the orderid after the operation is complete
          */
@@ -77,6 +79,14 @@ export class OrdersService {
           this.queuedorders.value.splice(index, 1);
         }
       }).catch(reason => {
+        /**
+         * delete the orderid after the operation is complete
+         */
+        const index = this.queuedorders.value.indexOf(order.Id);
+        if (index > -1) {
+          this.queuedorders.value.splice(index, 1);
+        }
+        console.log("error creating order", reason);
         /***
          * error creating order
          */

@@ -4,6 +4,7 @@ import { inituser, AssociatedUser } from "../admin/AssociatedUser";
 import { deepCopy } from "../../utils/deepCopy";
 export interface DepotConfig {
     depotId: string;
+    QbId: string;
     CompanyRep: {
         phone: null;
         name: null;
@@ -11,7 +12,6 @@ export interface DepotConfig {
     price: {
         [key in FuelType]: DepotPrice;
     };
-    QbId: string;
     hospitality: {
         amnt: number;
     };
