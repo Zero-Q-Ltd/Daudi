@@ -52,7 +52,7 @@ exports.createEstimate = functions.https.onCall((data: OrderCreate, context) => 
        * Only send sn SMS when estimate creation is complete
        * Make the two processes run parallel so that none is blocking
        */
-      return Promise.all([ordersms(data.order), validorderupdate(data.order, result), creteOrder(data.order, data.omcId)])
+      return Promise.all([ordersms(data.order, data.omcId), validorderupdate(data.order, result), creteOrder(data.order, data.omcId)])
     });
   })
 
@@ -66,12 +66,12 @@ exports.approveInvoice = functions.https.onCall((data: OrderCreate, context) => 
   return createQbo(data.omcId, data.config, data.environment).then(async result => {
     console.log(result)
     const inv = new createInvoice(data.order, result, data.config, data.environment)
-    return result.createInvoice(inv.formulateEstimate()).then(() => {
+    return result.createInvoice(inv.formulateInvoice()).then(() => {
       /**
-    * Only send sn SMS when order creation is complete
+    * Only send sn SMS when invoice creation is complete
     * Make the two processes run parallel so that none is blocking
     */
-      return Promise.all([ordersms(data.order), validorderupdate(data.order, result)]);
+      return Promise.all([ordersms(data.order, data.omcId), validorderupdate(data.order, result)]);
     });
   })
 
@@ -125,7 +125,7 @@ exports.customerUpdated = functions.firestore
  * @todo Add a callback for when the SMS is successfully sent and possibly when it's read
  */
 exports.smscreated = functions.firestore
-  .document("/sms/{smsID}")
+  .document("/omc/{omcId}/sms/{smsID}")
   .onCreate((data, context) => {
     console.log(data);
     const eventID = context.eventId;
