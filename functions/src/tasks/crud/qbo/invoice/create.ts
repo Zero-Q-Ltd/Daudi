@@ -80,7 +80,7 @@ export class createInvoice {
     formulateEstimate(): Invoice {
         const newEstimate: Invoice = {
             CustomField: [{
-                DefinitionId: "2",
+                DefinitionId: "1",
                 Name: "Customer ID",
                 StringValue: this.orderdata.customer.QbId,
                 Type: "StringType"
