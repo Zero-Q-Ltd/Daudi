@@ -52,10 +52,7 @@ exports.createEstimate = functions.https.onCall((data: OrderCreate, context) => 
        * Only send sn SMS when estimate creation is complete
        * Make the two processes run parallel so that none is blocking
        */
-      return Promise.all([ordersms(data.order), validorderupdate(data.order, result)])
-        .then(() => {
-          return creteOrder(data.order, data.omcId)
-        });
+      return Promise.all([ordersms(data.order), validorderupdate(data.order, result), creteOrder(data.order, data.omcId)])
     });
   })
 
