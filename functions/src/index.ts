@@ -17,6 +17,9 @@ import { createEstimate } from './tasks/crud/qbo/Estimate/create';
 import { ordersms } from './tasks/sms/smscompose';
 import { validorderupdate } from './validators/orderupdate';
 import { MyTimestamp } from './models/firestore/firestoreTypes';
+import { QuickBooks } from './libs/qbmain';
+import { SyncRequest } from './models/Cloud/Sync';
+import { processSync } from './tasks/syncdb/processSync';
 
 admin.initializeApp(functions.config().firebase);
 admin.firestore().settings({ timestampsInSnapshots: true });
@@ -93,6 +96,12 @@ exports.smscreated = functions.firestore
     markAsRunning(eventID);
     return sendsms(data.data() as SMS, context.params.smsID);
   });
+exports.requestsync = functions.https.onCall(((data: { omc: OMC, config: Config, environment: Environment, sync: SyncRequest }, _) => {
+  return createQbo(data.omc.Id, data.config, data.environment)
+    .then((qbo: QuickBooks) => {
+      return processSync(data.sync, qbo);
+    });
+}))
 
 exports.onUserStatusChanged = functions.database
   .ref("/admins/{uid}")
