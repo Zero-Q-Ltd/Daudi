@@ -88,7 +88,6 @@ const initorderfuel: OrderFuelConfig = {
     taxableAmnt: 0,
     taxQbId: null
   },
-  QbId: null,
   batches: []
 };
 

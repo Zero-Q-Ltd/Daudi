@@ -61,7 +61,7 @@ export function initFuels(omc: OMC, config: Config, environment: Environment, qb
                 const newconfig = data.data() as Config
                 const res = operationresult.Item as Array<Item>
                 res.forEach(item => {
-                    newconfig.Qbo[environment].fuelconfig[item.Name].QbId = item.Id
+                    newconfig.Qbo[environment].fuelconfig[item.Name].groupId = item.Id
                 })
                 return t.update(ref, newconfig)
             })

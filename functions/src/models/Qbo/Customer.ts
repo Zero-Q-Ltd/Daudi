@@ -1,13 +1,12 @@
+import { ReferenceType } from "./subTypes/ClassRef";
+
 export interface Customer {
   Taxable?: boolean;
   Job?: boolean;
   BillWithParent?: boolean;
   Balance?: number;
   BalanceWithJobs?: number;
-  CurrencyRef?: {
-    value: "KES";
-    name: "Kenyan Shilling";
-  };
+  CurrencyRef?: ReferenceType;
   Notes?: string;
   PreferredDeliveryMethod?: "Email";
   domain?: "QBO";

@@ -1,4 +1,5 @@
 import { LinkedTxn } from "./subTypes/LinkedTxn";
+import { ReferenceType } from "./subTypes/ClassRef";
 
 export interface Bill {
   DueDate: string;
@@ -13,7 +14,7 @@ export interface Bill {
   };
   DocNumber: string;
   TxnDate: string;
-  CurrencyRef: { value: string; name: string };
+  CurrencyRef: ReferenceType;
   LinkedTxn: Array<LinkedTxn>;
   Line: Array<{
     Id: string;
@@ -21,24 +22,13 @@ export interface Bill {
     DetailType: string;
     ItemBasedExpenseLineDetail: {
       BillableStatus: string;
-      ItemRef: {
-        value: string;
-        name: string;
-      };
+      ItemRef: ReferenceType;
       UnitPrice: number;
       Qty: number;
-      TaxCodeRef: {
-        value: string;
-      };
+      TaxCodeRef: ReferenceType;
     };
   }>;
-  VendorRef: {
-    value: string;
-    name: string;
-  };
-  APAccountRef: {
-    value: string;
-    name: string;
-  };
+  VendorRef: ReferenceType;
+  APAccountRef: ReferenceType;
   TotalAmt: number;
 }

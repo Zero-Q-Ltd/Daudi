@@ -45,7 +45,8 @@ exports.createEstimate = functions.https.onCall((data: OrderCreate, context) => 
 
   return createQbo(data.omcId, data.config, data.environment).then(async result => {
     console.log(result)
-    return createEstimate(data.order, result, data.config, data.environment).then(() => {
+    const est = new createEstimate(data.order, result, data.config, data.environment)
+    return result.createEstimate(est.formulateEstimate()).then(() => {
       /**
        * Only send sn SMS when estimate creation is complete
        * Make the two processes run parallel so that none is blocking
@@ -63,11 +64,12 @@ exports.approveInvoice = functions.https.onCall((data: OrderCreate, context) => 
 
   return createQbo(data.omcId, data.config, data.environment).then(async result => {
     console.log(result)
-    return createInvoice(data.order, result, data.config, data.environment, data.omcId).then(() => {
+    const inv = new createInvoice(data.order, result, data.config, data.environment)
+    return result.createInvoice(inv.formulateEstimate()).then(() => {
       /**
-       * Only send sn SMS when order creation is complete
-       * Make the two processes run parallel so that none is blocking
-       */
+    * Only send sn SMS when order creation is complete
+    * Make the two processes run parallel so that none is blocking
+    */
       return Promise.all([ordersms(data.order), validorderupdate(data.order, result)]);
     });
   })

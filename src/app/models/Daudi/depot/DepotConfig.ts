@@ -11,6 +11,7 @@ export interface DepotConfig {
     price: {
         [key in FuelType]: DepotPrice;
     };
+    QbId: string;
     hospitality: {
         amnt: number;
     };
@@ -22,6 +23,7 @@ const initPrice: DepotPrice = {
 };
 export const emptyDepotConfig: DepotConfig = {
     depotId: null,
+    QbId: null,
     CompanyRep: {
         name: null,
         phone: null

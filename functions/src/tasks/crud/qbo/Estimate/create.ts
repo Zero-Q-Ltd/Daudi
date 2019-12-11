@@ -22,7 +22,6 @@ export class createEstimate {
     qbo: QuickBooks;
     config: Config;
     environment: Environment;
-
     constructor(_orderdata: Order, _qbo: QuickBooks, _config: Config, environment: Environment) {
         /**
     * format the timestamp again as it loses it when it doesnt directly go to the database
@@ -34,14 +33,16 @@ export class createEstimate {
         this.environment = environment
     }
 
-    syncfueltypes(TxnTaxCodeRef: string): Array<any> {
+    syncfueltypes(): Array<any> {
         const values: Array<Line> = [];
         FuelNamesArray.forEach(fuel => {
             if (this.orderdata.fuel[fuel].qty > 0) {
                 values.push({
                     Amount: this.orderdata.fuel[fuel].priceconfig.nonTaxprice * this.orderdata.fuel[fuel].qty,
                     DetailType: LineDetailType.GroupLineDetail,
-                    Description: `VAT-Exempt : ${this.orderdata.fuel[fuel].priceconfig.nonTax} \t, Taxable Amount: ${this.orderdata.fuel[fuel].priceconfig.taxableAmnt} \t , VAT Total : ${orderdata.fuel[fuel].priceconfig.taxAmnt} \t`,
+                    Description: `VAT-Exempt : ${this.orderdata.fuel[fuel].priceconfig.nonTax} \t,
+                     Taxable Amount: ${this.orderdata.fuel[fuel].priceconfig.taxableAmnt} \t ,
+                      VAT Total : ${this.orderdata.fuel[fuel].priceconfig.taxAmnt} \t`,
                     GroupLineDetail: {
                         Quantity: this.orderdata.fuel[fuel].qty,
                         GroupItemRef: {
@@ -110,8 +111,11 @@ export class createEstimate {
             domain: "QBO",
             TxnStatus: TxnStatus.Pending,
             PrintStatus: PrintStatus.NeedToPrint,
-
-            Line: this.syncfueltypes(TxnTaxCodeRef)
+            DepartmentRef: {
+                name: this.orderdata.config.depot.name,
+                value: this.orderdata.QbConfig.classId
+            },
+            Line: this.syncfueltypes()
         };
 
         return newEstimate;

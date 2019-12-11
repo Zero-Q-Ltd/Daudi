@@ -5,7 +5,7 @@ export interface FuelConfig {
     };
     groupId: string;
     aseId: string;
-    entryId: string;
+    entryId: string
 }
 
 export const emptyFuelConfig: FuelConfig = {
