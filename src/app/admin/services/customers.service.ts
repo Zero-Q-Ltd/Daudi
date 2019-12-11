@@ -42,14 +42,14 @@ export class CustomerService {
   queryActivecompany(krapin: string) {
     return this.db.firestore.collection("omc")
       .doc(this.omc.currentOmc.value.Id)
-      .collection("customers")
+      .collection("customer")
       .where("krapin", "==", krapin)
       .where("Active", "==", true)
       .limit(1);
   }
 
   getcompany(companyid) {
-    return this.db.firestore.collection("customers")
+    return this.db.firestore.collection("customer")
       .doc(companyid);
   }
 
@@ -57,8 +57,8 @@ export class CustomerService {
     this.loadingcustomers.next(true);
     const subscriprion = this.db.firestore.collection("omc")
       .doc(this.omc.currentOmc.value.Id)
-      .collection("customers")
-      .where("sandbox", "==", this.config.environment.value)
+      .collection("customer")
+      .where("environment", "==", this.config.environment.value)
       .onSnapshot(snapshot => {
         this.allcustomers.next(snapshot.docs.map(value => {
           const co: DaudiCustomer = value.data() as DaudiCustomer;
@@ -83,18 +83,18 @@ export class CustomerService {
   verifykra(krapin: string) {
     return this.db.firestore.collection("omc")
       .doc(this.omc.currentOmc.value.Id)
-      .collection("customers")
+      .collection("customer")
       .where("krapin", "==", krapin);
   }
 
   querycustomers(customer: string, maxstring: string) {
     return this.db.firestore.collection("omc")
       .doc(this.omc.currentOmc.value.Id)
-      .collection("customers")
+      .collection("customer")
       .where("name", ">=", customer)
       .where("name", "<", maxstring)
       .where("Active", "==", true)
-      .where("companyId", "==", this.config.getEnvironment().auth.companyId);
+      .where("environment", "==", this.config.environment.value);
   }
 
   createcompany(company: DaudiCustomer): Observable<any> {
@@ -104,7 +104,7 @@ export class CustomerService {
 
 
   updatecompany(companyid: string) {
-    return this.db.firestore.collection("customers").doc(companyid);
+    return this.db.firestore.collection("customer").doc(companyid);
   }
 
 }

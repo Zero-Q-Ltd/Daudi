@@ -39,7 +39,7 @@ export function syncCustomers(qbo: QuickBooks, omcId: string, env: Environment) 
                             firestore()
                                 .collection("omc")
                                 .doc(omcId)
-                                .collection("customers")
+                                .collection("customer")
                                 .doc(co.Id),
                             co
                         );
@@ -51,7 +51,7 @@ export function syncCustomers(qbo: QuickBooks, omcId: string, env: Environment) 
                             firestore()
                                 .collection("omc")
                                 .doc(omcId)
-                                .collection("customers")
+                                .collection("customer")
                                 .doc(co.Id),
                             co
                         );
@@ -108,6 +108,6 @@ function getallcustomers(omcId: string) {
     return firestore()
         .collection("omc")
         .doc(omcId)
-        .collection("customers")
+        .collection("customer")
         .get();
 }
