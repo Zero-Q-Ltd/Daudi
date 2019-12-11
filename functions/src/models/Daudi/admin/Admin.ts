@@ -1,5 +1,6 @@
 import { inituser, AssociatedUser } from "./AssociatedUser";
 import { deepCopy } from "../../utils/deepCopy";
+import { Environment } from "../omc/Environments";
 
 export interface Admin {
   Active: boolean;
@@ -8,7 +9,7 @@ export interface Admin {
     qbo: {
       companyid: string,
       QbId: string,
-      sandbox: boolean
+      environment: Environment;
     }
     omcid: string,
     level: string,
@@ -71,7 +72,7 @@ export const emptyadmin: Admin = {
     qbo: {
       companyid: null,
       QbId: null,
-      sandbox: null
+      environment: null
     },
     approvedby: deepCopy<AssociatedUser>(inituser),
     app: {

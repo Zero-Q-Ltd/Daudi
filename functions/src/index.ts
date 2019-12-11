@@ -19,6 +19,7 @@ import { validorderupdate } from './validators/orderupdate';
 import { MyTimestamp } from './models/firestore/firestoreTypes';
 import { QuickBooks } from './libs/qbmain';
 import { SyncRequest } from './models/Cloud/Sync';
+import { CompanySync } from "./models/Cloud/CompanySync";
 import { processSync } from './tasks/syncdb/processSync';
 
 admin.initializeApp(functions.config().firebase);
@@ -97,10 +98,10 @@ exports.smscreated = functions.firestore
     return sendsms(data.data() as SMS, context.params.smsID);
   });
 
-exports.requestsync = functions.https.onCall(((data: { omc: OMC, config: Config, environment: Environment, sync: SyncRequest }, _) => {
+exports.requestsync = functions.https.onCall(((data: CompanySync, _) => {
   return createQbo(data.omc.Id, data.config, data.environment)
     .then((qbo: QuickBooks) => {
-      return processSync(data.sync, qbo);
+      return processSync(data.sync, qbo, data.omc.Id, data.config, data.environment);
     });
 }))
 

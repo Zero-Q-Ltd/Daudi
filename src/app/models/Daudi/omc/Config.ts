@@ -62,7 +62,7 @@ export const emptyqboAuth: QBOAuthCOnfig = {
     clientId: "",
     clientSecret: "",
     webhooksVerifier: "",
-    isSandbox: true,
+    environment: Environment.sandbox,
     authConfig: {
         previousDCT: MyTimestamp.fromDate(new Date()),
         accessToken: "",

@@ -6,7 +6,7 @@ import { Observable, ReplaySubject } from "rxjs";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { MapsComponent } from "../maps/maps.component";
 import { NotificationService } from "../../shared/services/notification.service";
-import { Customer, emptycompany } from "../../models/Daudi/customer/Customer";
+import { DaudiCustomer, emptyDaudiCustomer } from "../../models/Daudi/customer/Customer";
 import { emptyorder, Order } from "../../models/Daudi/order/Order";
 import { Depot, emptydepot } from "../../models/Daudi/depot/Depot";
 import { AdminService } from "../services/core/admin.service";
@@ -45,10 +45,10 @@ export class CreateOrderComponent implements OnDestroy {
      * strictly hold information from the database ONLY
      * Have one source of truth and dont mix up the data
      */
-    companydata: Customer
+    companydata: DaudiCustomer
   } = {
       newcompany: true,
-      companydata: Object.assign({}, emptycompany)
+      companydata: { ...emptyDaudiCustomer }
     };
 
   tempsellingprices = {
@@ -77,7 +77,7 @@ export class CreateOrderComponent implements OnDestroy {
     }
   );
   fueltypesArray = FuelNamesArray;
-  filteredCompanies: Observable<Customer[]>;
+  filteredCompanies: Observable<DaudiCustomer[]>;
   companyControl = new FormControl();
   loadingcustomers = false;
   queuedorders = [];
@@ -370,7 +370,7 @@ export class CreateOrderComponent implements OnDestroy {
   /**
    * Returns true if this KRA pin has not been used
    */
-  searchkra(krapin: string): Customer | undefined {
+  searchkra(krapin: string): DaudiCustomer | undefined {
     return this.customerService.allcustomers.value.filter(value => {
       return value.krapin === krapin;
     })[0];
@@ -468,7 +468,7 @@ export class CreateOrderComponent implements OnDestroy {
          */
         this.krausedmsg(this.companyInfo.companydata.krapin);
       } else {
-        this.customerService.createcompany(this.companyInfo.companydata).pipe(takeUntil(this.comopnentDestroyed)).subscribe((newcompany: Customer) => {
+        this.customerService.createcompany(this.companyInfo.companydata).pipe(takeUntil(this.comopnentDestroyed)).subscribe((newcompany: DaudiCustomer) => {
           this.notificationService.notify({
             duration: 2000,
             title: "Synchronising",
@@ -523,7 +523,7 @@ export class CreateOrderComponent implements OnDestroy {
     }
   }
 
-  companyselect(selectedcompany: Customer) {
+  companyselect(selectedcompany: DaudiCustomer) {
     this.companyInfo.newcompany = false;
     this.companyInfo.companydata = selectedcompany;
     this.contactform.controls.kraControl.setValue(selectedcompany.krapin, { emitEvent: false });
@@ -578,7 +578,7 @@ export class CreateOrderComponent implements OnDestroy {
     });
   }
 
-  private _filter(value: string): Customer[] {
+  private _filter(value: string): DaudiCustomer[] {
     if (!value) {
       return;
     }

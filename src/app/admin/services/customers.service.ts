@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { Customer } from "../../models/Daudi/customer/Customer";
+import { DaudiCustomer } from "../../models/Daudi/customer/Customer";
 import { AngularFirestore } from "@angular/fire/firestore";
 import { DepotService } from "./core/depot.service";
 import { BehaviorSubject, Observable, combineLatest } from "rxjs";
@@ -12,7 +12,7 @@ import { OmcService } from "./core/omc.service";
   providedIn: "root"
 })
 export class CustomerService {
-  allcustomers: BehaviorSubject<Array<Customer>> = new BehaviorSubject<Array<Customer>>([]);
+  allcustomers: BehaviorSubject<Array<DaudiCustomer>> = new BehaviorSubject<Array<DaudiCustomer>>([]);
   loadingcustomers: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
 
   /**
@@ -61,7 +61,7 @@ export class CustomerService {
       .where("sandbox", "==", this.config.environment.value)
       .onSnapshot(snapshot => {
         this.allcustomers.next(snapshot.docs.map(value => {
-          const co: Customer = value.data() as Customer;
+          const co: DaudiCustomer = value.data() as DaudiCustomer;
           co.Id = value.id;
           return co;
         }));
@@ -97,7 +97,7 @@ export class CustomerService {
       .where("companyId", "==", this.config.getEnvironment().auth.companyId);
   }
 
-  createcompany(company: Customer): Observable<any> {
+  createcompany(company: DaudiCustomer): Observable<any> {
     company.companyId = this.db.createId();
     return this.functions.httpsCallable("createcustomer")(company);
   }

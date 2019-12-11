@@ -1,5 +1,5 @@
 import { AssociatedUser } from "../Daudi/admin/AssociatedUser";
-
+import { Environment } from '../Daudi/omc/Environments';
 export interface EquityBulk {
     billNumber: string;
     billAmount: number;
@@ -16,7 +16,7 @@ export interface EquityBulk {
     transactionDate: Date;
     daudiFields: {
         companyid: string;
-        sandbox: boolean;
+        environment: Environment;
         /**
          * 0 : empty company
          * 1 : unprocessed

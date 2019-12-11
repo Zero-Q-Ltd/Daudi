@@ -1,6 +1,7 @@
 import { Contact } from "./Contact";
 import { AssociatedUser } from "../admin/AssociatedUser";
 import { MyGeoPoint } from "../../firestore/firestoreTypes";
+import { Environment } from '../omc/Environments';
 
 export interface DaudiCustomer {
   Active: boolean;
@@ -10,7 +11,7 @@ export interface DaudiCustomer {
    */
   contact: Array<Contact>;
   QbId: string;
-  sandbox: boolean;
+  environment: Environment;
   Id: string;
   location: MyGeoPoint;
   krapin: string;
@@ -29,7 +30,7 @@ export const emptyDaudiCustomer: DaudiCustomer = {
   Id: null,
   name: null,
   QbId: null,
-  sandbox: null,
+  environment: null,
   /**
    * make default location Somewhere in nbi
    */

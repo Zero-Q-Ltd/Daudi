@@ -2,12 +2,13 @@ import { QuickBooks } from "../../libs/qbmain";
 import { firestore } from "firebase-admin";
 import { DaudiCustomer, emptyDaudiCustomer } from '../../models/Daudi/customer/Customer';
 import { Customer } from "../../models/Qbo/Customer";
+import { Environment } from '../../models/Daudi/omc/Environments';
 
 /**
  * Fetches all the customer information qbom qbo and overwrites the Companies info on Dausi
  * @param qbo
  */
-export function syncCustomers(qbo: QuickBooks) {
+export function syncCustomers(qbo: QuickBooks, omcId: string, env: Environment) {
     /**
      * Limit to 1000 customers for every sync operation
      */
@@ -32,7 +33,7 @@ export function syncCustomers(qbo: QuickBooks) {
                     // console.log('ignoring conflicting company');
                     return;
                 } else {
-                    let co = convertToDaudicustomer(customer, qbo.sandbox, qbo.companyid);
+                    let co = convertToDaudicustomer(customer, env, qbo.companyid);
                     if (companiesarray.find(company => company.QbId === customer.Id)) {
                         // console.log('updating company');
                         batchwrite.update(
@@ -61,12 +62,12 @@ export function syncCustomers(qbo: QuickBooks) {
 
 function convertToDaudicustomer(
     customer: Customer,
-    sandbox: boolean,
+    env: Environment,
     companyid: string
 ): DaudiCustomer {
     let daudicompany: DaudiCustomer;
     daudicompany = {
-        sandbox: sandbox,
+        environment: env,
         balance: customer.Balance || 0,
         contact: [{
             email: customer.PrimaryEmailAddr
