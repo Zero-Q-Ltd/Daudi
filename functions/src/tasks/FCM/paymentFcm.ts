@@ -2,6 +2,7 @@ import { firestore, messaging } from "firebase-admin";
 import { EquityBulk } from "../../models/ipn/EquityBulk";
 import { Fcm } from "../../models/Cloud/Fcm";
 import { Admin } from "../../models/Daudi/admin/Admin";
+import { Environment } from '../../models/Daudi/omc/Environments';
 
 export function paymentFcm(ipn: EquityBulk) {
   console.log("sending payment FCM");
@@ -36,7 +37,7 @@ export function paymentFcm(ipn: EquityBulk) {
            * Only users below level 3 can receive payment notifications
            * It is mandatory that the users have tokens
            */
-          if (ipn.daudiFields.sandbox) {
+          if (ipn.daudiFields.environment === Environment.sandbox) {
             return (
               Number(admin.config.level) < 3 &&
               admin.config.fcm.subscriptions.payment &&

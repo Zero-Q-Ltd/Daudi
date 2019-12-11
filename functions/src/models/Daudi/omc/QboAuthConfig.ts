@@ -1,4 +1,5 @@
 import { MyTimestamp } from "../../firestore/firestoreTypes";
+import { Environment } from './Environments';
 
 
 export interface QBOAuthCOnfig {
@@ -6,7 +7,7 @@ export interface QBOAuthCOnfig {
     clientId: string;
     clientSecret: string;
     webhooksVerifier: string;
-    isSandbox: boolean;
+    environment: Environment;
     authConfig: AuthConfig;
 }
 export interface AuthConfig {

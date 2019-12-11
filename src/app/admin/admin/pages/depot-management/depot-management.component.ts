@@ -79,7 +79,6 @@ export class DepotManagementComponent implements OnInit, OnDestroy {
 
     this.creatingsync = true;
     const syncobject: SyncRequest = {
-      companyid: this.config.getEnvironment().auth.companyId,
       time: MyTimestamp.now(),
       synctype: ["Item"]
     };

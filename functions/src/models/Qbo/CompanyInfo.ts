@@ -1,4 +1,5 @@
 import { QboMetaData } from "./subTypes/QboMetaData";
+import { WebAddr } from './subTypes/WebAddr';
 
 export interface Address {
     City: string;
@@ -7,10 +8,6 @@ export interface Address {
     PostalCode: string;
     CountrySubDivisionCode: string;
     Id: string;
-}
-
-export interface WebAddr {
-    URI: string
 }
 
 export interface CustomerCommunicationAddr {
@@ -67,9 +64,4 @@ Original Line1 through Line 5 contents, City, SubDivisionCode, and PostalCode fl
      */
     NameValue?: NameValue[];
     MetaData?: QboMetaData;
-}
-
-export interface RootObject {
-    CompanyInfo: CompanyInfo;
-    time: Date;
 }

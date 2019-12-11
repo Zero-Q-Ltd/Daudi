@@ -5,10 +5,11 @@ import { NotificationService } from "../../../../shared/services/notification.se
 import { MatDialog, MatPaginator, MatSort, MatTableDataSource } from "@angular/material";
 import { PaymentsService } from "../../../services/payments.service";
 import { CustomerManagementComponent } from "../customer-management/customer-management.component";
-import { Customer } from "../../../../models/Daudi/customer/Customer";
+import { DaudiCustomer } from "../../../../models/Daudi/customer/Customer";
 import { takeUntil } from "rxjs/operators";
 import { ReplaySubject } from "rxjs";
 import { EquityBulk } from "../../../../models/ipn/EquityBulk";
+import { Environment } from "../../../../models/Daudi/omc/Environments";
 
 @Component({
   selector: "app-payments",
@@ -49,14 +50,16 @@ export class PaymentsComponent implements OnInit, OnDestroy {
       width: "80%",
       data: "Attach"
     });
-    dialogRef.afterClosed().pipe(takeUntil(this.comopnentDestroyed)).subscribe((result: Array<Customer> | null) => {
+    dialogRef.afterClosed().pipe(takeUntil(this.comopnentDestroyed)).subscribe((result: Array<DaudiCustomer> | null) => {
       if (result) {
         payment.billNumber = result[0].Id;
         payment.daudiFields.status = 48;
         payment.daudiFields.approvedby = this.adminservice.createuserobject();
-        this.functions.httpsCallable(payment.daudiFields.sandbox ? "ipnsandboxcallable" : "ipnprodcallable")(payment).pipe(takeUntil(this.comopnentDestroyed)).subscribe(res => {
-          console.log(res);
-        });
+        this.functions.httpsCallable(payment.daudiFields.environment === Environment.sandbox ? "ipnsandboxcallable" : "ipnprodcallable")(payment)
+          .pipe(takeUntil(this.comopnentDestroyed))
+          .subscribe(res => {
+            console.log(res);
+          });
       }
 
     });

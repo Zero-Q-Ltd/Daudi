@@ -1,5 +1,4 @@
 import { AssociatedUser } from "../Daudi/admin/AssociatedUser";
-
 export interface Jenga {
     customer: {
         name: string;
@@ -22,7 +21,6 @@ export interface Jenga {
         account: string;
     };
     daudiFields: {
-        companyid: string;
         sandbox: boolean;
         /**
          * 0 : empty company

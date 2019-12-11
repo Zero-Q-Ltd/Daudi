@@ -1,5 +1,5 @@
-import * as CloneDeep from "lodash.clonedeep";
+import { cloneDeep } from "lodash";
 
 export function deepCopy<T>(object: T): T {
-    return CloneDeep(object);
+    return cloneDeep(object);
 }

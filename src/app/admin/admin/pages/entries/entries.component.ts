@@ -118,7 +118,6 @@ export class BatchesComponent implements OnInit {
   syncdb() {
     this.creatingsync = true;
     const syncobject: SyncRequest = {
-      companyid: this.config.getEnvironment().auth.companyId,
       time: MyTimestamp.now(),
       synctype: ["BillPayment"]
     };

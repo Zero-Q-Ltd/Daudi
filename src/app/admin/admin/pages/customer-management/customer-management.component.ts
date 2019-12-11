@@ -2,7 +2,7 @@ import { Component, Inject, OnDestroy, OnInit, Optional, ViewChild } from "@angu
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef, MatPaginator, MatSnackBar, MatSort, MatTableDataSource } from "@angular/material";
 import { CompanyMembersComponent } from "../company-members/company-members.component";
 import { SendMsgComponent } from "../../../send-msg/send-msg.component";
-import { Customer } from "../../../../models/Daudi/customer/Customer";
+import { DaudiCustomer } from "../../../../models/Daudi/customer/Customer";
 import { SMS } from "../../../../models/Daudi/sms/sms";
 import { NotificationService } from "../../../../shared/services/notification.service";
 import { SelectionModel } from "@angular/cdk/collections";
@@ -15,6 +15,8 @@ import { takeUntil } from "rxjs/operators";
 import { ConfigService } from "../../../services/core/config.service";
 import { SyncRequest } from "../../../../models/Cloud/Sync";
 import { MyTimestamp } from "../../../../models/firestore/firestoreTypes";
+import { OmcService } from "../../../services/core/omc.service";
+import { CompanySync } from "../../../../models/Cloud/CompanySync";
 
 
 @Component({
@@ -27,11 +29,11 @@ export class CustomerManagementComponent implements OnInit, OnDestroy {
 
   dialogProperties: object = {};
   displayedColumns: string[] = ["select", "QbId", "name", "email", "phone", "krapin", "balance"];
-  companiesdatasource = new MatTableDataSource<Customer>();
+  companiesdatasource = new MatTableDataSource<DaudiCustomer>();
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   creatingsync = false;
-  selection = new SelectionModel<Customer>(true, []);
+  selection = new SelectionModel<DaudiCustomer>(true, []);
   loadingcompanies = true;
   savingcompany = false;
 
@@ -46,9 +48,11 @@ export class CustomerManagementComponent implements OnInit, OnDestroy {
     private functions: AngularFireFunctions,
     private config: ConfigService,
     private depot: DepotService,
+    private omc: OmcService,
     @Optional() public dialogRef: MatDialogRef<CustomerManagementComponent>,
     @Optional() @Inject(MAT_DIALOG_DATA) public purpose: "SMS" | "Attach") {
-    this.depot.activedepot.pipe(takeUntil(this.comopnentDestroyed))
+    this.depot.activedepot
+      .pipe(takeUntil(this.comopnentDestroyed))
       .subscribe(depotvata => {
         this.companiesdatasource.data = [];
         this.loadingcompanies = true;
@@ -59,18 +63,20 @@ export class CustomerManagementComponent implements OnInit, OnDestroy {
                 /**
                  * disable mutiselect and channge the buttontext
                  */
-                this.selection = new SelectionModel<Customer>(false, []);
+                this.selection = new SelectionModel<DaudiCustomer>(false, []);
               }
             }
           }
-          // this.customerservice.loadingcompanies.pipe(takeUntil(this.comopnentDestroyed))
-          //   .subscribe(value => {
-          //     this.loadingcompanies = value;
-          //   });
-          // customerservice.allcompanies.pipe(takeUntil(this.comopnentDestroyed))
-          //   .subscribe(data => {
-          //     this.companiesdatasource.data = data;
-          //   });
+          this.customerservice.loadingcustomers
+            .pipe(takeUntil(this.comopnentDestroyed))
+            .subscribe(value => {
+              this.loadingcompanies = value;
+            });
+          customerservice.allcustomers
+            .pipe(takeUntil(this.comopnentDestroyed))
+            .subscribe(data => {
+              this.companiesdatasource.data = data;
+            });
         }
       });
 
@@ -151,21 +157,37 @@ export class CustomerManagementComponent implements OnInit, OnDestroy {
   syncdb() {
     this.creatingsync = true;
 
-    const syncobject: SyncRequest = {
-      companyid: this.config.getEnvironment().auth.companyId,
+    const req: SyncRequest = {
       time: MyTimestamp.now(),
       synctype: ["Customer"]
     };
-
-    this.functions.httpsCallable("requestsync")(syncobject).pipe(takeUntil(this.comopnentDestroyed))
-      .subscribe(res => {
-        this.creatingsync = false;
-        this.notification.notify({
-          alert_type: "success",
-          title: "Success",
-          body: "Companies Synchronized"
-        });
+    const syncObject: CompanySync = {
+      config: this.config.omcconfig.value,
+      environment: this.config.environment.value,
+      omc: this.omc.currentOmc.value,
+      sync: req
+    };
+    const sync = this.functions.httpsCallable("requestsync")(syncObject)
+      .pipe(takeUntil(this.comopnentDestroyed))
+      .toPromise();
+    sync.then(res => {
+      this.creatingsync = false;
+      this.notification.notify({
+        alert_type: "success",
+        title: "Success",
+        body: "Companies Synchronized"
       });
+    }).catch(e => {
+      this.creatingsync = false;
+      this.notification.notify({
+        alert_type: "error",
+        title: "Error",
+        body: "Sync failed, please try again later"
+      });
+      /**
+       * @todo send the error to the database
+       */
+    });
 
   }
 
@@ -173,7 +195,7 @@ export class CustomerManagementComponent implements OnInit, OnDestroy {
     console.log(id);
   }
 
-  approvecompany(company: Customer) {
+  approvecompany(company: DaudiCustomer) {
     this.savingcompany = true;
     this.customerservice.verifykra(company.krapin)
       .get()
@@ -203,7 +225,7 @@ export class CustomerManagementComponent implements OnInit, OnDestroy {
     this.companiesdatasource.filter = filterValue;
   }
 
-  approve(company: Customer) {
+  approve(company: DaudiCustomer) {
     // console.log(company)
     if (company.kraverified.status === undefined) {
       company.kraverified = {
@@ -221,7 +243,7 @@ export class CustomerManagementComponent implements OnInit, OnDestroy {
 
   }
 
-  saveChanges(company: Customer) {
+  saveChanges(company: DaudiCustomer) {
     console.log(company);
     // update company
     // this.updateCompanies(company.$key, company)

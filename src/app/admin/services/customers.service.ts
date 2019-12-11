@@ -1,17 +1,18 @@
 import { Injectable } from "@angular/core";
-import { Customer } from "../../models/Daudi/customer/Customer";
+import { DaudiCustomer } from "../../models/Daudi/customer/Customer";
 import { AngularFirestore } from "@angular/fire/firestore";
 import { DepotService } from "./core/depot.service";
-import { BehaviorSubject, Observable } from "rxjs";
+import { BehaviorSubject, Observable, combineLatest } from "rxjs";
 import { AngularFireFunctions } from "@angular/fire/functions";
-import { distinctUntilKeyChanged, distinctUntilChanged } from "rxjs/operators";
+import { distinctUntilKeyChanged, distinctUntilChanged, skipWhile } from "rxjs/operators";
 import { ConfigService } from "./core/config.service";
+import { OmcService } from "./core/omc.service";
 
 @Injectable({
   providedIn: "root"
 })
 export class CustomerService {
-  allcustomers: BehaviorSubject<Array<Customer>> = new BehaviorSubject<Array<Customer>>([]);
+  allcustomers: BehaviorSubject<Array<DaudiCustomer>> = new BehaviorSubject<Array<DaudiCustomer>>([]);
   loadingcustomers: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
 
   /**
@@ -23,14 +24,15 @@ export class CustomerService {
     private db: AngularFirestore,
     private depotsservice: DepotService,
     private config: ConfigService,
+    private omc: OmcService,
     private functions: AngularFireFunctions) {
-    this.config.environment.subscribe(val => {
-      this.unsubscribeAll();
-      this.getallcustomers();
-    });
-    this.depotsservice.activedepot.subscribe(depot => {
+    combineLatest(this.config.environment, this.omc.currentOmc)
+      .pipe(skipWhile(t => !t[1].Id))
+      .subscribe(t => {
+        this.unsubscribeAll();
+        this.getallcustomers();
+      });
 
-    });
   }
 
   /**
@@ -38,24 +40,28 @@ export class CustomerService {
    * @param krapin
    */
   queryActivecompany(krapin: string) {
-    return this.db.firestore.collection("customers")
+    return this.db.firestore.collection("omc")
+      .doc(this.omc.currentOmc.value.Id)
+      .collection("customer")
       .where("krapin", "==", krapin)
       .where("Active", "==", true)
       .limit(1);
   }
 
   getcompany(companyid) {
-    return this.db.firestore.collection("customers")
+    return this.db.firestore.collection("customer")
       .doc(companyid);
   }
 
   getallcustomers() {
     this.loadingcustomers.next(true);
-    const subscriprion = this.db.firestore.collection("customers")
-      .where("sandbox", "==", this.config.environment.value)
+    const subscriprion = this.db.firestore.collection("omc")
+      .doc(this.omc.currentOmc.value.Id)
+      .collection("customer")
+      .where("environment", "==", this.config.environment.value)
       .onSnapshot(snapshot => {
         this.allcustomers.next(snapshot.docs.map(value => {
-          const co: Customer = value.data() as Customer;
+          const co: DaudiCustomer = value.data() as DaudiCustomer;
           co.Id = value.id;
           return co;
         }));
@@ -75,26 +81,32 @@ export class CustomerService {
    * @param {string} krapin
    */
   verifykra(krapin: string) {
-    return this.db.firestore.collection("customers")
+    return this.db.firestore.collection("omc")
+      .doc(this.omc.currentOmc.value.Id)
+      .collection("customer")
       .where("krapin", "==", krapin);
   }
 
   querycustomers(customer: string, maxstring: string) {
-    return this.db.firestore.collection("customers")
+    return this.db.firestore.collection("omc")
+      .doc(this.omc.currentOmc.value.Id)
+      .collection("customer")
       .where("name", ">=", customer)
       .where("name", "<", maxstring)
       .where("Active", "==", true)
-      .where("companyId", "==", this.config.getEnvironment().auth.companyId);
+      .where("environment", "==", this.config.environment.value);
   }
 
-  createcompany(company: Customer): Observable<any> {
-    company.companyId = this.db.createId();
+  createcompany(company: DaudiCustomer): Observable<any> {
     return this.functions.httpsCallable("createcustomer")(company);
   }
 
 
   updatecompany(companyid: string) {
-    return this.db.firestore.collection("customers").doc(companyid);
+    return this.db.firestore.collection("omc")
+      .doc(this.omc.currentOmc.value.Id)
+      .collection("customer")
+      .doc(companyid);
   }
 
 }

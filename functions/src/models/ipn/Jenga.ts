@@ -21,7 +21,6 @@ export interface Jenga {
         account: string;
     };
     daudiFields: {
-        companyid: string;
         sandbox: boolean;
         /**
          * 0 : empty company

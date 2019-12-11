@@ -27,7 +27,7 @@ export interface Config {
         [key in Environment]: Array<DepotConfig> };
     taxExempt: {
         [key in Environment]: {
-            [key in FuelType]: TaxExempt
+            [subKey in FuelType]: TaxExempt
         } };
 }
 
@@ -62,7 +62,7 @@ export const emptyqboAuth: QBOAuthCOnfig = {
     clientId: "",
     clientSecret: "",
     webhooksVerifier: "",
-    isSandbox: true,
+    environment: Environment.sandbox,
     authConfig: {
         previousDCT: MyTimestamp.fromDate(new Date()),
         accessToken: "",
