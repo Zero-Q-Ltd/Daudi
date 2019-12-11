@@ -104,7 +104,10 @@ export class CustomerService {
 
 
   updatecompany(companyid: string) {
-    return this.db.firestore.collection("customer").doc(companyid);
+    return this.db.firestore.collection("omc")
+      .doc(this.omc.currentOmc.value.Id)
+      .collection("customer")
+      .doc(companyid);
   }
 
 }
