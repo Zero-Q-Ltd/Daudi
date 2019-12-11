@@ -77,7 +77,7 @@ export class createInvoice {
         return values;
     }
 
-    formulateEstimate(): Invoice {
+    formulateInvoice(): Invoice {
         const newEstimate: Invoice = {
             CustomField: [{
                 DefinitionId: "1",

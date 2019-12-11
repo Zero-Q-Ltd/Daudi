@@ -4,7 +4,7 @@ import { Order } from "../../models/Daudi/order/Order";
 import { SMS } from "../../models/Daudi/sms/sms";
 import { Truck } from "../../models/Daudi/order/Truck";
 
-export function ordersms(order: Order) {
+export function ordersms(order: Order, omcId: string) {
   /**
    * An order has been modified
    * Only sent an SMS if the stage has been incremented. Ignore stage 4 and 5 because another one will be sent for the truck
@@ -38,11 +38,13 @@ export function ordersms(order: Order) {
   };
 
   return firestore()
+    .collection("omc")
+    .doc(omcId)
     .collection("sms")
     .add(newsms);
 }
 
-export function trucksms(order: Order) {
+export function trucksms(order: Order, omcId: string) {
   const newsms: SMS = {
     Id: "",
     timestamp: firestore.Timestamp.fromDate(new Date()),
@@ -60,11 +62,13 @@ export function trucksms(order: Order) {
     phone: order.customer.phone
   };
   return firestore()
+    .collection("omc")
+    .doc(omcId)
     .collection("sms")
     .add(newsms);
 }
 
-export function driverchangedsms(order: Order) {
+export function driverchangedsms(order: Order, omcId: string) {
   const text = ` ID ${order.customer.QbId} Truck#${order.QbConfig.InvoiceId} [DRIVER CHANGED] to ${order.truck.driverdetail.name}`;
   const newsms: SMS = {
     Id: null,
@@ -83,11 +87,13 @@ export function driverchangedsms(order: Order) {
     }
   };
   return firestore()
+    .collection("omc")
+    .doc(omcId)
     .collection("sms")
     .add(newsms);
 }
 
-export function truckchangesdsms(order: Order) {
+export function truckchangesdsms(order: Order, omcId: string) {
   const text = ` ID ${order.customer.QbId} Truck#${order.QbConfig.InvoiceId} [TRUCK CHANGED] to ${order.truck.truckdetail.numberplate}`;
   const newsms: SMS = {
     Id: null,
@@ -106,11 +112,13 @@ export function truckchangesdsms(order: Order) {
     }
   };
   return firestore()
+    .collection("omc")
+    .doc(omcId)
     .collection("sms")
     .add(newsms);
 }
 
-function resolveOrderText(order: Order): string {
+function resolveOrderText(order: Order, omcId: string): string {
   let text = ` ID ${order.customer.QbId} Order# ${order.QbConfig.InvoiceId}`;
   switch (order.stage) {
     case 1:
