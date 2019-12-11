@@ -86,7 +86,7 @@ export class createEstimate {
                                     TaxCodeRef: {
                                         value: this.config.Qbo[this.environment].taxConfig.taxCode.Id
                                     },
-                                    UnitPrice: this.orderdata.fuel[fuel].priceconfig.nonTaxprice
+                                    UnitPrice: 0
                                 }
                             },
 

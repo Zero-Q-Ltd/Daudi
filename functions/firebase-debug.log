@@ -1,0 +1,125 @@
+[debug] [2019-12-11T19:27:38.272Z] ----------------------------------------------------------------------
+[debug] [2019-12-11T19:27:38.275Z] Command:       /usr/bin/node /home/kisinga/.npm-global/bin/firebase deploy --only functions
+[debug] [2019-12-11T19:27:38.275Z] CLI Version:   7.9.0
+[debug] [2019-12-11T19:27:38.275Z] Platform:      linux
+[debug] [2019-12-11T19:27:38.275Z] Node Version:  v10.17.0
+[debug] [2019-12-11T19:27:38.275Z] Time:          Wed Dec 11 2019 22:27:38 GMT+0300 (East Africa Time)
+[debug] [2019-12-11T19:27:38.275Z] ----------------------------------------------------------------------
+[debug] [2019-12-11T19:27:38.276Z] 
+[debug] [2019-12-11T19:27:38.282Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2019-12-11T19:27:38.282Z] > authorizing via signed-in user
+[debug] [2019-12-11T19:27:38.283Z] [iam] checking project daudi-4 for permissions ["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]
+[debug] [2019-12-11T19:27:38.284Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2019-12-11T19:27:38.284Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ <request body omitted>
+[debug] [2019-12-11T19:27:38.735Z] <<< HTTP RESPONSE 200
+[debug] [2019-12-11T19:27:38.747Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/daudi-4:testIamPermissions  
+
+[debug] [2019-12-11T19:27:40.686Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Deploying to 'daudi-4'...
+[info] 
+[info] i  deploying functions
+[info] Running command: npm --prefix "$RESOURCE_DIR" run lint
+[info] Running command: npm --prefix "$RESOURCE_DIR" run build
+[info] ✔  functions: Finished running predeploy script.
+[debug] [2019-12-11T19:27:54.250Z] > [functions] package.json contents: {
+  "name": "functions",
+  "scripts": {
+    "lint": "tslint --project tsconfig.json",
+    "build": "tsc",
+    "serve": "npm run build && firebase serve --only functions",
+    "shell": "npm run build && firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
+  },
+  "main": "lib/index.js",
+  "dependencies": {
+    "@firebase/firestore-types": "^1.8.1",
+    "@google-cloud/pubsub": "^1.1.1",
+    "bluebird": "^3.7.0",
+    "firebase-admin": "^8.6.0",
+    "firebase-functions": "^3.2.0",
+    "jxon": "^2.0.0-beta.5",
+    "lodash": "^4.17.15",
+    "moment": "^2.24.0",
+    "request": "^2.88.0",
+    "request-debug": "^0.2.0",
+    "underscore": "^1.9.1",
+    "uuid": "^3.3.3"
+  },
+  "devDependencies": {
+    "@types/lodash.clonedeep": "^4.5.6",
+    "@types/node": "^12.7.12",
+    "@types/underscore": "^1.9.3",
+    "@types/uuid": "^3.4.5",
+    "tslint": "^5.20.0",
+    "typescript": "^3.6.4"
+  },
+  "engines": {
+    "node": "8"
+  },
+  "private": true
+}
+[info] i  functions: ensuring necessary APIs are enabled...
+[debug] [2019-12-11T19:27:54.252Z] >>> HTTP REQUEST GET https://serviceusage.googleapis.com/v1/projects/daudi-4/services/cloudfunctions.googleapis.com  
+ 
+[debug] [2019-12-11T19:27:54.252Z] >>> HTTP REQUEST GET https://serviceusage.googleapis.com/v1/projects/daudi-4/services/runtimeconfig.googleapis.com  
+ 
+[debug] [2019-12-11T19:27:56.218Z] <<< HTTP RESPONSE 200
+[debug] [2019-12-11T19:27:56.251Z] <<< HTTP RESPONSE 200
+[info] ✔  functions: all necessary APIs are enabled
+[debug] [2019-12-11T19:27:56.253Z] >>> HTTP REQUEST GET https://firebase.googleapis.com/v1beta1/projects/daudi-4/adminSdkConfig  
+ 
+[debug] [2019-12-11T19:27:56.933Z] <<< HTTP RESPONSE 200
+[info] i  functions: preparing functions directory for uploading...
+[debug] [2019-12-11T19:27:56.938Z] >>> HTTP REQUEST GET https://runtimeconfig.googleapis.com/v1beta1/projects/daudi-4/configs  
+ 
+[debug] [2019-12-11T19:27:58.042Z] <<< HTTP RESPONSE 200
+[info] i  functions: packaged functions (267.68 KB) for uploading
+[debug] [2019-12-11T19:27:58.841Z] >>> HTTP REQUEST POST https://cloudfunctions.googleapis.com/v1/projects/daudi-4/locations/us-central1/functions:generateUploadUrl  
+ 
+[debug] [2019-12-11T19:28:00.021Z] <<< HTTP RESPONSE 200
+[debug] [2019-12-11T19:28:00.023Z] >>> HTTP REQUEST PUT https://storage.googleapis.com/gcf-upload-us-central1-c083ee8d-c519-4767-a169-b9c1ec0ee6ce/16c9b7e2-c862-427c-a950-38c14b8ad037.zip?GoogleAccessId=service-999511162358@gcf-admin-robot.iam.gserviceaccount.com&Expires=1576094279&Signature=rilKQ%2B7yHAY7vdkz1%2FwhmPXX5NvNEApV2nwhwK3ebDEmg6bC8PTnd3i7tjm%2Bg%2BD24gFUL3DdKQOwmdqycaZ6kuKGrhg1xckDTObi77o2K0a7hyJInagQfiegZwLpiGNv3Nucrr%2BZmZswEvhiamzNLDov1vndw1NqCqGYGwe%2BlZ0u8G3Ub83cWZFDyQyVUe8EhAVOtmONByE3RKIopiggLdeAdFifI03UbCcI08wZQmsd2vrCP4o59OiVIxxms8aQ2UUiuXrhfVK8vJmz%2F9d%2Bhm%2BrXkOVMSqGDf%2B9mUAXRj%2F9ee6%2BI6HOqJ%2BRllsupk8REwr6Tbqiao1ZNwB6pwmgqw%3D%3D  
+ <request body omitted>
+[debug] [2019-12-11T19:28:01.398Z] <<< HTTP RESPONSE 200
+[info] ✔  functions: functions folder uploaded successfully
+[debug] [2019-12-11T19:28:01.403Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/projects/daudi-4/locations/-/functions  
+ 
+[debug] [2019-12-11T19:28:01.943Z] <<< HTTP RESPONSE 200
+[info] i  functions: updating Node.js 8 function createEstimate(us-central1)...
+[debug] [2019-12-11T19:28:01.949Z] Trigger is:  {"httpsTrigger":{}}
+[info] i  functions: updating Node.js 8 function approveInvoice(us-central1)...
+[debug] [2019-12-11T19:28:01.950Z] Trigger is:  {"httpsTrigger":{}}
+[info] i  functions: updating Node.js 8 function customerUpdated(us-central1)...
+[debug] [2019-12-11T19:28:01.951Z] Trigger is:  {"eventTrigger":{"resource":"projects/daudi-4/databases/(default)/documents/omc/{omcId}/customer/{customerId}","eventType":"providers/cloud.firestore/eventTypes/document.update","service":"firestore.googleapis.com"}}
+[info] i  functions: updating Node.js 8 function smscreated(us-central1)...
+[debug] [2019-12-11T19:28:01.952Z] Trigger is:  {"eventTrigger":{"resource":"projects/daudi-4/databases/(default)/documents/sms/{smsID}","eventType":"providers/cloud.firestore/eventTypes/document.create","service":"firestore.googleapis.com"}}
+[info] i  functions: updating Node.js 8 function requestsync(us-central1)...
+[debug] [2019-12-11T19:28:01.952Z] Trigger is:  {"httpsTrigger":{}}
+[info] i  functions: updating Node.js 8 function onUserStatusChanged(us-central1)...
+[debug] [2019-12-11T19:28:01.953Z] Trigger is:  {"eventTrigger":{"resource":"projects/_/instances/daudi-4/refs/admins/{uid}","eventType":"providers/google.firebase.database/eventTypes/ref.update","service":"firebaseio.com"}}
+[debug] [2019-12-11T19:28:01.955Z] >>> HTTP REQUEST GET https://serviceusage.googleapis.com/v1/projects/daudi-4/services/cloudscheduler.googleapis.com  
+ 
+[debug] [2019-12-11T19:28:03.657Z] <<< HTTP RESPONSE 200
+[debug] [2019-12-11T19:28:03.672Z] >>> HTTP REQUEST PATCH https://cloudfunctions.googleapis.com/v1/projects/daudi-4/locations/us-central1/functions/createEstimate {"updateMask":"sourceUploadUrl,name,labels,runtime,httpsTrigger"} 
+
+[debug] [2019-12-11T19:28:03.674Z] >>> HTTP REQUEST PATCH https://cloudfunctions.googleapis.com/v1/projects/daudi-4/locations/us-central1/functions/approveInvoice {"updateMask":"sourceUploadUrl,name,labels,runtime,httpsTrigger"} 
+
+[debug] [2019-12-11T19:28:03.675Z] >>> HTTP REQUEST PATCH https://cloudfunctions.googleapis.com/v1/projects/daudi-4/locations/us-central1/functions/customerUpdated {"updateMask":"sourceUploadUrl,name,labels,runtime,eventTrigger.resource,eventTrigger.eventType,eventTrigger.service"} 
+
+[debug] [2019-12-11T19:28:03.676Z] >>> HTTP REQUEST PATCH https://cloudfunctions.googleapis.com/v1/projects/daudi-4/locations/us-central1/functions/smscreated {"updateMask":"sourceUploadUrl,name,labels,runtime,eventTrigger.resource,eventTrigger.eventType,eventTrigger.service"} 
+
+[debug] [2019-12-11T19:28:03.676Z] >>> HTTP REQUEST PATCH https://cloudfunctions.googleapis.com/v1/projects/daudi-4/locations/us-central1/functions/requestsync {"updateMask":"sourceUploadUrl,name,labels,runtime,httpsTrigger"} 
+
+[debug] [2019-12-11T19:28:03.677Z] >>> HTTP REQUEST PATCH https://cloudfunctions.googleapis.com/v1/projects/daudi-4/locations/us-central1/functions/onUserStatusChanged {"updateMask":"sourceUploadUrl,name,labels,runtime,eventTrigger.resource,eventTrigger.eventType,eventTrigger.service"} 
+
+[debug] [2019-12-11T19:28:04.409Z] <<< HTTP RESPONSE 200
+[debug] [2019-12-11T19:28:04.412Z] <<< HTTP RESPONSE 200
+[debug] [2019-12-11T19:28:04.413Z] <<< HTTP RESPONSE 200
+[debug] [2019-12-11T19:28:04.430Z] <<< HTTP RESPONSE 200
+[debug] [2019-12-11T19:28:04.431Z] <<< HTTP RESPONSE 200
+[debug] [2019-12-11T19:28:04.447Z] <<< HTTP RESPONSE 200
+[debug] [2019-12-11T19:28:04.450Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/projects/daudi-4/locations/-/functions  
+ 
