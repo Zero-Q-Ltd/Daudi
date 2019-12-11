@@ -27,7 +27,7 @@ export interface Config {
         [key in Environment]: Array<DepotConfig> };
     taxExempt: {
         [key in Environment]: {
-            [key in FuelType]: TaxExempt
+            [subKey in FuelType]: TaxExempt
         } };
 }
 

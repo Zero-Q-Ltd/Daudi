@@ -8,13 +8,11 @@ export interface Price {
   price: number;
   user: AssociatedUser;
   fueltytype: FuelType;
-  depotId: string;
 }
 
 export const emptyprice: Price = {
   price: null,
   Id: null,
-  depotId: null,
   user: deepCopy<AssociatedUser>(inituser),
   fueltytype: null
 };

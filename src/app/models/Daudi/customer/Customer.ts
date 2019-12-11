@@ -2,7 +2,7 @@ import { Contact } from "./Contact";
 import { AssociatedUser } from "../admin/AssociatedUser";
 import { MyGeoPoint } from "../../firestore/firestoreTypes";
 
-export interface Customer {
+export interface DaudiCustomer {
   Active: boolean;
   name: string;
   /**
@@ -22,7 +22,7 @@ export interface Customer {
   balance: number;
 }
 
-export const emptycompany: Customer = {
+export const emptyDaudiCustomer: DaudiCustomer = {
   Active: null,
   contact: [],
   companyId: null,

@@ -160,15 +160,27 @@ export class CustomerManagementComponent implements OnInit, OnDestroy {
       synctype: ["Customer"]
     };
 
-    this.functions.httpsCallable("requestsync")(syncobject).pipe(takeUntil(this.comopnentDestroyed))
-      .subscribe(res => {
-        this.creatingsync = false;
-        this.notification.notify({
-          alert_type: "success",
-          title: "Success",
-          body: "Companies Synchronized"
-        });
+    const sync = this.functions.httpsCallable("requestsync")(syncobject)
+      .pipe(takeUntil(this.comopnentDestroyed))
+      .toPromise();
+    sync.then(res => {
+      this.creatingsync = false;
+      this.notification.notify({
+        alert_type: "success",
+        title: "Success",
+        body: "Companies Synchronized"
       });
+    }).catch(e => {
+      this.creatingsync = false;
+      this.notification.notify({
+        alert_type: "error",
+        title: "Error",
+        body: "Sync failed, please try again later"
+      });
+      /**
+       * @todo send the error to the database
+       */
+    });
 
   }
 

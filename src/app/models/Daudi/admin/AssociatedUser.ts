@@ -10,7 +10,7 @@ export interface AssociatedUser {
 
 export const inituser: AssociatedUser = {
     name: "",
-    time: null,
+    time: MyTimestamp.fromDate(new Date()),
     uid: ""
 };
 
