@@ -48,7 +48,8 @@ export class CustomerManagementComponent implements OnInit, OnDestroy {
     private depot: DepotService,
     @Optional() public dialogRef: MatDialogRef<CustomerManagementComponent>,
     @Optional() @Inject(MAT_DIALOG_DATA) public purpose: "SMS" | "Attach") {
-    this.depot.activedepot.pipe(takeUntil(this.comopnentDestroyed))
+    this.depot.activedepot
+      .pipe(takeUntil(this.comopnentDestroyed))
       .subscribe(depotvata => {
         this.companiesdatasource.data = [];
         this.loadingcompanies = true;
@@ -63,14 +64,16 @@ export class CustomerManagementComponent implements OnInit, OnDestroy {
               }
             }
           }
-          // this.customerservice.loadingcompanies.pipe(takeUntil(this.comopnentDestroyed))
-          //   .subscribe(value => {
-          //     this.loadingcompanies = value;
-          //   });
-          // customerservice.allcompanies.pipe(takeUntil(this.comopnentDestroyed))
-          //   .subscribe(data => {
-          //     this.companiesdatasource.data = data;
-          //   });
+          this.customerservice.loadingcustomers
+            .pipe(takeUntil(this.comopnentDestroyed))
+            .subscribe(value => {
+              this.loadingcompanies = value;
+            });
+          customerservice.allcustomers
+            .pipe(takeUntil(this.comopnentDestroyed))
+            .subscribe(data => {
+              this.companiesdatasource.data = data;
+            });
         }
       });
 

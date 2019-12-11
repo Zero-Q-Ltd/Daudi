@@ -2,10 +2,11 @@ import { Injectable } from "@angular/core";
 import { Customer } from "../../models/Daudi/customer/Customer";
 import { AngularFirestore } from "@angular/fire/firestore";
 import { DepotService } from "./core/depot.service";
-import { BehaviorSubject, Observable } from "rxjs";
+import { BehaviorSubject, Observable, combineLatest } from "rxjs";
 import { AngularFireFunctions } from "@angular/fire/functions";
-import { distinctUntilKeyChanged, distinctUntilChanged } from "rxjs/operators";
+import { distinctUntilKeyChanged, distinctUntilChanged, skipWhile } from "rxjs/operators";
 import { ConfigService } from "./core/config.service";
+import { OmcService } from "./core/omc.service";
 
 @Injectable({
   providedIn: "root"
@@ -23,14 +24,15 @@ export class CustomerService {
     private db: AngularFirestore,
     private depotsservice: DepotService,
     private config: ConfigService,
+    private omc: OmcService,
     private functions: AngularFireFunctions) {
-    this.config.environment.subscribe(val => {
-      this.unsubscribeAll();
-      this.getallcustomers();
-    });
-    this.depotsservice.activedepot.subscribe(depot => {
+    combineLatest(this.config.environment, this.omc.currentOmc)
+      .pipe(skipWhile(t => !t[1].Id))
+      .subscribe(t => {
+        this.unsubscribeAll();
+        this.getallcustomers();
+      });
 
-    });
   }
 
   /**
@@ -38,7 +40,9 @@ export class CustomerService {
    * @param krapin
    */
   queryActivecompany(krapin: string) {
-    return this.db.firestore.collection("customers")
+    return this.db.firestore.collection("omc")
+      .doc(this.omc.currentOmc.value.Id)
+      .collection("customers")
       .where("krapin", "==", krapin)
       .where("Active", "==", true)
       .limit(1);
@@ -51,7 +55,9 @@ export class CustomerService {
 
   getallcustomers() {
     this.loadingcustomers.next(true);
-    const subscriprion = this.db.firestore.collection("customers")
+    const subscriprion = this.db.firestore.collection("omc")
+      .doc(this.omc.currentOmc.value.Id)
+      .collection("customers")
       .where("sandbox", "==", this.config.environment.value)
       .onSnapshot(snapshot => {
         this.allcustomers.next(snapshot.docs.map(value => {
@@ -75,12 +81,16 @@ export class CustomerService {
    * @param {string} krapin
    */
   verifykra(krapin: string) {
-    return this.db.firestore.collection("customers")
+    return this.db.firestore.collection("omc")
+      .doc(this.omc.currentOmc.value.Id)
+      .collection("customers")
       .where("krapin", "==", krapin);
   }
 
   querycustomers(customer: string, maxstring: string) {
-    return this.db.firestore.collection("customers")
+    return this.db.firestore.collection("omc")
+      .doc(this.omc.currentOmc.value.Id)
+      .collection("customers")
       .where("name", ">=", customer)
       .where("name", "<", maxstring)
       .where("Active", "==", true)

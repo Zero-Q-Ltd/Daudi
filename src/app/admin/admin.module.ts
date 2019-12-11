@@ -95,6 +95,7 @@ import { ConfigComponent } from "./admin/pages/config/config.component";
 import { AdminRolesComponent } from "./admin/pages/admin-roles/admin-roles.component";
 import { AdminLevelsComponent } from "./admin/pages/admin-levels/admin-levels.component";
 import { CreateComponent } from "./admin/pages/payments/create/create.component";
+import { AseComponent } from './admin/ase/ase.component';
 
 @NgModule({
 
@@ -193,6 +194,7 @@ import { CreateComponent } from "./admin/pages/payments/create/create.component"
     AdminRolesComponent,
     AdminLevelsComponent,
     CreateComponent,
+    AseComponent,
   ],
   providers: [UsersGuard,
     LayoutService,
