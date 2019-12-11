@@ -11,7 +11,7 @@ export function processSync(sync: SyncRequest, qbo: QuickBooks, omcId: string, c
             switch (syncdetail) {
                 case "Customer":
                     console.log("Syncing customers");
-                    return await syncCustomers(qbo, omcId);
+                    return await syncCustomers(qbo, omcId, enviromnent);
                 case "Employee":
                     console.log("Syncing employees");
                     return true;

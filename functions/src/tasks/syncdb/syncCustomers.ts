@@ -5,7 +5,7 @@ import { Customer } from "../../models/Qbo/Customer";
 import { Environment } from '../../models/Daudi/omc/Environments';
 
 /**
- * Fetches all the customer information qbom qbo and overwrites the Companies info on Dausi
+ * Fetches all the customer information qbom qbo and overwrites the customers info on Dausi
  * @param qbo
  */
 export function syncCustomers(qbo: QuickBooks, omcId: string, env: Environment) {
@@ -15,15 +15,14 @@ export function syncCustomers(qbo: QuickBooks, omcId: string, env: Environment) 
     return qbo.findCustomers([{ Active: [true, false] }]).then(customers => {
         const allcustomers: Array<Customer> = customers.QueryResponse.Customer;
         const batchwrite = firestore().batch();
-        return getallcompanies().then(allcompanies => {
-            const companiesarray =
-                allcompanies.docs.map(doc => doc.data() as DaudiCustomer) || [];
+        return getallcustomers(omcId).then(existingcustomers => {
+            const customersarray = existingcustomers.docs.map(doc => doc.data() as DaudiCustomer) || [];
             allcustomers.forEach(customer => {
                 /**
-                 * Overwrite sandbox companies that conflict id with live, but ignore sandbox companies that conflict with live
+                 * Overwrite sandbox customers that conflict id with live, but ignore sandbox customers that conflict with live
                  */
                 if (
-                    companiesarray.find(
+                    customersarray.find(
                         comp =>
                             comp.QbId === customer.Id &&
                             comp.companyId !== qbo.companyid &&
@@ -34,11 +33,13 @@ export function syncCustomers(qbo: QuickBooks, omcId: string, env: Environment) 
                     return;
                 } else {
                     let co = convertToDaudicustomer(customer, env, qbo.companyid);
-                    if (companiesarray.find(company => company.QbId === customer.Id)) {
+                    if (customersarray.find(company => company.QbId === customer.Id)) {
                         // console.log('updating company');
                         batchwrite.update(
                             firestore()
-                                .collection("companies")
+                                .collection("omc")
+                                .doc(omcId)
+                                .collection("customers")
                                 .doc(co.Id),
                             co
                         );
@@ -48,7 +49,9 @@ export function syncCustomers(qbo: QuickBooks, omcId: string, env: Environment) 
                         // console.log(co);
                         batchwrite.set(
                             firestore()
-                                .collection("companies")
+                                .collection("omc")
+                                .doc(omcId)
+                                .collection("customers")
                                 .doc(co.Id),
                             co
                         );
@@ -101,8 +104,10 @@ function convertToDaudicustomer(
     return daudicompany;
 }
 
-function getallcompanies() {
+function getallcustomers(omcId: string) {
     return firestore()
-        .collection("companies")
+        .collection("omc")
+        .doc(omcId)
+        .collection("customers")
         .get();
 }

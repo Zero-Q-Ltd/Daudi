@@ -158,7 +158,6 @@ export class CustomerManagementComponent implements OnInit, OnDestroy {
     this.creatingsync = true;
 
     const req: SyncRequest = {
-      companyid: this.config.getEnvironment().auth.companyId,
       time: MyTimestamp.now(),
       synctype: ["Customer"]
     };
