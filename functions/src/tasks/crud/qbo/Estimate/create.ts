@@ -6,92 +6,115 @@ import { Order } from "../../../../models/Daudi/order/Order";
 import { QuickBooks } from "../../../../libs/qbmain";
 import { Estimate } from "../../../../models/Qbo/Estimate";
 import { PrintStatus } from "../../../../models/Qbo/enums/PrintStatus";
-import { Config } from "../../../../models/Daudi/omc/Config";
+import { Config, QboEnvironment } from "../../../../models/Daudi/omc/Config";
 import { Environment } from "../../../../models/Daudi/omc/Environments";
 import { TxnStatus } from "../../../../models/Qbo/enums/TxnStatus";
 import { EmailStatus } from "../../../../models/Qbo/enums/EmailStatus";
 import { Line } from "../../../../models/Qbo/subTypes/Line";
 import { LineDetailType } from "../../../../models/Qbo/enums/LineDetailType";
-import { FuelType } from '../../../../models/Daudi/fuel/FuelType';
+import { FuelType, FuelNamesArray } from '../../../../models/Daudi/fuel/FuelType';
+import { FuelConfig } from "../../../../models/Daudi/omc/FuelConfig";
 
-function syncfueltypes(orderdata: Order, TxnTaxCodeRef: string): Array<any> {
-    const values: Array<Line> = [];
-    Object.keys(FuelType).forEach(key => {
-        const fuel: FuelType = FuelType[key]
-        if (orderdata.fuel[fuel].qty > 0) {
-            values.push({
-                Amount: orderdata.fuel[fuel].priceconfig.nonTaxprice * orderdata.fuel[fuel].qty,
-                DetailType: LineDetailType.SalesItemLineDetail,
-                Description: `VAT-Exempt : ${orderdata.fuel[fuel].priceconfig.nonTax} \t, Taxable Amount: ${orderdata.fuel[fuel].priceconfig.taxableAmnt} \t , VAT Total : ${orderdata.fuel[fuel].priceconfig.taxAmnt} \t`,
-                SalesItemLineDetail: {
-                    ItemRef: {
-                        value: orderdata.fuel[fuel].QbId,
-                        name: "Inventory"
-                    },
-                    UnitPrice: orderdata.fuel[fuel].priceconfig.nonTaxprice,
-                    Qty: orderdata.fuel[fuel].qty,
-                    TaxCodeRef: {
-                        value: TxnTaxCodeRef
+
+export class createEstimate {
+
+    orderdata: Order;
+    qbo: QuickBooks;
+    config: Config;
+    environment: Environment;
+
+    constructor(_orderdata: Order, _qbo: QuickBooks, _config: Config, environment: Environment) {
+        /**
+    * format the timestamp again as it loses it when it doesnt directly go to the database
+    */
+        _orderdata.stagedata["1"].user.time = moment().toDate() as any;
+        this.orderdata = _orderdata;
+        this.qbo = _qbo;
+        this.config = _config;
+        this.environment = environment
+    }
+
+    syncfueltypes(TxnTaxCodeRef: string): Array<any> {
+        const values: Array<Line> = [];
+        FuelNamesArray.forEach(fuel => {
+            if (this.orderdata.fuel[fuel].qty > 0) {
+                values.push({
+                    Amount: this.orderdata.fuel[fuel].priceconfig.nonTaxprice * this.orderdata.fuel[fuel].qty,
+                    DetailType: LineDetailType.GroupLineDetail,
+                    Description: `VAT-Exempt : ${this.orderdata.fuel[fuel].priceconfig.nonTax} \t, Taxable Amount: ${this.orderdata.fuel[fuel].priceconfig.taxableAmnt} \t , VAT Total : ${orderdata.fuel[fuel].priceconfig.taxAmnt} \t`,
+                    GroupLineDetail: {
+                        Quantity: this.orderdata.fuel[fuel].qty,
+                        GroupItemRef: {
+                            name: fuel,
+                            value: this.config.Qbo[this.environment].fuelconfig[fuel].groupId
+                        },
+                        Line: [
+                            /**
+                             * There are 2 mandatory group items in every order: Ase and Emtry
+                             * The entry component doesnt have an amount attached to it
+                             */
+                            {
+                                Amount: this.orderdata.fuel[fuel].priceconfig.nonTaxprice * this.orderdata.fuel[fuel].qty,
+                                Description: "",
+                                DetailType: LineDetailType.GroupLineDetail,
+                                Id: this.config.Qbo[this.environment].fuelconfig[fuel].aseId
+                            },
+                            {
+                                Amount: 0,
+                                Description: "",
+                                DetailType: LineDetailType.GroupLineDetail,
+                                Id: this.config.Qbo[this.environment].fuelconfig[fuel].entryId
+                            },
+
+                        ]
                     }
-                }
-            });
-        }
-    });
-    return values;
-}
+                });
+            }
+        });
+        return values;
+    }
 
-function formulateEstimate(orderdata: Order, TxnTaxCodeRef: string, TaxRateRef: string): Estimate {
-    const newEstimate: Estimate = {
-        CustomField: [{
-            DefinitionId: "2",
-            Name: "Customer ID",
-            StringValue: orderdata.customer.QbId,
-            Type: "StringType"
-        }],
-        EmailStatus: EmailStatus.NeedToSend,
-        CustomerRef: {
-            value: orderdata.customer.QbId
-        },
-        BillEmail: {
-            Address: orderdata.customer.contact[0].email
-        },
-        TxnTaxDetail: {
-            TotalTax: orderdata.fuel.pms.priceconfig.taxAmnt + orderdata.fuel.ago.priceconfig.taxAmnt + orderdata.fuel.ik.priceconfig.taxAmnt,
-            TxnTaxCodeRef: {
-                value: TxnTaxCodeRef
+    formulateEstimate(): Estimate {
+        const newEstimate: Estimate = {
+            CustomField: [{
+                DefinitionId: "2",
+                Name: "Customer ID",
+                StringValue: this.orderdata.customer.QbId,
+                Type: "StringType"
+            }],
+            EmailStatus: EmailStatus.NeedToSend,
+            CustomerRef: {
+                value: this.orderdata.customer.QbId
             },
-            TaxLine: [{
-                Amount: (orderdata.fuel.pms.priceconfig.taxAmnt + orderdata.fuel.ago.priceconfig.taxAmnt + orderdata.fuel.ik.priceconfig.taxAmnt),
-                DetailType: "TaxLineDetail",
-                TaxLineDetail: {
-                    NetAmountTaxable: orderdata.fuel.pms.priceconfig.taxableAmnt + orderdata.fuel.ago.priceconfig.taxableAmnt + orderdata.fuel.ik.priceconfig.taxableAmnt,
-                    PercentBased: false,
-                    TaxPercent: 8,
-                    TaxRateRef: {
-                        value: TaxRateRef
+            BillEmail: {
+                Address: this.orderdata.customer.contact[0].email
+            },
+            TxnTaxDetail: {
+                TotalTax: this.orderdata.fuel.pms.priceconfig.taxAmnt + this.orderdata.fuel.ago.priceconfig.taxAmnt + this.orderdata.fuel.ik.priceconfig.taxAmnt,
+                TxnTaxCodeRef: {
+                    value: this.config.Qbo[this.environment].taxConfig.taxCode.Id
+                },
+                TaxLine: [{
+                    Amount: (this.orderdata.fuel.pms.priceconfig.taxAmnt + this.orderdata.fuel.ago.priceconfig.taxAmnt + this.orderdata.fuel.ik.priceconfig.taxAmnt),
+                    DetailType: "TaxLineDetail",
+                    TaxLineDetail: {
+                        NetAmountTaxable: this.orderdata.fuel.pms.priceconfig.taxableAmnt + this.orderdata.fuel.ago.priceconfig.taxableAmnt + this.orderdata.fuel.ik.priceconfig.taxableAmnt,
+                        PercentBased: false,
+                        TaxPercent: 8,
+                        TaxRateRef: {
+                            value: this.config.Qbo[this.environment].taxConfig.taxRate.Id
+                        }
                     }
-                }
-            }]
-        },
-        domain: "QBO",
-        TxnStatus: TxnStatus.Pending,
-        PrintStatus: PrintStatus.NeedToPrint,
+                }]
+            },
+            domain: "QBO",
+            TxnStatus: TxnStatus.Pending,
+            PrintStatus: PrintStatus.NeedToPrint,
 
-        Line: syncfueltypes(orderdata, TxnTaxCodeRef)
-    };
+            Line: this.syncfueltypes(TxnTaxCodeRef)
+        };
 
-    return newEstimate;
-}
+        return newEstimate;
+    }
 
-export function createEstimate(orderdata: Order, qbo: QuickBooks, config: Config, environment: Environment) {
-    /**
-     * format the timestamp again as it loses it when it doesnt directly go to the database
-     */
-    orderdata.stagedata["1"].user.time = moment().toDate() as any;
-
-    console.log("Not new company, checking for pending payments");
-
-    const newInvoice = formulateEstimate(orderdata, config.Qbo[environment].taxConfig.taxCode.Id, config.Qbo[environment].taxConfig.taxRate.Id);
-    console.log(newInvoice);
-    return qbo.createEstimate(newInvoice)
 }

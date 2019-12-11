@@ -8,9 +8,9 @@
         <mat-form-field appearance="legacy">
           <input (keyup)="filtercompanies($event.target.value)" matInput placeholder="Filter">
           <button (click)='syncdb()' *ngIf='!creatingsync' mat-icon-button matSuffix type="button">
-              <span class="nav-icon nav-dot material-icons kra-save" matTooltip="Update">
-                autorenew
-              </span>
+            <span class="nav-icon nav-dot material-icons kra-save" matTooltip="Update">
+              autorenew
+            </span>
           </button>
           <mat-spinner *ngIf='creatingsync' [diameter]="19" matSuffix></mat-spinner>
         </mat-form-field>
@@ -22,14 +22,13 @@
           <ng-container matColumnDef="select">
             <th *matHeaderCellDef mat-header-cell>
               <mat-checkbox (change)="$event ? masterToggle() : null"
-                            [checked]="selection.hasValue() && isAllSelected()"
-                            [indeterminate]="selection.hasValue() && !isAllSelected()">
+                [checked]="selection.hasValue() && isAllSelected()"
+                [indeterminate]="selection.hasValue() && !isAllSelected()">
               </mat-checkbox>
             </th>
             <td *matCellDef="let row" mat-cell>
-              <mat-checkbox (change)="$event ? selection.toggle(row) : null"
-                            (click)="$event.stopPropagation()"
-                            [checked]="selection.isSelected(row)">
+              <mat-checkbox (change)="$event ? selection.toggle(row) : null" (click)="$event.stopPropagation()"
+                [checked]="selection.isSelected(row)">
               </mat-checkbox>
             </td>
           </ng-container>
@@ -46,12 +45,12 @@
           <!-- Email Column -->
           <ng-container matColumnDef="email">
             <th *matHeaderCellDef mat-header-cell> Company Email</th>
-            <td *matCellDef="let company" mat-cell>{{company.contact.email}}</td>
+            <td *matCellDef="let company" mat-cell>{{company.contact[0].email}}</td>
           </ng-container>
           <!-- Phone Column -->
           <ng-container matColumnDef="phone">
             <th *matHeaderCellDef mat-header-cell> Company Phone</th>
-            <td *matCellDef="let company" mat-cell>{{company.contact.phone}}</td>
+            <td *matCellDef="let company" mat-cell>{{company.contact[0].phone}}</td>
           </ng-container>
           <!-- KRA Column -->
           <ng-container matColumnDef="krapin">
@@ -61,8 +60,7 @@
                 <input [(ngModel)]="company.krapin" [disabled]="company.kraverified.status" matInput required>
                 <mat-spinner *ngIf='savingcompany' [diameter]="19" matSuffix></mat-spinner>
                 <button (click)='approvecompany(company)' [hidden]="savingcompany || company.kraverified.status"
-                        mat-icon-button matSuffix
-                        type="button">
+                  mat-icon-button matSuffix type="button">
                   <span class="nav-icon nav-dot material-icons kra-save" matTooltip="Update">check_circle</span>
                 </button>
                 <mat-hint *ngIf='!savingcompany' align="start">
@@ -80,8 +78,7 @@
           <ng-container matColumnDef="balance">
             <th *matHeaderCellDef mat-header-cell mat-sort-header>Balance</th>
             <td *matCellDef="let company"
-                [ngClass]="{ 'color-danger' : company.balance > 0 , 'color-success' :   company.balance < 0} "
-                mat-cell>
+              [ngClass]="{ 'color-danger' : company.balance > 0 , 'color-success' :   company.balance < 0} " mat-cell>
               {{company.balance | number}}
             </td>
           </ng-container>
