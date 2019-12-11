@@ -7,6 +7,7 @@ import { DepotService } from "./core/depot.service";
 import { BehaviorSubject } from "rxjs";
 import { Price } from "../../models/Daudi/depot/Price";
 import { skipWhile } from "rxjs/operators";
+import { OmcService } from "./core/omc.service";
 
 @Injectable({
   providedIn: "root"
@@ -42,7 +43,10 @@ export class PricesService {
   subscriptions: Map<string, any> = new Map<string, any>();
   fueltypesArray = FuelNamesArray;
 
-  constructor(private db: AngularFirestore, private depotservice: DepotService) {
+  constructor(
+    private db: AngularFirestore,
+    private omc: OmcService,
+    private depotservice: DepotService) {
     depotservice.activedepot.pipe(
       skipWhile(t => !t.depot.Id)
     )
@@ -78,25 +82,26 @@ export class PricesService {
   }
 
   createavgprice() {
-    return this.db.firestore.collection("depots")
-      .doc(this.depotservice.activedepot.value.depot.Id)
+    return this.db.firestore.collection("omc")
+      .doc(this.omc.currentOmc.value.Id)
       .collection(`avgprices`)
       .doc(this.db.createId());
   }
 
   deleteavgprice(id: string) {
-    return this.db.firestore.collection("depots")
-      .doc(this.depotservice.activedepot.value.depot.Id)
+    return this.db.firestore.collection("omc")
+      .doc(this.omc.currentOmc.value.Id)
       .collection(`avgprices`)
       .doc(id);
   }
 
 
   getavgprices(fueltye: FuelType) {
-    return this.db.firestore.collection("depots")
-      .doc(this.depotservice.activedepot.value.depot.Id)
+    return this.db.firestore.collection("omc")
+      .doc(this.omc.currentOmc.value.Id)
       .collection("avgprices")
       .where("fueltytype", "==", fueltye)
+      .where("depotId", "==", this.depotservice.activedepot.value.depot.Id)
       /**
        * Get only prices changed on the same day
        */
@@ -105,16 +110,17 @@ export class PricesService {
   }
 
   getAvgpricesrange(start, stop) {
-    return this.db.firestore.collection("depots")
-      .doc(this.depotservice.activedepot.value.depot.Id)
+    return this.db.firestore.collection("omc")
+      .doc(this.omc.currentOmc.value.Id)
       .collection(`avgprices`)
       .where("user.time", ">=", start)
+      .where("depotId", "==", this.depotservice.activedepot.value.depot.Id)
       .where("user.time", "<=", stop);
   }
 
   createprice() {
-    return this.db.firestore.collection("depots")
-      .doc(this.depotservice.activedepot.value.depot.Id)
+    return this.db.firestore.collection("omc")
+      .doc(this.omc.currentOmc.value.Id)
       .collection(`prices`)
       .doc(this.db.createId());
   }

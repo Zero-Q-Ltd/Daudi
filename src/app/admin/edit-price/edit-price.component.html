@@ -62,7 +62,7 @@
             <span class="color-{{pricetype}}">{{pricetype | uppercase}}</span>
             <mat-form-field class="full-width">
               <input formControlName="{{pricetype}}" matInput name='{{pricetype}}Price'
-                placeholder="{{activedepot.currentpriceconfig[pricetype].price }}" required type="number">
+                placeholder="{{activedepot.config.price[pricetype].price }}" required type="number">
               <span [matTooltipPosition]="position2" class="nav-icon nav-dot material-icons color-{{pricetype}}"
                 matPrefix matTooltip='{{pricetype}}'>local_gas_station</span>
               <mat-spinner *ngIf='saving' [diameter]="19" matPrefix></mat-spinner>
@@ -71,11 +71,11 @@
                   matTooltip="Set Price">check_circle</span>
               </button>
               <mat-hint *ngIf='!saving' align="start">
-                <i> Last edited by {{activedepot.currentpriceconfig[pricetype].user?.name || 'Never Edited'}} |
-                  {{activedepot.currentpriceconfig[pricetype].user?.time?.toDate() | date: 'short'}}</i>
+                <i> Last edited by {{activedepot.config.price[pricetype].user?.name || 'Never Edited'}} |
+                  {{activedepot.config.price[pricetype].user?.time?.toDate() | date: 'short'}}</i>
               </mat-hint>
               <mat-error>
-                Min price is <strong>{{activedepot.minpriceconfig[pricetype].price }}</strong>
+                Min price is <strong>{{activedepot.config.price[pricetype].minPrice }}</strong>
               </mat-error>
             </mat-form-field>
           </div>
@@ -91,7 +91,7 @@
             <span class="color-{{pricetype}}">{{pricetype | uppercase}}</span>
             <mat-form-field class="full-width">
               <input formControlName="{{pricetype}}" matInput name='{{pricetype}}Price'
-                placeholder="{{taxexempt[pricetype].nonTax}}" required type="number">
+                placeholder="{{currentOmcConfig.taxExempt[env][pricetype].amount}}" required type="number">
               <span [matTooltipPosition]="position2" class="nav-icon nav-dot material-icons color-{{pricetype}}"
                 matPrefix matTooltip='{{pricetype}}'>local_gas_station</span>
               <mat-spinner *ngIf='saving' [diameter]="19" matPrefix></mat-spinner>
@@ -100,10 +100,10 @@
                   matTooltip="Set Price">check_circle</span>
               </button>
               <mat-hint *ngIf='!saving' align="start">
-                <i>Last Edited on </i> {{taxexempt[pricetype].MetaData?.LastUpdatedTime}}
+                <i>Last Edited on </i> {{currentOmcConfig.taxExempt[env][pricetype].MetaData?.LastUpdatedTime}}
               </mat-hint>
               <mat-error>
-                this field is <strong>{{activedepot.minpriceconfig[pricetype].price }}</strong>
+                this field is <strong>Required</strong>
               </mat-error>
             </mat-form-field>
           </div>
