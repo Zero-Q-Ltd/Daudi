@@ -198,7 +198,6 @@ export class OrdersService {
         .where("config.depot.id", "==", this.depotsservice.activedepot.value.depot.Id)
         .orderBy("stagedata.1.user.time", "asc")
         .onSnapshot(snapshot => {
-          console.log(snapshot.docs);
           /**
            * reset the array at the postion when data changes
            */
@@ -206,7 +205,8 @@ export class OrdersService {
           /**
            * dont assign a value in case the query delayed and the depot changed before it returned a value
            */
-          if (snapshot.empty || snapshot.docs[0].data().config.depot.Id !== this.depotsservice.activedepot.value.depot.Id) {
+          console.log(snapshot.docs.length + " Orders found in stage " + stage);
+          if (snapshot.empty || snapshot.docs[0].data().config.depot.id !== this.depotsservice.activedepot.value.depot.Id) {
             if (snapshot.empty) {
               this.loadingorders.next(false);
             }
@@ -215,6 +215,7 @@ export class OrdersService {
           this.loadingorders.next(false);
           this.orders[stage].next(snapshot.docs.filter(doc => {
             const value = doc.data() as Order;
+            console.log(value);
             value.Id = doc.id;
             if (value.stage === 6 && (value.stagedata["1"].user.time instanceof MyTimestamp) && value.stagedata["1"].user.time.toDate() < moment().subtract(2, "w").toDate()) {
               doc.ref.delete();
