@@ -48,6 +48,7 @@ export class OrdersService {
       .pipe(
         skipWhile(t => !t[0].depot.Id || !t[1].Id)
       ).subscribe(depot => {
+        // console.log(depot);
         this.unsubscribeAll();
         this.getpipeline();
       });
@@ -77,11 +78,6 @@ export class OrdersService {
         if (index > -1) {
           this.queuedorders.value.splice(index, 1);
         }
-        return this.db.firestore.collection("omc")
-          .doc(this.omc.currentOmc.value.Id)
-          .collection("order")
-          .doc(order.Id)
-          .set(order);
       }).catch(reason => {
         /**
          * delete the orderid after the operation is complete
@@ -115,21 +111,21 @@ export class OrdersService {
   updateorder(orderid: string, order: Order) {
     return this.db.firestore.collection("omc")
       .doc(this.omc.currentOmc.value.Id)
-      .collection("orders")
+      .collection("order")
       .doc(orderid).update(order);
   }
 
   getorder(orderid: string) {
     return this.db.firestore.collection("depots")
       .doc(this.depotsservice.activedepot.value.depot.Id)
-      .collection("orders")
+      .collection("order")
       .doc(orderid);
   }
 
   orderquery(query: any) {
     let queryvalue: any = this.db.firestore.collection("omc")
       .doc(this.omc.currentOmc.value.Id)
-      .collection("orders");
+      .collection("order");
     if (query.stagedata.status) {
       if (query.stagedata.invoiceno.status) {
         queryvalue = queryvalue.where("InvoiceId", "==", query.stagedata.invoiceno.value);
@@ -186,23 +182,22 @@ export class OrdersService {
      * reset the trucks and orders array when this function is invoked
      */
     this.loadingorders.next(true);
-    this.orders["1"].next([]);
-    this.orders["2"].next([]);
-    this.orders["3"].next([]);
-    this.orders["4"].next([]);
-    this.orders["5"].next([]);
-    this.orders["6"].next([]);
+    this.orders[1].next([]);
+    this.orders[2].next([]);
+    this.orders[3].next([]);
+    this.orders[4].next([]);
+    this.orders[5].next([]);
+    this.orders[6].next([]);
 
     OrderStageIds.forEach(stage => {
 
       const subscriprion = this.db.firestore.collection("omc")
         .doc(this.omc.currentOmc.value.Id)
         .collection("order")
-        .where("stage", "==", Number(stage))
-        .where("config.depot.Id", "==", this.depotsservice.activedepot.value.depot.Id)
+        .where("stage", "==", stage)
+        .where("config.depot.id", "==", this.depotsservice.activedepot.value.depot.Id)
         .orderBy("stagedata.1.user.time", "asc")
         .onSnapshot(snapshot => {
-          console.log(snapshot.docs);
           /**
            * reset the array at the postion when data changes
            */
@@ -210,7 +205,8 @@ export class OrdersService {
           /**
            * dont assign a value in case the query delayed and the depot changed before it returned a value
            */
-          if (snapshot.empty || snapshot.docs[0].data().config.depot.Id !== this.depotsservice.activedepot.value.depot.Id) {
+          // console.log(snapshot.docs.length + " Orders found in stage " + stage);
+          if (snapshot.empty || snapshot.docs[0].data().config.depot.id !== this.depotsservice.activedepot.value.depot.Id) {
             if (snapshot.empty) {
               this.loadingorders.next(false);
             }
@@ -229,7 +225,6 @@ export class OrdersService {
           }).map(doc => {
             const value = doc.data() as Order;
             value.Id = doc.id;
-
             return value;
           }));
         }, err => {
@@ -246,7 +241,7 @@ export class OrdersService {
      */
     const stage5subscription = this.db.firestore.collection("omc")
       .doc(this.omc.currentOmc.value.Id)
-      .collection("orders")
+      .collection("order")
       .where("stage", "==", 5)
       .where("stagedata.5.user.time", ">=", startofweek)
       .orderBy("stagedata.5.user.time", "desc")
