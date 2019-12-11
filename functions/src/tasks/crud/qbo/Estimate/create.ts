@@ -80,7 +80,7 @@ export class createEstimate {
                                 SalesItemLineDetail: {
                                     ItemRef: {
                                         name: fuel,
-                                        value: this.config.Qbo[this.environment].fuelconfig[fuel].aseId
+                                        value: this.config.Qbo[this.environment].fuelconfig[fuel].entryId
                                     },
                                     Qty: this.orderdata.fuel[fuel].qty,
                                     TaxCodeRef: {
