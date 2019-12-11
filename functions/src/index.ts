@@ -23,6 +23,7 @@ import { processSync } from './tasks/syncdb/processSync';
 import { readConfig } from './tasks/crud/daudi/readConfig';
 import { DaudiCustomer } from './models/Daudi/customer/Customer';
 import { updateCustomer } from './tasks/crud/qbo/customer/update';
+import { OrderCreate } from './models/Cloud/OrderCreate';
 
 admin.initializeApp(functions.config().firebase);
 admin.firestore().settings({ timestampsInSnapshots: true });
@@ -40,9 +41,9 @@ function markAsRunning(eventID: string) {
 /**
  * create an estimate from the client directly
  */
-exports.createEstimate = functions.https.onCall((data: { omc: OMC, config: Config, environment: Environment, order: Order }, context) => {
+exports.createEstimate = functions.https.onCall((data: OrderCreate, context) => {
 
-  return createQbo(data.omc.Id, data.config, data.environment).then(async result => {
+  return createQbo(data.omcId, data.config, data.environment).then(async result => {
     console.log(result)
     return createEstimate(data.order, result, data.config, data.environment).then(() => {
       /**
@@ -58,11 +59,11 @@ exports.createEstimate = functions.https.onCall((data: { omc: OMC, config: Confi
 /**
  * create an order from the client directly
  */
-exports.approveInvoice = functions.https.onCall((data: { omc: OMC, config: Config, environment: Environment, order: Order }, context) => {
+exports.approveInvoice = functions.https.onCall((data: OrderCreate, context) => {
 
-  return createQbo(data.omc.Id, data.config, data.environment).then(async result => {
+  return createQbo(data.omcId, data.config, data.environment).then(async result => {
     console.log(result)
-    return createInvoice(data.order, result, data.config, data.environment, data.omc).then(() => {
+    return createInvoice(data.order, result, data.config, data.environment, data.omcId).then(() => {
       /**
        * Only send sn SMS when order creation is complete
        * Make the two processes run parallel so that none is blocking

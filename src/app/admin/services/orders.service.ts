@@ -12,6 +12,8 @@ import { AngularFireFunctions } from "@angular/fire/functions";
 import { OmcService } from "./core/omc.service";
 import { skipWhile } from "rxjs/operators";
 import { MyTimestamp } from "../../models/firestore/firestoreTypes";
+import { OrderCreate } from "../../models/Cloud/OrderCreate";
+import { ConfigService } from "./core/config.service";
 
 
 @Injectable({
@@ -40,6 +42,7 @@ export class OrdersService {
     private db: AngularFirestore,
     private depotsservice: DepotService,
     private omc: OmcService,
+    private config: ConfigService,
     private functions: AngularFireFunctions) {
 
     this.omc.currentOmc
@@ -57,9 +60,15 @@ export class OrdersService {
     /**
      * add a counter for the number of pending orders in the queue
      */
+    const orderdata: OrderCreate = {
+      config: this.config.omcconfig.value,
+      environment: this.config.environment.value,
+      omcId: this.omc.currentOmc.value.Id,
+      order
+    };
     this.queuedorders.value.push(order.Id);
     if (order.stage === 2) {
-      return this.functions.httpsCallable("createorder")(order).toPromise().then(value => {
+      return this.functions.httpsCallable("createorder")(orderdata).toPromise().then(value => {
         /**
          * delete the orderid after the operation is complete
          */

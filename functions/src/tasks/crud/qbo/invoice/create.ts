@@ -82,7 +82,7 @@ function formulateInvoice(orderdata: Order, TxnTaxCodeRef: string, TaxRateRef: s
     return newInvoice;
 }
 
-export function createInvoice(orderdata: Order, qbo: QuickBooks, config: Config, environment: Environment, omc: OMC) {
+export function createInvoice(orderdata: Order, qbo: QuickBooks, config: Config, environment: Environment, omcId: string) {
     /**
      * format the timestamp again as it loses it when it doesnt directly go to the database
      */
@@ -168,7 +168,7 @@ export function createInvoice(orderdata: Order, qbo: QuickBooks, config: Config,
                     orderdata.QbConfig.InvoiceId = invoiceresult.DocNumber || null;
                     orderdata.stage = invoicefullypaid ? 3 : 2;
                     return admin.firestore().collection("omc")
-                        .doc(omc.Id)
+                        .doc(omcId)
                         .collection("orders")
                         .doc(orderdata.Id)
                         .set(orderdata).then(() => {
@@ -187,7 +187,7 @@ export function createInvoice(orderdata: Order, qbo: QuickBooks, config: Config,
                 orderdata.stage = 2;
 
                 return admin.firestore().collection("omc")
-                    .doc(omc.Id)
+                    .doc(omcId)
                     .collection("orders")
                     .doc(orderdata.Id)
                     .set(orderdata).then(() => {
