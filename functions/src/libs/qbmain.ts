@@ -142,7 +142,7 @@ export class QuickBooks {
     return new Promise(function (resolve, reject) {
       if (debug) {
         console.log("ClientId : ", clientID, "ClientSecret : ", clientSecret);
-        console.log(postBody);
+        console.log(JSON.stringify(postBody));
       }
       requester.post(postBody, function (e, r, data) {
         console.log(JSON.parse(r.body));

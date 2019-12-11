@@ -9,6 +9,7 @@ import { TxnStatus } from "./enums/TxnStatus";
 import { CustomerMemo } from "./subTypes/CustomerMemo";
 import { CustomerRef } from "./subTypes/CustomerRef";
 import { BillEmail } from "./subTypes/BillEmail";
+import { ReferenceType } from './subTypes/ClassRef';
 
 export interface Estimate {
 
@@ -59,5 +60,8 @@ export interface Estimate {
      * This field maps to the Memo field on the Invoice form
      */
     PrivateNote?: string
+    DepartmentRef?: ReferenceType,
+    ClassRef?: ReferenceType,
+
 }
 

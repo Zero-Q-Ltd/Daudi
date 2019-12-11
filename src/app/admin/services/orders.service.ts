@@ -3,7 +3,7 @@ import { Order } from "../../models/Daudi/order/Order";
 import { OrderStages, OrderStageIds } from "../../models/Daudi/order/OrderStages";
 import { firestore } from "firebase";
 import * as moment from "moment";
-import { BehaviorSubject } from "rxjs";
+import { BehaviorSubject, combineLatest } from "rxjs";
 import { AngularFirestore } from "@angular/fire/firestore";
 import { DepotService } from "./core/depot.service";
 import { Depot } from "../../models/Daudi/depot/Depot";
@@ -12,6 +12,8 @@ import { AngularFireFunctions } from "@angular/fire/functions";
 import { OmcService } from "./core/omc.service";
 import { skipWhile } from "rxjs/operators";
 import { MyTimestamp } from "../../models/firestore/firestoreTypes";
+import { OrderCreate } from "../../models/Cloud/OrderCreate";
+import { ConfigService } from "./core/config.service";
 
 
 @Injectable({
@@ -40,11 +42,11 @@ export class OrdersService {
     private db: AngularFirestore,
     private depotsservice: DepotService,
     private omc: OmcService,
+    private config: ConfigService,
     private functions: AngularFireFunctions) {
-
-    this.omc.currentOmc
+    combineLatest([this.depotsservice.activedepot, this.omc.currentOmc])
       .pipe(
-        skipWhile(t => !t.Id)
+        skipWhile(t => !t[0].depot.Id || !t[1].Id)
       ).subscribe(depot => {
         this.unsubscribeAll();
         this.getpipeline();
@@ -57,9 +59,17 @@ export class OrdersService {
     /**
      * add a counter for the number of pending orders in the queue
      */
+    const orderdata: OrderCreate = {
+      config: this.config.omcconfig.value,
+      environment: this.config.environment.value,
+      omcId: this.omc.currentOmc.value.Id,
+      order
+    };
     this.queuedorders.value.push(order.Id);
-    if (order.stage === 2) {
-      return this.functions.httpsCallable("createorder")(order).toPromise().then(value => {
+    console.log(orderdata);
+
+    if (order.stage === 1) {
+      return this.functions.httpsCallable("createEstimate")(orderdata).toPromise().then(value => {
         /**
          * delete the orderid after the operation is complete
          */
@@ -67,15 +77,28 @@ export class OrdersService {
         if (index > -1) {
           this.queuedorders.value.splice(index, 1);
         }
+        return this.db.firestore.collection("omc")
+          .doc(this.omc.currentOmc.value.Id)
+          .collection("order")
+          .doc(order.Id)
+          .set(order);
       }).catch(reason => {
+        /**
+         * delete the orderid after the operation is complete
+         */
+        const index = this.queuedorders.value.indexOf(order.Id);
+        if (index > -1) {
+          this.queuedorders.value.splice(index, 1);
+        }
+        console.log("error creating order", reason);
         /***
          * error creating order
          */
       });
     } else {
       return this.db.firestore.collection("omc")
-        .doc(this.depotsservice.activedepot.value.depot.Id)
-        .collection("orders")
+        .doc(this.omc.currentOmc.value.Id)
+        .collection("order")
         .doc(order.Id)
         .set(order);
     }
@@ -159,9 +182,6 @@ export class OrdersService {
    * Fetches all orders and trucks Relevant to the header
    */
   getpipeline() {
-    if (!this.depotsservice.activedepot.value.depot.Id) {
-      return;
-    }
     /**
      * reset the trucks and orders array when this function is invoked
      */
@@ -177,12 +197,12 @@ export class OrdersService {
 
       const subscriprion = this.db.firestore.collection("omc")
         .doc(this.omc.currentOmc.value.Id)
-        .collection("orders")
+        .collection("order")
         .where("stage", "==", Number(stage))
         .where("config.depot.Id", "==", this.depotsservice.activedepot.value.depot.Id)
         .orderBy("stagedata.1.user.time", "asc")
         .onSnapshot(snapshot => {
-
+          console.log(snapshot.docs);
           /**
            * reset the array at the postion when data changes
            */

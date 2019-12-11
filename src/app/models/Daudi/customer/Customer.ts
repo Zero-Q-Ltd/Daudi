@@ -1,7 +1,7 @@
 import { Contact } from "./Contact";
 import { AssociatedUser } from "../admin/AssociatedUser";
 import { MyGeoPoint } from "../../firestore/firestoreTypes";
-import { Environment } from "../omc/Environments";
+import { Environment } from '../omc/Environments';
 
 export interface DaudiCustomer {
   Active: boolean;

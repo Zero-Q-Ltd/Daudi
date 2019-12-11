@@ -1,10 +1,8 @@
 import { LinkedTxn } from "./subTypes/LinkedTxn";
+import { ReferenceType } from "./subTypes/ClassRef";
 
 export interface Payment {
-  CustomerRef: {
-    value: string;
-    name?: string;
-  };
+  CustomerRef: ReferenceType;
   PaymentRefNum: string;
   DepositToAccountRef?: {
     value: "4";

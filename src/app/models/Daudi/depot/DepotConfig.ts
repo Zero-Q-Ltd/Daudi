@@ -4,6 +4,7 @@ import { inituser, AssociatedUser } from "../admin/AssociatedUser";
 import { deepCopy } from "../../utils/deepCopy";
 export interface DepotConfig {
     depotId: string;
+    QbId: string;
     CompanyRep: {
         phone: null;
         name: null;
@@ -22,6 +23,7 @@ const initPrice: DepotPrice = {
 };
 export const emptyDepotConfig: DepotConfig = {
     depotId: null,
+    QbId: null,
     CompanyRep: {
         name: null,
         phone: null

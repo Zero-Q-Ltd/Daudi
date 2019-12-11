@@ -1,7 +1,7 @@
 import { FuelType } from "../fuel/FuelType";
 import { Contact } from "../customer/Contact";
 import { Truck, emptytruck } from "./Truck";
-import { FuelConfig } from "./FuelConfig";
+import { OrderFuelConfig } from "./FuelConfig";
 import { OrderStages } from "./OrderStages";
 import { Environment } from "../omc/Environments";
 import { AssociatedUser } from "../admin/AssociatedUser";
@@ -21,10 +21,10 @@ export interface Order {
     InvoiceId: string,
     QbId: string,
     /**
-     * depots are created in qbo as classes
-     * The class Id's must be referenced
+     * depots are created in qbo as departments
+     * The departments Id's must be referenced
      */
-    classId: string,
+    departmentId: string,
   };
   stage: number;
   origin: string;
@@ -50,7 +50,7 @@ export interface Order {
   truck: Truck;
   loaded: boolean;
   fuel: {
-    [key in FuelType]: FuelConfig
+    [key in FuelType]: OrderFuelConfig
   };
   discount?: {
     approved: {
@@ -72,7 +72,7 @@ export interface StageData {
   data: any;
 }
 
-const initorderfuel: FuelConfig = {
+const initorderfuel: OrderFuelConfig = {
   qty: 0,
   priceconfig: {
     price: 0,
@@ -88,7 +88,6 @@ const initorderfuel: FuelConfig = {
     taxableAmnt: 0,
     taxQbId: null
   },
-  QbId: null,
   batches: []
 };
 
@@ -138,8 +137,8 @@ export const emptyorder: Order = {
 
 
   fuel: {
-    pms: deepCopy<FuelConfig>(initorderfuel),
-    ago: deepCopy<FuelConfig>(initorderfuel),
-    ik: deepCopy<FuelConfig>(initorderfuel)
+    pms: deepCopy<OrderFuelConfig>(initorderfuel),
+    ago: deepCopy<OrderFuelConfig>(initorderfuel),
+    ik: deepCopy<OrderFuelConfig>(initorderfuel)
   }
 };

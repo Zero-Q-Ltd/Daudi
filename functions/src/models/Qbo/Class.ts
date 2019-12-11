@@ -1,4 +1,5 @@
 import { QboMetaData } from "./subTypes/QboMetaData";
+import { ReferenceType } from "./subTypes/ClassRef";
 
 export interface Class {
     /**
@@ -51,19 +52,7 @@ Unique identifier for this object. Sort order is ASC by default.
 ReferenceType
 The immediate parent of the SubClass. Required if this object is a subclass
      */
-    ParentRef?: {
-        /**
-         * The ID for the referenced object as found in the Id field of the object payload. 
-         * The context is set by the type of reference and is specific to the QuickBooks company file.
-         */
-        value: string
-        /**
-         * An identifying name for the object being referenced by value and is derived from the field that holds the common name of that object. 
-         * This varies by context and specific type of object referenced. For example, references to a Customer object use Customer.
-         * DisplayName to populate this field. Optionally returned in responses, implementation dependent.
-         */
-        name: string
-    }
+    ParentRef?: ReferenceType
 }
 
 

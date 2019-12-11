@@ -1,5 +1,6 @@
 import { ItemType } from "./enums/ItemType";
 import { FuelType } from '../Daudi/fuel/FuelType';
+import { ReferenceType } from "./subTypes/ClassRef";
 
 export interface Item {
   Name: FuelType;
@@ -9,44 +10,26 @@ export interface Item {
   Taxable: true;
   UnitPrice: number;
   Type: ItemType;
-  IncomeAccountRef: {
-    value: string;
-    name: string;
-  };
+  IncomeAccountRef: ReferenceType;
   PurchaseDesc?: string;
   PurchaseCost?: number;
-  ExpenseAccountRef: {
-    value: string;
-    name: string;
-  };
-  ParentRef?: {
-    value: string;
-    name: string;
-  };
+  ExpenseAccountRef: ReferenceType;
+  ParentRef?: ReferenceType;
 
-  AssetAccountRef?: {
-    value: string;
-    name: string;
-  };
+  AssetAccountRef?: ReferenceType;
   TrackQtyOnHand: true;
   QtyOnHand: number;
   InvStartDate?: string;
   domain: "QBO";
   sparse: false;
-  Id?: number;
+  Id?: string;
   SyncToken: string;
   MetaData?: {
     CreateTime: string;
     LastUpdatedTime: string;
   };
-  SalesTaxCodeRef: {
-    value: string;
-    name: string;
-  },
-  ClassRef?: {
-    value: string;
-    name: string;
-  },
+  SalesTaxCodeRef: ReferenceType,
+  ClassRef?: ReferenceType,
   SalesTaxIncluded?: boolean
 }
 

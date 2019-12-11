@@ -23,6 +23,7 @@ import { processSync } from './tasks/syncdb/processSync';
 import { readConfig } from './tasks/crud/daudi/readConfig';
 import { DaudiCustomer } from './models/Daudi/customer/Customer';
 import { updateCustomer } from './tasks/crud/qbo/customer/update';
+import { OrderCreate } from './models/Cloud/OrderCreate';
 
 admin.initializeApp(functions.config().firebase);
 admin.firestore().settings({ timestampsInSnapshots: true });
@@ -40,11 +41,12 @@ function markAsRunning(eventID: string) {
 /**
  * create an estimate from the client directly
  */
-exports.createEstimate = functions.https.onCall((data: { omc: OMC, config: Config, environment: Environment, order: Order }, context) => {
+exports.createEstimate = functions.https.onCall((data: OrderCreate, context) => {
 
-  return createQbo(data.omc.Id, data.config, data.environment).then(async result => {
+  return createQbo(data.omcId, data.config, data.environment).then(async result => {
     console.log(result)
-    return createEstimate(data.order, result, data.config, data.environment).then(() => {
+    const est = new createEstimate(data.order, result, data.config, data.environment)
+    return result.createEstimate(est.formulateEstimate()).then(() => {
       /**
        * Only send sn SMS when estimate creation is complete
        * Make the two processes run parallel so that none is blocking
@@ -58,15 +60,16 @@ exports.createEstimate = functions.https.onCall((data: { omc: OMC, config: Confi
 /**
  * create an order from the client directly
  */
-exports.approveInvoice = functions.https.onCall((data: { omc: OMC, config: Config, environment: Environment, order: Order }, context) => {
+exports.approveInvoice = functions.https.onCall((data: OrderCreate, context) => {
 
-  return createQbo(data.omc.Id, data.config, data.environment).then(async result => {
+  return createQbo(data.omcId, data.config, data.environment).then(async result => {
     console.log(result)
-    return createInvoice(data.order, result, data.config, data.environment, data.omc).then(() => {
+    const inv = new createInvoice(data.order, result, data.config, data.environment)
+    return result.createInvoice(inv.formulateEstimate()).then(() => {
       /**
-       * Only send sn SMS when order creation is complete
-       * Make the two processes run parallel so that none is blocking
-       */
+    * Only send sn SMS when order creation is complete
+    * Make the two processes run parallel so that none is blocking
+    */
       return Promise.all([ordersms(data.order), validorderupdate(data.order, result)]);
     });
   })

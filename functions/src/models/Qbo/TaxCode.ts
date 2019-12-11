@@ -1,3 +1,5 @@
+import { ReferenceType } from "./subTypes/ClassRef";
+
 export interface TaxCode {
   Name: string;
   Description: string;
@@ -7,10 +9,7 @@ export interface TaxCode {
   SalesTaxRateList: {
     TaxRateDetail: [
       {
-        TaxRateRef: {
-          value: "18";
-          name: "VAT";
-        };
+        TaxRateRef: ReferenceType;
         TaxTypeApplicable: "TaxOnAmount";
         TaxOrder: 0;
       }

@@ -406,7 +406,7 @@ export class CreateOrderComponent implements OnDestroy {
         if (result) {
           if (this.discApproval) {
             if (this.userAuthenticated()) {
-              this.saveOrder(redirect, 2);
+              this.saveOrder(redirect);
             } else {
               this.notificationService.notify({
                 alert_type: "warning",
@@ -423,12 +423,11 @@ export class CreateOrderComponent implements OnDestroy {
             if (this.temporder.fuel.pms.priceconfig.difference < 0
               || this.temporder.fuel.ago.priceconfig.difference < 0
               || this.temporder.fuel.ik.priceconfig.difference < 0) {
-              this.saveOrder(redirect, this.userAuthenticated() ? 2 : 1);
+              this.saveOrder(redirect);
             } else {
-              this.saveOrder(redirect, 2);
+              this.saveOrder(redirect);
             }
           }
-
         }
       });
   }
@@ -437,12 +436,10 @@ export class CreateOrderComponent implements OnDestroy {
     return Number(this.adminservice.userdata.config.level) < 2;
   }
 
-  saveOrder(redirect: boolean, stage: number) {
-    this.temporder.stage = stage;
+  saveOrder(redirect: boolean) {
+    this.temporder.stage = 1;
     this.temporder.origin = "backend";
-    this.temporder.fuel.pms.QbId = this.configService.getEnvironment().fuelconfig.pms.QbId;
-    this.temporder.fuel.ago.QbId = this.configService.getEnvironment().fuelconfig.ago.QbId;
-    this.temporder.fuel.ik.QbId = this.configService.getEnvironment().fuelconfig.ik.QbId;
+    this.temporder.QbConfig.departmentId = this.activedepot.config.QbId;
     this.temporder.customer.krapin = this.temporder.customer.krapin.toLocaleUpperCase();
     this.temporder.stagedata["1"] = {
       user: this.adminservice.createuserobject(),

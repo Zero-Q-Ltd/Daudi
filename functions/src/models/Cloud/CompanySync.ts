@@ -8,3 +8,4 @@ export interface CompanySync {
     environment: Environment;
     sync: SyncRequest;
 }
+

@@ -21,20 +21,13 @@ export function syncCustomers(qbo: QuickBooks, omcId: string, env: Environment) 
                 /**
                  * Overwrite sandbox customers that conflict id with live, but ignore sandbox customers that conflict with live
                  */
-                if (
-                    customersarray.find(
-                        comp =>
-                            comp.QbId === customer.Id &&
-                            comp.companyId !== qbo.companyid &&
-                            qbo.sandbox
-                    )
-                ) {
-                    // console.log('ignoring conflicting company');
+                if (customersarray.find(comp => comp.QbId === customer.Id && env === Environment.sandbox)) {
+                    console.log('ignoring conflicting company');
                     return;
                 } else {
                     let co = convertToDaudicustomer(customer, env, qbo.companyid);
                     if (customersarray.find(company => company.QbId === customer.Id)) {
-                        // console.log('updating company');
+                        console.log('updating customer');
                         batchwrite.update(
                             firestore()
                                 .collection("omc")
@@ -45,7 +38,7 @@ export function syncCustomers(qbo: QuickBooks, omcId: string, env: Environment) 
                         );
                     } else {
                         co = { ...emptyDaudiCustomer, ...co };
-                        // console.log('creating company');
+                        console.log('creating company');
                         // console.log(co);
                         batchwrite.set(
                             firestore()
@@ -98,7 +91,6 @@ function convertToDaudicustomer(
             status: false,
             user: null
         },
-        companyId: companyid,
         location: new firestore.GeoPoint(0, 0)
     };
     return daudicompany;

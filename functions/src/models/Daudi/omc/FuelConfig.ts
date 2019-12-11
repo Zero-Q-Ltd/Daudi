@@ -3,13 +3,16 @@ export interface FuelConfig {
     allocation: {
         qty: number;
     };
-    QbId: number;
-
+    groupId: string;
+    aseId: string;
+    entryId: string
 }
 
 export const emptyFuelConfig: FuelConfig = {
     allocation: {
         qty: 0
     },
-    QbId: null,
+    groupId: null,
+    aseId: null,
+    entryId: null
 };

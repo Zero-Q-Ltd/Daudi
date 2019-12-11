@@ -5,13 +5,11 @@ import { TxnTaxDetail } from "./subTypes/TxnTaxDetail";
 import { Line } from "./subTypes/Line";
 import { PrintStatus } from "./enums/PrintStatus";
 import { EmailStatus } from "./enums/EmailStatus";
+import { ReferenceType } from './subTypes/ClassRef';
 
 export interface Invoice {
   Line?: Array<Line>;
-  CustomerRef?: {
-    value: string;
-    name?: string;
-  };
+  CustomerRef?: ReferenceType;
   Deposit?: number;
   AllowIPNPayment?: boolean;
   AllowOnlinePayment?: boolean;
@@ -28,10 +26,7 @@ export interface Invoice {
   CustomField?: Array<CustomField>;
   DocNumber?: string;
   TxnDate?: string;
-  CurrencyRef?: {
-    value: string;
-    name: string;
-  };
+  CurrencyRef?: ReferenceType;
   LinkedTxn?: Array<LinkedTxn>;
   TxnTaxDetail?: TxnTaxDetail;
   Balance?: number;
@@ -49,10 +44,9 @@ export interface Invoice {
   CustomerMemo?: {
     value: string;
   };
-  ClassRef: {
-    value: string;
-    name?: string;
-  },
+  DepartmentRef?: ReferenceType,
+
+  ClassRef: ReferenceType,
   AutoDocNumber?: boolean;
 }
 
