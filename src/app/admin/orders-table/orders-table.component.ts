@@ -2,7 +2,7 @@ import { Component, Input, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import { MatDialog, MatPaginator, MatSort, MatTableDataSource, MatTreeNestedDataSource } from "@angular/material";
 import { CompartmentsComponent } from "../compartments/compartments.component";
 import { SendMsgComponent } from "../send-msg/send-msg.component";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { NotificationService } from "../../shared/services/notification.service";
 import { AngularFirestore } from "@angular/fire/firestore";
 import { animate, sequence, state, style, transition, trigger } from "@angular/animations";
@@ -71,6 +71,7 @@ export class OrdersTableComponent implements OnInit, OnDestroy {
     private excelService: ExcelService,
     private adminservice: AdminService,
     private orderservice: OrdersService,
+    private router: Router,
     private componentcommunication: ComponentCommunicationService) {
 
     this.orderservice.loadingorders.subscribe(value => {
@@ -185,6 +186,9 @@ export class OrdersTableComponent implements OnInit, OnDestroy {
     this.ordersdataSource.filter = filterValue;
   }
 
+  approveOrder(order: Order) {
+    this.router.navigate(["admin/create-order/", { orderid: order.Id }]);
+  }
 
   /**
    *
@@ -218,7 +222,6 @@ export class OrdersTableComponent implements OnInit, OnDestroy {
         });
       }
     });
-
   }
 
   /**

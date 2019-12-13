@@ -116,8 +116,8 @@ export class OrdersService {
   }
 
   getorder(orderid: string) {
-    return this.db.firestore.collection("depots")
-      .doc(this.depotsservice.activedepot.value.depot.Id)
+    return this.db.firestore.collection("omc")
+      .doc(this.omc.currentOmc.value.Id)
       .collection("order")
       .doc(orderid);
   }

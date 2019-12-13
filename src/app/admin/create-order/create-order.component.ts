@@ -2,7 +2,7 @@ import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from "@angular
 import { ActivatedRoute, Router } from "@angular/router";
 import { MatDialog, MatSort, MatTableDataSource } from "@angular/material";
 // import our interface
-import { Observable, ReplaySubject } from "rxjs";
+import { Observable, ReplaySubject, combineLatest } from "rxjs";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { MapsComponent } from "../maps/maps.component";
 import { NotificationService } from "../../shared/services/notification.service";
@@ -104,70 +104,125 @@ export class CreateOrderComponent implements OnDestroy {
     private priceservice: PricesService,
     private functions: AngularFireFunctions) {
 
-
-    this.route.params
-      .pipe(takeUntil(this.comopnentDestroyed))
-      .subscribe((paramdata: { orderid: string }) => {
-        if (!paramdata.orderid) {
-          console.log("Not discount approval");
-          this.depotService.activedepot
-            .pipe(
-              takeUntil(this.comopnentDestroyed),
-              skipWhile(t => !t.depot.Id)
-            )
-            .subscribe((value) => {
-              /**
-               * This must execute in this exact order
-               */
-              this.activedepot = value;
-
-              this.initfuelprices();
-              this.initordersform();
+    combineLatest(
+      this.route.params.pipe(
+        takeUntil(this.comopnentDestroyed),
+        map((paramdata: { orderid: string }) => paramdata)),
+      this.depotService.activedepot.pipe(
+        takeUntil(this.comopnentDestroyed),
+        skipWhile(t => !t.depot.Id)),
+      this.configService.omcconfig.pipe(
+        takeUntil(this.comopnentDestroyed),
+        skipWhile(t => !t)),
+      this.configService.environment
+        .pipe(takeUntil(this.comopnentDestroyed)),
+      this.omcservice.currentOmc.pipe(
+        takeUntil(this.comopnentDestroyed),
+        skipWhile(t => !t.Id))
+    ).subscribe(res => {
+      if (!res[0].orderid) {
+        console.log("Not discount approval");
+        /**
+         * This must execute in this exact order
+         */
+        this.activedepot = res[1];
+        this.omcConfig = res[2];
+        this.env = res[3];
+        this.initfuelprices();
+        this.initordersform();
+      } else {
+        console.log("Discount approval");
+        console.log(res);
+        const subscription = this.orderservice.getorder(res[0].orderid).onSnapshot(ordersnapshot => {
+          this.temporder = ordersnapshot.data() as Order;
+          if (this.temporder.stage !== 1) {
+            this.notificationService.notify({
+              alert_type: "warning",
+              body: "Order has been approved",
+              duration: 2000,
+              title: "Conflict"
             });
-        } else {
-          this.discApproval = true;
-          const subscription = this.orderservice.getorder(paramdata.orderid).onSnapshot(ordersnapshot => {
-            this.temporder = ordersnapshot.data() as Order;
-            if (this.temporder.stage !== 1) {
-              this.notificationService.notify({
-                alert_type: "warning",
-                body: "Order has been approved",
-                duration: 2000,
-                title: "Conflict"
-              });
-              return;
-            }
-            this.depotService.activedepot
-              .pipe(
-                takeUntil(this.comopnentDestroyed),
-                skipWhile(t => !t.depot.Id)
-              ).subscribe((value) => {
-                console.log(value);
-                /**
-                 * This must execute in this exact order
-                 */
-
-                this.activedepot = value;
-                this.initfuelprices();
-                this.initordersform();
-              });
-          });
-          this.subscriptions.set(`discountorder`, subscription);
-        }
-        this.configService.environment
-          .pipe(takeUntil(this.comopnentDestroyed))
-          .subscribe(value => {
-            this.env = value;
-          });
-
-        this.configService.omcconfig.pipe(
-          takeUntil(this.comopnentDestroyed),
-          skipWhile(t => !t)
-        ).subscribe(val => {
-          this.omcConfig = val;
+            return;
+          } else {
+            /**
+             * This must execute in this exact order
+             */
+            this.activedepot = res[1];
+            this.omcConfig = res[2];
+            this.env = res[3];
+            this.initfuelprices();
+            this.initordersform();
+          }
         });
+        this.subscriptions.set(`discountorder`, subscription);
 
-      });
+      }
+
+    });
+
+    // this.route.params
+    //   .pipe(takeUntil(this.comopnentDestroyed))
+    //   .subscribe((paramdata: { orderid: string }) => {
+    //     if (!paramdata.orderid) {
+    //       console.log("Not discount approval");
+    //       this.depotService.activedepot
+    //         .pipe(
+    //           takeUntil(this.comopnentDestroyed),
+    //           skipWhile(t => !t.depot.Id)
+    //         )
+    //         .subscribe((value) => {
+    //           /**
+    //            * This must execute in this exact order
+    //            */
+    //           this.activedepot = value;
+
+    //           this.initfuelprices();
+    //           this.initordersform();
+    //         });
+    //     } else {
+    //       this.discApproval = true;
+    //       const subscription = this.orderservice.getorder(paramdata.orderid).onSnapshot(ordersnapshot => {
+    //         this.temporder = ordersnapshot.data() as Order;
+    //         if (this.temporder.stage !== 1) {
+    //           this.notificationService.notify({
+    //             alert_type: "warning",
+    //             body: "Order has been approved",
+    //             duration: 2000,
+    //             title: "Conflict"
+    //           });
+    //           return;
+    //         }
+    //         this.depotService.activedepot
+    //           .pipe(
+    //             takeUntil(this.comopnentDestroyed),
+    //             skipWhile(t => !t.depot.Id)
+    //           ).subscribe((value) => {
+    //             console.log(value);
+    //             /**
+    //              * This must execute in this exact order
+    //              */
+
+    //             this.activedepot = value;
+    //             this.initfuelprices();
+    //             this.initordersform();
+    //           });
+    //       });
+    //       this.subscriptions.set(`discountorder`, subscription);
+    //     }
+    //     this.configService.environment
+    //       .pipe(takeUntil(this.comopnentDestroyed))
+    //       .subscribe(value => {
+    //         this.env = value;
+    //       });
+
+    //     this.configService.omcconfig.pipe(
+    //       takeUntil(this.comopnentDestroyed),
+    //       skipWhile(t => !t)
+    //     ).subscribe(val => {
+    //       this.omcConfig = val;
+    //     });
+
+    //   });
 
     this.customerService.loadingcustomers
       .pipe(takeUntil(this.comopnentDestroyed))
