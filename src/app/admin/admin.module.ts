@@ -88,14 +88,16 @@ import { BatchesComponent } from "./admin/pages/entries/entries.component";
 import { NgxEchartsModule } from "ngx-echarts";
 import { SatDatepickerModule, SatNativeDateModule } from "saturn-datepicker";
 import { CalendarRangesComponent } from "./dashboard/calendar-ranges/calendar-ranges.component";
-import { ConfirmDepotComponent } from "./create-order/confirm-depot/confirm-depot.component";
+import { ConfirmDepotComponent } from "./create-order/components/confirm-depot/confirm-depot.component";
 import { StatsComponent } from "./dashboard/stats/stats.component";
 import { UserLevelsComponent } from "./admin/pages/user-levels/user-levels.component";
 import { ConfigComponent } from "./admin/pages/config/config.component";
 import { AdminRolesComponent } from "./admin/pages/admin-roles/admin-roles.component";
 import { AdminLevelsComponent } from "./admin/pages/admin-levels/admin-levels.component";
 import { CreateComponent } from "./admin/pages/payments/create/create.component";
-import { AseComponent } from './admin/ase/ase.component';
+import { AseComponent } from "./admin/ase/ase.component";
+import { CalculationsComponent } from './create-order/components/calculations/calculations.component';
+
 
 @NgModule({
 
@@ -195,6 +197,7 @@ import { AseComponent } from './admin/ase/ase.component';
     AdminLevelsComponent,
     CreateComponent,
     AseComponent,
+    CalculationsComponent,
   ],
   providers: [UsersGuard,
     LayoutService,

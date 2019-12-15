@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { MatDialog, MatSort, MatTableDataSource } from "@angular/material";
 // import our interface
 import { Observable, ReplaySubject, combineLatest } from "rxjs";
-import { FormControl, FormGroup, Validators } from "@angular/forms";
+import { FormArray, FormControl, FormGroup, FormBuilder } from "ngx-strongly-typed-forms";
 import { MapsComponent } from "../maps/maps.component";
 import { NotificationService } from "../../shared/services/notification.service";
 import { DaudiCustomer, emptyDaudiCustomer } from "../../models/Daudi/customer/Customer";
@@ -17,12 +17,14 @@ import { PricesService } from "../services/prices.service";
 import { AngularFireFunctions } from "@angular/fire/functions";
 import { map, startWith, takeUntil, skipWhile } from "rxjs/operators";
 import { FuelType, FuelNamesArray } from "../../models/Daudi/fuel/FuelType";
-import { ConfirmDepotComponent } from "./confirm-depot/confirm-depot.component";
+import { ConfirmDepotComponent } from "./components/confirm-depot/confirm-depot.component";
 import { OmcService } from "../services/core/omc.service";
 import { ConfigService } from "../services/core/config.service";
 import { Config, emptyConfig } from "../../models/Daudi/omc/Config";
 import { DepotConfig, emptyDepotConfig } from "../../models/Daudi/depot/DepotConfig";
 import { Environment } from "../../models/Daudi/omc/Environments";
+import { Validators } from "@angular/forms";
+import { CreateOrder, OrderFuel } from "../../models/Daudi/forms/CreateOrder";
 
 @Component({
   selector: "create-order",
@@ -59,13 +61,35 @@ export class CreateOrderComponent implements OnDestroy {
 
   kramask = [/^[a-zA-Z]+$/i, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /^[a-zA-Z]+$/i];
 
-  orderform: FormGroup = new FormGroup({
-    pmsqtyControl: new FormControl("", [Validators.required, Validators.min(1000)]),
-    agoqtyControl: new FormControl("", [Validators.required, Validators.min(1000)]),
-    ikqtyControl: new FormControl("", [Validators.required, Validators.min(1000)]),
-    pms: new FormControl({}),
-    ago: new FormControl({}),
-    ik: new FormControl({})
+  // orderform: FormGroup = new FormGroup({
+  //   pmsqtyControl: new FormControl("", [Validators.required, Validators.min(1000)]),
+  //   agoqtyControl: new FormControl("", [Validators.required, Validators.min(1000)]),
+  //   ikqtyControl: new FormControl("", [Validators.required, Validators.min(1000)]),
+  //   pms: new FormControl({}),
+  //   ago: new FormControl({}),
+  //   ik: new FormControl({})
+  // });
+  orderform: FormGroup<CreateOrder> = new FormGroup<CreateOrder>({
+    contact: new FormGroup(
+      {
+        email: new FormControl("", [Validators.required, Validators.email]),
+        name: new FormControl("", [Validators.required, Validators.minLength(4)]),
+        phone: new FormControl("", [Validators.required, Validators.pattern("[0-9].{8}")]),
+        kraPin: new FormControl("", [Validators.required]),
+      }),
+    fuel: new FormGroup({
+      ago: new FormGroup<OrderFuel>({
+        price: new FormControl(0, [Validators.required, Validators.min(1000)]),
+        qty: new FormControl()
+      }), pms: new FormGroup<OrderFuel>({
+        price: new FormControl(0, [Validators.required, Validators.min(1000)]),
+        qty: new FormControl()
+      }), ik: new FormGroup<OrderFuel>({
+        price: new FormControl(0, [Validators.required, Validators.min(1000)]),
+        qty: new FormControl()
+      }),
+
+    })
   });
   contactform: FormGroup = new FormGroup(
     {
@@ -76,6 +100,7 @@ export class CreateOrderComponent implements OnDestroy {
       emailControl: new FormControl("", [Validators.required, Validators.email])
     }
   );
+
   fueltypesArray = FuelNamesArray;
   filteredCompanies: Observable<DaudiCustomer[]>;
   companyControl = new FormControl();
