@@ -47,8 +47,4 @@ export class PriceComparisonComponent implements OnInit {
 
   }
 
-
-  applyFilter(filterValue: string) {
-    this.depotsdataSource.filter = filterValue.trim().toLowerCase();
-  }
 }

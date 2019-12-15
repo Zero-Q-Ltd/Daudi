@@ -53,7 +53,8 @@ export class DepotService {
 
   fetchdepots() {
     const depotquery = this.db.firestore.collection("depot")
-      .where("Active", "==", true);
+      .where("Active", "==", true)
+      .orderBy("Name", "asc");
     const subscriprion = depotquery.onSnapshot(snapshot => {
       const tempdepot: Depot = { ...emptydepot, ...snapshot.docs[0].data() };
       tempdepot.Id = snapshot.docs[0].id;
