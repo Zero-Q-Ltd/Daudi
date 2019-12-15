@@ -1,31 +1,34 @@
 <section class="container-fluid sixty-top">
   <mat-card>
     <mat-card-content>
-
-      <br>
       <div fxFlex="row" class="container-fluid">
+        <app-price-comparison>
 
-        <app-contact-form [initData]="temporder" (formChangesResult)="contactFormChanges($event)">
-        </app-contact-form>
-        <br>
-        <app-calculations [initData]="temporder"></app-calculations>
+        </app-price-comparison>
+
       </div>
       <div fxFlex="row">
-        <div class="" fxLayout fxLayout.xs="column" fxLayoutAlign="center" fxLayoutGap="10px" fxLayoutGap.xs="0">
-          <button class="btn-default1" mat-raised-button matTooltip="Orders processsing in the background">
-            << {{queuedorders.length}} </button> <div fxFlex>&nbsp;</div>
-        <div fxFlex>&nbsp;</div>
-        <div class="btn-group" role="group" style="width: 100%;">
+        <app-contact-form [(initData)]="temporder">
+        </app-contact-form>
+        <br>
+        <app-calculations [(initData)]="temporder">
+        </app-calculations>
+        <div>
+          <div class="" fxLayout fxLayout.xs="column" fxLayoutAlign="center" fxLayoutGap="10px" fxLayoutGap.xs="0">
+            <button class="btn-default1" mat-raised-button matTooltip="Orders processsing in the background">
+              << {{queuedorders.length}} </button> <div fxFlex>&nbsp;</div>
+          <div fxFlex>&nbsp;</div>
+          <div class="btn-group" role="group" style="width: 100%;">
 
-          <button (click)="checkOrder(true)" [disabled]=" orderform.invalid || contactform.invalid" class="btn-default"
-            mat-flat-button>SAVE ONLY
-          </button>&nbsp;&nbsp;
-          <button (click)="checkOrder(false)" [disabled]=" orderform.invalid || contactform.invalid" class="btn-default"
-            mat-button>SAVE AND NEW
-          </button>
+            <button (click)="checkOrder(true)" [disabled]=" orderform.invalid || contactform.invalid"
+              class="btn-default" mat-flat-button>SAVE ONLY
+            </button>&nbsp;&nbsp;
+            <button (click)="checkOrder(false)" [disabled]=" orderform.invalid || contactform.invalid"
+              class="btn-default" mat-button>SAVE AND NEW
+            </button>
+          </div>
         </div>
       </div>
-
       </div>
     </mat-card-content>
   </mat-card>

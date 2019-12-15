@@ -15,10 +15,10 @@ import { CustomerService } from "./../../../services/customers.service";
   styleUrls: ["./contact-form.component.scss"]
 })
 export class ContactFormComponent implements OnInit {
-  @Input() initData?: Order;
-  @Output() formChangesResult: EventEmitter<{ detail: CustomerDetail, kraModified: boolean }> =
-    new EventEmitter<{ detail: CustomerDetail, kraModified: boolean }>();
-  filteredCompanies: Subject<DaudiCustomer[]>;
+  @Input() initData: Order;
+  // @Output() formChangesResult: EventEmitter<{ detail: CustomerDetail, kraModified: boolean }> =
+  //   new EventEmitter<{ detail: CustomerDetail, kraModified: boolean }>();
+  filteredCompanies: Subject<DaudiCustomer[]> = new Subject();
   loadingcustomers = false;
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
   subscriptions: Map<string, any> = new Map<string, any>();
@@ -33,8 +33,8 @@ export class ContactFormComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private customerService: CustomerService
-
   ) {
+    console.log(this.initData);
     if (this.initData) {
       this.contactform.disable();
       this.contactform.controls.email.setValue(this.initData.customer.contact[0].email);
@@ -60,10 +60,9 @@ export class ContactFormComponent implements OnInit {
           name: values.name
         };
         const kraModified = this.initData ? this.initData.customer.krapin === values.kraPin : false;
-        this.formChangesResult.emit({ detail, kraModified });
         this.filteredCompanies.next(this._filter(values.name));
       });
-
+    // this.initData.customer
     this.customerService.loadingcustomers
       .pipe(takeUntil(this.comopnentDestroyed))
       .subscribe(value => {
@@ -96,7 +95,7 @@ export class ContactFormComponent implements OnInit {
     };
     // const kraModified = this.initData ? this.initData.customer.krapin === values.kraPin : false;
     // this.formChangesResult.emit({ detail, kraModified });
-    this.formChangesResult.emit({ detail, kraModified: false });
+    // this.formChangesResult.emit({ detail, kraModified: false });
   }
 
   ngOnInit() {

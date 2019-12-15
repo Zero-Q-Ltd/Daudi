@@ -3,6 +3,9 @@ import { Order } from "./../../../../models/Daudi/order/Order";
 import { OrderContactForm } from "./../../../../models/Daudi/forms/CreateOrder";
 import { FuelType } from "./../../../../models/Daudi/fuel/FuelType";
 import { OrderFuelConfig } from "./../../../../models/Daudi/order/FuelConfig";
+import { ConfigService } from "./../../../../admin/services/core/config.service";
+import { Config, emptyConfig } from "./../../../../models/Daudi/omc/Config";
+import { Environment } from "./../../../../models/Daudi/omc/Environments";
 
 @Component({
   selector: "app-calculations",
@@ -14,8 +17,13 @@ export class CalculationsComponent implements OnInit {
   @Output() formResult: {
     [key in FuelType]: OrderFuelConfig
   };
+  omcConfig: Config = { ...emptyConfig };
+  env: Environment = Environment.sandbox;
 
-  constructor() {
+  constructor(
+    private configService: ConfigService,
+
+  ) {
     //  .pipe(takeUntil(this.comopnentDestroyed))
     //       .subscribe((value) => {
     //         if (value.pmsqtyControl >= 1000 || value.agoqtyControl >= 1000 || value.ikqtyControl >= 1000) {
@@ -99,6 +107,32 @@ export class CalculationsComponent implements OnInit {
     //     this.orderform.controls[fueltype].setValidators(Validators.compose([Validators.min(this.activedepot.config.price[fueltype].price), Validators.required]));
     //   });
     // }
+  }
+  /**
+   * uses the simple formula :
+   * PricewithoutVAT=OriginalPrice + (0.08*VATExempt)/1.08, simplified
+   * Decimal resolution depends on the qty, as above 10000l the point affects significant amount, but at the same time we
+   * Dont want decimals at lower quantities
+   */
+  deriveprice(priceinclusivevat: number, fueltype: FuelType, decimalResolution: number): { pricewithoutvat: number, amountdeducted: number, taxablePrice: number } {
+    const pricewithoutvat = Number(((priceinclusivevat + (0.08 * this.omcConfig.taxExempt[this.env][fueltype].amount)) / 1.08).toFixed(decimalResolution));
+    const amountdeducted = priceinclusivevat - pricewithoutvat;
+    const taxablePrice = Number((pricewithoutvat - this.omcConfig.taxExempt[this.env][fueltype].amount).toFixed(decimalResolution));
+    return { pricewithoutvat, amountdeducted, taxablePrice };
+  }
+
+  /**
+   * calculates the total amount exclusive of tax
+   * @param nontaxprice price exclusive of tax. refer to deriveprice()
+   * @param quantity fuel quantity
+   */
+  totalswithouttax(nontaxprice: number, quantity: number): number {
+    // console.log(nontaxprice, quantity);
+    return Math.round(nontaxprice * quantity);
+  }
+
+  calculateupmark(orderprice: number, retailprice: number, quanity: number): number {
+    return Math.round((orderprice - retailprice) * quanity);
   }
 
 }
