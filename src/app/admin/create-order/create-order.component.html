@@ -1,189 +1,31 @@
 <section class="container-fluid sixty-top">
   <mat-card>
     <mat-card-content>
-      <mat-accordion>
-        <mat-expansion-panel>
-          <mat-expansion-panel-header>
-            <mat-panel-title>
-              <span class="expansion-depot">
-                <i class="material-icons color-blue">local_gas_station</i>
-                {{activedepot.depot.Name}}
-              </span>
-              <span class="expansion-title">PRICE COMPARISON</span>
-            </mat-panel-title>
 
-          </mat-expansion-panel-header>
-          <div>
-            <div>
-              <mat-form-field appearance="legacy">
-                <input (keyup)="applyFilter($event.target.value)" matInput
-                  placeholder="Filtering All depots and their respective prices">
-              </mat-form-field>
-            </div>
-            <div>
-              <mat-table [dataSource]="depotsdataSource" matSort>
-                <ng-container matColumnDef="depot">
-                  <mat-header-cell *matHeaderCellDef class="order-title1" mat-sort-header>Depot</mat-header-cell>
-                  <mat-cell *matCellDef="let depot"> {{depot.Name}}</mat-cell>
-                </ng-container>
-                <div *ngFor='let pricetype of  fueltypesArray'>
-                  <ng-container matColumnDef="{{pricetype}}_price">
-                    <mat-header-cell *matHeaderCellDef class="" mat-sort-header>
-                      <i [matTooltipPosition]="position1" class="material-icons rangi-{{pricetype}}"
-                        matTooltip="{{pricetype | uppercase}} Price">attach_money</i>
-                    </mat-header-cell>
-                    <mat-cell *matCellDef="let depot" class="color-{{pricetype}}">
-                      {{depot.currentpriceconfig ? depot.currentpriceconfig[pricetype]?.price : 0}}
-                    </mat-cell>
-                  </ng-container>
-
-                  <ng-container matColumnDef="{{pricetype}}_avgprice">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header>
-                      <i [matTooltipPosition]="position1" class="material-icons rangi-{{pricetype}}"
-                        matTooltip="{{pricetype | uppercase}} Avg Price">compare_arrows</i>
-                    </mat-header-cell>
-                    <mat-cell *matCellDef="let depot" class="color-{{pricetype}}"> {{depot[pricetype]}}
-                    </mat-cell>
-                  </ng-container>
-                </div>
-                <mat-header-row *matHeaderRowDef="priceColumns"></mat-header-row>
-                <mat-row *matRowDef="let row; columns: priceColumns;">
-                </mat-row>
-              </mat-table>
-            </div>
-          </div>
-        </mat-expansion-panel>
-      </mat-accordion>
       <br>
-      <div class="container-fluid">
+      <div fxFlex="row" class="container-fluid">
 
+        <app-contact-form [initData]="temporder" (formChangesResult)="contactFormChanges($event)">
+        </app-contact-form>
         <br>
-        <form [formGroup]="orderform">
-          <div class="table-responsive">
-            <table class="table table-borderless mat-elevation-z2">
-              <thead class="thead-light vat-title1">
-                <th>Quantity</th>
-                <th>Selling Price</th>
-                <th class="vat-title">Price <b style="color: red"> EXC VAT </b></th>
-                <th class="vat-title">VAT Exempt</th>
-                <th class="vat-title">Vatable</th>
-                <th class="vat-title">VAT</th>
-                <th class="vat-title">Total <b style="color: red"> EXC VAT </b></th>
-                <th class="vat-title">Line Total</th>
-              </thead>
-              <tbody>
-                <tr *ngFor='let pricetype of  fueltypesArray'>
-                  <td>
-                    <mat-form-field class="full-width">
-                      <input formControlName="{{pricetype}}qtyControl" matInput name="{{pricetype | uppercase}}Qty"
-                        placeholder="{{pricetype | uppercase}} Quantity">
-                      <mat-icon [matTooltipPosition]="position"
-                        class="nav-icon nav-dot material-icons color-{{pricetype}}" matPrefix
-                        matTooltip="{{pricetype}}">local_gas_station
-                      </mat-icon>
-                      <mat-error>Min 1000 for at least one fuel</mat-error>
-                      <span matPrefix> &nbsp; </span>
-                    </mat-form-field>
-                  </td>
-                  <td>
-                    <mat-form-field class="full-width">
-                      <input [formControl]="orderform.controls[pricetype]" matInput name="{{pricetype}}Sp"
-                        placeholder="{{pricetype}} Selling Price (min: {{activedepot.config.price[pricetype].minPrice | number : '1.0-2'}})">
-                      <mat-error *ngIf="orderform.controls[pricetype]?.invalid">Min allowed price is
-                        {{activedepot.config.price[pricetype].minPrice | number : '1.0-2'}}
-                      </mat-error>
-                      <!-- <mat-hint class="text-danger" align="start">
-                    <i>Requested price: {{temporder.discountRequest.pms}}</i>
-                  </mat-hint> -->
-                    </mat-form-field>
-                  </td>
-                  <td class="vat-title">
-                    <span
-                      class="label label-{{pricetype}}">{{temporder.fuel[pricetype].priceconfig.nonTaxprice }}</span>
-                  </td>
-                  <td class="vat-title">
-                    <span class="label label-{{pricetype}}">{{omcConfig.taxExempt[env][pricetype].amount }}</span>
-                  </td>
-
-                  <td class="vat-title">
-                    <span
-                      class="label label-{{pricetype}}">{{temporder.fuel[pricetype].priceconfig.taxablePrice }}</span>
-                  </td>
-                  <td class="vat-title">
-                    <span class="label label-{{pricetype}}">{{temporder.fuel[pricetype].priceconfig.taxAmnt }}</span>
-                  </td>
-                  <td class="vat-title">
-                    <span
-                      class="label label-{{pricetype}}">{{temporder.fuel[pricetype].priceconfig.nonTaxtotal }}</span>
-                  </td>
-                  <td class="vat-title">
-                    <span class="label label-{{pricetype}}">{{temporder.fuel[pricetype].priceconfig.total }}</span>
-                  </td>
-                </tr>
-                <tr>
-                  <td colspan="5">
-                    <strong>Total:</strong>
-                  </td>
-                  <td class="order-title">
-                    {{temporder.fuel.pms.priceconfig.taxAmnt + temporder.fuel.ago.priceconfig.taxAmnt +
-                temporder.fuel.ik.priceconfig.taxAmnt | number : '1.2-2'}}
-                  </td>
-                  <td class="order-title">
-                    {{temporder.fuel.pms.priceconfig.nonTaxtotal + temporder.fuel.ago.priceconfig.nonTaxtotal +
-                temporder.fuel.ik.priceconfig.nonTaxtotal | number : '1.2-2'}}
-                  </td>
-                  <td class="order-title">
-                    {{temporder.fuel.pms.priceconfig.total + temporder.fuel.ago.priceconfig.total +
-                temporder.fuel.ik.priceconfig.total | number : '1.2-2'}}
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <!-- Totals Row -->
-          <div class="" fxLayout fxLayout.xs="column" fxLayoutAlign="center" fxLayoutGap="10px" fxLayoutGap.xs="0">
-            <div fxFlex>
-              <p>{{determinediscount()}}
-                Excluding 8% VAT</p>
-            </div>
-            <div fxFlex>
-              <label class="custom-control custom-checkbox pull-right">
-                <!--Avoid setting this change to the surrounding formcontrol-->
-                <mat-slide-toggle [(ngModel)]="temporder.notifications.sms" [ngModelOptions]="{standalone: true}">
-                  Allow SMS &nbsp;
-                </mat-slide-toggle>
-                <mat-slide-toggle [(ngModel)]="temporder.notifications.email" [ngModelOptions]="{standalone: true}">
-                  Allow EMAIL
-                </mat-slide-toggle>
-              </label>
-            </div>
-            <div class="fuel-totals" fxFlex>
-              <span>
-                <strong>Total Amount :Ksh
-                  {{ temporder.fuel.pms.priceconfig.total +
-                temporder.fuel.ago.priceconfig.total + temporder.fuel.ik.priceconfig.total | number : '1.2-2'}}</strong>
-              </span>
-            </div>
-          </div>
-          <br>
-          <div class="" fxLayout fxLayout.xs="column" fxLayoutAlign="center" fxLayoutGap="10px" fxLayoutGap.xs="0">
-            <button class="btn-default1" mat-raised-button matTooltip="Orders processsing in the background">
-              << {{queuedorders.length}} </button> <div fxFlex>&nbsp;</div>
-          <div fxFlex>&nbsp;</div>
-          <div fxFlex>
-            <div class="btn-group" role="group" style="width: 100%;">
-
-              <button (click)="checkOrder(true)" [disabled]=" orderform.invalid || contactform.invalid"
-                class="btn-default" mat-flat-button>SAVE ONLY
-              </button>&nbsp;&nbsp;
-              <button (click)="checkOrder(false)" [disabled]=" orderform.invalid || contactform.invalid"
-                class="btn-default" mat-button>SAVE AND NEW
-              </button>
-            </div>
-          </div>
+        <app-calculations [initData]="temporder"></app-calculations>
       </div>
-      </form>
+      <div fxFlex="row">
+        <div class="" fxLayout fxLayout.xs="column" fxLayoutAlign="center" fxLayoutGap="10px" fxLayoutGap.xs="0">
+          <button class="btn-default1" mat-raised-button matTooltip="Orders processsing in the background">
+            << {{queuedorders.length}} </button> <div fxFlex>&nbsp;</div>
+        <div fxFlex>&nbsp;</div>
+        <div class="btn-group" role="group" style="width: 100%;">
+
+          <button (click)="checkOrder(true)" [disabled]=" orderform.invalid || contactform.invalid" class="btn-default"
+            mat-flat-button>SAVE ONLY
+          </button>&nbsp;&nbsp;
+          <button (click)="checkOrder(false)" [disabled]=" orderform.invalid || contactform.invalid" class="btn-default"
+            mat-button>SAVE AND NEW
+          </button>
+        </div>
+      </div>
+
       </div>
     </mat-card-content>
   </mat-card>

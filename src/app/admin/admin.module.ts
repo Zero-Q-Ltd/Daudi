@@ -96,7 +96,9 @@ import { AdminRolesComponent } from "./admin/pages/admin-roles/admin-roles.compo
 import { AdminLevelsComponent } from "./admin/pages/admin-levels/admin-levels.component";
 import { CreateComponent } from "./admin/pages/payments/create/create.component";
 import { AseComponent } from "./admin/ase/ase.component";
-import { CalculationsComponent } from './create-order/components/calculations/calculations.component';
+import { CalculationsComponent } from "./create-order/components/calculations/calculations.component";
+import { ContactFormComponent } from "./create-order/components/contact-form/contact-form.component";
+import { PriceComparisonComponent } from './price-comparison/price-comparison.component';
 
 
 @NgModule({
@@ -198,6 +200,9 @@ import { CalculationsComponent } from './create-order/components/calculations/ca
     CreateComponent,
     AseComponent,
     CalculationsComponent,
+    ContactFormComponent,
+    PriceComparisonComponent,
+
   ],
   providers: [UsersGuard,
     LayoutService,

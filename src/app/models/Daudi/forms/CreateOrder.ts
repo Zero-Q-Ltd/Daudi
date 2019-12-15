@@ -1,10 +1,9 @@
 import { FuelType } from "../fuel/FuelType";
+import { Contact } from "../customer/Contact";
 
-export interface Contact {
-    name: string;
-    phone: string;
-    email: string;
+export interface OrderContactForm extends Contact {
     kraPin: string;
+    companyName: string;
 }
 
 export interface OrderFuel {
@@ -16,5 +15,5 @@ export interface CreateOrder {
     fuel: {
         [key in FuelType]: OrderFuel;
     };
-    contact: Contact;
+    detail: OrderContactForm;
 }

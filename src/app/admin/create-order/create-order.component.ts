@@ -8,6 +8,7 @@ import { MapsComponent } from "../maps/maps.component";
 import { NotificationService } from "../../shared/services/notification.service";
 import { DaudiCustomer, emptyDaudiCustomer } from "../../models/Daudi/customer/Customer";
 import { emptyorder, Order } from "../../models/Daudi/order/Order";
+import { CustomerDetail } from "../../models/Daudi/customer/CustomerDetail";
 import { Depot, emptydepot } from "../../models/Daudi/depot/Depot";
 import { AdminService } from "../services/core/admin.service";
 import { DepotService } from "../services/core/depot.service";
@@ -25,6 +26,7 @@ import { DepotConfig, emptyDepotConfig } from "../../models/Daudi/depot/DepotCon
 import { Environment } from "../../models/Daudi/omc/Environments";
 import { Validators } from "@angular/forms";
 import { CreateOrder, OrderFuel } from "../../models/Daudi/forms/CreateOrder";
+import { firestore } from "firebase";
 
 @Component({
   selector: "create-order",
@@ -33,88 +35,6 @@ import { CreateOrder, OrderFuel } from "../../models/Daudi/forms/CreateOrder";
 })
 
 export class CreateOrderComponent implements OnDestroy {
-  position = "before";
-  position1 = "above";
-  // for KRA mask
-  temporder: Order = { ...emptyorder };
-  discApproval = false;
-  depotsdataSource = new MatTableDataSource<Depot>();
-  priceColumns = ["depot", "pms_price", "pms_avgprice", "ago_price", "ago_avgprice", "ik_price", "ik_avgprice"];
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
-  companyInfo: {
-    newcompany: boolean,
-    /**
-     * strictly hold information from the database ONLY
-     * Have one source of truth and dont mix up the data
-     */
-    companydata: DaudiCustomer
-  } = {
-      newcompany: true,
-      companydata: { ...emptyDaudiCustomer }
-    };
-
-  tempsellingprices = {
-    pms: 0,
-    ago: 0,
-    ik: 0
-  };
-
-  kramask = [/^[a-zA-Z]+$/i, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /^[a-zA-Z]+$/i];
-
-  // orderform: FormGroup = new FormGroup({
-  //   pmsqtyControl: new FormControl("", [Validators.required, Validators.min(1000)]),
-  //   agoqtyControl: new FormControl("", [Validators.required, Validators.min(1000)]),
-  //   ikqtyControl: new FormControl("", [Validators.required, Validators.min(1000)]),
-  //   pms: new FormControl({}),
-  //   ago: new FormControl({}),
-  //   ik: new FormControl({})
-  // });
-  orderform: FormGroup<CreateOrder> = new FormGroup<CreateOrder>({
-    contact: new FormGroup(
-      {
-        email: new FormControl("", [Validators.required, Validators.email]),
-        name: new FormControl("", [Validators.required, Validators.minLength(4)]),
-        phone: new FormControl("", [Validators.required, Validators.pattern("[0-9].{8}")]),
-        kraPin: new FormControl("", [Validators.required]),
-      }),
-    fuel: new FormGroup({
-      ago: new FormGroup<OrderFuel>({
-        price: new FormControl(0, [Validators.required, Validators.min(1000)]),
-        qty: new FormControl()
-      }), pms: new FormGroup<OrderFuel>({
-        price: new FormControl(0, [Validators.required, Validators.min(1000)]),
-        qty: new FormControl()
-      }), ik: new FormGroup<OrderFuel>({
-        price: new FormControl(0, [Validators.required, Validators.min(1000)]),
-        qty: new FormControl()
-      }),
-
-    })
-  });
-  contactform: FormGroup = new FormGroup(
-    {
-      locationControl: new FormControl({ value: "", disabled: true }, [Validators.required]),
-      kraControl: new FormControl("", [Validators.required]),
-      nameControl: new FormControl("", [Validators.required, Validators.minLength(4)]),
-      phoneControl: new FormControl("", [Validators.required, Validators.pattern("[0-9].{8}")]),
-      emailControl: new FormControl("", [Validators.required, Validators.email])
-    }
-  );
-
-  fueltypesArray = FuelNamesArray;
-  filteredCompanies: Observable<DaudiCustomer[]>;
-  companyControl = new FormControl();
-  loadingcustomers = false;
-  queuedorders = [];
-
-  /**
-   * this keeps a local copy of all the subscriptions within this service
-   */
-  subscriptions: Map<string, any> = new Map<string, any>();
-  comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
-  activedepot: { depot: Depot, config: DepotConfig } = { depot: { ...emptydepot }, config: { ...emptyDepotConfig } };
-  omcConfig: Config = { ...emptyConfig };
-  env: Environment = Environment.sandbox;
   constructor(
     private router: Router,
     private notificationService: NotificationService,
@@ -185,75 +105,7 @@ export class CreateOrderComponent implements OnDestroy {
 
     });
 
-    // this.route.params
-    //   .pipe(takeUntil(this.comopnentDestroyed))
-    //   .subscribe((paramdata: { orderid: string }) => {
-    //     if (!paramdata.orderid) {
-    //       console.log("Not discount approval");
-    //       this.depotService.activedepot
-    //         .pipe(
-    //           takeUntil(this.comopnentDestroyed),
-    //           skipWhile(t => !t.depot.Id)
-    //         )
-    //         .subscribe((value) => {
-    //           /**
-    //            * This must execute in this exact order
-    //            */
-    //           this.activedepot = value;
 
-    //           this.initfuelprices();
-    //           this.initordersform();
-    //         });
-    //     } else {
-    //       this.discApproval = true;
-    //       const subscription = this.orderservice.getorder(paramdata.orderid).onSnapshot(ordersnapshot => {
-    //         this.temporder = ordersnapshot.data() as Order;
-    //         if (this.temporder.stage !== 1) {
-    //           this.notificationService.notify({
-    //             alert_type: "warning",
-    //             body: "Order has been approved",
-    //             duration: 2000,
-    //             title: "Conflict"
-    //           });
-    //           return;
-    //         }
-    //         this.depotService.activedepot
-    //           .pipe(
-    //             takeUntil(this.comopnentDestroyed),
-    //             skipWhile(t => !t.depot.Id)
-    //           ).subscribe((value) => {
-    //             console.log(value);
-    //             /**
-    //              * This must execute in this exact order
-    //              */
-
-    //             this.activedepot = value;
-    //             this.initfuelprices();
-    //             this.initordersform();
-    //           });
-    //       });
-    //       this.subscriptions.set(`discountorder`, subscription);
-    //     }
-    //     this.configService.environment
-    //       .pipe(takeUntil(this.comopnentDestroyed))
-    //       .subscribe(value => {
-    //         this.env = value;
-    //       });
-
-    //     this.configService.omcconfig.pipe(
-    //       takeUntil(this.comopnentDestroyed),
-    //       skipWhile(t => !t)
-    //     ).subscribe(val => {
-    //       this.omcConfig = val;
-    //     });
-
-    //   });
-
-    this.customerService.loadingcustomers
-      .pipe(takeUntil(this.comopnentDestroyed))
-      .subscribe(value => {
-        this.loadingcustomers = value;
-      });
     this.depotService.alldepots
       .pipe(takeUntil(this.comopnentDestroyed))
       .subscribe((value) => {
@@ -268,9 +120,8 @@ export class CreateOrderComponent implements OnDestroy {
       .pipe(takeUntil(this.comopnentDestroyed))
       .subscribe((value) => {
         this.temporder.customer = {
-          QbId: this.companyInfo.companydata.QbId,
-          phone: value.phoneControl,
-          name: this.companyControl.value,
+          QbId: "this.companyInfo.companydata.QbId",
+          name: "this.companyControl.value",
           Id: null,
           contact: [{
             email: value.emailControl,
@@ -313,13 +164,87 @@ export class CreateOrderComponent implements OnDestroy {
         });
       });
   }
+  position = "before";
+  position1 = "above";
+  // for KRA mask
+  temporder: Order = { ...emptyorder };
+  discApproval = false;
+  depotsdataSource = new MatTableDataSource<Depot>();
+  priceColumns = ["depot", "pms_price", "pms_avgprice", "ago_price", "ago_avgprice", "ik_price", "ik_avgprice"];
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
+
+
+  tempsellingprices = {
+    pms: 0,
+    ago: 0,
+    ik: 0
+  };
+
+  kramask = [/^[a-zA-Z]+$/i, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /^[a-zA-Z]+$/i];
+
+  orderform = new FormGroup({
+    pmsqtyControl: new FormControl("", [Validators.required, Validators.min(1000)]),
+    agoqtyControl: new FormControl("", [Validators.required, Validators.min(1000)]),
+    ikqtyControl: new FormControl("", [Validators.required, Validators.min(1000)]),
+    pms: new FormControl({}),
+    ago: new FormControl({}),
+    ik: new FormControl({})
+  });
+  // orderform: FormGroup<CreateOrder> = new FormGroup<CreateOrder>({
+  //   contact: new FormGroup(
+  //     {
+  //       email: new FormControl("", [Validators.required, Validators.email]),
+  //       name: new FormControl("", [Validators.required, Validators.minLength(4)]),
+  //       phone: new FormControl("", [Validators.required, Validators.pattern("[0-9].{8}")]),
+  //       kraPin: new FormControl("", [Validators.required]),
+  //     }),
+  //   fuel: new FormGroup({
+  //     ago: new FormGroup<OrderFuel>({
+  //       price: new FormControl(0, [Validators.required, Validators.min(1000)]),
+  //       qty: new FormControl()
+  //     }), pms: new FormGroup<OrderFuel>({
+  //       price: new FormControl(0, [Validators.required, Validators.min(1000)]),
+  //       qty: new FormControl()
+  //     }), ik: new FormGroup<OrderFuel>({
+  //       price: new FormControl(0, [Validators.required, Validators.min(1000)]),
+  //       qty: new FormControl()
+  //     }),
+
+  //   })
+  // });
+  contactform = new FormGroup(
+    {
+      locationControl: new FormControl({ value: "", disabled: true }, [Validators.required]),
+      kraControl: new FormControl("", [Validators.required]),
+      nameControl: new FormControl("", [Validators.required, Validators.minLength(4)]),
+      phoneControl: new FormControl("", [Validators.required, Validators.pattern("[0-9].{8}")]),
+      emailControl: new FormControl("", [Validators.required, Validators.email])
+    }
+  );
+
+  fueltypesArray = FuelNamesArray;
+  companyControl = new FormControl();
+  queuedorders = [];
+
+  /**
+   * this keeps a local copy of all the subscriptions within this service
+   */
+  subscriptions: Map<string, any> = new Map<string, any>();
+  comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
+  activedepot: { depot: Depot, config: DepotConfig } = { depot: { ...emptydepot }, config: { ...emptyDepotConfig } };
+  omcConfig: Config = { ...emptyConfig };
+  env: Environment = Environment.sandbox;
+  kraModified = false;
+
+  contactFormChanges(event: { detail: CustomerDetail, kraModified: boolean }) {
+    this.temporder.customer = event.detail;
+    this.kraModified = event.kraModified;
+  }
 
   ngOnDestroy(): void {
     this.comopnentDestroyed.next(true);
     this.unsubscribeAll();
   }
-
-
   unsubscribeAll() {
     this.subscriptions.forEach(value => {
       value();
@@ -429,14 +354,7 @@ export class CreateOrderComponent implements OnDestroy {
 
 
   ngOnInit() {
-    this.filteredCompanies = this.companyControl.valueChanges
-      .pipe(
-        startWith(""),
-        map(value => {
-          // this.contactform.reset()
-          return this._filter(value);
-        })
-      );
+
   }
 
   ngAfterViewInit() {
@@ -456,25 +374,13 @@ export class CreateOrderComponent implements OnDestroy {
     })[0];
   }
 
-  determinediscount() {
-    if ((this.temporder.fuel.pms.priceconfig.difference + this.temporder.fuel.ago.priceconfig.difference
-      + this.temporder.fuel.ik.priceconfig.difference) > 0) {
-      return "Upmark " + Number(this.temporder.fuel.pms.priceconfig.difference +
-        this.temporder.fuel.ago.priceconfig.difference + this.temporder.fuel.ik.priceconfig.difference);
-    } else {
-      return "Discount " + Math.abs(Number(this.temporder.fuel.pms.priceconfig.difference +
-        this.temporder.fuel.ago.priceconfig.difference + this.temporder.fuel.ik.priceconfig.difference));
-    }
-  }
 
   /**
    *
    * redirect specifies whether to redirect to the orders page when the order creation is successful
    */
   checkOrder(redirect: boolean) {
-    /**
-     * Check if an order is being approved
-     */
+
     const dialogRef = this.dialog.open(ConfirmDepotComponent,
       {
         role: "dialog",
@@ -484,36 +390,20 @@ export class CreateOrderComponent implements OnDestroy {
       .pipe(takeUntil(this.comopnentDestroyed))
       .subscribe(result => {
         if (result) {
-          if (this.discApproval) {
-            if (this.userAuthenticated()) {
-              this.saveOrder(redirect);
-            } else {
-              this.notificationService.notify({
-                alert_type: "warning",
-                body: "You cannot perform this action",
-                duration: 2000,
-                title: "Not Authenticated"
-              });
-            }
+          /**
+           * @todo
+           * Check if there is a discount request
+           * Discount has a -ve value
+           */
+          if (this.temporder.fuel.pms.priceconfig.difference < 0
+            || this.temporder.fuel.ago.priceconfig.difference < 0
+            || this.temporder.fuel.ik.priceconfig.difference < 0) {
+            this.saveOrder(redirect);
           } else {
-            /**
-             * Check if there is a discount request
-             * Discount has a -ve value
-             */
-            if (this.temporder.fuel.pms.priceconfig.difference < 0
-              || this.temporder.fuel.ago.priceconfig.difference < 0
-              || this.temporder.fuel.ik.priceconfig.difference < 0) {
-              this.saveOrder(redirect);
-            } else {
-              this.saveOrder(redirect);
-            }
+            this.saveOrder(redirect);
           }
         }
       });
-  }
-
-  userAuthenticated(): boolean {
-    return Number(this.adminservice.userdata.config.level) < 2;
   }
 
   saveOrder(redirect: boolean) {
@@ -532,31 +422,43 @@ export class CreateOrderComponent implements OnDestroy {
       },
       environment: this.configService.environment.value
     };
-    if (this.companyInfo.newcompany) {
+    if (!this.temporder.customer.QbId) {
       // check if KRA pin is unique
       /**
        * Todo : USe transaction instead
        */
       // this.companyInfo.companydata.sandbox = this.currentdepotconfig.sandbox;
-      this.companyInfo.companydata.krapin = this.temporder.customer.krapin;
-      if (this.searchkra(this.companyInfo.companydata.krapin)) {
+      if (this.searchkra(this.temporder.customer.krapin)) {
         /**
          * This KRA pin has been used
          */
-        this.krausedmsg(this.companyInfo.companydata.krapin);
+        this.krausedmsg(this.temporder.customer.krapin);
       } else {
-        this.customerService.createcompany(this.companyInfo.companydata).pipe(takeUntil(this.comopnentDestroyed)).subscribe((newcompany: DaudiCustomer) => {
-          this.notificationService.notify({
-            duration: 2000,
-            title: "Synchronising",
-            body: "Waiting For Quickboocks",
-            alert_type: "notify"
+        const newCustomer: DaudiCustomer = {
+          Active: true,
+          Id: this.temporder.customer.Id,
+          QbId: this.temporder.customer.QbId,
+          balance: 0,
+          contact: this.temporder.customer.contact,
+          environment: this.env,
+          krapin: this.temporder.customer.krapin,
+          kraverified: null,
+          location: new firestore.GeoPoint(0, 38),
+          name: this.temporder.customer.name
+        };
+        this.customerService.createcompany(newCustomer)
+          .pipe(takeUntil(this.comopnentDestroyed))
+          .subscribe((newcompany: DaudiCustomer) => {
+            this.notificationService.notify({
+              duration: 2000,
+              title: "Synchronising",
+              body: "Waiting For Quickboocks",
+              alert_type: "notify"
+            });
+            this.temporder.customer.QbId = newcompany.QbId;
+            this.temporder.customer.name = newcompany.name.toUpperCase();
+            this.createorder(redirect);
           });
-          this.companyInfo.companydata = newcompany;
-          this.temporder.customer.QbId = newcompany.QbId;
-          this.temporder.customer.name = newcompany.name.toUpperCase();
-          this.createorder(redirect);
-        });
       }
 
     } else {
@@ -565,54 +467,29 @@ export class CreateOrderComponent implements OnDestroy {
       /**
        * Conditionally update company if information has changed
        */
-      if (this.temporder.customer.krapin !== this.companyInfo.companydata.krapin || JSON.stringify(this.temporder.customer.contact) !== JSON.stringify(this.companyInfo.companydata.contact)) {
-        this.notificationService.notify({
-          duration: 2000,
-          title: "Updating",
-          body: "Updating Company Info",
-          alert_type: "notify"
-        });
+      if (this.kraModified) {
         /**
-         * Check if kra pin has been modified and update if so
+         * make sure the kra pin is unique
          */
-        if (this.temporder.customer.krapin !== this.companyInfo.companydata.krapin) {
+        if (this.searchkra(this.temporder.customer.krapin)) {
           /**
-           * make sure the kra pin is unique
+           * this KRA pin has been used
            */
-          if (this.searchkra(this.temporder.customer.krapin)) {
-            /**
-             * this KRA pin has been used
-             */
-            this.krausedmsg(this.companyInfo.companydata.krapin);
-          } else {
-            this.updatecompany().then(() => {
-              this.createorder(redirect);
-            });
-          }
+          this.krausedmsg(this.temporder.customer.krapin);
         } else {
           this.updatecompany().then(() => {
             this.createorder(redirect);
           });
         }
+
       } else {
-        this.createorder(redirect);
+        this.updatecompany().then(() => {
+          this.createorder(redirect);
+        });
       }
     }
   }
 
-  companyselect(selectedcompany: DaudiCustomer) {
-    this.companyInfo.newcompany = false;
-    this.companyInfo.companydata = selectedcompany;
-    this.contactform.controls.kraControl.setValue(selectedcompany.krapin, { emitEvent: false });
-    this.contactform.controls.nameControl.setValue(selectedcompany.contact[0].name, { emitEvent: false });
-    this.contactform.controls.phoneControl.setValue(selectedcompany.contact[0].phone, { emitEvent: false });
-    this.contactform.controls.emailControl.setValue(selectedcompany.contact[0].email, { emitEvent: false });
-    this.temporder.customer.QbId = selectedcompany.QbId;
-    this.temporder.customer.name = selectedcompany.name;
-    this.temporder.customer.krapin = selectedcompany.krapin;
-    this.temporder.customer.phone = selectedcompany.contact[0].phone;
-    this.temporder.customer.contact = selectedcompany.contact;
-  }
 
   krausedmsg(krapin: string) {
     const companyused = this.searchkra(krapin);
@@ -625,7 +502,7 @@ export class CreateOrderComponent implements OnDestroy {
   }
 
   updatecompany() {
-    return this.customerService.updatecompany(this.companyInfo.companydata.Id).update(this.temporder.customer);
+    return this.customerService.updatecompany(this.temporder.customer.Id).update(this.temporder.customer);
   }
 
   createorder(redirect) {
@@ -655,12 +532,5 @@ export class CreateOrderComponent implements OnDestroy {
     });
   }
 
-  private _filter(value: string): DaudiCustomer[] {
-    if (!value) {
-      return;
-    }
-    const filterValue = value.toLowerCase();
 
-    return this.customerService.allcustomers.value.filter(option => option.name.toLowerCase().includes(filterValue));
-  }
 }

@@ -1,22 +1,15 @@
 import { FuelType } from "../fuel/FuelType";
-import { Contact } from "../customer/Contact";
 import { Truck, emptytruck } from "./Truck";
 import { OrderFuelConfig } from "./FuelConfig";
 import { OrderStages } from "./OrderStages";
 import { Environment } from "../omc/Environments";
 import { AssociatedUser } from "../admin/AssociatedUser";
 import { deepCopy } from "../../utils/deepCopy";
+import { CustomerDetail } from "../customer/CustomerDetail";
 
 export interface Order {
   Id: string; // used to temporarily store the key, used later for looping
-  customer: {
-    name: string,
-    Id: string,
-    phone: string,
-    contact: Array<Contact>;
-    krapin: string,
-    QbId: string,
-  };
+  customer: CustomerDetail;
   QbConfig: {
     InvoiceId: string,
     EstimateId: string,
@@ -105,7 +98,6 @@ export const emptyorder: Order = {
   Id: null,
   customer: {
     contact: [],
-    phone: null,
     name: null,
     Id: null,
     QbId: null,
