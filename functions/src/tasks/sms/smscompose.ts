@@ -118,7 +118,7 @@ export function truckchangesdsms(order: Order, omcId: string) {
     .add(newsms);
 }
 
-function resolveOrderText(order: Order, omcId: string): string {
+function resolveOrderText(order: Order): string {
   let text = ` ID ${order.customer.QbId} Order# ${order.QbConfig.InvoiceId}`;
   switch (order.stage) {
     case 1:

@@ -68,9 +68,9 @@ exports.approveInvoice = functions.https.onCall((data: OrderCreate, context) => 
     const inv = new createInvoice(data.order, result, data.config, data.environment)
     return result.createInvoice(inv.formulateInvoice()).then(() => {
       /**
-    * Only send sn SMS when invoice creation is complete
-    * Make the two processes run parallel so that none is blocking
-    */
+       * Only send sn SMS when invoice creation is complete
+       * Make the two processes run parallel so that none is blocking
+       */
       return Promise.all([ordersms(data.order, data.omcId), validorderupdate(data.order, result)]);
     });
   })

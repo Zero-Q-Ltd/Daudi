@@ -1,0 +1,50 @@
+<mat-card class="example-card">
+    <mat-card-header>
+        <mat-card-title>PRICE COMPARISON</mat-card-title>
+        <mat-card-subtitle>{{activedepot.depot.Name}}</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+        <div>
+            <div>
+                <mat-form-field appearance="legacy">
+                    <input (keyup)="applyFilter($event.target.value)" matInput placeholder="Filter">
+                </mat-form-field>
+            </div>
+            <div>
+                <mat-table [dataSource]="depotsdataSource" matSort>
+                    <ng-container matColumnDef="depot">
+                        <mat-header-cell *matHeaderCellDef class="order-title1" mat-sort-header>Depot</mat-header-cell>
+                        <mat-cell *matCellDef="let depot"> {{depot.Name}}</mat-cell>
+                    </ng-container>
+                    <div *ngFor='let pricetype of  fueltypesArray'>
+                        <ng-container matColumnDef="{{pricetype}}_price">
+                            <mat-header-cell *matHeaderCellDef class="" mat-sort-header>
+                                <i class="material-icons rangi-{{pricetype}}"
+                                    matTooltip="{{pricetype | uppercase}} Price">attach_money</i>
+                            </mat-header-cell>
+                            <mat-cell *matCellDef="let depot" class="color-{{pricetype}}">
+                                {{depot.currentpriceconfig ? depot.currentpriceconfig[pricetype]?.price : 0}}
+                            </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="{{pricetype}}_avgprice">
+                            <mat-header-cell *matHeaderCellDef mat-sort-header>
+                                <i class="material-icons rangi-{{pricetype}}"
+                                    matTooltip="{{pricetype | uppercase}} Avg Price">compare_arrows</i>
+                            </mat-header-cell>
+                            <mat-cell *matCellDef="let depot" class="color-{{pricetype}}"> {{depot[pricetype]}}
+                            </mat-cell>
+                        </ng-container>
+                    </div>
+                    <mat-header-row *matHeaderRowDef="priceColumns"></mat-header-row>
+                    <mat-row *matRowDef="let row; columns: priceColumns;">
+                    </mat-row>
+                </mat-table>
+            </div>
+        </div>
+    </mat-card-content>
+    <mat-card-actions>
+        <!-- <button mat-button>LIKE</button>
+        <button mat-button>SHARE</button> -->
+    </mat-card-actions>
+</mat-card>
