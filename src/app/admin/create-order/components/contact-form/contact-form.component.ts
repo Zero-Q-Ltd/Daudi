@@ -17,7 +17,9 @@ import { CustomerService } from "./../../../services/customers.service";
 export class ContactFormComponent implements OnInit {
   @Input() initData: Order;
   @Input() newOrder: boolean;
+
   @Output() initDataChange = new EventEmitter();
+  @Output() formValid = new EventEmitter<boolean>();
 
   // @Output() formChangesResult: EventEmitter<{ detail: CustomerDetail, kraModified: boolean }> =
   //   new EventEmitter<{ detail: CustomerDetail, kraModified: boolean }>();
@@ -50,10 +52,17 @@ export class ContactFormComponent implements OnInit {
   }
   companyselect(selectedcompany: DaudiCustomer) {
 
+    /**
+     * Silently update the related values
+     */
     this.contactform.controls.kraPin.setValue(selectedcompany.krapin, { emitEvent: false });
     this.contactform.controls.name.setValue(selectedcompany.contact[0].name, { emitEvent: false });
     this.contactform.controls.phone.setValue(selectedcompany.contact[0].phone, { emitEvent: false });
     this.contactform.controls.email.setValue(selectedcompany.contact[0].email, { emitEvent: false });
+    /**
+     * emit the cahnges at once
+     */
+    this.contactform.updateValueAndValidity();
 
     const detail: CustomerDetail = {
       Id: selectedcompany.Id,
@@ -66,16 +75,22 @@ export class ContactFormComponent implements OnInit {
     // this.formChangesResult.emit({ detail, kraModified });
     // this.formChangesResult.emit({ detail, kraModified: false });
   }
+  ngOnChanges(changes: any) {
+    if (changes.initData) {
+      console.log(changes.initData);
+      if (!this.newOrder) {
+        this.contactform.disable();
+        this.contactform.controls.email.setValue(this.initData.customer.contact[0].email);
+        this.contactform.controls.name.setValue(this.initData.customer.contact[0].name);
+        this.contactform.controls.companyName.setValue(this.initData.customer.name);
+        this.contactform.controls.phone.setValue(this.initData.customer.contact[0].phone);
+        this.contactform.controls.kraPin.setValue(this.initData.customer.krapin);
+      }
+    }
+  }
+
 
   ngOnInit() {
-    if (!this.newOrder) {
-      this.contactform.disable();
-      this.contactform.controls.email.setValue(this.initData.customer.contact[0].email);
-      this.contactform.controls.name.setValue(this.initData.customer.name);
-      this.contactform.controls.phone.setValue(this.initData.customer.contact[0].phone);
-      this.contactform.controls.kraPin.setValue(this.initData.customer.krapin);
-    }
-
     this.contactform.valueChanges
       .pipe(
         takeUntil(this.comopnentDestroyed),
@@ -94,8 +109,11 @@ export class ContactFormComponent implements OnInit {
         };
         const kraModified = this.initData ? this.initData.customer.krapin === values.kraPin : false;
         this.filteredCompanies.next(this._filter(values.companyName));
+        /**
+         * emit the form validity
+         */
+        this.formValid.emit(this.contactform.valid);
       });
-    // this.initData.customer
     this.customerService.loadingcustomers
       .pipe(takeUntil(this.comopnentDestroyed))
       .subscribe(value => {

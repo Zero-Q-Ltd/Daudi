@@ -99,20 +99,24 @@ export class CalculationsComponent implements OnInit {
 
           });
         }
+        /**
+         * emit the form validity
+         */
+        this.formValid.emit(this.calculationsform.valid);
+
       });
   }
   ngOnChanges(changes: any) {
     if (changes.initData) {
-      console.log(changes.initData.currentValue);
       this.fueltypesArray.forEach(fueltype => {
         /**
-         * set the order price values on depot config change
+         * make sure that the order price values are up to date
          */
         this.initData.fuel[fueltype].priceconfig.retailprice = this.activedepot.config.price[fueltype].price;
         this.initData.fuel[fueltype].priceconfig.minsp = this.activedepot.config.price[fueltype].minPrice;
         this.initData.fuel[fueltype].priceconfig.nonTax = this.omcConfig.taxExempt[this.env][fueltype].amount;
         /**
-         * set the form price values on depot config change
+         * update calculations as well
          */
         this.calculationsform.updateValueAndValidity();
       });
