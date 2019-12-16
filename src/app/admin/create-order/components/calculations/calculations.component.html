@@ -28,7 +28,7 @@
                             <mat-error>Min allowed price is
                                 {{activedepot.config.price[pricetype].minPrice | number : '1.0-2'}}
                             </mat-error>
-                            <mat-hint class="text-danger" *ngIf="newOrder" align="start">
+                            <mat-hint class="text-danger" *ngIf="!newOrder" align="start">
                                 <i>Requested price: {{initData.fuel[pricetype].priceconfig.price}}</i>
                             </mat-hint>
                         </mat-form-field>

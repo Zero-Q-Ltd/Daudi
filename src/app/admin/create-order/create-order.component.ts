@@ -117,9 +117,6 @@ export class CreateOrderComponent implements OnDestroy {
             });
             return;
           } else {
-            /**
-             * This must execute in this exact order
-             */
             this.activedepot = res[1];
             this.omcConfig = res[2];
             this.env = res[3];

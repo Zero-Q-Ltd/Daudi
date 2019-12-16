@@ -59,26 +59,11 @@ export class CalculationsComponent implements OnInit {
     ).subscribe(val => {
       this.env = val;
     });
-  }
-
-  ngOnInit() {
     this.depot.activedepot.pipe(
       takeUntil(this.comopnentDestroyed),
       skipWhile(t => !t.depot.Id))
       .subscribe(dep => {
         this.activedepot = dep;
-        this.fueltypesArray.forEach(fueltype => {
-          /**
-           * set the order price values on depot config change
-           */
-          this.initData.fuel[fueltype].priceconfig.retailprice = this.depot.activedepot.value.config.price[fueltype].price;
-          this.initData.fuel[fueltype].priceconfig.minsp = this.depot.activedepot.value.config.price[fueltype].minPrice;
-          this.initData.fuel[fueltype].priceconfig.nonTax = this.omcConfig.taxExempt[this.env][fueltype].amount;
-          /**
-           * set the form price values on depot config change
-           */
-          this.calculationsform.updateValueAndValidity();
-        });
 
       });
     this.calculationsform.valueChanges
@@ -115,6 +100,28 @@ export class CalculationsComponent implements OnInit {
           });
         }
       });
+  }
+  ngOnChanges(changes: any) {
+    if (changes.initData) {
+      console.log(changes.initData.currentValue);
+      this.fueltypesArray.forEach(fueltype => {
+        /**
+         * set the order price values on depot config change
+         */
+        this.initData.fuel[fueltype].priceconfig.retailprice = this.activedepot.config.price[fueltype].price;
+        this.initData.fuel[fueltype].priceconfig.minsp = this.activedepot.config.price[fueltype].minPrice;
+        this.initData.fuel[fueltype].priceconfig.nonTax = this.omcConfig.taxExempt[this.env][fueltype].amount;
+        /**
+         * set the form price values on depot config change
+         */
+        this.calculationsform.updateValueAndValidity();
+      });
+    }
+  }
+
+  ngOnInit() {
+
+
   }
 
   determinediscount() {
