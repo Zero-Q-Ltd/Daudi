@@ -80,10 +80,10 @@ const initorderfuel: OrderFuelConfig = {
     nonTaxtotal: 0,
     taxablePrice: 0,
     taxableAmnt: 0,
-    taxQbId: null
   },
   batches: []
 };
+
 
 const initstages: StageData = {
   data: null,

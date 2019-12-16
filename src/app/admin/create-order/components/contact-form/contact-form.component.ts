@@ -16,6 +16,9 @@ import { CustomerService } from "./../../../services/customers.service";
 })
 export class ContactFormComponent implements OnInit {
   @Input() initData: Order;
+  @Input() newOrder: boolean;
+  @Output() initDataChange = new EventEmitter();
+
   // @Output() formChangesResult: EventEmitter<{ detail: CustomerDetail, kraModified: boolean }> =
   //   new EventEmitter<{ detail: CustomerDetail, kraModified: boolean }>();
   filteredCompanies: Subject<DaudiCustomer[]> = new Subject();
@@ -34,8 +37,38 @@ export class ContactFormComponent implements OnInit {
     private formBuilder: FormBuilder,
     private customerService: CustomerService
   ) {
-    console.log(this.initData);
-    if (this.initData) {
+
+  }
+
+  private _filter(value: string): DaudiCustomer[] {
+    if (!value) {
+      return;
+    }
+    const filterValue = value.toLowerCase();
+
+    return this.customerService.allcustomers.value.filter(option => option.name.toLowerCase().includes(filterValue));
+  }
+  companyselect(selectedcompany: DaudiCustomer) {
+
+    this.contactform.controls.kraPin.setValue(selectedcompany.krapin, { emitEvent: false });
+    this.contactform.controls.name.setValue(selectedcompany.contact[0].name, { emitEvent: false });
+    this.contactform.controls.phone.setValue(selectedcompany.contact[0].phone, { emitEvent: false });
+    this.contactform.controls.email.setValue(selectedcompany.contact[0].email, { emitEvent: false });
+
+    const detail: CustomerDetail = {
+      Id: selectedcompany.Id,
+      QbId: selectedcompany.QbId,
+      contact: selectedcompany.contact,
+      krapin: selectedcompany.krapin,
+      name: selectedcompany.name
+    };
+    // const kraModified = this.initData ? this.initData.customer.krapin === values.kraPin : false;
+    // this.formChangesResult.emit({ detail, kraModified });
+    // this.formChangesResult.emit({ detail, kraModified: false });
+  }
+
+  ngOnInit() {
+    if (!this.newOrder) {
       this.contactform.disable();
       this.contactform.controls.email.setValue(this.initData.customer.contact[0].email);
       this.contactform.controls.name.setValue(this.initData.customer.name);
@@ -69,36 +102,6 @@ export class ContactFormComponent implements OnInit {
         this.loadingcustomers = value;
       });
 
-  }
-
-  private _filter(value: string): DaudiCustomer[] {
-    if (!value) {
-      return;
-    }
-    const filterValue = value.toLowerCase();
-
-    return this.customerService.allcustomers.value.filter(option => option.name.toLowerCase().includes(filterValue));
-  }
-  companyselect(selectedcompany: DaudiCustomer) {
-
-    this.contactform.controls.kraPin.setValue(selectedcompany.krapin, { emitEvent: false });
-    this.contactform.controls.name.setValue(selectedcompany.contact[0].name, { emitEvent: false });
-    this.contactform.controls.phone.setValue(selectedcompany.contact[0].phone, { emitEvent: false });
-    this.contactform.controls.email.setValue(selectedcompany.contact[0].email, { emitEvent: false });
-
-    const detail: CustomerDetail = {
-      Id: selectedcompany.Id,
-      QbId: selectedcompany.QbId,
-      contact: selectedcompany.contact,
-      krapin: selectedcompany.krapin,
-      name: selectedcompany.name
-    };
-    // const kraModified = this.initData ? this.initData.customer.krapin === values.kraPin : false;
-    // this.formChangesResult.emit({ detail, kraModified });
-    // this.formChangesResult.emit({ detail, kraModified: false });
-  }
-
-  ngOnInit() {
   }
 
   ngOnDestroy(): void {

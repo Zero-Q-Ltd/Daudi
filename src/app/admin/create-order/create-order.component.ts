@@ -35,6 +35,35 @@ import { firestore } from "firebase";
 })
 
 export class CreateOrderComponent implements OnDestroy {
+
+  position = "before";
+  position1 = "above";
+  temporder: Order = { ...emptyorder };
+  discApproval = false;
+  tempsellingprices = {
+    pms: 0,
+    ago: 0,
+    ik: 0
+  };
+
+  kramask = [/^[a-zA-Z]+$/i, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /^[a-zA-Z]+$/i];
+  newOrder = true;
+
+  fueltypesArray = FuelNamesArray;
+  companyControl = new FormControl();
+  queuedorders = [];
+
+  /**
+   * this keeps a local copy of all the subscriptions within this service
+   */
+  subscriptions: Map<string, any> = new Map<string, any>();
+  comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
+  activedepot: { depot: Depot, config: DepotConfig } = { depot: { ...emptydepot }, config: { ...emptyDepotConfig } };
+  omcConfig: Config = { ...emptyConfig };
+  env: Environment = Environment.sandbox;
+  kraModified = false;
+  validContactForm = false;
+  validCalculationForm = false;
   constructor(
     private router: Router,
     private notificationService: NotificationService,
@@ -73,7 +102,6 @@ export class CreateOrderComponent implements OnDestroy {
         this.activedepot = res[1];
         this.omcConfig = res[2];
         this.env = res[3];
-        this.initfuelprices();
         this.initordersform();
       } else {
         console.log("Discount approval");
@@ -95,7 +123,6 @@ export class CreateOrderComponent implements OnDestroy {
             this.activedepot = res[1];
             this.omcConfig = res[2];
             this.env = res[3];
-            this.initfuelprices();
             this.initordersform();
           }
         });
@@ -111,105 +138,8 @@ export class CreateOrderComponent implements OnDestroy {
       .subscribe(value => {
         this.queuedorders = value;
       });
-    this.contactform.valueChanges
-      .pipe(takeUntil(this.comopnentDestroyed))
-      .subscribe((value) => {
-        this.temporder.customer = {
-          QbId: "this.companyInfo.companydata.QbId",
-          name: "this.companyControl.value",
-          Id: null,
-          contact: [{
-            email: value.emailControl,
-            name: value.nameControl,
-            phone: value.phoneControl
-          }],
-          krapin: value.kraControl
-        };
-      });
-    this.orderform.valueChanges
-      .pipe(takeUntil(this.comopnentDestroyed))
-      .subscribe((value) => {
-        // if (value.pmsqtyControl >= 1000 || value.agoqtyControl >= 1000 || value.ikqtyControl >= 1000) {
-        //   this.orderform.controls.pmsqtyControl.setErrors(null);
-        //   this.orderform.controls.agoqtyControl.setErrors(null);
-        //   this.orderform.controls.ikqtyControl.setErrors(null);
-        // }
-        // this.fueltypesArray.forEach((fueltype) => {
-        //   this.temporder.fuel[fueltype].qty = Number(value[fueltype + "qtyControl"]);
-        //   this.temporder.fuel[fueltype].priceconfig.price = Number(value[fueltype]);
-        //   this.temporder.fuel[fueltype].priceconfig.retailprice = this.tempsellingprices[fueltype];
-        //   this.temporder.fuel[fueltype].priceconfig.minsp = this.activedepot.config.price[fueltype].minPrice;
-        //   const decimamlResolution = value[`${fueltype}qtyControl`] >= 10000 ? 4 : 3;
-        //   const calculatedpirces = this.deriveprice(this.temporder.fuel[fueltype].priceconfig.price, fueltype, decimamlResolution);
-        //   this.temporder.fuel[fueltype].priceconfig.taxablePrice = calculatedpirces.taxablePrice;
-        //   this.temporder.fuel[fueltype].priceconfig.nonTaxprice = calculatedpirces.pricewithoutvat;
 
-        //   const totalwithouttax = this.totalswithouttax(this.temporder.fuel[fueltype].priceconfig.nonTaxprice, this.temporder.fuel[fueltype].qty);
-        //   this.temporder.fuel[fueltype].priceconfig.nonTaxtotal = totalwithouttax;
-
-        //   // this.temporder.fuel[fueltype].priceconfig.total = taxcalculations.taxamount + totalwithouttax;
-        //   this.temporder.fuel[fueltype].priceconfig.total = this.temporder.fuel[fueltype].priceconfig.price * this.temporder.fuel[fueltype].qty;
-
-        //   this.temporder.fuel[fueltype].priceconfig.taxAmnt = this.temporder.fuel[fueltype].priceconfig.total - totalwithouttax;
-        //   this.temporder.fuel[fueltype].priceconfig.taxableAmnt = totalwithouttax;
-
-        //   this.temporder.fuel[fueltype].priceconfig.difference =
-        //     this.calculateupmark(this.temporder.fuel[fueltype].priceconfig.price, this.temporder.fuel[fueltype].priceconfig.retailprice, this.temporder.fuel[fueltype].qty);
-        //   this.validateandcorrect();
-        // });
-      });
   }
-  position = "before";
-  position1 = "above";
-  temporder: Order = { ...emptyorder };
-  discApproval = false;
-  tempsellingprices = {
-    pms: 0,
-    ago: 0,
-    ik: 0
-  };
-
-  kramask = [/^[a-zA-Z]+$/i, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /^[a-zA-Z]+$/i];
-
-  orderform = new FormGroup({
-    pmsqtyControl: new FormControl("", [Validators.required, Validators.min(1000)]),
-    agoqtyControl: new FormControl("", [Validators.required, Validators.min(1000)]),
-    ikqtyControl: new FormControl("", [Validators.required, Validators.min(1000)]),
-    pms: new FormControl({}),
-    ago: new FormControl({}),
-    ik: new FormControl({})
-  });
-
-  contactform = new FormGroup(
-    {
-      locationControl: new FormControl({ value: "", disabled: true }, [Validators.required]),
-      kraControl: new FormControl("", [Validators.required]),
-      nameControl: new FormControl("", [Validators.required, Validators.minLength(4)]),
-      phoneControl: new FormControl("", [Validators.required, Validators.pattern("[0-9].{8}")]),
-      emailControl: new FormControl("", [Validators.required, Validators.email])
-    }
-  );
-
-  fueltypesArray = FuelNamesArray;
-  companyControl = new FormControl();
-  queuedorders = [];
-
-  /**
-   * this keeps a local copy of all the subscriptions within this service
-   */
-  subscriptions: Map<string, any> = new Map<string, any>();
-  comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
-  activedepot: { depot: Depot, config: DepotConfig } = { depot: { ...emptydepot }, config: { ...emptyDepotConfig } };
-  omcConfig: Config = { ...emptyConfig };
-  env: Environment = Environment.sandbox;
-  kraModified = false;
-
-  contactFormChanges(event: { detail: CustomerDetail, kraModified: boolean }) {
-    console.log(event);
-    this.temporder.customer = event.detail;
-    this.kraModified = event.kraModified;
-  }
-
   ngOnDestroy(): void {
     this.comopnentDestroyed.next(true);
     this.unsubscribeAll();
@@ -221,29 +151,6 @@ export class CreateOrderComponent implements OnDestroy {
   }
 
 
-
-  validateandcorrect() {
-
-  }
-
-  initfuelprices() {
-    if (!this.discApproval) {
-      this.fueltypesArray.forEach((fueltype) => {
-        this.temporder.fuel[fueltype].priceconfig.taxQbId = this.omcConfig.Qbo[this.env].taxConfig.taxCode.Id;
-        this.temporder.fuel[fueltype].priceconfig.nonTax = this.omcConfig.taxExempt[this.env][fueltype].amount;
-        /**
-         * force the form to detect a change so that calculations are redone
-         */
-        this.orderform.updateValueAndValidity();
-      });
-    } else {
-      /**
-       * force the form to detect a change so that calculations are redone
-       */
-      this.orderform.updateValueAndValidity();
-    }
-
-  }
 
   initordersform() {
     if (!this.discApproval) {
@@ -272,13 +179,13 @@ export class CreateOrderComponent implements OnDestroy {
             body: `The current selling price for ${fueltype} is lower than the Min selling price, hence the Min selling price has been used`
           });
         }
-        this.orderform.controls[fueltype].setValue(this.temporder.fuel[fueltype].priceconfig.price = this.tempsellingprices[fueltype]);
-        this.orderform.controls[fueltype].setValidators(Validators.compose([Validators.min(this.activedepot.config.price[fueltype].minPrice), Validators.required]));
+        // this.orderform.controls[fueltype].setValue(this.temporder.fuel[fueltype].priceconfig.price = this.tempsellingprices[fueltype]);
+        // this.orderform.controls[fueltype].setValidators(Validators.compose([Validators.min(this.activedepot.config.price[fueltype].minPrice), Validators.required]));
       });
     } else {
       this.fueltypesArray.forEach((fueltype) => {
-        this.orderform.controls[fueltype].setValue(this.temporder.fuel[fueltype].priceconfig.price = this.tempsellingprices[fueltype]);
-        this.orderform.controls[fueltype].setValidators(Validators.compose([Validators.min(this.activedepot.config.price[fueltype].price), Validators.required]));
+        // this.orderform.controls[fueltype].setValue(this.temporder.fuel[fueltype].priceconfig.price = this.tempsellingprices[fueltype]);
+        // this.orderform.controls[fueltype].setValidators(Validators.compose([Validators.min(this.activedepot.config.price[fueltype].price), Validators.required]));
       });
     }
   }
@@ -304,8 +211,6 @@ export class CreateOrderComponent implements OnDestroy {
   ngAfterViewInit() {
   }
 
-  applyFilter(filterValue: string) {
-  }
 
   /**
    * Returns true if this KRA pin has not been used
@@ -423,6 +328,12 @@ export class CreateOrderComponent implements OnDestroy {
     });
   }
 
+  contactFormChanges(event: { detail: CustomerDetail, kraModified: boolean }) {
+    console.log(event);
+    this.temporder.customer = event.detail;
+    this.kraModified = event.kraModified;
+  }
+
   updatecompany() {
     return this.customerService.updatecompany(this.temporder.customer.Id).update(this.temporder.customer);
   }
@@ -438,13 +349,12 @@ export class CreateOrderComponent implements OnDestroy {
       /**
        * reset fields in preparation fro a new order
        */
-      this.contactform.reset();
+      // this.contactform.reset();
       this.companyControl.reset();
-      this.orderform.reset();
+      // this.orderform.reset();
       /**
        * re-populate the prices
        */
-      this.initfuelprices();
       this.initordersform();
     }
     this.notificationService.notify({
