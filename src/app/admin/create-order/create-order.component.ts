@@ -60,9 +60,12 @@ export class CreateOrderComponent implements OnDestroy {
   activedepot: { depot: Depot, config: DepotConfig } = { depot: { ...emptydepot }, config: { ...emptyDepotConfig } };
   omcConfig: Config = { ...emptyConfig };
   env: Environment = Environment.sandbox;
+
   kraModified = false;
   validContactForm = false;
   validCalculationForm = false;
+
+
   constructor(
     private router: Router,
     private notificationService: NotificationService,

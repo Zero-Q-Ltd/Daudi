@@ -78,15 +78,17 @@ export class ContactFormComponent implements OnInit {
     // this.formChangesResult.emit({ detail, kraModified: false });
   }
   ngOnChanges(changes: any) {
-    if (changes.initData) {
-      console.log(changes.initData);
-      if (!this.newOrder) {
-        this.contactform.disable();
+    if (!this.newOrder) {
+      this.contactform.disable();
+      this.contactform.controls.companyName.setValue(this.initData.customer.name);
+      this.contactform.controls.kraPin.setValue(this.initData.customer.krapin);
+      /**
+       * Check if the contact array has values, as the initialization data which may trigger a change detection is empty
+       */
+      if (this.initData.customer.contact.length > 0) {
         this.contactform.controls.email.setValue(this.initData.customer.contact[0].email);
         this.contactform.controls.name.setValue(this.initData.customer.contact[0].name);
-        this.contactform.controls.companyName.setValue(this.initData.customer.name);
         this.contactform.controls.phone.setValue(this.initData.customer.contact[0].phone);
-        this.contactform.controls.kraPin.setValue(this.initData.customer.krapin);
       }
     }
   }
