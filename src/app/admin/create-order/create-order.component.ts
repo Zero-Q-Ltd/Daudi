@@ -82,8 +82,7 @@ export class CreateOrderComponent implements OnDestroy {
 
     combineLatest([
       this.route.params.pipe(
-        takeUntil(this.comopnentDestroyed),
-        map((paramdata: { orderid: string }) => paramdata)),
+        takeUntil(this.comopnentDestroyed)),
       this.depotService.activedepot.pipe(
         takeUntil(this.comopnentDestroyed),
         skipWhile(t => !t.depot.Id)),
@@ -96,8 +95,6 @@ export class CreateOrderComponent implements OnDestroy {
         takeUntil(this.comopnentDestroyed),
         skipWhile(t => !t.Id))
     ]).subscribe(res => {
-      console.log(this.router.url);
-
       if (this.router.url === "/admin/create-order") {
         console.log("New Order");
         this.newOrder = true;
@@ -110,12 +107,11 @@ export class CreateOrderComponent implements OnDestroy {
         this.initordersform();
       } else {
         console.log("Order approval");
-        if (!res[0].orderid) {
+        if (!res[0].id) {
           return console.error("Empty params for Order approval");
-
         }
         this.newOrder = false;
-        const subscription = this.orderservice.getorder(res[0].orderid).onSnapshot(ordersnapshot => {
+        const subscription = this.orderservice.getorder(res[0].id).onSnapshot(ordersnapshot => {
           this.temporder = ordersnapshot.data() as Order;
           if (this.temporder.stage !== 1) {
             this.notificationService.notify({
