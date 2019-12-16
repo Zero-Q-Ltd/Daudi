@@ -96,7 +96,9 @@ export class CreateOrderComponent implements OnDestroy {
         takeUntil(this.comopnentDestroyed),
         skipWhile(t => !t.Id))
     ]).subscribe(res => {
-      if (!res[0].orderid) {
+      console.log(this.router.url);
+
+      if (this.router.url === "/admin/create-order") {
         console.log("New Order");
         this.newOrder = true;
         /**
@@ -107,7 +109,11 @@ export class CreateOrderComponent implements OnDestroy {
         this.env = res[3];
         this.initordersform();
       } else {
-        console.log("Discount approval");
+        console.log("Order approval");
+        if (!res[0].orderid) {
+          return console.error("Empty params for Order approval");
+
+        }
         this.newOrder = false;
         const subscription = this.orderservice.getorder(res[0].orderid).onSnapshot(ordersnapshot => {
           this.temporder = ordersnapshot.data() as Order;
