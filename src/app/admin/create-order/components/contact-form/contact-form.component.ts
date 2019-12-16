@@ -93,7 +93,7 @@ export class ContactFormComponent implements OnInit {
           name: values.name
         };
         const kraModified = this.initData ? this.initData.customer.krapin === values.kraPin : false;
-        this.filteredCompanies.next(this._filter(values.name));
+        this.filteredCompanies.next(this._filter(values.companyName));
       });
     // this.initData.customer
     this.customerService.loadingcustomers

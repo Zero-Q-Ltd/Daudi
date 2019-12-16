@@ -39,7 +39,6 @@ export class CreateOrderComponent implements OnDestroy {
   position = "before";
   position1 = "above";
   temporder: Order = { ...emptyorder };
-  discApproval = false;
   tempsellingprices = {
     pms: 0,
     ago: 0,
@@ -95,7 +94,8 @@ export class CreateOrderComponent implements OnDestroy {
         skipWhile(t => !t.Id))
     ]).subscribe(res => {
       if (!res[0].orderid) {
-        console.log("Not discount approval");
+        console.log("New Order");
+        this.newOrder = true;
         /**
          * This must execute in this exact order
          */
@@ -105,7 +105,7 @@ export class CreateOrderComponent implements OnDestroy {
         this.initordersform();
       } else {
         console.log("Discount approval");
-        console.log(res);
+        this.newOrder = false;
         const subscription = this.orderservice.getorder(res[0].orderid).onSnapshot(ordersnapshot => {
           this.temporder = ordersnapshot.data() as Order;
           if (this.temporder.stage !== 1) {
@@ -153,7 +153,7 @@ export class CreateOrderComponent implements OnDestroy {
 
 
   initordersform() {
-    if (!this.discApproval) {
+    if (this.newOrder) {
       this.temporder.notifications = {
         /**
          * Initialise these variables default as false for sandbox environment

@@ -4,11 +4,8 @@
             <thead class="thead-light vat-title1">
                 <th>Quantity</th>
                 <th>Selling Price</th>
-                <!-- <th class="vat-title">Price <b style="color: red"> EXC VAT </b></th> -->
                 <th class="vat-title">VAT Exempt</th>
-                <!-- <th class="vat-title">Vatable</th> -->
                 <th class="vat-title">VAT Amount</th>
-                <!-- <th class="vat-title">Total <b style="color: red"> EXC VAT </b></th> -->
                 <th class="vat-title">Line Total</th>
             </thead>
             <tbody>
@@ -31,38 +28,25 @@
                             <mat-error>Min allowed price is
                                 {{activedepot.config.price[pricetype].minPrice | number : '1.0-2'}}
                             </mat-error>
-                            <!-- <mat-hint class="text-danger" align="start">
-                                <i>Requested price: {{initData.discountRequest.pms}}</i>
-                            </mat-hint> -->
+                            <mat-hint class="text-danger" *ngIf="newOrder" align="start">
+                                <i>Requested price: {{initData.fuel[pricetype].priceconfig.price}}</i>
+                            </mat-hint>
                         </mat-form-field>
                     </td>
-                    <td class="vat-title">
-                        <span class="label label-{{pricetype}}">
-                            {{initData.fuel[pricetype].priceconfig.nonTaxprice }}
-                        </span>
-                    </td>
+
                     <td class="vat-title">
                         <span class="label label-{{pricetype}}">
                             {{omcConfig.taxExempt[env][pricetype].amount }}
                         </span>
                     </td>
 
-                    <!-- <td class="vat-title">
-                        <span class="label label-{{pricetype}}">
-                            {{initData.fuel[pricetype].priceconfig.taxablePrice }}
-                        </span>
-                    </td> -->
                     <td class="vat-title">
                         <span class="label label-{{pricetype}}">
                             {{initData.fuel[pricetype].priceconfig.taxAmnt }}
 
                         </span>
                     </td>
-                    <!-- <td class="vat-title">
-                        <span class="label label-{{pricetype}}">
-                            {{initData.fuel[pricetype].priceconfig.nonTaxtotal }}
-                        </span>
-                    </td> -->
+
                     <td class="vat-title">
                         <span class="label label-{{pricetype}}">
                             {{initData.fuel[pricetype].priceconfig.total }}
@@ -73,10 +57,7 @@
                     <td colspan="3">
                         <strong>Total:</strong>
                     </td>
-                    <td class="order-title">
-                        {{initData.fuel.pms.priceconfig.taxAmnt + initData.fuel.ago.priceconfig.taxAmnt +
-                initData.fuel.ik.priceconfig.taxAmnt | number : '1.2-2'}}
-                    </td>
+
                     <td class="order-title">
                         {{initData.fuel.pms.priceconfig.nonTaxtotal + initData.fuel.ago.priceconfig.nonTaxtotal +
                 initData.fuel.ik.priceconfig.nonTaxtotal | number : '1.2-2'}}

@@ -22,6 +22,8 @@ import { DepotConfig, emptyDepotConfig } from "./../../../../models/Daudi/depot/
 })
 export class CalculationsComponent implements OnInit {
   @Input() initData: Order;
+  @Input() newOrder: boolean;
+
   @Output() initDataChange = new EventEmitter();
   @Output() formValid = new EventEmitter<boolean>();
 
@@ -52,7 +54,11 @@ export class CalculationsComponent implements OnInit {
     private configService: ConfigService,
     private depot: DepotService
   ) {
-
+    this.configService.environment.pipe(
+      takeUntil(this.comopnentDestroyed)
+    ).subscribe(val => {
+      this.env = val;
+    });
   }
 
   ngOnInit() {
@@ -67,7 +73,7 @@ export class CalculationsComponent implements OnInit {
            */
           this.initData.fuel[fueltype].priceconfig.retailprice = this.depot.activedepot.value.config.price[fueltype].price;
           this.initData.fuel[fueltype].priceconfig.minsp = this.depot.activedepot.value.config.price[fueltype].minPrice;
-          // this.initData.fuel[fueltype].priceconfig.minsp = this.depot.activedepot.value.config.price[fueltype].minPrice;
+          this.initData.fuel[fueltype].priceconfig.nonTax = this.omcConfig.taxExempt[this.env][fueltype].amount;
           /**
            * set the form price values on depot config change
            */
@@ -166,9 +172,9 @@ export class CalculationsComponent implements OnInit {
    * Dont want decimals at lower quantities
    */
   deriveprice(priceinclusivevat: number, fueltype: FuelType, decimalResolution: number): { pricewithoutvat: number, amountdeducted: number, taxablePrice: number } {
-    const pricewithoutvat = Number(((priceinclusivevat + (0.08 * this.omcConfig.taxExempt[this.env][fueltype].amount)) / 1.08).toFixed(decimalResolution));
+    const pricewithoutvat = Number(((priceinclusivevat + (0.08 * this.initData.fuel[fueltype].priceconfig.nonTax)) / 1.08).toFixed(decimalResolution));
     const amountdeducted = priceinclusivevat - pricewithoutvat;
-    const taxablePrice = Number((pricewithoutvat - this.omcConfig.taxExempt[this.env][fueltype].amount).toFixed(decimalResolution));
+    const taxablePrice = Number((pricewithoutvat - this.initData.fuel[fueltype].priceconfig.nonTax).toFixed(decimalResolution));
     return { pricewithoutvat, amountdeducted, taxablePrice };
   }
   ngOnDestroy(): void {
