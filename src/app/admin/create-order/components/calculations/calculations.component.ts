@@ -23,9 +23,10 @@ import { DepotConfig, emptyDepotConfig } from "./../../../../models/Daudi/depot/
 export class CalculationsComponent implements OnInit {
   @Input() initData: Order;
   @Input() newOrder: boolean;
+  @Input() formValid: boolean;
 
   @Output() initDataChange = new EventEmitter();
-  @Output() formValid = new EventEmitter<boolean>();
+  @Output() formValidChange = new EventEmitter<boolean>();
 
   fueltypesArray = FuelNamesArray;
   omcConfig: Config = { ...emptyConfig };
@@ -102,7 +103,7 @@ export class CalculationsComponent implements OnInit {
         /**
          * emit the form validity
          */
-        this.formValid.emit(this.calculationsform.valid);
+        this.formValid = this.calculationsform.valid;
 
       });
   }

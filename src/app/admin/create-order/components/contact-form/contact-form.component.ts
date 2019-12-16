@@ -16,10 +16,12 @@ import { CustomerService } from "./../../../services/customers.service";
 })
 export class ContactFormComponent implements OnInit {
   @Input() initData: Order;
+
   @Input() newOrder: boolean;
+  @Input() formValid: boolean;
 
   @Output() initDataChange = new EventEmitter();
-  @Output() formValid = new EventEmitter<boolean>();
+  @Output() formValidChange = new EventEmitter<boolean>();
 
   // @Output() formChangesResult: EventEmitter<{ detail: CustomerDetail, kraModified: boolean }> =
   //   new EventEmitter<{ detail: CustomerDetail, kraModified: boolean }>();
@@ -112,7 +114,7 @@ export class ContactFormComponent implements OnInit {
         /**
          * emit the form validity
          */
-        this.formValid.emit(this.contactform.valid);
+        this.formValid = this.contactform.valid;
       });
     this.customerService.loadingcustomers
       .pipe(takeUntil(this.comopnentDestroyed))
