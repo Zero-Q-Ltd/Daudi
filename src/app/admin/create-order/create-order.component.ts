@@ -36,35 +36,6 @@ import { firestore } from "firebase";
 
 export class CreateOrderComponent implements OnDestroy {
 
-  position = "before";
-  position1 = "above";
-  temporder: Order = { ...emptyorder };
-  tempsellingprices = {
-    pms: 0,
-    ago: 0,
-    ik: 0
-  };
-
-  kramask = [/^[a-zA-Z]+$/i, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /^[a-zA-Z]+$/i];
-  newOrder = true;
-
-  fueltypesArray = FuelNamesArray;
-  companyControl = new FormControl();
-  queuedorders = [];
-
-  /**
-   * this keeps a local copy of all the subscriptions within this service
-   */
-  subscriptions: Map<string, any> = new Map<string, any>();
-  comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
-  activedepot: { depot: Depot, config: DepotConfig } = { depot: { ...emptydepot }, config: { ...emptyDepotConfig } };
-  omcConfig: Config = { ...emptyConfig };
-  env: Environment = Environment.sandbox;
-
-  kraModified = false;
-  validContactForm: boolean;
-  validCalculationForm: boolean;
-
 
   constructor(
     private router: Router,
@@ -142,6 +113,36 @@ export class CreateOrderComponent implements OnDestroy {
       });
 
   }
+
+  position = "before";
+  position1 = "above";
+  temporder: Order = { ...emptyorder };
+  tempsellingprices = {
+    pms: 0,
+    ago: 0,
+    ik: 0
+  };
+
+  kramask = [/^[a-zA-Z]+$/i, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /^[a-zA-Z]+$/i];
+  newOrder = true;
+
+  fueltypesArray = FuelNamesArray;
+  companyControl = new FormControl();
+  queuedorders = [];
+
+  /**
+   * this keeps a local copy of all the subscriptions within this service
+   */
+  subscriptions: Map<string, any> = new Map<string, any>();
+  comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
+  activedepot: { depot: Depot, config: DepotConfig } = { depot: { ...emptydepot }, config: { ...emptyDepotConfig } };
+  omcConfig: Config = { ...emptyConfig };
+  env: Environment = Environment.sandbox;
+
+  kraModified = false;
+  validContactForm = false;
+  validCalculationForm = false;
+
   ngOnDestroy(): void {
     this.comopnentDestroyed.next(true);
     this.unsubscribeAll();
@@ -152,8 +153,12 @@ export class CreateOrderComponent implements OnDestroy {
     });
   }
 
-
-
+  contactFormValid(event: boolean) {
+    this.validContactForm = event;
+  }
+  calaculationsFormValid(event: boolean) {
+    this.validCalculationForm = event;
+  }
   initordersform() {
     if (this.newOrder) {
       this.temporder.notifications = {
