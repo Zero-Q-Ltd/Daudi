@@ -26,7 +26,7 @@
             </button>
           </div>
           <div class="btn-group" role="group" style="width: 100%;" *ngIf="!newOrder">
-            <button (click)="checkOrder(false)" [disabled]=" !validContactForm || !validCalculationForm"
+            <button (click)="checkOrder(false)" [disabled]=" !validContactForm || !validCalculationForm || orderError"
               class="btn-default" mat-button>APPROVE
             </button>
           </div>

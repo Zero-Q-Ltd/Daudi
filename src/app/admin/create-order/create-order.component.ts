@@ -36,6 +36,26 @@ import { firestore } from "firebase";
 
 export class CreateOrderComponent implements OnDestroy {
 
+  kramask = [/^[a-zA-Z]+$/i, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /^[a-zA-Z]+$/i];
+  newOrder = true;
+
+  fueltypesArray = FuelNamesArray;
+  companyControl = new FormControl();
+  queuedorders = [];
+
+  /**
+   * this keeps a local copy of all the subscriptions within this service
+   */
+  subscriptions: Map<string, any> = new Map<string, any>();
+  comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
+  activedepot: { depot: Depot, config: DepotConfig } = { depot: { ...emptydepot }, config: { ...emptyDepotConfig } };
+  omcConfig: Config = { ...emptyConfig };
+  env: Environment = Environment.sandbox;
+
+  kraModified = false;
+  validContactForm = false;
+  validCalculationForm = false;
+  orderError = false;
 
   constructor(
     private router: Router,
@@ -83,21 +103,34 @@ export class CreateOrderComponent implements OnDestroy {
         }
         this.newOrder = false;
         const subscription = this.orderservice.getorder(res[0].id).onSnapshot(ordersnapshot => {
-          this.temporder = ordersnapshot.data() as Order;
-          if (this.temporder.stage !== 1) {
-            this.notificationService.notify({
-              alert_type: "warning",
-              body: "Order has been approved",
-              duration: 2000,
-              title: "Conflict"
-            });
-            return;
+          if (ordersnapshot.exists) {
+            this.temporder = ordersnapshot.data() as Order;
+            if (this.temporder.stage !== 1) {
+              this.notificationService.notify({
+                alert_type: "warning",
+                body: "Order has been approved",
+                duration: 2000,
+                title: "Conflict"
+              });
+              this.orderError = true;
+              return;
+            } else {
+              this.activedepot = res[1];
+              this.omcConfig = res[2];
+              this.env = res[3];
+              this.initordersform();
+            }
           } else {
-            this.activedepot = res[1];
-            this.omcConfig = res[2];
-            this.env = res[3];
-            this.initordersform();
+            this.orderError = true;
+
+            this.notificationService.notify({
+              alert_type: "error",
+              body: "No order found with this ID",
+              duration: 2000,
+              title: "ERROR"
+            });
           }
+
         });
         this.subscriptions.set(`discountorder`, subscription);
 
@@ -123,25 +156,6 @@ export class CreateOrderComponent implements OnDestroy {
     ik: 0
   };
 
-  kramask = [/^[a-zA-Z]+$/i, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /^[a-zA-Z]+$/i];
-  newOrder = true;
-
-  fueltypesArray = FuelNamesArray;
-  companyControl = new FormControl();
-  queuedorders = [];
-
-  /**
-   * this keeps a local copy of all the subscriptions within this service
-   */
-  subscriptions: Map<string, any> = new Map<string, any>();
-  comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
-  activedepot: { depot: Depot, config: DepotConfig } = { depot: { ...emptydepot }, config: { ...emptyDepotConfig } };
-  omcConfig: Config = { ...emptyConfig };
-  env: Environment = Environment.sandbox;
-
-  kraModified = false;
-  validContactForm = false;
-  validCalculationForm = false;
 
   ngOnDestroy(): void {
     this.comopnentDestroyed.next(true);
