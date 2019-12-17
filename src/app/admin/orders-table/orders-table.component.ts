@@ -187,7 +187,7 @@ export class OrdersTableComponent implements OnInit, OnDestroy {
   }
 
   approveOrder(order: Order) {
-    this.router.navigate(["admin/create-order/", { orderid: order.Id }]);
+    this.router.navigate(["admin/approve-order/", order.Id]);
   }
 
   /**

@@ -50,14 +50,13 @@ const routes: Routes = [
       {
         path: "create-order",
         data: new RouteDataClass({
-          description: "Order creaion",
+          description: "Order creation",
           configurable: true,
-
         }),
         component: CreateOrderComponent
       },
       {
-        path: "create-order/:id",
+        path: "approve-order/:id",
         data: new RouteDataClass({
           description: "Order approval",
           configurable: true,

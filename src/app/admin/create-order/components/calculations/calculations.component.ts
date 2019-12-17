@@ -1,11 +1,20 @@
-import { Component, OnInit, Input, Output } from "@angular/core";
+import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
 import { Order } from "./../../../../models/Daudi/order/Order";
 import { OrderContactForm } from "./../../../../models/Daudi/forms/CreateOrder";
-import { FuelType } from "./../../../../models/Daudi/fuel/FuelType";
+import { FuelType, FuelNamesArray } from "./../../../../models/Daudi/fuel/FuelType";
 import { OrderFuelConfig } from "./../../../../models/Daudi/order/FuelConfig";
 import { ConfigService } from "./../../../../admin/services/core/config.service";
 import { Config, emptyConfig } from "./../../../../models/Daudi/omc/Config";
 import { Environment } from "./../../../../models/Daudi/omc/Environments";
+import { FormArray, FormControl, Controls, FormGroup, FormBuilder } from "ngx-strongly-typed-forms";
+import { Validators } from "@angular/forms";
+import { Calculations, FuelCalculation } from "./../../../../models/Daudi/forms/Calculations";
+import { takeUntil, skipWhile } from "rxjs/operators";
+import { ReplaySubject } from "rxjs";
+import { DepotService } from "./../../../services/core/depot.service";
+import { Depot, emptydepot } from "./../../../../models/Daudi/depot/Depot";
+import { DepotConfig, emptyDepotConfig } from "./../../../../models/Daudi/depot/DepotConfig";
+import { NotificationService } from "./../../../../shared/services/notification.service";
 
 @Component({
   selector: "app-calculations",
@@ -14,50 +23,144 @@ import { Environment } from "./../../../../models/Daudi/omc/Environments";
 })
 export class CalculationsComponent implements OnInit {
   @Input() initData: Order;
-  @Output() formResult: {
-    [key in FuelType]: OrderFuelConfig
-  };
+  @Input() newOrder: boolean;
+
+  @Output() initDataChange = new EventEmitter<Order>();
+  @Output() formValid = new EventEmitter<boolean>();
+
+  fueltypesArray = FuelNamesArray;
   omcConfig: Config = { ...emptyConfig };
+  activedepot: { depot: Depot, config: DepotConfig } = { depot: { ...emptydepot }, config: { ...emptyDepotConfig } };
+
   env: Environment = Environment.sandbox;
+  calculationsForm: FormGroup<Calculations> = new FormGroup<Calculations>({
+    pms: new FormGroup<FuelCalculation>({
+      price: new FormControl<number>(0, [Validators.required]),
+      qty: new FormControl<number>(0, [Validators.required, Validators.min(1000)]),
+    }),
+    ago: new FormGroup<FuelCalculation>({
+      price: new FormControl<number>(0, [Validators.required]),
+      qty: new FormControl<number>(0, [Validators.required, Validators.min(1000)]),
+    }),
+    ik: new FormGroup<FuelCalculation>({
+      price: new FormControl<number>(0, [Validators.required]),
+      qty: new FormControl<number>(0, [Validators.required, Validators.min(1000)]),
+    })
+  });
+
+  comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
+
 
   constructor(
     private configService: ConfigService,
+    private depot: DepotService,
+    private notificationService: NotificationService,
 
   ) {
-    //  .pipe(takeUntil(this.comopnentDestroyed))
-    //       .subscribe((value) => {
-    //         if (value.pmsqtyControl >= 1000 || value.agoqtyControl >= 1000 || value.ikqtyControl >= 1000) {
-    //           this.orderform.controls.pmsqtyControl.setErrors(null);
-    //           this.orderform.controls.agoqtyControl.setErrors(null);
-    //           this.orderform.controls.ikqtyControl.setErrors(null);
-    //         }
-    //         this.fueltypesArray.forEach((fueltype) => {
-    //           this.initData.fuel[fueltype].qty = Number(value[fueltype + "qtyControl"]);
-    //           this.initData.fuel[fueltype].priceconfig.price = Number(value[fueltype]);
-    //           this.initData.fuel[fueltype].priceconfig.retailprice = this.tempsellingprices[fueltype];
-    //           this.initData.fuel[fueltype].priceconfig.minsp = this.activedepot.config.price[fueltype].minPrice;
-    //           const decimamlResolution = value[`${fueltype}qtyControl`] >= 10000 ? 4 : 3;
-    //           const calculatedpirces = this.deriveprice(this.initData.fuel[fueltype].priceconfig.price, fueltype, decimamlResolution);
-    //           this.initData.fuel[fueltype].priceconfig.taxablePrice = calculatedpirces.taxablePrice;
-    //           this.initData.fuel[fueltype].priceconfig.nonTaxprice = calculatedpirces.pricewithoutvat;
+    this.configService.environment.pipe(
+      takeUntil(this.comopnentDestroyed)
+    ).subscribe(val => {
+      this.env = val;
+    });
 
-    //           const totalwithouttax = this.totalswithouttax(this.initData.fuel[fueltype].priceconfig.nonTaxprice, this.initData.fuel[fueltype].qty);
-    //           this.initData.fuel[fueltype].priceconfig.nonTaxtotal = totalwithouttax;
+    this.configService.omcconfig.pipe(
+      takeUntil(this.comopnentDestroyed)
+    ).subscribe(val => {
+      this.omcConfig = val;
+    });
+    this.depot.activedepot.pipe(
+      takeUntil(this.comopnentDestroyed),
+      skipWhile(t => !t.depot.Id))
+      .subscribe(dep => {
+        this.activedepot = dep;
+      });
 
-    //           // this.initData.fuel[fueltype].priceconfig.total = taxcalculations.taxamount + totalwithouttax;
-    //           this.initData.fuel[fueltype].priceconfig.total = this.initData.fuel[fueltype].priceconfig.price * this.initData.fuel[fueltype].qty;
+    this.calculationsForm.valueChanges
+      .pipe(takeUntil(this.comopnentDestroyed))
+      .subscribe((value) => {
+        /**
+         * Only do calculation if the quantities are above threshold
+         */
+        if (value.pms.qty >= 1000 || value.ago.qty >= 1000 || value.ik.qty >= 1000) {
+          this.fueltypesArray.forEach(fueltype => {
+            this.calculationsForm.get([fueltype, "qty"]).setErrors(null);
+            this.initData.fuel[fueltype].qty = value[fueltype].qty;
+            this.initData.fuel[fueltype].priceconfig.price = value[fueltype].price;
 
-    //           this.initData.fuel[fueltype].priceconfig.taxAmnt = this.initData.fuel[fueltype].priceconfig.total - totalwithouttax;
-    //           this.initData.fuel[fueltype].priceconfig.taxableAmnt = totalwithouttax;
+            const decimamlResolution = value[`${fueltype}qtyControl`] >= 10000 ? 4 : 3;
+            const calculatedpirces = this.deriveprice(this.initData.fuel[fueltype].priceconfig.price, fueltype, decimamlResolution);
+            this.initData.fuel[fueltype].priceconfig.taxablePrice = calculatedpirces.taxablePrice;
+            this.initData.fuel[fueltype].priceconfig.nonTaxprice = calculatedpirces.pricewithoutvat;
+            const totalwithouttax = this.totalswithouttax(this.initData.fuel[fueltype].priceconfig.nonTaxprice, this.initData.fuel[fueltype].qty);
+            this.initData.fuel[fueltype].priceconfig.nonTaxtotal = totalwithouttax;
 
-    //           this.initData.fuel[fueltype].priceconfig.difference =
-    //             this.calculateupmark(this.initData.fuel[fueltype].priceconfig.price, this.initData.fuel[fueltype].priceconfig.retailprice, this.initData.fuel[fueltype].qty);
-    //           this.validateandcorrect();
-    //         });
-    //       });
+            // this.initData.fuel[fueltype].priceconfig.total = taxcalculations.taxamount + totalwithouttax;
+            this.initData.fuel[fueltype].priceconfig.total = this.initData.fuel[fueltype].priceconfig.price * this.initData.fuel[fueltype].qty;
+
+            this.initData.fuel[fueltype].priceconfig.taxAmnt = this.initData.fuel[fueltype].priceconfig.total - totalwithouttax;
+            this.initData.fuel[fueltype].priceconfig.taxableAmnt = totalwithouttax;
+
+            this.initData.fuel[fueltype].priceconfig.difference = this.calculateupmark(
+              this.initData.fuel[fueltype].priceconfig.price,
+              this.initData.fuel[fueltype].priceconfig.retailprice,
+              this.initData.fuel[fueltype].qty);
+
+          });
+        }
+        /**
+         * emit the form validity
+         */
+        this.formValid.emit(this.calculationsForm.valid);
+        this.initDataChange.emit(this.initData);
+
+      });
+  }
+  ngOnChanges(changes: any) {
+    this.fueltypesArray.forEach(fueltype => {
+      /**
+       * Make sure that the current selling price is lower than the min selling price for the most recent entry
+       */
+      let tempPrice = 0;
+      if (this.initData.fuel[fueltype].priceconfig.retailprice >= this.initData.fuel[fueltype].priceconfig.minsp) {
+        tempPrice = this.initData.fuel[fueltype].priceconfig.retailprice;
+      } else {
+        tempPrice = this.initData.fuel[fueltype].priceconfig.minsp;
+        this.notificationService.notify({
+          alert_type: "notify",
+          duration: 20000,
+          title: "Invalid Prices",
+          body: `The current selling price for ${fueltype} is lower than the Min selling price, hence the Min selling price has been used`
+        });
+      }
+      /**
+       * update order price values
+       */
+      this.initData.fuel[fueltype].priceconfig.retailprice = this.activedepot.config.price[fueltype].price;
+      this.initData.fuel[fueltype].priceconfig.minsp = this.activedepot.config.price[fueltype].minPrice;
+      this.initData.fuel[fueltype].priceconfig.nonTax = this.omcConfig.taxExempt[this.env][fueltype].amount;
+
+      this.calculationsForm.get([fueltype, "price"]).setValidators(Validators.min(this.activedepot.config.price[fueltype].minPrice));
+
+      /**
+       * DOnt overwrite value for order approval
+       */
+      if (this.newOrder) {
+        this.calculationsForm.get([fueltype, "price"]).setValue(tempPrice, { emitEvent: false });
+      } else {
+        this.calculationsForm.get([fueltype, "price"]).setValue(this.initData.fuel[fueltype].priceconfig.price, { emitEvent: false });
+        this.calculationsForm.get([fueltype, "qty"]).setValue(this.initData.fuel[fueltype].qty, { emitEvent: false });
+      }
+      /**
+       * update calculations as well
+       */
+    });
+    this.calculationsForm.updateValueAndValidity();
+
   }
 
   ngOnInit() {
+
+
   }
 
   determinediscount() {
@@ -71,43 +174,6 @@ export class CalculationsComponent implements OnInit {
     }
   }
 
-  initordersform() {
-    // if (!this.discApproval) {
-    //   this.temporder.notifications = {
-    //     /**
-    //      * Initialise these variables default as false for sandbox environment
-    //      */
-    //     sms: this.configService.environment.value === "sandbox" ? false : true,
-    //     email: this.configService.environment.value === "sandbox" ? false : true
-    //   };
-    //   /**
-    //    * @todo finish min price calculation logic
-    //    */
-    //   this.fueltypesArray.forEach((fueltype: FuelType) => {
-    //     /**
-    //      * Make sure that the current selling price is lower than the min selling price for the most recent entry
-    //      */
-    //     if (this.activedepot.config.price[fueltype].price >= this.activedepot.config.price[fueltype].minPrice) {
-    //       this.tempsellingprices[fueltype] = this.activedepot.config.price[fueltype].minPrice;
-    //     } else {
-    //       this.tempsellingprices[fueltype] = this.activedepot.config.price[fueltype].price;
-    //       this.notificationService.notify({
-    //         alert_type: "notify",
-    //         duration: 20000,
-    //         title: "Invalid Prices",
-    //         body: `The current selling price for ${fueltype} is lower than the Min selling price, hence the Min selling price has been used`
-    //       });
-    //     }
-    //     this.orderform.controls[fueltype].setValue(this.temporder.fuel[fueltype].priceconfig.price = this.tempsellingprices[fueltype]);
-    //     this.orderform.controls[fueltype].setValidators(Validators.compose([Validators.min(this.activedepot.config.price[fueltype].minPrice), Validators.required]));
-    //   });
-    // } else {
-    //   this.fueltypesArray.forEach((fueltype) => {
-    //     this.orderform.controls[fueltype].setValue(this.temporder.fuel[fueltype].priceconfig.price = this.tempsellingprices[fueltype]);
-    //     this.orderform.controls[fueltype].setValidators(Validators.compose([Validators.min(this.activedepot.config.price[fueltype].price), Validators.required]));
-    //   });
-    // }
-  }
   /**
    * uses the simple formula :
    * PricewithoutVAT=OriginalPrice + (0.08*VATExempt)/1.08, simplified
@@ -115,10 +181,13 @@ export class CalculationsComponent implements OnInit {
    * Dont want decimals at lower quantities
    */
   deriveprice(priceinclusivevat: number, fueltype: FuelType, decimalResolution: number): { pricewithoutvat: number, amountdeducted: number, taxablePrice: number } {
-    const pricewithoutvat = Number(((priceinclusivevat + (0.08 * this.omcConfig.taxExempt[this.env][fueltype].amount)) / 1.08).toFixed(decimalResolution));
+    const pricewithoutvat = Number(((priceinclusivevat + (0.08 * this.initData.fuel[fueltype].priceconfig.nonTax)) / 1.08).toFixed(decimalResolution));
     const amountdeducted = priceinclusivevat - pricewithoutvat;
-    const taxablePrice = Number((pricewithoutvat - this.omcConfig.taxExempt[this.env][fueltype].amount).toFixed(decimalResolution));
+    const taxablePrice = Number((pricewithoutvat - this.initData.fuel[fueltype].priceconfig.nonTax).toFixed(decimalResolution));
     return { pricewithoutvat, amountdeducted, taxablePrice };
+  }
+  ngOnDestroy(): void {
+    this.comopnentDestroyed.next(true);
   }
 
   /**
