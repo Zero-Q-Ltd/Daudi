@@ -53,7 +53,7 @@ export class OrdersTableComponent implements OnInit, OnDestroy {
   position3 = "below";
   ordersdataSource = new MatTableDataSource<Order>();
   stage = 0;
-  ordercolumns = ["Id", "Company", "Contact", "Time", "User", "Phone", "PMS", "AGO", "IK", "Total", "Action", "Status"];
+  ordercolumns = ["Id", "Company", "Contact", "Time", "User", "Phone", "PMS", "AGO", "IK", "Total", "Action"];
   loadingtruck = true;
   clickedtruck: Truck;
   expandedElement = null;

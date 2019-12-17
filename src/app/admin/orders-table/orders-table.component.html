@@ -108,32 +108,6 @@
                   number}}
               </td>
             </ng-container>
-            <!-- Action Column -->
-            <ng-container matColumnDef="Status">
-              <th *matHeaderCellDef mat-header-cell mat-sort-header>Status</th>
-              <td *matCellDef="let order" class="gen-size" mat-cell>
-                <span [ngSwitch]="stage">
-                  <span *ngSwitchCase=1>
-                    <span>NEW</span>
-                  </span>
-                  <span *ngSwitchCase=2>
-                    <span>Invoiced</span>
-                  </span>
-                  <span *ngSwitchCase=3>
-                    <span>Paid</span>
-                  </span>
-                  <span *ngSwitchCase=4>
-                    <span>In Progress</span>
-                  </span>
-                  <span *ngSwitchCase=5>
-                    <span>Complete</span>
-                  </span>
-                  <span *ngSwitchCase=6>
-                    <span>Deleted</span>
-                  </span>
-                </span>
-              </td>
-            </ng-container>
             <!-- Status Column -->
             <ng-container matColumnDef="Action">
               <th *matHeaderCellDef mat-header-cell mat-sort-header>Action</th>

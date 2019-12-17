@@ -44,8 +44,5 @@ export interface PriceConfig {
      * +ve for upmark and -ve for discount
      */
     difference: number;
-    /**
-     * @description QuickbooksId of the tax Object, used for referencing for accounting
-     */
-    taxQbId: string;
+
 }

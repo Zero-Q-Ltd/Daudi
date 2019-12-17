@@ -40,7 +40,6 @@ export class CreateOrderComponent implements OnDestroy {
   newOrder = true;
 
   fueltypesArray = FuelNamesArray;
-  companyControl = new FormControl();
   queuedorders = [];
 
   /**
@@ -56,6 +55,15 @@ export class CreateOrderComponent implements OnDestroy {
   validContactForm = false;
   validCalculationForm = false;
   orderError = false;
+
+  position = "before";
+  position1 = "above";
+  temporder: Order = { ...emptyorder };
+  tempsellingprices = {
+    pms: 0,
+    ago: 0,
+    ik: 0
+  };
 
   constructor(
     private router: Router,
@@ -86,75 +94,53 @@ export class CreateOrderComponent implements OnDestroy {
         takeUntil(this.comopnentDestroyed),
         skipWhile(t => !t.Id))
     ]).subscribe(res => {
+      this.activedepot = res[1];
+      this.omcConfig = res[2];
+      this.env = res[3];
+
       if (this.router.url === "/admin/create-order") {
         console.log("New Order");
         this.newOrder = true;
-        /**
-         * This must execute in this exact order
-         */
-        this.activedepot = res[1];
-        this.omcConfig = res[2];
-        this.env = res[3];
-        this.initordersform();
       } else {
         console.log("Order approval");
         if (!res[0].id) {
           return console.error("Empty params for Order approval");
         }
         this.newOrder = false;
-        const subscription = this.orderservice.getorder(res[0].id).onSnapshot(ordersnapshot => {
-          if (ordersnapshot.exists) {
-            this.temporder = ordersnapshot.data() as Order;
-            if (this.temporder.stage !== 1) {
-              this.notificationService.notify({
-                alert_type: "warning",
-                body: "Order has been approved",
-                duration: 2000,
-                title: "Conflict"
-              });
-              this.orderError = true;
-              return;
+        const subscription = this.orderservice.getorder(res[0].id)
+          .onSnapshot(ordersnapshot => {
+            if (ordersnapshot.exists) {
+              this.temporder = ordersnapshot.data() as Order;
+              if (this.temporder.stage !== 1) {
+                this.notificationService.notify({
+                  alert_type: "warning",
+                  body: "Order has been approved",
+                  duration: 2000,
+                  title: "Conflict"
+                });
+                this.orderError = true;
+                return;
+              }
             } else {
-              this.activedepot = res[1];
-              this.omcConfig = res[2];
-              this.env = res[3];
-              this.initordersform();
+              this.orderError = true;
+              this.notificationService.notify({
+                alert_type: "error",
+                body: "No order found with this ID",
+                duration: 2000,
+                title: "ERROR"
+              });
             }
-          } else {
-            this.orderError = true;
 
-            this.notificationService.notify({
-              alert_type: "error",
-              body: "No order found with this ID",
-              duration: 2000,
-              title: "ERROR"
-            });
-          }
-
-        });
+          });
         this.subscriptions.set(`discountorder`, subscription);
-
       }
-
     });
-
-
     this.orderservice.queuedorders
       .pipe(takeUntil(this.comopnentDestroyed))
       .subscribe(value => {
         this.queuedorders = value;
       });
-
   }
-
-  position = "before";
-  position1 = "above";
-  temporder: Order = { ...emptyorder };
-  tempsellingprices = {
-    pms: 0,
-    ago: 0,
-    ik: 0
-  };
 
 
   ngOnDestroy(): void {
@@ -173,43 +159,6 @@ export class CreateOrderComponent implements OnDestroy {
   calaculationsFormValid(event: boolean) {
     this.validCalculationForm = event;
   }
-  initordersform() {
-    if (this.newOrder) {
-      this.temporder.notifications = {
-        /**
-         * Initialise these variables default as false for sandbox environment
-         */
-        sms: this.configService.environment.value === "sandbox" ? false : true,
-        email: this.configService.environment.value === "sandbox" ? false : true
-      };
-      /**
-       * @todo finish min price calculation logic
-       */
-      this.fueltypesArray.forEach((fueltype: FuelType) => {
-        /**
-         * Make sure that the current selling price is lower than the min selling price for the most recent entry
-         */
-        if (this.activedepot.config.price[fueltype].price >= this.activedepot.config.price[fueltype].minPrice) {
-          this.tempsellingprices[fueltype] = this.activedepot.config.price[fueltype].minPrice;
-        } else {
-          this.tempsellingprices[fueltype] = this.activedepot.config.price[fueltype].price;
-          this.notificationService.notify({
-            alert_type: "notify",
-            duration: 20000,
-            title: "Invalid Prices",
-            body: `The current selling price for ${fueltype} is lower than the Min selling price, hence the Min selling price has been used`
-          });
-        }
-        // this.orderform.controls[fueltype].setValue(this.temporder.fuel[fueltype].priceconfig.price = this.tempsellingprices[fueltype]);
-        // this.orderform.controls[fueltype].setValidators(Validators.compose([Validators.min(this.activedepot.config.price[fueltype].minPrice), Validators.required]));
-      });
-    } else {
-      this.fueltypesArray.forEach((fueltype) => {
-        // this.orderform.controls[fueltype].setValue(this.temporder.fuel[fueltype].priceconfig.price = this.tempsellingprices[fueltype]);
-        // this.orderform.controls[fueltype].setValidators(Validators.compose([Validators.min(this.activedepot.config.price[fueltype].price), Validators.required]));
-      });
-    }
-  }
 
   openmaps() {
     const dialogRef = this.dialog.open(MapsComponent,
@@ -224,14 +173,12 @@ export class CreateOrderComponent implements OnDestroy {
     });
   }
 
-
   ngOnInit() {
 
   }
 
   ngAfterViewInit() {
   }
-
 
   /**
    * Returns true if this KRA pin has not been used
@@ -242,9 +189,7 @@ export class CreateOrderComponent implements OnDestroy {
     })[0];
   }
 
-
   /**
-   *
    * redirect specifies whether to redirect to the orders page when the order creation is successful
    */
   checkOrder(redirect: boolean) {
@@ -332,9 +277,11 @@ export class CreateOrderComponent implements OnDestroy {
     } else {
       console.log("Not new company");
       console.log(this.temporder);
-      this.updatecompany().then(() => {
-        this.createorder(redirect);
-      });
+      this.createorder(redirect);
+
+      // this.updatecompany().then(() => {
+      //   this.createorder(redirect);
+      // });
     }
   }
 
@@ -360,23 +307,18 @@ export class CreateOrderComponent implements OnDestroy {
   }
 
   createorder(redirect) {
-    this.orderservice.createorder(this.temporder);
+    if (this.temporder.Id) {
+      this.orderservice.approveOrder(this.temporder);
+    } else {
+      this.orderservice.createOrder(this.temporder);
+    }
     if (redirect) {
       /**
        * navigate away from the page if the user intends fro it
        */
       this.router.navigate(["admin/orders-table/1"]);
     } else {
-      /**
-       * reset fields in preparation fro a new order
-       */
-      // this.contactform.reset();
-      this.companyControl.reset();
-      // this.orderform.reset();
-      /**
-       * re-populate the prices
-       */
-      this.initordersform();
+      this.temporder = { ...emptyorder };
     }
     this.notificationService.notify({
       duration: 2000,
