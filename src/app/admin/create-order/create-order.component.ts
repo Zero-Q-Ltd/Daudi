@@ -62,8 +62,8 @@ export class CreateOrderComponent implements OnDestroy {
   env: Environment = Environment.sandbox;
 
   kraModified = false;
-  validContactForm = false;
-  validCalculationForm = false;
+  validContactForm: boolean;
+  validCalculationForm: boolean;
 
 
   constructor(

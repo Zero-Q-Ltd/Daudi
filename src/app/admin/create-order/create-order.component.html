@@ -8,9 +8,9 @@
 
       </div>
       <div fxFlex="row">
-        <app-contact-form [(initData)]="temporder" [newOrder]="newOrder" [(formValid)]="validContactForm">
+        <app-contact-form [(initData)]="temporder" [newOrder]="newOrder" (formValid)="validContactForm">
         </app-contact-form>
-        <app-calculations [(initData)]="temporder" [newOrder]="newOrder" [(formValid)]="validCalculationForm">
+        <app-calculations [(initData)]="temporder" [newOrder]="newOrder" (formValid)="validCalculationForm">
         </app-calculations>
         <div>
           <div class="" fxLayout fxLayout.xs="column" fxLayoutAlign="center" fxLayoutGap="10px" fxLayoutGap.xs="0">
@@ -18,7 +18,7 @@
               << {{queuedorders.length}} </button> <div fxFlex>&nbsp;</div>
           <div fxFlex>&nbsp;</div>
           <div class="btn-group" role="group" style="width: 100%;">
-            {{validContactForm }}, {{validCalculationForm}}
+            contact:{{validContactForm }} calc:{{validCalculationForm}}
             <button (click)="checkOrder(true)" [disabled]=" !validContactForm || !validCalculationForm"
               class="btn-default" mat-flat-button>SAVE ONLY
             </button>&nbsp;&nbsp;

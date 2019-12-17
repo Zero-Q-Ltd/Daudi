@@ -24,10 +24,9 @@ import { NotificationService } from "./../../../../shared/services/notification.
 export class CalculationsComponent implements OnInit {
   @Input() initData: Order;
   @Input() newOrder: boolean;
-  @Input() formValid: boolean;
 
   @Output() initDataChange = new EventEmitter<Order>();
-  @Output() formValidChange = new EventEmitter<boolean>();
+  @Output() formValid = new EventEmitter<boolean>();
 
   fueltypesArray = FuelNamesArray;
   omcConfig: Config = { ...emptyConfig };
@@ -111,8 +110,9 @@ export class CalculationsComponent implements OnInit {
         /**
          * emit the form validity
          */
-        this.formValidChange.emit(this.calculationsForm.valid);
+        this.formValid.emit(this.calculationsForm.valid);
         this.initDataChange.emit(this.initData);
+
       });
   }
   ngOnChanges(changes: any) {

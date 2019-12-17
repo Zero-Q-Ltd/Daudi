@@ -18,10 +18,9 @@ export class ContactFormComponent implements OnInit {
   @Input() initData: Order;
 
   @Input() newOrder: boolean;
-  @Input() formValid: boolean;
 
   @Output() initDataChange = new EventEmitter<Order>();
-  @Output() formValidChange = new EventEmitter<boolean>();
+  @Output() formValid = new EventEmitter<boolean>();
 
   // @Output() formChangesResult: EventEmitter<{ detail: CustomerDetail, kraModified: boolean }> =
   //   new EventEmitter<{ detail: CustomerDetail, kraModified: boolean }>();
@@ -64,9 +63,10 @@ export class ContactFormComponent implements OnInit {
          * A disabled form is considered invalid by default, so omit
          */
         if (!this.newOrder) {
-          this.formValidChange.emit(this.contactForm.valid);
+          this.formValid.emit(this.contactForm.valid);
         } else {
-          this.formValidChange.emit(true);
+          console.log("here");
+          this.formValid.emit(false);
         }
       });
     this.customerService.loadingcustomers
@@ -124,8 +124,6 @@ export class ContactFormComponent implements OnInit {
       }
     }
     this.contactForm.updateValueAndValidity();
-    this.initDataChange.emit(this.initData);
-
   }
 
 
