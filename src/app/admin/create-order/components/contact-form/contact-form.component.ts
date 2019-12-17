@@ -20,7 +20,7 @@ export class ContactFormComponent implements OnInit {
   @Input() newOrder: boolean;
   @Input() formValid: boolean;
 
-  @Output() initDataChange = new EventEmitter();
+  @Output() initDataChange = new EventEmitter<Order>();
   @Output() formValidChange = new EventEmitter<boolean>();
 
   // @Output() formChangesResult: EventEmitter<{ detail: CustomerDetail, kraModified: boolean }> =
@@ -30,72 +30,18 @@ export class ContactFormComponent implements OnInit {
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
   subscriptions: Map<string, any> = new Map<string, any>();
 
-  contactform: FormGroup<OrderContactForm> = new FormGroup<OrderContactForm>({
+  contactForm: FormGroup<OrderContactForm> = new FormGroup<OrderContactForm>({
     kraPin: new FormControl<string>("", [Validators.required]),
     email: new FormControl<string>("", [Validators.required, Validators.email]),
     companyName: new FormControl<string>("", [Validators.required]),
-    name: new FormControl<string>("", [Validators.required]),
-    phone: new FormControl<string>("", [Validators.required, Validators.email])
+    name: new FormControl<string>("", [Validators.required, Validators.minLength(4)]),
+    phone: new FormControl<string>("", [Validators.required, Validators.pattern("[0-9].{8}")])
   });
   constructor(
     private formBuilder: FormBuilder,
     private customerService: CustomerService
   ) {
-
-  }
-
-  private _filter(value: string): DaudiCustomer[] {
-    if (!value) {
-      return;
-    }
-    const filterValue = value.toLowerCase();
-
-    return this.customerService.allcustomers.value.filter(option => option.name.toLowerCase().includes(filterValue));
-  }
-  companyselect(selectedcompany: DaudiCustomer) {
-
-    /**
-     * Silently update the related values
-     */
-    this.contactform.controls.kraPin.setValue(selectedcompany.krapin, { emitEvent: false });
-    this.contactform.controls.name.setValue(selectedcompany.contact[0].name, { emitEvent: false });
-    this.contactform.controls.phone.setValue(selectedcompany.contact[0].phone, { emitEvent: false });
-    this.contactform.controls.email.setValue(selectedcompany.contact[0].email, { emitEvent: false });
-    /**
-     * emit the cahnges at once
-     */
-    this.contactform.updateValueAndValidity();
-
-    const detail: CustomerDetail = {
-      Id: selectedcompany.Id,
-      QbId: selectedcompany.QbId,
-      contact: selectedcompany.contact,
-      krapin: selectedcompany.krapin,
-      name: selectedcompany.name
-    };
-    // const kraModified = this.initData ? this.initData.customer.krapin === values.kraPin : false;
-    // this.formChangesResult.emit({ detail, kraModified });
-    // this.formChangesResult.emit({ detail, kraModified: false });
-  }
-  ngOnChanges(changes: any) {
-    if (!this.newOrder) {
-      this.contactform.disable();
-      this.contactform.controls.companyName.setValue(this.initData.customer.name);
-      this.contactform.controls.kraPin.setValue(this.initData.customer.krapin);
-      /**
-       * Check if the contact array has values, as the initialization data which may trigger a change detection is empty
-       */
-      if (this.initData.customer.contact.length > 0) {
-        this.contactform.controls.email.setValue(this.initData.customer.contact[0].email);
-        this.contactform.controls.name.setValue(this.initData.customer.contact[0].name);
-        this.contactform.controls.phone.setValue(this.initData.customer.contact[0].phone);
-      }
-    }
-  }
-
-
-  ngOnInit() {
-    this.contactform.valueChanges
+    this.contactForm.valueChanges
       .pipe(
         takeUntil(this.comopnentDestroyed),
       )
@@ -115,14 +61,75 @@ export class ContactFormComponent implements OnInit {
         this.filteredCompanies.next(this._filter(values.companyName));
         /**
          * emit the form validity
+         * A disabled form is considered invalid by default, so omit
          */
-        this.formValid = this.contactform.valid;
+        if (!this.newOrder) {
+          this.formValidChange.emit(this.contactForm.valid);
+        } else {
+          this.formValidChange.emit(true);
+        }
       });
     this.customerService.loadingcustomers
       .pipe(takeUntil(this.comopnentDestroyed))
       .subscribe(value => {
         this.loadingcustomers = value;
       });
+  }
+
+  private _filter(value: string): DaudiCustomer[] {
+    if (!value) {
+      return;
+    }
+    const filterValue = value.toLowerCase();
+
+    return this.customerService.allcustomers.value.filter(option => option.name.toLowerCase().includes(filterValue));
+  }
+  companyselect(selectedcompany: DaudiCustomer) {
+
+    /**
+     * Silently update the related values
+     */
+    this.contactForm.controls.kraPin.setValue(selectedcompany.krapin, { emitEvent: false });
+    this.contactForm.controls.name.setValue(selectedcompany.contact[0].name, { emitEvent: false });
+    this.contactForm.controls.phone.setValue(selectedcompany.contact[0].phone, { emitEvent: false });
+    this.contactForm.controls.email.setValue(selectedcompany.contact[0].email, { emitEvent: false });
+    /**
+     * emit the cahnges at once
+     */
+    this.contactForm.updateValueAndValidity();
+
+    const detail: CustomerDetail = {
+      Id: selectedcompany.Id,
+      QbId: selectedcompany.QbId,
+      contact: selectedcompany.contact,
+      krapin: selectedcompany.krapin,
+      name: selectedcompany.name
+    };
+    // const kraModified = this.initData ? this.initData.customer.krapin === values.kraPin : false;
+    // this.formChangesResult.emit({ detail, kraModified });
+    // this.formChangesResult.emit({ detail, kraModified: false });
+  }
+  ngOnChanges(changes: any) {
+    if (!this.newOrder) {
+      this.contactForm.disable();
+      this.contactForm.controls.companyName.setValue(this.initData.customer.name, { emitEvent: false });
+      this.contactForm.controls.kraPin.setValue(this.initData.customer.krapin, { emitEvent: false });
+      /**
+       * Check if the contact array has values, as the initialization data which may trigger a change detection is empty
+       */
+      if (this.initData.customer.contact.length > 0) {
+        this.contactForm.controls.email.setValue(this.initData.customer.contact[0].email, { emitEvent: false });
+        this.contactForm.controls.name.setValue(this.initData.customer.contact[0].name, { emitEvent: false });
+        this.contactForm.controls.phone.setValue(this.initData.customer.contact[0].phone, { emitEvent: false });
+      }
+    }
+    this.contactForm.updateValueAndValidity();
+    this.initDataChange.emit(this.initData);
+
+  }
+
+
+  ngOnInit() {
 
   }
 
