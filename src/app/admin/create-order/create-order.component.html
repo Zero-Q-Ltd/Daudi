@@ -8,17 +8,16 @@
 
       </div>
       <div fxFlex="row">
-        <app-contact-form [(initData)]="temporder" [newOrder]="newOrder" (formValid)="validContactForm">
+        <app-contact-form [(initData)]="temporder" [newOrder]="newOrder" (formValid)="contactFormValid($event)">
         </app-contact-form>
-        <app-calculations [(initData)]="temporder" [newOrder]="newOrder" (formValid)="validCalculationForm">
+        <app-calculations [(initData)]="temporder" [newOrder]="newOrder" (formValid)="calaculationsFormValid($event)">
         </app-calculations>
         <div>
           <div class="" fxLayout fxLayout.xs="column" fxLayoutAlign="center" fxLayoutGap="10px" fxLayoutGap.xs="0">
             <button class="btn-default1" mat-raised-button matTooltip="Orders processsing in the background">
               << {{queuedorders.length}} </button> <div fxFlex>&nbsp;</div>
           <div fxFlex>&nbsp;</div>
-          <div class="btn-group" role="group" style="width: 100%;">
-            contact:{{validContactForm }} calc:{{validCalculationForm}}
+          <div class="btn-group" role="group" style="width: 100%;" *ngIf="newOrder">
             <button (click)="checkOrder(true)" [disabled]=" !validContactForm || !validCalculationForm"
               class="btn-default" mat-flat-button>SAVE ONLY
             </button>&nbsp;&nbsp;
@@ -26,9 +25,14 @@
               class="btn-default" mat-button>SAVE AND NEW
             </button>
           </div>
+          <div class="btn-group" role="group" style="width: 100%;" *ngIf="!newOrder">
+            <button (click)="checkOrder(false)" [disabled]=" !validContactForm || !validCalculationForm || orderError"
+              class="btn-default" mat-button>APPROVE
+            </button>
+          </div>
         </div>
       </div>
       </div>
     </mat-card-content>
   </mat-card>
-</section>
+</section>c

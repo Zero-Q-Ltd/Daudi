@@ -1,56 +1,8 @@
 <div class="container-fluid no-breadcrumbs page-dashboard" style="padding-top:60px;">
-  <mat-expansion-panel>
-    <mat-expansion-panel-header>
-      <mat-panel-title>
-        <span *ngIf="activedepot" class="expansion-depot">
-          <i class="material-icons color-blue">local_gas_station</i>
-          {{activedepot.Name}}</span>
-        <span class="expansion-title">PRICE COMPARISON</span>
-      </mat-panel-title>
-      <!-- <mat-panel-description>
-      All depots and their respective prices.
-      </mat-panel-description> -->
-    </mat-expansion-panel-header>
-    <div>
-      <div>
-        <mat-form-field appearance="legacy">
-          <input (keyup)="applyFilter($event.target.value)" matInput
-            placeholder="Filtering All depots and their respective prices">
-        </mat-form-field>
-      </div>
-      <div>
-        <mat-table [dataSource]="depotsdataSource" matSort>
-          <ng-container matColumnDef="depot">
-            <mat-header-cell *matHeaderCellDef class="order-title1" mat-sort-header>Depot</mat-header-cell>
-            <mat-cell *matCellDef="let depot"> {{depot.Name}}</mat-cell>
-          </ng-container>
-          <div *ngFor='let pricetype of fueltypesArray'>
-            <ng-container matColumnDef="{{pricetype}}_price">
-              <mat-header-cell *matHeaderCellDef class="" mat-sort-header>
-                <i class="material-icons rangi-{{pricetype}}"
-                  matTooltip="{{pricetype | uppercase}} Price">attach_money</i>
-              </mat-header-cell>
-              <mat-cell *matCellDef="let depot" class="color-{{pricetype}}">
-                {{depot.currentpriceconfig ? depot.currentpriceconfig[pricetype]?.price : 0}}
-              </mat-cell>
-            </ng-container>
+  <app-price-comparison>
 
-            <ng-container matColumnDef="{{pricetype}}_avgprice">
-              <mat-header-cell *matHeaderCellDef mat-sort-header>
-                <i [matTooltipPosition]="position1" class="material-icons rangi-{{pricetype}}"
-                  matTooltip="{{pricetype | uppercase}} Avg Price">compare_arrows</i>
-              </mat-header-cell>
-              <mat-cell *matCellDef="let depot" class="color-{{pricetype}}"> {{depot[pricetype]}}
-              </mat-cell>
-            </ng-container>
-          </div>
-          <mat-header-row *matHeaderRowDef="priceColumns"></mat-header-row>
-          <mat-row *matRowDef="let row; columns: priceColumns;">
-          </mat-row>
-        </mat-table>
-      </div>
-    </div>
-  </mat-expansion-panel>
+  </app-price-comparison>
+
   <br>
   <mat-card *ngIf='activedepot'>
     <mat-card-title>Current Prices</mat-card-title>

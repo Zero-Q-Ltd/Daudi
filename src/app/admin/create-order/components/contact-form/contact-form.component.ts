@@ -62,11 +62,10 @@ export class ContactFormComponent implements OnInit {
          * emit the form validity
          * A disabled form is considered invalid by default, so omit
          */
-        if (!this.newOrder) {
+        if (this.newOrder) {
           this.formValid.emit(this.contactForm.valid);
         } else {
-          console.log("here");
-          this.formValid.emit(false);
+          this.formValid.emit(true);
         }
       });
     this.customerService.loadingcustomers

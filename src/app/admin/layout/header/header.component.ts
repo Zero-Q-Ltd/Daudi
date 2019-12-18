@@ -8,7 +8,6 @@ import { AdminService } from "../../services/core/admin.service";
 import { DepotService } from "../../services/core/depot.service";
 import { Admin, emptyadmin } from "../../../models/Daudi/admin/Admin";
 import { OrdersService } from "../../services/orders.service";
-import { truckStagesarray } from "../../../models/Daudi/order/Truck";
 import { PricesService } from "../../services/prices.service";
 import { FuelType, FuelNamesArray } from "../../../models/Daudi/fuel/FuelType";
 import { Price } from "../../../models/Daudi/depot/Price";
@@ -21,6 +20,7 @@ import { Environment } from "../../../models/Daudi/omc/Environments";
 import { ConfigService } from "../../services/core/config.service";
 import { DepotConfig, emptyDepotConfig } from "../../../models/Daudi/depot/DepotConfig";
 import { OrderStageIds } from "../../../models/Daudi/order/OrderStages";
+import { TruckStageNames } from "../../../models/Daudi/order/TruckStages";
 
 @Component({
   selector: "my-app-header",
@@ -105,7 +105,7 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
         .pipe(takeUntil(this.comopnentDestroyed))
         .subscribe(orders => this.orderscount[stage] = orders.length);
     });
-    truckStagesarray.forEach(stage => {
+    TruckStageNames.forEach(stage => {
       // this.truckservice.trucks[stage].pipe(takeUntil(this.comopnentDestroyed)).subscribe(trucks => this.truckscount[stage] = trucks.length);
     });
     this.adminservice.observableuserdata

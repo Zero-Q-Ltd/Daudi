@@ -55,7 +55,7 @@ export class OrdersService {
 
   }
 
-  createorder(order: Order): Promise<any> {
+  createOrder(order: Order): Promise<any> {
     order.Id = this.db.createId();
     /**
      * add a counter for the number of pending orders in the queue
@@ -69,35 +69,60 @@ export class OrdersService {
     this.queuedorders.value.push(order.Id);
     console.log(orderdata);
 
-    if (order.stage === 1) {
-      return this.functions.httpsCallable("createEstimate")(orderdata).toPromise().then(value => {
-        /**
-         * delete the orderid after the operation is complete
-         */
-        const index = this.queuedorders.value.indexOf(order.Id);
-        if (index > -1) {
-          this.queuedorders.value.splice(index, 1);
-        }
-      }).catch(reason => {
-        /**
-         * delete the orderid after the operation is complete
-         */
-        const index = this.queuedorders.value.indexOf(order.Id);
-        if (index > -1) {
-          this.queuedorders.value.splice(index, 1);
-        }
-        console.log("error creating order", reason);
-        /***
-         * error creating order
-         */
-      });
-    } else {
-      return this.db.firestore.collection("omc")
-        .doc(this.omc.currentOmc.value.Id)
-        .collection("order")
-        .doc(order.Id)
-        .set(order);
-    }
+    return this.functions.httpsCallable("createEstimate")(orderdata).toPromise().then(value => {
+      /**
+       * delete the orderid after the operation is complete
+       */
+      const index = this.queuedorders.value.indexOf(order.Id);
+      if (index > -1) {
+        this.queuedorders.value.splice(index, 1);
+      }
+    }).catch(reason => {
+      /**
+       * delete the orderid after the operation is complete
+       */
+      const index = this.queuedorders.value.indexOf(order.Id);
+      if (index > -1) {
+        this.queuedorders.value.splice(index, 1);
+      }
+      console.log("error creating order", reason);
+      /***
+       * error creating order
+       */
+    });
+
+  }
+  approveOrder(order: Order): Promise<any> {
+    const orderdata: OrderCreate = {
+      config: this.config.omcconfig.value,
+      environment: this.config.environment.value,
+      omcId: this.omc.currentOmc.value.Id,
+      order
+    };
+    this.queuedorders.value.push(order.Id);
+    console.log(orderdata);
+
+    return this.functions.httpsCallable("createInvoice")(orderdata).toPromise().then(value => {
+      /**
+       * delete the orderid after the operation is complete
+       */
+      const index = this.queuedorders.value.indexOf(order.Id);
+      if (index > -1) {
+        this.queuedorders.value.splice(index, 1);
+      }
+    }).catch(reason => {
+      /**
+       * delete the orderid after the operation is complete
+       */
+      const index = this.queuedorders.value.indexOf(order.Id);
+      if (index > -1) {
+        this.queuedorders.value.splice(index, 1);
+      }
+      console.log("error creating order", reason);
+      /***
+       * error creating order
+       */
+    });
 
   }
 

@@ -29,7 +29,7 @@ export function ordersms(order: Order, omcId: string) {
       Id: order.customer.Id,
       krapin: order.customer.krapin
     },
-    phone: order.customer.phone,
+    phone: order.customer.contact[0].phone,
     msg: resolveOrderText(order),
     type: {
       origin: "system",
@@ -59,7 +59,7 @@ export function trucksms(order: Order, omcId: string) {
       origin: "system",
       reason: "ordermoved"
     },
-    phone: order.customer.phone
+    phone: order.customer.contact[0].phone
   };
   return firestore()
     .collection("omc")
@@ -77,7 +77,7 @@ export function driverchangedsms(order: Order, omcId: string) {
       sent: false,
       delivered: false
     },
-    phone: order.customer.phone,
+    phone: order.customer.contact[0].phone,
     greeting: "Hujambo",
     company: order.customer,
     msg: text,
@@ -103,7 +103,7 @@ export function truckchangesdsms(order: Order, omcId: string) {
       delivered: false
     },
     greeting: "Hujambo",
-    company: order.customer, phone: order.customer.phone,
+    company: order.customer, phone: order.customer.contact[0].phone,
 
     msg: text,
     type: {

@@ -24,7 +24,7 @@ import { readConfig } from './tasks/crud/daudi/readConfig';
 import { DaudiCustomer } from './models/Daudi/customer/Customer';
 import { updateCustomer } from './tasks/crud/qbo/customer/update';
 import { OrderCreate } from './models/Cloud/OrderCreate';
-import { creteOrder } from './tasks/crud/daudi/Order';
+import { creteOrder, updateOrder } from './tasks/crud/daudi/Order';
 
 admin.initializeApp(functions.config().firebase);
 admin.firestore().settings({ timestampsInSnapshots: true });
@@ -47,10 +47,13 @@ exports.createEstimate = functions.https.onCall((data: OrderCreate, context) => 
   return createQbo(data.omcId, data.config, data.environment).then(async result => {
     console.log(result)
     const est = new createEstimate(data.order, result, data.config, data.environment)
-    return result.createEstimate(est.formulateEstimate()).then(() => {
+    return result.createEstimate(est.formulateEstimate()).then((createResult) => {
       /**
        * Only send sn SMS when estimate creation is complete
        * Make the two processes run parallel so that none is blocking
+       */
+      /**
+       * @todo update the Estimate ID
        */
       return Promise.all([ordersms(data.order, data.omcId), validorderupdate(data.order, result), creteOrder(data.order, data.omcId)])
     });
@@ -61,17 +64,21 @@ exports.createEstimate = functions.https.onCall((data: OrderCreate, context) => 
 /**
  * create an order from the client directly
  */
-exports.approveInvoice = functions.https.onCall((data: OrderCreate, context) => {
+exports.createInvoice = functions.https.onCall((data: OrderCreate, context) => {
 
   return createQbo(data.omcId, data.config, data.environment).then(async result => {
     console.log(result)
     const inv = new createInvoice(data.order, result, data.config, data.environment)
-    return result.createInvoice(inv.formulateInvoice()).then(() => {
+    return result.createInvoice(inv.formulateInvoice()).then((createResult) => {
       /**
        * Only send sn SMS when invoice creation is complete
        * Make the two processes run parallel so that none is blocking
        */
-      return Promise.all([ordersms(data.order, data.omcId), validorderupdate(data.order, result)]);
+      /**
+       * @todo update the invoice id
+       */
+      data.order.stage = 2
+      return Promise.all([ordersms(data.order, data.omcId), validorderupdate(data.order, result), updateOrder(data.order, data.omcId)]);
     });
   })
 

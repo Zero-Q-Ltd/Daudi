@@ -4,24 +4,22 @@
     <div fxLayout fxLayout.xs="column" fxLayoutAlign="center" fxLayoutGap="10px" fxLayoutGap.xs="0">
       <div fxFlex>
         <mat-form-field class="full-width">
-          <input #truckDN (input)="truckDN.value=$event.target.value.toUpperCase()" [(ngModel)]="truck.drivername"
-                 matInput name="driverName"
-                 placeholder="Driver Name" required>
+          <input #truckDN (input)="truckDN.value=$event.target.value.toUpperCase()"
+            [(ngModel)]="order.truck.driverdetail.name" matInput name="driverName" placeholder="Driver Name" required>
         </mat-form-field>
       </div>
       <div fxFlex>
         <mat-form-field class="full-width">
-          <input #truckDriverId="ngModel" [(ngModel)]="truck.driverid" matInput name="driverId" placeholder="Driver ID"
-                 required>
+          <input #truckDriverId="ngModel" [(ngModel)]="order.truck.driverdetail.id" matInput name="driverId"
+            placeholder="Driver ID" required>
         </mat-form-field>
 
       </div>
       <div fxFlex>
         <mat-form-field class="full-width">
           <!-- #truckReg (input)="truckReg.value=$event.target.value.toUpperCase()" -->
-          <input #truckReg="ngModel" [(ngModel)]="truck.numberplate" [textMask]="{mask: mask}" matInput name="truckReg"
-                 placeholder="Number Plate"
-                 required style="text-transform:uppercase;">
+          <input #truckReg="ngModel" [(ngModel)]="order.truck.truckdetail.numberplate" [textMask]="{mask: mask}"
+            matInput name="truckReg" placeholder="Number Plate" required style="text-transform:uppercase;">
         </mat-form-field>
 
       </div>
@@ -29,25 +27,22 @@
     <div fxLayout fxLayout.xs="column" fxLayoutAlign="center" fxLayoutGap="10px" fxLayoutGap.xs="0">
       <div *ngFor="let fueltype of fueltypesArray" fxFlex>
         <span [matTooltipPosition]="position2" class="btn btn-{{fueltype}} btn-block"
-              matTooltip="{{fueltype | uppercase}}">
-          {{order.fuel[fueltype].qty - truck.fuel[fueltype].qty || 0}}</span>
+          matTooltip="{{fueltype | uppercase}}">
+          <!-- {{order.fuel[fueltype].qty - truck.fuel[fueltype].qty || 0}} -->
+        </span>
       </div>
 
     </div>
     <br>
     <div fxLayout fxLayout.xs="column" fxLayoutAlign="center" fxLayoutGap="20px" fxLayoutGap.xs="0">
       <div *ngFor="let fueltype of fueltypesArray" fxFlex>
-        <mat-form-field *ngFor="let compartment of truck.compartments; let i = index" class="full-width">
+        <mat-form-field *ngFor="let compartment of order.truck.compartments; let i = index" class="full-width">
           <!--The following two lines of code binding the model and model change MUST remain in this EXACT order, otherwise the logic doesnt work as the model change is executed before binding the model-->
           <!--Consider using reactive forms instead-->
-          <input [(ngModel)]="truck.compartments[i].qty"
-                 (ngModelChange)="setfueltype(i, truck.compartments[i].qty> 0 ? fueltype : null)"
-                 [disabled]="truck.fuel[fueltype].qty ? (compartment.fueltype  && compartment.fueltype !== fueltype ): !order.fuel[fueltype].qty"
-                 matInput
-                 min="0"
-                 name="{{fueltype}}+{{i}}" placeholder="C{{i+1}}"
-                 required
-                 type="number">
+          <input [(ngModel)]="order.truck.compartments[i].qty"
+            (ngModelChange)="setfueltype(i, order.truck.compartments[i].qty> 0 ? fueltype : null)"
+            [disabled]="order.fuel[fueltype].qty ? (compartment.fueltype  && compartment.fueltype !== fueltype ): !order.fuel[fueltype].qty"
+            matInput min="0" name="{{fueltype}}+{{i}}" placeholder="C{{i+1}}" required type="number">
           <mat-hint *ngIf="compartment.fueltype && compartment.fueltype !== fueltype" align="start" class="text-danger">
             <i>Loaded Fuel: {{compartment.fueltype}}</i>
           </mat-hint>
