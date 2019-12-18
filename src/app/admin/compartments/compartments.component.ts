@@ -4,7 +4,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material"; // added dial
 import { NotificationService } from "../../shared/services/notification.service";
 import { FormControl, Validators } from "@angular/forms";
 import { Order } from "../../models/Daudi/order/Order";
-import { emptytruck, Truck } from "../../models/Daudi/order/Truck";
+import { emptytruck, Truck, emptyTruckStageData } from "../../models/Daudi/order/Truck";
 import { AdminService } from "../services/core/admin.service";
 import { OrdersService } from "../services/orders.service";
 import { DepotService } from "../services/core/depot.service";
@@ -42,13 +42,14 @@ export class CompartmentsComponent implements OnInit, OnDestroy {
     private depotservice: DepotService,
     private dialogRef: MatDialogRef<OrderDetailsComponent>,
     private adminservice: AdminService) {
-    for (let i = 0; i < 8; i++) {
+    for (let i = 0; i < 7; i++) {
       this.order.truck.compartments[i] = {
         position: i,
         fueltype: null,
         qty: 0,
       };
     }
+    console.log(this.order);
   }
 
 
@@ -107,15 +108,12 @@ export class CompartmentsComponent implements OnInit, OnDestroy {
     if (errorcheck) {
       return false;
     } else {
-
+      this.order.truck.stagedata[0] = { ...emptyTruckStageData };
       this.order.truck.stagedata[0].user = this.adminservice.createuserobject();
-      // this.order.truck.numberplate = this.order.truck.numberplate ? this.order.truck.numberplate.toUpperCase() : null;
-      // this.order.truck.drivername = this.order.truck.drivername ? this.order.truck.drivername.toUpperCase() : null;
+      this.order.truck.truckdetail.numberplate = this.order.truck.truckdetail.numberplate ? this.order.truck.truckdetail.numberplate.toUpperCase() : null;
+      this.order.truck.driverdetail.name = this.order.truck.driverdetail.name ? this.order.truck.driverdetail.name.toUpperCase() : null;
 
-      // this.order.truck.notifications = this.order.notifications;
       this.order.truck.stage = 0;
-      // this.order.truck.isPrinted = false;
-
       this.order.loaded = true;
       return this.dialogRef.close({ order: this.order, truck: this.order.truck });
     }

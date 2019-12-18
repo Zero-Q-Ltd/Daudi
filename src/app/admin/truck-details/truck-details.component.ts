@@ -207,11 +207,11 @@ export class TruckDetailsComponent implements OnInit, OnDestroy {
   }
 
   approveTruck() {
-    // const dialogRef = this.dialog.open(BatchesSelectorComponent, {
-    //   role: "dialog",
-    //   data: this.clickedtruck.Id,
-    //   width: "80%"
-    // });
+    const dialogRef = this.dialog.open(BatchesSelectorComponent, {
+      role: "dialog",
+      data: this.order.Id,
+      width: "80%"
+    });
 
   }
 

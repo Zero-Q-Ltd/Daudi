@@ -257,17 +257,15 @@ export class OrdersTableComponent implements OnInit, OnDestroy {
       if (!result) {
         return;
       }
-      const batchaction = this.db.firestore.batch();
-      // batchaction.set(this.truckservice.createTruck(result.truck.Id), result.truck);
-      // batchaction.update(this.orderservice.updateorder(result.order.Id), result.order);
-      // batchaction.commit().then(result => {
-      //   this.notification.notify({
-      //     body: "Truck created",
-      //     alert_type: "success",
-      //     title: "Success",
-      //     duration: 2000
-      //   });
-      // });
+
+      this.orderservice.updateorder(result.order.Id, result.order).then(result => {
+        this.notification.notify({
+          body: "Truck created",
+          alert_type: "success",
+          title: "Success",
+          duration: 2000
+        });
+      });
     });
 
   }
