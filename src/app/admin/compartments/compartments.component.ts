@@ -20,7 +20,7 @@ export class CompartmentsComponent implements OnInit, OnDestroy {
   position = "left";
   position2 = "above";
   saving = false;
-  @Input() order: Order;
+  // @Input() order: Order;
   mask = [/^[kK]+$/i, /^[a-zA-Z]+$/i, /^[a-zA-Z]+$/i, " ", /\d/, /\d/, /\d/, /^[a-zA-Z]+$/i];
   fueltypesArray = FuelNamesArray;
   nameControl: FormControl = new FormControl("", [Validators.required]);
@@ -36,12 +36,19 @@ export class CompartmentsComponent implements OnInit, OnDestroy {
 
   // added to constructor to inject the data
   constructor(
+    @Inject(MAT_DIALOG_DATA) public order: Order,
     private notification: NotificationService,
     private orderservice: OrdersService,
     private depotservice: DepotService,
     private dialogRef: MatDialogRef<OrderDetailsComponent>,
     private adminservice: AdminService) {
-
+    for (let i = 0; i < 8; i++) {
+      this.order.truck.compartments[i] = {
+        position: i,
+        fueltype: null,
+        qty: 0,
+      };
+    }
   }
 
 

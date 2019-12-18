@@ -98,7 +98,7 @@ import { CreateComponent } from "./admin/pages/payments/create/create.component"
 import { AseComponent } from "./admin/ase/ase.component";
 import { CalculationsComponent } from "./create-order/components/calculations/calculations.component";
 import { ContactFormComponent } from "./create-order/components/contact-form/contact-form.component";
-import { PriceComparisonComponent } from './price-comparison/price-comparison.component';
+import { PriceComparisonComponent } from "./price-comparison/price-comparison.component";
 
 
 @NgModule({
@@ -220,6 +220,7 @@ import { PriceComparisonComponent } from './price-comparison/price-comparison.co
     ColumnsCustomizerComponent,
     CustomerManagementComponent,
     ConfirmDepotComponent,
+    CompartmentsComponent,
     CalendarRangesComponent]
 })
 export class AdminModule {

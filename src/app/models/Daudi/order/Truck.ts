@@ -1,10 +1,12 @@
 import { AssociatedUser } from "../admin/AssociatedUser";
 import { TruckStages } from "./TruckStages";
 import { MyTimestamp } from "../../firestore/firestoreTypes";
+import { FuelType } from "./../../Daudi/fuel/FuelType";
 
 
 interface Compartment {
-  fueltype: string;
+  position: number;
+  fueltype: FuelType;
   qty: number;
 }
 
