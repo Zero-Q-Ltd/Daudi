@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from "@angular/core";
 import { MatPaginator, MatTableDataSource } from "@angular/material";
 import { Entry, emptybatches } from "../../../../models/Daudi/fuel/Entry";
 import { DepotService } from "../../../services/core/depot.service";
-import { EntriesService } from "../../../services/batches.service";
+import { EntriesService } from "../../../services/entries.service";
 import { NotificationService } from "../../../../shared/services/notification.service";
 import { AngularFireFunctions } from "@angular/fire/functions";
 import { ReplaySubject } from "rxjs";

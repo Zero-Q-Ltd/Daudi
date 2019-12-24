@@ -5,15 +5,15 @@
   <table class="table table-stripped">
     <thead class="thead-primary">
       <tr>
-        <th> Batch ID</th>
-        <th> Batch #</th>
-        <th> Batch Qty</th>
+        <th> Entry ID</th>
+        <th> Entry #</th>
+        <th> Entry Qty</th>
         <th> Accum Qty</th>
         <th> Loaded Qty</th>
         <th> Available Qty</th>
         <th> Qty to be Drawn</th>
-        <th> New Batch Qty</th>
-        <th> New Batch Status</th>
+        <th> New Entry Qty</th>
+        <th> New Entry Status</th>
       </tr>
     </thead>
 
@@ -26,17 +26,17 @@
         <td>{{entry.loadedqty}}</td>
         <td>{{entry.qty + entry.accumulated.usable - entry.loadedqty}}</td>
         <td>
-          {{drawnbatch[fueltype]['batch' + resolveindex(i)].name == entry.batch ?
-          drawnbatch[fueltype]['batch' + resolveindex(i)].qtydrawn : 0 }}
+          {{drawnEntry[fueltype]['batch' + resolveindex(i)].name == entry.batch ?
+          drawnEntry[fueltype]['batch' + resolveindex(i)].qtydrawn : 0 }}
         </td>
         <td>
-          {{(drawnbatch[fueltype]['batch' + resolveindex(i)].name == entry.batch ?
-          drawnbatch[fueltype]['batch' + resolveindex(i)].remainqty : 0) }}
+          {{(drawnEntry[fueltype]['batch' + resolveindex(i)].name == entry.batch ?
+          drawnEntry[fueltype]['batch' + resolveindex(i)].remainqty : 0) }}
         </td>
         <td>
           <button class="btn btn-outline-success btn-sm">
-            {{drawnbatch[fueltype]['batch' + resolveindex(i)].name == entry.batch ?
-            drawnbatch[fueltype]['batch' + resolveindex(i)].resultstatus ? 'Active' : 'Inactive' : 'Active' }}
+            {{drawnEntry[fueltype]['batch' + resolveindex(i)].name == entry.batch ?
+            drawnEntry[fueltype]['batch' + resolveindex(i)].resultstatus ? 'Active' : 'Inactive' : 'Active' }}
           </button>
         </td>
       </tr>

@@ -9,7 +9,7 @@ import { FuelType, FuelNamesArray, } from "../../models/Daudi/fuel/FuelType";
 import { emptyorder, Order } from "../../models/Daudi/order/Order";
 import { AdminService } from "../services/core/admin.service";
 import { DepotService } from "../services/core/depot.service";
-import { EntriesService } from "../services/batches.service";
+import { EntriesService } from "../services/entries.service";
 import { OrdersService } from "../services/orders.service";
 import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";

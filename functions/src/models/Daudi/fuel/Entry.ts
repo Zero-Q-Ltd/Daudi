@@ -7,7 +7,7 @@ export interface Entry {
 
   Amount: number;
   date: MyTimestamp;
-  batch: string;
+  entry: string;
   depot: {
     name: string
     Id: string
@@ -31,20 +31,22 @@ export interface Entry {
     transfered: number
 
   };
+  QbId: string;
   // vessel:{
 
   // }
   fuelType: FuelType;
   price: number;
   Id: string;
-  active: number; // 1 for active, 0 for inactive
+  active: boolean; // 1 for active, 0 for inactive
 }
 
 export const emptybatches: Entry = {
   Id: null,
   fuelType: null,
+  QbId: null,
   Amount: null,
-  batch: null,
+  entry: null,
   price: 0,
   qty: {
     total: 0,
@@ -63,6 +65,6 @@ export const emptybatches: Entry = {
     name: null,
     Id: null
   },
-  active: 1,
+  active: false,
   date: new MyTimestamp(0, 0)
 };

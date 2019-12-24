@@ -8,7 +8,7 @@ import { FormControl } from "@angular/forms";
 import { Router } from "@angular/router";
 import { MatSnackBar } from "@angular/material";
 import { DepotService } from "../../services/core/depot.service";
-import { EntriesService } from "../../services/batches.service";
+import { EntriesService } from "../../services/entries.service";
 import { StatsService } from "../../services/stats.service";
 import { PricesService } from "../../services/prices.service";
 import { Entry } from "../../../models/Daudi/fuel/Entry";
