@@ -1,46 +1,45 @@
-<h2 mat-dialog-title>Truck for {{truck.company.name}} <span class="color-pms">PMS:</span>{{truck.fuel.pms.qty}} <span
-  class="color-ago">AGO:</span> {{truck.fuel.ago.qty}} <span class="color-ik">IK:</span> {{truck.fuel.ik.qty}}</h2>
+<h2 mat-dialog-title>Truck for {{order.customer.name}} <span class="color-pms">PMS:</span>{{order.fuel.pms.qty}} <span
+    class="color-ago">AGO:</span> {{order.fuel.ago.qty}} <span class="color-ik">IK:</span> {{order.fuel.ik.qty}}</h2>
 
 <mat-dialog-content *ngIf="donecalculating">
   <table class="table table-stripped">
     <thead class="thead-primary">
-    <tr>
-      <th> Batch ID</th>
-      <th> Batch #</th>
-      <th> Batch Qty</th>
-      <th> Accum Qty</th>
-      <th> Loaded Qty</th>
-      <th> Available Qty</th>
-      <th> Qty to be Drawn</th>
-      <th> New Batch Qty</th>
-      <th> New Batch Status</th>
-    </tr>
+      <tr>
+        <th> Batch ID</th>
+        <th> Batch #</th>
+        <th> Batch Qty</th>
+        <th> Accum Qty</th>
+        <th> Loaded Qty</th>
+        <th> Available Qty</th>
+        <th> Qty to be Drawn</th>
+        <th> New Batch Qty</th>
+        <th> New Batch Status</th>
+      </tr>
     </thead>
 
-    <tbody *ngFor="let fueltype of fueltypesArray"
-           [ngClass]="{ 'mat-elevation-z4' :  truck.fuel[fueltype].qty > 0} ">
-    <tr *ngFor="let batch of batches[fueltype];let i = index">
-      <td>{{batch.Id}}</td>
-      <td><span class="color-{{fueltype}}">{{batch.batch}}</span></td>
-      <td>{{batch.qty}}</td>
-      <td>{{batch.accumulated.usable}}</td>
-      <td>{{batch.loadedqty}}</td>
-      <td>{{batch.qty + batch.accumulated.usable - batch.loadedqty}}</td>
-      <td>
-        {{drawnbatch[fueltype]['batch' + resolveindex(i)].name == batch.batch ?
+    <tbody *ngFor="let fueltype of fueltypesArray" [ngClass]="{ 'mat-elevation-z4' :  order.fuel[fueltype].qty > 0} ">
+      <tr *ngFor="let entry of depotEntries[fueltype];let i = index">
+        <td>{{entry.Id}}</td>
+        <td><span class="color-{{fueltype}}">{{entry.batch}}</span></td>
+        <td>{{entry.qty}}</td>
+        <td>{{entry.accumulated.usable}}</td>
+        <td>{{entry.loadedqty}}</td>
+        <td>{{entry.qty + entry.accumulated.usable - entry.loadedqty}}</td>
+        <td>
+          {{drawnbatch[fueltype]['batch' + resolveindex(i)].name == entry.batch ?
           drawnbatch[fueltype]['batch' + resolveindex(i)].qtydrawn : 0 }}
-      </td>
-      <td>
-        {{(drawnbatch[fueltype]['batch' + resolveindex(i)].name == batch.batch ?
+        </td>
+        <td>
+          {{(drawnbatch[fueltype]['batch' + resolveindex(i)].name == entry.batch ?
           drawnbatch[fueltype]['batch' + resolveindex(i)].remainqty : 0) }}
-      </td>
-      <td>
-        <button class="btn btn-outline-success btn-sm">
-          {{drawnbatch[fueltype]['batch' + resolveindex(i)].name == batch.batch ?
+        </td>
+        <td>
+          <button class="btn btn-outline-success btn-sm">
+            {{drawnbatch[fueltype]['batch' + resolveindex(i)].name == entry.batch ?
             drawnbatch[fueltype]['batch' + resolveindex(i)].resultstatus ? 'Active' : 'Inactive' : 'Active' }}
-        </button>
-      </td>
-    </tr>
+          </button>
+        </td>
+      </tr>
     </tbody>
   </table>
 
@@ -55,6 +54,6 @@
   </button>
   <mat-spinner *ngIf='saving || !donecalculating || fetchingbatches' [diameter]="27"></mat-spinner>
   <button (click)="approvetruck()" [disabled]="saving || !donecalculating" class="float-right" color="primary"
-          mat-stroked-button>APPROVE
+    mat-stroked-button>APPROVE
   </button>
 </div>

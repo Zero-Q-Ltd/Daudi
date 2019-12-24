@@ -1,13 +1,13 @@
-<mat-card-content *ngIf="!loadingtruck">
+<mat-card-content>
   <div>
     <span [matTooltipPosition]="position" class="truck-details" matTooltip="Driver Name">
-      <i class="fa fa-user color-primary"></i>: {{order.truck?.drivername}}
+      <i class="fa fa-user color-primary"></i>: {{order.truck?.driverdetail.name}}
     </span>
     <span [matTooltipPosition]="position" class="truck-details" matTooltip="Driver ID">
-      <i class="fa fa-id-card-o color-primary"></i>: {{order.truck?.driverid}}
+      <i class="fa fa-id-card-o color-primary"></i>: {{order.truck?.driverdetail.id}}
     </span>
     <span [matTooltipPosition]="position" class="truck-details" matTooltip="Truck Number Plate">
-      <i class="fa fa-truck color-primary"></i>: {{order.truck?.numberplate}}
+      <i class="fa fa-truck color-primary"></i>: {{order.truck?.truckdetail.numberplate}}
     </span>
 
     <span class="float-right">
@@ -23,7 +23,7 @@
       </button>
       <mat-slide-toggle (toggleChange)="freezetruck(order.truck)" [(ngModel)]="order.truck.frozen"
         [disabled]="order.stage!=4"
-        matTooltip="{{order.stage!=4 ? 'You can only freeze a truck that has been approved, and not complete' : ''}}">
+        matTooltip="{{order.stage!=4 ? 'You can only freeze a truck that has been approved, but not complete' : ''}}">
         Freeze</mat-slide-toggle>
       <button (click)="approveTruck()" *ngIf="order.truck?.stage === 0" mat-icon-button>
         <span [matTooltipPosition]="position2" class="nav-icon nav-dot material-icons color-success"
@@ -234,26 +234,26 @@
         <div class="col-sm-4">
           <span class="batch-table color-pms">
             <mat-icon>local_gas_station</mat-icon>
-            PMS : {{order.truck.fuel.pms.qty}}
+            PMS : {{order.fuel.pms.qty}}
           </span>
           <table class="table table-stripped">
             <thead class="thead-primary">
               <tr class="color-pms">
-                <th>{{order.truck?.fuel.pms.batches["0"]?.Name || 'Batch1'}}</th>
-                <th>{{order.truck?.fuel.pms.batches["1"]?.Name || 'Batch2'}}</th>
+                <th>{{order.fuel.pms.batches["0"]?.Name || 'Batch1'}}</th>
+                <th>{{order.fuel.pms.batches["1"]?.Name || 'Batch2'}}</th>
                 <th>Total</th>
                 <th>Observed</th>
               </tr>
             </thead>
             <tbody>
               <tr class="color-pms">
-                <td>{{order.truck?.fuel.pms.batches["0"]?.qty}}</td>
-                <td>{{order.truck?.fuel.pms.batches["1"]?.qty}}</td>
-                <td>{{order.truck.fuel.pms.qty}}</td>
+                <td>{{order.fuel.pms.batches["0"]?.qty}}</td>
+                <td>{{order.fuel.pms.batches["1"]?.qty}}</td>
+                <td>{{order.fuel.pms.qty}}</td>
                 <td>
-                  {{order.truck?.fuel.pms.batches["1"]?.qty ?
-                  order.truck?.fuel.pms.batches["1"]?.observed :
-                  order.truck?.fuel.pms.batches["0"]?.observed}}
+                  {{order.fuel.pms.batches["1"]?.qty ?
+                  order.fuel.pms.batches["1"]?.observed :
+                  order.fuel.pms.batches["0"]?.observed}}
                 </td>
               </tr>
 
@@ -263,25 +263,25 @@
         <div class="col-sm-4">
           <span class="batch-table color-ago">
             <mat-icon>local_gas_station</mat-icon>
-            AGO : {{order.truck.fuel.ago.qty}}
+            AGO : {{order.fuel.ago.qty}}
           </span>
           <table class="table table-stripped">
             <thead class="thead-primary">
               <tr class="color-ago">
-                <th>{{order.truck?.fuel.ago.batches["0"]?.Name || 'Batch1'}}</th>
-                <th>{{order.truck?.fuel.ago.batches["1"]?.Name || 'Batch2'}}</th>
+                <th>{{order.fuel.ago.batches["0"]?.Name || 'Batch1'}}</th>
+                <th>{{order.fuel.ago.batches["1"]?.Name || 'Batch2'}}</th>
                 <th>Total</th>
                 <th>Observed</th>
               </tr>
             </thead>
             <tbody>
               <tr class="color-ago">
-                <td>{{order.truck?.fuel.ago.batches["0"]?.qty}}</td>
-                <td>{{order.truck?.fuel.ago.batches["1"]?.qty}}</td>
-                <td>{{order.truck.fuel.ago.qty}}</td>
-                <td>{{order.truck?.fuel.ago.batches["1"]?.qty ?
-                  order.truck?.fuel.ago.batches["1"]?.observed :
-                  order.truck?.fuel.ago.batches["0"]?.observed}}
+                <td>{{order.fuel.ago.batches["0"]?.qty}}</td>
+                <td>{{order.fuel.ago.batches["1"]?.qty}}</td>
+                <td>{{order.fuel.ago.qty}}</td>
+                <td>{{order.fuel.ago.batches["1"]?.qty ?
+                  order.fuel.ago.batches["1"]?.observed :
+                  order.fuel.ago.batches["0"]?.observed}}
                 </td>
               </tr>
 
@@ -291,25 +291,25 @@
         <div class="col-sm-4">
           <span class="batch-table color-ik">
             <mat-icon>local_gas_station</mat-icon>
-            IK : {{order.truck.fuel.ik.qty}}
+            IK : {{order.fuel.ik.qty}}
           </span>
           <table class="table table-stripped">
             <thead class="thead-primary">
               <tr class="color-ik">
-                <th>{{order.truck?.fuel.ik.batches["0"]?.Name || 'Batch1'}}</th>
-                <th>{{order.truck?.fuel.ik.batches["1"]?.Name || 'Batch2'}}</th>
+                <th>{{order.fuel.ik.batches["0"]?.Name || 'Batch1'}}</th>
+                <th>{{order.fuel.ik.batches["1"]?.Name || 'Batch2'}}</th>
                 <th>Total</th>
                 <th>Observed</th>
               </tr>
             </thead>
             <tbody>
               <tr class="color-ik">
-                <td>{{order.truck?.fuel.ik.batches["0"]?.qty}}</td>
-                <td>{{order.truck?.fuel.ik.batches["1"]?.qty}}</td>
-                <td>{{order.truck.fuel.ik.qty}}</td>
-                <td>{{order.truck?.fuel.ik.batches["1"]?.qty ?
-                  order.truck?.fuel.ik.batches["1"]?.observed :
-                  order.truck?.fuel.ik.batches["0"]?.observed}}
+                <td>{{order.fuel.ik.batches["0"]?.qty}}</td>
+                <td>{{order.fuel.ik.batches["1"]?.qty}}</td>
+                <td>{{order.fuel.ik.qty}}</td>
+                <td>{{order.fuel.ik.batches["1"]?.qty ?
+                  order.fuel.ik.batches["1"]?.observed :
+                  order.fuel.ik.batches["0"]?.observed}}
                 </td>
               </tr>
 
@@ -320,6 +320,3 @@
     </mat-expansion-panel>
   </mat-accordion>
 </mat-card-content>
-<div *ngIf="loadingtruck" class="full-div">
-  <mat-spinner class="katikati"></mat-spinner>
-</div>

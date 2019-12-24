@@ -10,7 +10,7 @@ import { skipWhile } from "rxjs/operators";
 @Injectable({
   providedIn: "root"
 })
-export class BatchesService {
+export class EntriesService {
   fetchingbatches = new BehaviorSubject(true);
   depotbatches: {
     pms: BehaviorSubject<Array<Entry>>,
@@ -47,7 +47,7 @@ export class BatchesService {
       }
       const subscriprion = this.db.firestore.collection("omc")
         .doc(this.omc.currentOmc.value.Id)
-        .collection("batch")
+        .collection("entry")
         .orderBy("date", "asc")
         .where("status", "==", 1)
         .where("type", "==", fueltype)
@@ -60,7 +60,7 @@ export class BatchesService {
             return value as Entry;
           }));
         });
-      this.subscriptions.set(`${fueltype}batch`, subscriprion);
+      this.subscriptions.set(`${fueltype}entry`, subscriprion);
     });
   }
 
@@ -74,7 +74,7 @@ export class BatchesService {
 
     return this.db.firestore.collection("omc")
       .doc(this.omc.currentOmc.value.Id)
-      .collection("entries")
+      .collection("entry")
       .where("type", "==", type)
       .orderBy("status", "desc");
   }
@@ -82,7 +82,7 @@ export class BatchesService {
   updatebatch(batchid: string) {
     return this.db.firestore.collection("omc")
       .doc(this.omc.currentOmc.value.Id)
-      .collection("entries")
+      .collection("entry")
       .doc(batchid);
   }
 }

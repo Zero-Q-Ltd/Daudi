@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { BatchesSelectorComponent } from "./entries-selector.component";
+import { EntriesSelectorComponent } from "./entries-selector.component";
 
 describe("BatchesSelectorComponent", () => {
-  let component: BatchesSelectorComponent;
-  let fixture: ComponentFixture<BatchesSelectorComponent>;
+  let component: EntriesSelectorComponent;
+  let fixture: ComponentFixture<EntriesSelectorComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [BatchesSelectorComponent]
+      declarations: [EntriesSelectorComponent]
     })
       .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(BatchesSelectorComponent);
+    fixture = TestBed.createComponent(EntriesSelectorComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
