@@ -120,7 +120,7 @@ export class CustomerManagementComponent implements OnInit, OnDestroy {
             name: company.name,
             krapin: company.krapin
           },
-          phone: company.contact[0].phone,
+          contact: company.contact,
           type: {
             reason: null,
             origin: "custom" as "custom"

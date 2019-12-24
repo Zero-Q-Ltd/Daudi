@@ -85,7 +85,7 @@ export class OrdersService {
       if (index > -1) {
         this.queuedorders.value.splice(index, 1);
       }
-      console.log("error creating order", reason);
+      console.error("error creating order", reason);
       /***
        * error creating order
        */

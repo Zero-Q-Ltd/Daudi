@@ -8,9 +8,9 @@
 
       </div>
       <div fxFlex="row">
-        <app-contact-form [(initData)]="temporder" [newOrder]="newOrder" (formValid)="contactFormValid($event)">
+        <app-contact-form [(initData)]="temporder" [newOrder]="newOrder" (formValid)="validContactForm = $event">
         </app-contact-form>
-        <app-calculations [(initData)]="temporder" [newOrder]="newOrder" (formValid)="calaculationsFormValid($event)">
+        <app-calculations [(initData)]="temporder" [newOrder]="newOrder" (formValid)="validCalculationForm = $event">
         </app-calculations>
         <div>
           <div class="" fxLayout fxLayout.xs="column" fxLayoutAlign="center" fxLayoutGap="10px" fxLayoutGap.xs="0">
@@ -24,6 +24,7 @@
             <button (click)="checkOrder(false)" [disabled]=" !validContactForm || !validCalculationForm"
               class="btn-default" mat-button>SAVE AND NEW
             </button>
+            <!-- {{validContactForm }}{{validCalculationForm}} -->
           </div>
           <div class="btn-group" role="group" style="width: 100%;" *ngIf="!newOrder">
             <button (click)="checkOrder(false)" [disabled]=" !validContactForm || !validCalculationForm || orderError"

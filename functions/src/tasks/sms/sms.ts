@@ -16,16 +16,19 @@ const debug = true;
 //[END AfricasTalking credentials]
 
 export function sendsms(smsdata: SMS, smsid: string) {
-  return sendMessage(
-    "+254" + smsdata.phone,
-    `${smsdata.greeting} ${smsdata.company.name} ${smsdata.msg}`
-  ).then(result => {
-    return admin
-      .firestore()
-      .collection("sms")
-      .doc(smsid)
-      .update({ status: { sent: true, delivered: false } });
-  });
+  return Promise.all(smsdata.contact.map(contact => {
+    return sendMessage(
+      "+254" + contact.phone,
+      `${smsdata.greeting} ${smsdata.company.name} ${smsdata.msg}`
+    ).then(result => {
+      return admin
+        .firestore()
+        .collection("sms")
+        .doc(smsid)
+        .update({ status: { sent: true, delivered: false } });
+    });
+  }))
+
 }
 
 function sendMessage(to: string, message: string) {

@@ -16,7 +16,7 @@ export class SendMsgComponent implements OnInit {
   dialogProperties: object = {}; // added to sent data via dialog
   saving = false;
   bulk = false;
-  tempbulkmodel: SMS = emptysms;
+  tempbulkmodel: SMS = { ...emptysms };
 
   constructor(
     private dialog: MatDialog,
@@ -25,6 +25,7 @@ export class SendMsgComponent implements OnInit {
     private notificationService: NotificationService,
     private db: AngularFirestore
   ) {
+    console.log(tempsms);
     if (this.tempsms instanceof Array) {
       this.bulk = true;
       this.tempbulkmodel.greeting = "Jambo";
@@ -40,7 +41,7 @@ export class SendMsgComponent implements OnInit {
     if (this.tempsms instanceof Array) {
       const batchaction = this.db.firestore.batch();
       this.tempsms.forEach((sms, index) => {
-        if (this.validatephone(sms.phone)) {
+        if (this.validatephone(sms.contact[0].phone)) {
           sms.greeting = this.tempbulkmodel.greeting;
           sms.msg = `ID ${sms.company.Id} ${this.tempbulkmodel.msg}`;
           sms.type = {

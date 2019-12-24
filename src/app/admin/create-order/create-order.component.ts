@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from "@angular/core";
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild, OnChanges } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { MatDialog, MatSort, MatTableDataSource } from "@angular/material";
 // import our interface
@@ -142,7 +142,6 @@ export class CreateOrderComponent implements OnDestroy {
       });
   }
 
-
   ngOnDestroy(): void {
     this.comopnentDestroyed.next(true);
     this.unsubscribeAll();
@@ -151,13 +150,6 @@ export class CreateOrderComponent implements OnDestroy {
     this.subscriptions.forEach(value => {
       value();
     });
-  }
-
-  contactFormValid(event: boolean) {
-    this.validContactForm = event;
-  }
-  calaculationsFormValid(event: boolean) {
-    this.validCalculationForm = event;
   }
 
   openmaps() {
@@ -223,6 +215,7 @@ export class CreateOrderComponent implements OnDestroy {
     this.temporder.stage = 1;
     this.temporder.origin = "backend";
     this.temporder.QbConfig.departmentId = this.activedepot.config.QbId;
+    console.log(this.temporder);
     this.temporder.customer.krapin = this.temporder.customer.krapin.toLocaleUpperCase();
     this.temporder.stagedata["1"] = {
       user: this.adminservice.createuserobject(),
@@ -294,12 +287,6 @@ export class CreateOrderComponent implements OnDestroy {
       body: `This KRA pin is already used by ${companyused.name} Id ${companyused.QbId} `,
       alert_type: "error"
     });
-  }
-
-  contactFormChanges(event: { detail: CustomerDetail, kraModified: boolean }) {
-    console.log(event);
-    this.temporder.customer = event.detail;
-    this.kraModified = event.kraModified;
   }
 
   updatecompany() {

@@ -133,7 +133,7 @@ export class OrdersTableComponent implements OnInit, OnDestroy {
         name: clickedOrder.customer.name,
         krapin: clickedOrder.customer.krapin
       },
-      phone: clickedOrder.customer.contact[0].phone,
+      contact: clickedOrder.customer.contact,
       type: {
         reason: null,
         origin: "custom"

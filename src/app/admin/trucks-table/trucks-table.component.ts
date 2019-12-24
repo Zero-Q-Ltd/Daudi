@@ -115,7 +115,7 @@ export class TrucksTableComponent implements OnInit {
         reason: null,
         origin: "custom"
       },
-      phone: clickedOrder.customer.contact[0].phone,
+      contact: clickedOrder.customer.contact,
       greeting: "Jambo",
       msg: null,
       status: {

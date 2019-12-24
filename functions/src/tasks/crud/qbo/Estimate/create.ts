@@ -65,7 +65,7 @@ export class createEstimate {
                                     },
                                     Qty: this.orderdata.fuel[fuel].qty,
                                     TaxCodeRef: {
-                                        value: this.config.Qbo[this.environment].taxConfig.taxCode.Id
+                                        value: "TAX"
                                     },
                                     UnitPrice: this.orderdata.fuel[fuel].priceconfig.nonTaxprice
                                 }
@@ -82,7 +82,7 @@ export class createEstimate {
                                     },
                                     Qty: this.orderdata.fuel[fuel].qty,
                                     TaxCodeRef: {
-                                        value: this.config.Qbo[this.environment].taxConfig.taxCode.Id
+                                        value: "NON"
                                     },
                                     UnitPrice: 0
                                 }
@@ -142,5 +142,4 @@ export class createEstimate {
 
         return newEstimate;
     }
-
 }

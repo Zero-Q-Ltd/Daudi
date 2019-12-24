@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
+import { Component, OnInit, Input, Output, EventEmitter, OnChanges } from "@angular/core";
 import { OrderContactForm } from "./../../../../models/Daudi/forms/CreateOrder";
 import { Order } from "./../../../../models/Daudi/order/Order";
 import { CustomerDetail } from "../../../../models/Daudi/customer/CustomerDetail";
@@ -14,7 +14,7 @@ import { CustomerService } from "./../../../services/customers.service";
   templateUrl: "./contact-form.component.html",
   styleUrls: ["./contact-form.component.scss"]
 })
-export class ContactFormComponent implements OnInit {
+export class ContactFormComponent implements OnInit, OnChanges {
   @Input() initData: Order;
 
   @Input() newOrder: boolean;
@@ -105,8 +105,9 @@ export class ContactFormComponent implements OnInit {
       name: selectedcompany.name
     };
     // const kraModified = this.initData ? this.initData.customer.krapin === values.kraPin : false;
-    // this.formChangesResult.emit({ detail, kraModified });
-    // this.formChangesResult.emit({ detail, kraModified: false });
+    this.initData.customer = detail;
+    this.formValid.emit(this.contactForm.valid);
+    this.initDataChange.emit(this.initData);
   }
   ngOnChanges(changes: any) {
     if (!this.newOrder) {
