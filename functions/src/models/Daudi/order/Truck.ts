@@ -1,10 +1,13 @@
-import { AssociatedUser } from "../admin/AssociatedUser";
+import { AssociatedUser, inituser } from "../admin/AssociatedUser";
 import { TruckStages } from "./TruckStages";
 import { MyTimestamp } from "../../firestore/firestoreTypes";
+import { FuelType } from "./../../Daudi/fuel/FuelType";
+import { deepCopy } from "./../../utils/deepCopy";
 
 
 interface Compartment {
-  fueltype: string;
+  position: number;
+  fueltype: FuelType;
   qty: number;
 }
 
@@ -47,7 +50,7 @@ export interface StageData {
    */
   print?: {
     status: boolean,
-    MyTimestamp: MyTimestamp | Date;
+    timestamp: MyTimestamp | Date;
   };
   expiry: Array<Expiry>;
   /**
@@ -58,7 +61,12 @@ export interface StageData {
     broken: Array<string>
   };
 }
-
+export const emptyTruckStageData: StageData = {
+  expiry: [],
+  user: deepCopy<AssociatedUser>(inituser),
+  print: null,
+  seals: null
+};
 export const emptytruck: Truck = {
   stage: null,
   compartmentCount: null,
@@ -71,8 +79,12 @@ export const emptytruck: Truck = {
   truckdetail: {
     numberplate: null
   },
-  stagedata: null,
+  stagedata: {
+    0: deepCopy<StageData>(emptyTruckStageData),
+    1: deepCopy<StageData>(emptyTruckStageData),
+    2: deepCopy<StageData>(emptyTruckStageData),
+    3: deepCopy<StageData>(emptyTruckStageData),
+    4: deepCopy<StageData>(emptyTruckStageData),
+  },
   compartments: []
 };
-
-export let truckStagesarray = ["0", "1", "2", "3", "4", "5"];

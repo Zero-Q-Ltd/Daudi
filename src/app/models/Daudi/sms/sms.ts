@@ -1,4 +1,5 @@
 import { MyTimestamp } from "../../firestore/firestoreTypes";
+import { Contact } from "../customer/Contact";
 
 
 export interface SMS {
@@ -13,7 +14,7 @@ export interface SMS {
     Id: string,
     krapin: string
   };
-  phone: string;
+  contact: Contact[];
   msg: string;
   greeting: string;
   timestamp: MyTimestamp;
@@ -35,7 +36,7 @@ export const emptysms: SMS = {
     Id: null,
     krapin: null
   },
-  phone: null,
+  contact: [],
   msg: null,
   greeting: null,
   timestamp: new MyTimestamp(0, 0),

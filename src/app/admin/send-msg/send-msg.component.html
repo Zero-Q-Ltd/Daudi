@@ -11,8 +11,7 @@
       </div>
       <div class="col">
         <mat-form-field class="full-width">
-          <input disabled matInput name="contactName" placeholder="Contact Name"
-                 value="{{tempsms.company.contactname}}">
+          <input disabled matInput name="contactName" placeholder="Contact Name" value="{{tempsms.contact[0].name}}">
           <mat-icon matPrefix>perm_identity</mat-icon>
           <span matPrefix> &nbsp; </span>
         </mat-form-field>
@@ -20,7 +19,7 @@
       <div class="col">
         <mat-form-field class="full-width">
           <input disabled matInput name="companyPhone" placeholder="Phone number" type="tel"
-                 value="{{tempsms.company.phone}}">
+            value="{{tempsms.contact[0].phone}}">
           <mat-icon matPrefix>phone</mat-icon>
           <span matPrefix> &nbsp; +254 &nbsp;</span>
         </mat-form-field>
@@ -32,7 +31,7 @@
         <textarea [(ngModel)]="tempsms.greeting" matInput name="greeting" placeholder="Greeting"></textarea>
       </mat-form-field>
       <p>ID {{this.tempsms.company.QbId}}</p>
-      <mat-form-field class="full-width">
+      <mat-form-field class=" full-width">
         <textarea [(ngModel)]="tempsms.msg" matInput name="message" placeholder="Text Content"></textarea>
       </mat-form-field>
       <mat-form-field class="full-width">
@@ -48,7 +47,8 @@
       <div>
         Selected companies : (Deleted Companies are automatically omitted)
         <mat-chip-list #chipList>
-          <mat-chip *ngFor="let sms of tempsms" [color]="validatephone(sms.company.phone)? 'primary' : 'warn'" selected>
+          <mat-chip *ngFor="let sms of tempsms" [color]="validatephone(sms.company[0].phone)? 'primary' : 'warn'"
+            selected>
             {{sms.company.name}}
           </mat-chip>
         </mat-chip-list>

@@ -9,7 +9,7 @@ import { FuelType, FuelNamesArray, } from "../../models/Daudi/fuel/FuelType";
 import { emptyorder, Order } from "../../models/Daudi/order/Order";
 import { AdminService } from "../services/core/admin.service";
 import { DepotService } from "../services/core/depot.service";
-import { BatchesService } from "../services/batches.service";
+import { EntriesService } from "../services/entries.service";
 import { OrdersService } from "../services/orders.service";
 import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
@@ -35,8 +35,8 @@ interface batchContent {
 })
 
 
-export class BatchesSelectorComponent implements OnInit, OnDestroy {
-  depotbatches: {
+export class EntriesSelectorComponent implements OnInit, OnDestroy {
+  depotEntries: {
     pms: Array<Entry>,
     ago: Array<Entry>,
     ik: Array<Entry>
@@ -45,77 +45,14 @@ export class BatchesSelectorComponent implements OnInit, OnDestroy {
       ago: [],
       ik: []
     };
-  truck: Truck = Object.assign({}, emptytruck);
   displayedColumns: string[] = ["id", "batch", "totalqty", "accumulated", "loadedqty", "availableqty", "drawnqty", "remainingqty", "status"];
-  batches: {
-    pms: Array<Entry>
-    ago: Array<Entry>
-    ik: Array<Entry>
+
+  drawnEntry: {
+    [key in FuelType]: batchContent[]
   } = {
       pms: [],
       ago: [],
-      ik: []
-    };
-  drawnbatch: {
-    [key in FuelType]: {
-      batch0: batchContent,
-      batch1: batchContent
-    }
-  } = {
-      pms: {
-        batch0: {
-          id: null,
-          qtydrawn: 0,
-          name: null,
-          totalqty: 0,
-          resultstatus: null,
-          remainqty: 0
-        },
-        batch1: {
-          id: null,
-          qtydrawn: 0,
-          name: null,
-          totalqty: 0,
-          resultstatus: null,
-          remainqty: 0
-        }
-      },
-      ago: {
-        batch0: {
-          id: null,
-          qtydrawn: 0,
-          name: null,
-          totalqty: 0,
-          resultstatus: null,
-          remainqty: 0
-        },
-        batch1: {
-          id: null,
-          qtydrawn: 0,
-          name: null,
-          totalqty: 0,
-          resultstatus: null,
-          remainqty: 0
-        }
-      },
-      ik: {
-        batch0: {
-          id: null,
-          qtydrawn: 0,
-          name: null,
-          totalqty: 0,
-          resultstatus: null,
-          remainqty: 0
-        },
-        batch1: {
-          id: null,
-          qtydrawn: 0,
-          name: null,
-          totalqty: 0,
-          resultstatus: null,
-          remainqty: 0
-        }
-      }
+      ik: [],
     };
   fuelerror = {
     pms: false,
@@ -134,45 +71,37 @@ export class BatchesSelectorComponent implements OnInit, OnDestroy {
   subscriptions: Map<string, any> = new Map<string, any>();
 
   constructor(
-    public dialogRef: MatDialogRef<BatchesSelectorComponent>,
+    public dialogRef: MatDialogRef<EntriesSelectorComponent>,
     @Inject(MAT_DIALOG_DATA) private orderid: string,
     private notification: NotificationService,
     private db: AngularFirestore,
     private adminservice: AdminService,
-    private depotsservice: DepotService,
-    private batchesservice: BatchesService,
+    private depotsService: DepotService,
+    private entriesService: EntriesService,
     private ordersservice: OrdersService) {
     this.fueltypesArray.forEach((fueltype: FuelType) => {
-      this.batchesservice.depotbatches[fueltype].pipe(takeUntil(this.comopnentDestroyed)).subscribe((batches: Array<Entry>) => {
-        // console.log(batches);
-        this.depotbatches[fueltype] = batches;
-        this.batches[fueltype] = batches;
-        this.calculateqty();
-      });
+      this.entriesService.depotbatches[fueltype]
+        .pipe(takeUntil(this.comopnentDestroyed))
+        .subscribe((entries: Array<Entry>) => {
+          console.log(entries);
+          this.depotEntries[fueltype] = entries;
+          this.calculateqty();
+        });
     });
-    this.batchesservice.fetchingbatches.pipe(takeUntil(this.comopnentDestroyed)).subscribe(value => {
+    this.entriesService.fetchingbatches.pipe(takeUntil(this.comopnentDestroyed)).subscribe(value => {
       this.fetchingbatches = value;
     });
-    const subscription = this.ordersservice.getorder(orderid)
-      .onSnapshot(trucksnapshot => {
-        if (trucksnapshot.exists) {
-          this.truck = Object.assign({}, trucksnapshot.data()) as Truck;
-          const ordersubscription = this.ordersservice.getorder(orderid)
-            .onSnapshot(ordersnapshot => {
-              if (trucksnapshot.exists) {
-                this.order = Object.assign({}, ordersnapshot.data()) as Order;
-                this.order.Id = ordersnapshot.id;
-              } else {
-                this.order = Object.assign({}, emptyorder);
-              }
-            });
-          this.subscriptions.set(`originalorder`, subscription);
+    const ordersubscription = this.ordersservice.getorder(orderid)
+      .onSnapshot(orderSnapshot => {
+        if (orderSnapshot.exists) {
+          this.order = Object.assign({}, orderSnapshot.data()) as Order;
+          this.order.Id = orderSnapshot.id;
         } else {
-          this.truck = Object.assign({}, emptytruck);
+          this.order = Object.assign({}, emptyorder);
         }
         this.calculateqty();
       });
-    this.subscriptions.set(`clickedtruck`, subscription);
+    this.subscriptions.set(`order`, ordersubscription);
 
   }
 
@@ -194,31 +123,21 @@ export class BatchesSelectorComponent implements OnInit, OnDestroy {
       /**
        * Check if there are batches to assign
        */
-      if ((this.depotbatches[fueltype].length > 0) && (this.order.fuel[fueltype].qty > 0)) {
+      if ((this.depotEntries[fueltype].length > 0) && (this.order.fuel[fueltype].qty > 0)) {
         /**
          * Check if there is a rollover in the batches
          */
         if (this.getTotalAvailable(0, fueltype) >= this.order.fuel[fueltype].qty) {
-          this.drawnbatch[fueltype] = {
-            batch0: {
-              id: this.depotbatches[fueltype][0].Id,
-              /**
-               * Since there is only 1 batch to be assigned, the new qty is direct
-               */
-              qtydrawn: this.order.fuel[fueltype].qty,
-              name: this.depotbatches[fueltype][0].batch,
-              totalqty: this.depotbatches[fueltype][0].qty.total,
-              resultstatus: this.getTotalAvailable(0, fueltype) > this.order.fuel[fueltype].qty,
-              remainqty: this.getTotalAvailable(0, fueltype) - this.order.fuel[fueltype].qty
-            },
-            batch1: {
-              id: null,
-              qtydrawn: 0,
-              name: null,
-              totalqty: 0,
-              resultstatus: true,
-              remainqty: 0
-            }
+          this.drawnEntry[fueltype][0] = {
+            id: this.depotEntries[fueltype][0].Id,
+            /**
+             * Since there is only 1 batch to be assigned, the new qty is direct
+             */
+            qtydrawn: this.order.fuel[fueltype].qty,
+            name: this.depotEntries[fueltype][0].batch,
+            totalqty: this.depotEntries[fueltype][0].qty.total,
+            resultstatus: this.getTotalAvailable(0, fueltype) > this.order.fuel[fueltype].qty,
+            remainqty: this.getTotalAvailable(0, fueltype) - this.order.fuel[fueltype].qty
           };
           this.donecalculating = true;
 
@@ -239,11 +158,11 @@ export class BatchesSelectorComponent implements OnInit, OnDestroy {
            */
           const assignedamount = this.getTotalAvailable(0, fueltype);
 
-          this.depotbatches[fueltype].forEach((batch: Entry, index) => {
+          this.depotEntries[fueltype].forEach((batch: Entry, index) => {
             /**
              * Check if there is fuel to rollover
              */
-            if (this.depotbatches[fueltype].length < 2) {
+            if (this.depotEntries[fueltype].length < 2) {
               this.fuelerror[fueltype] = true;
               return;
             }
@@ -287,26 +206,23 @@ export class BatchesSelectorComponent implements OnInit, OnDestroy {
           if (!batch1) {
             this.fuelerror[fueltype] = true;
           }
-          this.drawnbatch[fueltype] = {
-            batch0: {
-              id: this.depotbatches[fueltype][0].Id,
-              /**
-               * the qty drown
-               */
-              qtydrawn: this.getTotalAvailable(0, fueltype),
-              name: this.depotbatches[fueltype][0].batch,
-              totalqty: this.depotbatches[fueltype][0].qty.total,
-              resultstatus: false,
-              remainqty: 0
-            },
-            batch1
-          };
+          this.drawnEntry[fueltype] = [{
+            id: this.depotEntries[fueltype][0].Id,
+            /**
+             * the qty drown
+             */
+            qtydrawn: this.getTotalAvailable(0, fueltype),
+            name: this.depotEntries[fueltype][0].batch,
+            totalqty: this.depotEntries[fueltype][0].qty.total,
+            resultstatus: false,
+            remainqty: 0
+          }, batch1];
           this.donecalculating = true;
 
         }
       } else {
         this.donecalculating = true;
-        if (this.order.fuel[fueltype].qty > 0 && this.depotbatches[fueltype].length === 0) {
+        if (this.order.fuel[fueltype].qty > 0 && this.depotEntries[fueltype].length === 0) {
           this.fuelerror[fueltype] = true;
         }
       }
@@ -324,9 +240,9 @@ export class BatchesSelectorComponent implements OnInit, OnDestroy {
   }
 
   getTotalAvailable(index: number, fueltype: FuelType) {
-    const totalqty = this.depotbatches[fueltype][index].qty.total;
-    const loadedqty = this.depotbatches[fueltype][index].qty.directLoad.total + this.depotbatches[fueltype][index].qty.transfered;
-    const accumulated = this.depotbatches[fueltype][index].qty.directLoad.accumulated;
+    const totalqty = this.depotEntries[fueltype][index].qty.total;
+    const loadedqty = this.depotEntries[fueltype][index].qty.directLoad.total + this.depotEntries[fueltype][index].qty.transfered;
+    const accumulated = this.depotEntries[fueltype][index].qty.directLoad.accumulated;
     return totalqty - loadedqty + accumulated.usable;
   }
 
@@ -347,14 +263,14 @@ export class BatchesSelectorComponent implements OnInit, OnDestroy {
           duration: 6000
         });
       } else {
-        this.order.fuel[fueltype].batches["0"].Name = this.drawnbatch[fueltype].batch0.name;
-        this.order.fuel[fueltype].batches["0"].Id = this.drawnbatch[fueltype].batch0.id;
-        this.order.fuel[fueltype].batches["0"].qty = this.drawnbatch[fueltype].batch0.qtydrawn;
+        this.order.fuel[fueltype].batches["0"].Name = this.drawnEntry[fueltype][0].name;
+        this.order.fuel[fueltype].batches["0"].Id = this.drawnEntry[fueltype][0].id;
+        this.order.fuel[fueltype].batches["0"].qty = this.drawnEntry[fueltype][0].qtydrawn;
         this.order.fuel[fueltype].batches["0"].observed = 0;
 
-        this.order.fuel[fueltype].batches["1"].Name = this.drawnbatch[fueltype].batch1.name;
-        this.order.fuel[fueltype].batches["1"].Id = this.drawnbatch[fueltype].batch1.id;
-        this.order.fuel[fueltype].batches["1"].qty = this.drawnbatch[fueltype].batch1.qtydrawn;
+        this.order.fuel[fueltype].batches["1"].Name = this.drawnEntry[fueltype][0].name;
+        this.order.fuel[fueltype].batches["1"].Id = this.drawnEntry[fueltype][0].id;
+        this.order.fuel[fueltype].batches["1"].qty = this.drawnEntry[fueltype][0].qtydrawn;
         this.order.fuel[fueltype].batches["1"].observed = 0;
       }
     });

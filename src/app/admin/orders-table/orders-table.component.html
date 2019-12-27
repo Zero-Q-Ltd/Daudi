@@ -37,7 +37,7 @@
               <th *matHeaderCellDef mat-header-cell mat-sort-header>Phone</th>
               <td *matCellDef="let order " mat-cell>
                 <button (click)="sendSMS(order)" class="btn btn-outline-primary">
-                  {{order.customer.phone}}
+                  {{order.customer.contact[0].phone}}
                 </button>
               </td>
             </ng-container>

@@ -8,7 +8,7 @@ import { FormControl } from "@angular/forms";
 import { Router } from "@angular/router";
 import { MatSnackBar } from "@angular/material";
 import { DepotService } from "../../services/core/depot.service";
-import { BatchesService } from "../../services/batches.service";
+import { EntriesService } from "../../services/entries.service";
 import { StatsService } from "../../services/stats.service";
 import { PricesService } from "../../services/prices.service";
 import { Entry } from "../../../models/Daudi/fuel/Entry";
@@ -83,7 +83,7 @@ export class StatsComponent implements OnInit, OnDestroy {
     private router: Router,
     public snackBar: MatSnackBar,
     private depotservice: DepotService,
-    private batcheservice: BatchesService,
+    private batcheservice: EntriesService,
     private statservice: StatsService,
     private priceservice: PricesService) {
     this.depotservice.activedepot.pipe(

@@ -6,6 +6,7 @@ import { Depot } from "../../models/Daudi/depot/Depot";
 import { Entry } from "../../models/Daudi/fuel/Entry";
 import { FuelType, FuelNamesArray } from "../../models/Daudi/fuel/FuelType";
 import { FuelConfig } from "../../models/Daudi/omc/FuelConfig";
+import { ASE } from "../../models/Daudi/fuel/ASE";
 
 /**
  * 
@@ -13,7 +14,7 @@ import { FuelConfig } from "../../models/Daudi/omc/FuelConfig";
  * @param fuelConfig COnfig having valid ID's
  * @param since 
  */
-export function syncEntry(qbo: QuickBooks, omcId: string, fuelConfig: { [key in FuelType]: FuelConfig }) {
+export function syncAse(qbo: QuickBooks, omcId: string, fuelConfig: { [key in FuelType]: FuelConfig }) {
     return qbo
         .findBills([
             /**
@@ -25,7 +26,7 @@ export function syncEntry(qbo: QuickBooks, omcId: string, fuelConfig: { [key in 
              * Fetch all the fuel types at once
              */
             FuelNamesArray.map(fuel => {
-                return { field: "Line.ItemBasedExpenseLineDetail.ItemRef.value", value: fuelConfig[fuel].entryId, operator: "==" }
+                return { field: "Line.ItemBasedExpenseLineDetail.ItemRef.value", value: fuelConfig[fuel].aseId, operator: "==" }
             }),
             { desc: "MetaData.LastUpdatedTime" },
             /**
@@ -50,7 +51,7 @@ export function syncEntry(qbo: QuickBooks, omcId: string, fuelConfig: { [key in 
                     const batchesdir = firestore()
                         .collection("omc")
                         .doc(omcId)
-                        .collection("entry")
+                        .collection("ase")
 
                     const fetchedbatch = await batchesdir.where("QbId", "==", payment.Id).get();
                     /**
@@ -73,23 +74,22 @@ export function syncEntry(qbo: QuickBooks, omcId: string, fuelConfig: { [key in 
 
 
 
-function covertbilltobatch(convertedBill: Bill): Entry | null {
-    console.log("converting bill to batch");
+function covertbilltobatch(convertedBill: Bill): ASE | null {
+    console.log("converting bill to ASE");
 
-    const entryQty = convertedBill.Line[0].ItemBasedExpenseLineDetail.Qty ? convertedBill.Line[0].ItemBasedExpenseLineDetail.Qty : 0;
-    const entryPrice = convertedBill.Line[0].ItemBasedExpenseLineDetail.UnitPrice ? convertedBill.Line[0].ItemBasedExpenseLineDetail.UnitPrice : 0
+    const ASEQty = convertedBill.Line[0].ItemBasedExpenseLineDetail.Qty ? convertedBill.Line[0].ItemBasedExpenseLineDetail.Qty : 0;
     const fueltype = FuelType[convertedBill.Line[0].ItemBasedExpenseLineDetail.ItemRef.name.toLowerCase()];
 
 
-    const newEntry: Entry = {
+    const newASE: ASE = {
         Amount: convertedBill.Line[0].Amount ? convertedBill.Line[0].Amount : 0,
-        entry: convertedBill.DocNumber ? convertedBill.DocNumber : "Null",
+        ase: convertedBill.DocNumber ? convertedBill.DocNumber : "Null",
         depot: {
             Id: null,
             name: null
         },
         Id: null,
-        price: entryPrice,
+        price: 0,
         qty: {
             directLoad: {
                 accumulated: {
@@ -98,7 +98,7 @@ function covertbilltobatch(convertedBill: Bill): Entry | null {
                 },
                 total: 0
             },
-            total: entryQty,
+            total: ASEQty,
             transfered: 0
         },
         QbId: convertedBill.Id,
@@ -106,5 +106,5 @@ function covertbilltobatch(convertedBill: Bill): Entry | null {
         fuelType: fueltype,
         date: firestore.Timestamp.fromDate(new Date())
     };
-    return newEntry;
+    return newASE;
 }

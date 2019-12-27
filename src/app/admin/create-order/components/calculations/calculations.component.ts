@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
+import { Component, OnInit, Input, Output, EventEmitter, OnChanges } from "@angular/core";
 import { Order } from "./../../../../models/Daudi/order/Order";
 import { OrderContactForm } from "./../../../../models/Daudi/forms/CreateOrder";
 import { FuelType, FuelNamesArray } from "./../../../../models/Daudi/fuel/FuelType";
@@ -21,7 +21,7 @@ import { NotificationService } from "./../../../../shared/services/notification.
   templateUrl: "./calculations.component.html",
   styleUrls: ["./calculations.component.scss"]
 })
-export class CalculationsComponent implements OnInit {
+export class CalculationsComponent implements OnInit, OnChanges {
   @Input() initData: Order;
   @Input() newOrder: boolean;
 
@@ -79,13 +79,22 @@ export class CalculationsComponent implements OnInit {
       .pipe(takeUntil(this.comopnentDestroyed))
       .subscribe((value) => {
         /**
-         * Only do calculation if the quantities are above threshold
+         * Validate both quantities and prices
          */
-        if (value.pms.qty >= 1000 || value.ago.qty >= 1000 || value.ik.qty >= 1000) {
+        if ((value.pms.qty >= 1000 || value.ago.qty >= 1000 || value.ik.qty >= 1000) &&
+          (value.pms.price >= this.initData.fuel.pms.priceconfig.minsp ||
+            value.ago.price >= this.initData.fuel.ago.priceconfig.minsp ||
+            value.ik.price >= this.initData.fuel.ik.priceconfig.minsp)
+        ) {
           this.fueltypesArray.forEach(fueltype => {
+            console.log("prices and quantity valid");
+            /**
+             * Clear error that might exist on other fields
+             */
             this.calculationsForm.get([fueltype, "qty"]).setErrors(null);
+            this.calculationsForm.get([fueltype, "price"]).setErrors(null);
             this.initData.fuel[fueltype].qty = value[fueltype].qty;
-            this.initData.fuel[fueltype].priceconfig.price = value[fueltype].price;
+            this.initData.fuel[fueltype].priceconfig.price = Number(value[fueltype].price);
 
             const decimamlResolution = value[`${fueltype}qtyControl`] >= 10000 ? 4 : 3;
             const calculatedpirces = this.deriveprice(this.initData.fuel[fueltype].priceconfig.price, fueltype, decimamlResolution);
@@ -93,7 +102,6 @@ export class CalculationsComponent implements OnInit {
             this.initData.fuel[fueltype].priceconfig.nonTaxprice = calculatedpirces.pricewithoutvat;
             const totalwithouttax = this.totalswithouttax(this.initData.fuel[fueltype].priceconfig.nonTaxprice, this.initData.fuel[fueltype].qty);
             this.initData.fuel[fueltype].priceconfig.nonTaxtotal = totalwithouttax;
-
             // this.initData.fuel[fueltype].priceconfig.total = taxcalculations.taxamount + totalwithouttax;
             this.initData.fuel[fueltype].priceconfig.total = this.initData.fuel[fueltype].priceconfig.price * this.initData.fuel[fueltype].qty;
 
@@ -104,7 +112,6 @@ export class CalculationsComponent implements OnInit {
               this.initData.fuel[fueltype].priceconfig.price,
               this.initData.fuel[fueltype].priceconfig.retailprice,
               this.initData.fuel[fueltype].qty);
-
           });
         }
         /**
@@ -176,11 +183,11 @@ export class CalculationsComponent implements OnInit {
 
   /**
    * uses the simple formula :
-   * PricewithoutVAT=OriginalPrice + (0.08*VATExempt)/1.08, simplified
+   * PricewithoutVAT=(OriginalPrice + (0.08*VATExempt))/1.08, simplified
    * Decimal resolution depends on the qty, as above 10000l the point affects significant amount, but at the same time we
    * Dont want decimals at lower quantities
    */
-  deriveprice(priceinclusivevat: number, fueltype: FuelType, decimalResolution: number): { pricewithoutvat: number, amountdeducted: number, taxablePrice: number } {
+  deriveprice(priceinclusivevat: number, fueltype: FuelType, decimalResolution: number) {
     const pricewithoutvat = Number(((priceinclusivevat + (0.08 * this.initData.fuel[fueltype].priceconfig.nonTax)) / 1.08).toFixed(decimalResolution));
     const amountdeducted = priceinclusivevat - pricewithoutvat;
     const taxablePrice = Number((pricewithoutvat - this.initData.fuel[fueltype].priceconfig.nonTax).toFixed(decimalResolution));

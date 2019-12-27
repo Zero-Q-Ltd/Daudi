@@ -67,7 +67,7 @@ import { PrivateChatComponent } from "./layout/private-chat/private-chat.compone
 import { LayoutModule } from "./layout/layout.module";
 import { LayoutService } from "./layout/layout.service";
 import { UsersGuard } from "./guards/users.guard";
-import { BatchesSelectorComponent } from "./entries-selector/entries-selector.component";
+import { EntriesSelectorComponent } from "./entries-selector/entries-selector.component";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { PreloaderDirective } from "./layout/preloader.directive";
 import { PaymentsComponent } from "./admin/pages/payments/payments.component";
@@ -183,7 +183,7 @@ import { PriceComparisonComponent } from "./price-comparison/price-comparison.co
     MapsComponent,
     DashboardComponent,
     LoginComponent,
-    BatchesSelectorComponent,
+    EntriesSelectorComponent,
     PaymentsComponent,
     ReasonComponent,
     ColumnsCustomizerComponent,
@@ -215,7 +215,7 @@ import { PriceComparisonComponent } from "./price-comparison/price-comparison.co
     SendMsgComponent,
     CompanyMembersComponent,
     MapsComponent,
-    BatchesSelectorComponent,
+    EntriesSelectorComponent,
     ReasonComponent,
     ColumnsCustomizerComponent,
     CustomerManagementComponent,
