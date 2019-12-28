@@ -125,7 +125,7 @@ export class AseComponent implements OnInit {
       this.creatingsync = false;
       this.notification.notify({
         alert_type: "success",
-        body: "Batches updated",
+        body: "ASE's updated",
         title: "Success"
       });
     });

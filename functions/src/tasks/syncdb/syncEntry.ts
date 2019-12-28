@@ -14,32 +14,34 @@ import { FuelConfig } from "../../models/Daudi/omc/FuelConfig";
  * @param since 
  */
 export function syncEntry(qbo: QuickBooks, omcId: string, fuelConfig: { [key in FuelType]: FuelConfig }) {
-    return qbo
-        .findBills([
-            /**
-             * Get only the bills(Entries numbers) that have been fully paid
-             */
-            { field: "Balance", value: "1", operator: "<" },
-            /**
-             * fetch only bills that have been paid for Entry
-             * Fetch all the fuel types at once
-             */
-            FuelNamesArray.map(fuel => {
-                return { field: "Line.ItemBasedExpenseLineDetail.ItemRef.value", value: fuelConfig[fuel].entryId, operator: "==" }
-            }),
-            { desc: "MetaData.LastUpdatedTime" },
-            /**
-             * Use the update time to compare with sync request time
-             */
-            {
-                field: "TxnDate",
-                value: moment()
-                    .subtract(1, "day")
-                    .startOf("day")
-                    .format("YYYY-MM-DD"),
-                operator: ">="
+    return qbo.findBills([
+        /**
+         * Get only the bills(Entries numbers) that have been fully paid
+         */
+        { field: "Balance", value: "1", operator: "<" },
+        /**
+         * fetch only bills that have been paid for Entry
+         * Fetch all the fuel types at once
+         */
+        FuelNamesArray.map(fuel => {
+            return {
+                field: "Line.ItemBasedExpenseLineDetail.ItemRef.value",
+                value: fuelConfig[fuel].entryId, operator: "=="
             }
-        ])
+        }),
+        { desc: "MetaData.LastUpdatedTime" },
+        /**
+         * Use the update time to compare with sync request time
+         */
+        {
+            field: "TxnDate",
+            value: moment()
+                .subtract(1, "day")
+                .startOf("day")
+                .format("YYYY-MM-DD"),
+            operator: ">="
+        }
+    ])
         .then(billpayments => {
             const allbillpayment = (billpayments.QueryResponse.Bill as Array<Bill>) || [];
 
@@ -51,19 +53,31 @@ export function syncEntry(qbo: QuickBooks, omcId: string, fuelConfig: { [key in 
                         .collection("omc")
                         .doc(omcId)
                         .collection("entry")
-
-                    const fetchedbatch = await batchesdir.where("QbId", "==", payment.Id).get();
+                    const fetchedEntry = await batchesdir
+                        .where("QbId", "==", payment.Id).get();
                     /**
                      * make sure the Entry doenst alread exist before writing to db
                      */
-                    if (fetchedbatch.empty) {
+                    if (fetchedEntry.empty) {
                         console.log("creating new batch");
-                        /**
-                         * Update the prices as well
-                         */
                         return await batchesdir.add(convertedbacth);
                     } else {
-                        return true
+                        /**
+                         * Check if the same batch number previously existed for addition purposes
+                         */
+                        const existingEntry = await batchesdir
+                            .where("entry", "==", convertedbacth.entry).get();
+                        if (existingEntry.empty){
+                                console.log("creating new batch");
+                                return await batchesdir.add(convertedbacth);
+                            }else{
+                                /**
+                                 * Add the quantity to the existing batch
+                                 */
+                                const newEntry: Entry = existingEntry.docs[0].data() as Entry
+                                newEntry.qty.total += convertedbacth.qty.total
+                                return await batchesdir.doc(existingEntry.docs[0].id);
+                            }
                     }
                 })
             );
@@ -92,14 +106,13 @@ function covertbilltobatch(convertedBill: Bill): Entry | null {
         price: entryPrice,
         qty: {
             directLoad: {
-                accumulated: {
-                    total: 0,
-                    usable: 0
-                },
                 total: 0
             },
             total: entryQty,
-            transfered: 0
+            transfered: {
+                total: 0,
+                transfers: []
+            }
         },
         QbId: convertedBill.Id,
         active: true,

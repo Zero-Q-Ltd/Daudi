@@ -99,7 +99,10 @@ function covertbilltobatch(convertedBill: Bill): ASE | null {
                 total: 0
             },
             total: ASEQty,
-            transfered: 0
+            transfered: {
+                total: 0,
+                transfers: []
+            }
         },
         QbId: convertedBill.Id,
         active: true,

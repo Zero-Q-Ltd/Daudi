@@ -26,7 +26,7 @@ export interface StockTransfer {
   transfers: StockQty[];
 }
 
-export const emptybatches: Entry = {
+export const emptyEntries: Entry = {
   Id: null,
   fuelType: null,
   QbId: null,
@@ -38,6 +38,10 @@ export const emptybatches: Entry = {
     directLoad: {
       total: 0
     },
+    transfered: {
+      total: 0,
+      transfers: []
+    }
   },
 
   depot: {

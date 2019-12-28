@@ -11,6 +11,8 @@ import { ConfigService } from "../../../services/core/config.service";
 import { FuelType, FuelNamesArray } from "../../../../models/Daudi/fuel/FuelType";
 import { SyncRequest } from "../../../../models/Cloud/Sync";
 import { MyTimestamp } from "../../../../models/firestore/firestoreTypes";
+import { CompanySync } from "../../../../models/Cloud/CompanySync";
+import { OmcService } from "../../../services/core/omc.service";
 
 
 @Component({
@@ -61,6 +63,7 @@ export class BatchesComponent implements OnInit {
     private functions: AngularFireFunctions,
     private batcheservice: EntriesService,
     private config: ConfigService,
+    private omc: OmcService,
     private batchesservice: EntriesService) {
     depotsservice.activedepot.pipe(takeUntil(this.comopnentDestroyed)).subscribe(depotvata => {
       this.loading = {
@@ -117,16 +120,24 @@ export class BatchesComponent implements OnInit {
 
   syncdb() {
     this.creatingsync = true;
-    const syncobject: SyncRequest = {
+
+    const req: SyncRequest = {
       time: MyTimestamp.now(),
       synctype: ["BillPayment"]
+    };
+
+    const syncobject: CompanySync = {
+      config: this.config.omcconfig.value,
+      environment: this.config.environment.value,
+      omc: this.omc.currentOmc.value,
+      sync: req
     };
 
     this.functions.httpsCallable("requestsync")(syncobject).subscribe(res => {
       this.creatingsync = false;
       this.notification.notify({
         alert_type: "success",
-        body: "Batches updated",
+        body: "Entries updated",
         title: "Success"
       });
     });
