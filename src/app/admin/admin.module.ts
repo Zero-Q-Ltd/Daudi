@@ -95,7 +95,7 @@ import { ConfigComponent } from "./admin/pages/config/config.component";
 import { AdminRolesComponent } from "./admin/pages/admin-roles/admin-roles.component";
 import { AdminLevelsComponent } from "./admin/pages/admin-levels/admin-levels.component";
 import { CreateComponent } from "./admin/pages/payments/create/create.component";
-import { AseComponent } from "./admin/ase/ase.component";
+import { AseComponent } from "./admin/pages/ase/ase.component";
 import { CalculationsComponent } from "./create-order/components/calculations/calculations.component";
 import { ContactFormComponent } from "./create-order/components/contact-form/contact-form.component";
 import { PriceComparisonComponent } from "./price-comparison/price-comparison.component";

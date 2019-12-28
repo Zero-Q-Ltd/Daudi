@@ -12,13 +12,12 @@ import { FuelType, FuelNamesArray } from "../../../../models/Daudi/fuel/FuelType
 import { SyncRequest } from "../../../../models/Cloud/Sync";
 import { MyTimestamp } from "../../../../models/firestore/firestoreTypes";
 
-
 @Component({
-  selector: "app-entries",
-  templateUrl: "./entries.component.html",
-  styleUrls: ["./entries.component.scss"]
+  selector: "app-ase",
+  templateUrl: "./ase.component.html",
+  styleUrls: ["./ase.component.scss"]
 })
-export class BatchesComponent implements OnInit {
+export class AseComponent implements OnInit {
   fueltypesArray = FuelNamesArray;
   datasource = {
     pms: new MatTableDataSource<Entry>(),
