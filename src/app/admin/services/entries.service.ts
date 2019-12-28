@@ -49,7 +49,7 @@ export class EntriesService {
         .doc(this.omc.currentOmc.value.Id)
         .collection("entry")
         .orderBy("date", "asc")
-        .where("status", "==", 1)
+        .where("active", "==", true)
         .where("fuelType", "==", fueltype)
         .onSnapshot(snapshot => {
           this.fetchingEntry.next(false);
@@ -76,7 +76,7 @@ export class EntriesService {
       .doc(this.omc.currentOmc.value.Id)
       .collection("entry")
       .where("fuelType", "==", type)
-      .orderBy("status", "desc");
+      .orderBy("active", "desc");
   }
 
   updateEntry(entryId: string) {

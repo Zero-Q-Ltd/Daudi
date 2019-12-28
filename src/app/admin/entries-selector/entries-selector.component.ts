@@ -144,7 +144,7 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
              * Since there is only 1 batch to be assigned, the new qty is direct
              */
             qtydrawn: this.order.fuel[fueltype].qty,
-            name: this.depotEntries[fueltype][0].entry,
+            name: this.depotEntries[fueltype][0].entry.id,
             totalqty: this.depotEntries[fueltype][0].qty.total,
             resultstatus: this.getTotalAvailableEntry(0, fueltype) > this.order.fuel[fueltype].qty,
             remainqty: this.getTotalAvailableEntry(0, fueltype) - this.order.fuel[fueltype].qty

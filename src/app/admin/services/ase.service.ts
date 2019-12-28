@@ -49,7 +49,7 @@ export class AseService {
         .doc(this.omc.currentOmc.value.Id)
         .collection("ase")
         .orderBy("date", "asc")
-        .where("status", "==", 1)
+        .where("active", "==", true)
         .where("fuelType", "==", fueltype)
         .onSnapshot(snapshot => {
           this.fetchingASEs.next(false);
@@ -76,7 +76,7 @@ export class AseService {
       .doc(this.omc.currentOmc.value.Id)
       .collection("ase")
       .where("fuelType", "==", type)
-      .orderBy("status", "desc");
+      .orderBy("active", "desc");
   }
 
   updateASE(ASEId: string) {
