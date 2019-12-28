@@ -64,7 +64,7 @@ export class BatchesComponent implements OnInit {
     private batcheservice: EntriesService,
     private config: ConfigService,
     private omc: OmcService,
-    private batchesservice: EntriesService) {
+    private entriesService: EntriesService) {
     depotsservice.activedepot.pipe(takeUntil(this.comopnentDestroyed)).subscribe(depotvata => {
       this.loading = {
         pms: true,
@@ -77,7 +77,7 @@ export class BatchesComponent implements OnInit {
           /**
            * Create a subscrition for 1000 batches history
            */
-          const subscription = this.batchesservice.getEntries(fueltype).limit(100)
+          const subscription = this.entriesService.getEntries(fueltype).limit(100)
             .onSnapshot(snapshot => {
               this.loading[fueltype] = false;
               this.datasource[fueltype].data = snapshot.docs.map(batch => {

@@ -27,7 +27,8 @@ export function processSync(sync: SyncRequest, qbo: QuickBooks, omcId: string, c
                     // return true;
                     return await Promise.all([
                         syncEntry(qbo, omcId, config.Qbo[enviromnent].fuelconfig),
-                        syncAse(qbo, omcId, config.Qbo[enviromnent].fuelconfig)]);
+                        syncAse(qbo, omcId, config.Qbo[enviromnent].fuelconfig)
+                    ]);
                 default:
                     console.log("Unrecognized object for syncdetected, breaking");
                     return true;

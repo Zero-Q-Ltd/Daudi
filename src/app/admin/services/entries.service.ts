@@ -50,7 +50,7 @@ export class EntriesService {
         .collection("entry")
         .orderBy("date", "asc")
         .where("status", "==", 1)
-        .where("type", "==", fueltype)
+        .where("fuelType", "==", fueltype)
         .onSnapshot(snapshot => {
           this.fetchingEntry.next(false);
           // if(!snapshot.empty) console.log(snapshot.docs[0].data())
@@ -75,7 +75,7 @@ export class EntriesService {
     return this.db.firestore.collection("omc")
       .doc(this.omc.currentOmc.value.Id)
       .collection("entry")
-      .where("type", "==", type)
+      .where("fuelType", "==", type)
       .orderBy("status", "desc");
   }
 

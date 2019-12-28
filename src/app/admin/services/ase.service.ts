@@ -50,7 +50,7 @@ export class AseService {
         .collection("ase")
         .orderBy("date", "asc")
         .where("status", "==", 1)
-        .where("type", "==", fueltype)
+        .where("fuelType", "==", fueltype)
         .onSnapshot(snapshot => {
           this.fetchingASEs.next(false);
           // if(!snapshot.empty) console.log(snapshot.docs[0].data())
@@ -75,7 +75,7 @@ export class AseService {
     return this.db.firestore.collection("omc")
       .doc(this.omc.currentOmc.value.Id)
       .collection("ase")
-      .where("type", "==", type)
+      .where("fuelType", "==", type)
       .orderBy("status", "desc");
   }
 

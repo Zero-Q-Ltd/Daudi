@@ -2,33 +2,30 @@ import { MyTimestamp } from "../../firestore/firestoreTypes";
 import { FuelType } from "./FuelType";
 import { StockQty } from "./StockQty";
 import { ASEStockQty } from "./ASEStockQty";
+import { QbRef } from "./QbRef";
 
 export interface ASE {
 
     Amount: number;
     date: MyTimestamp;
-    ase: string;
+    ase: {
+        id: string,
+        refs: QbRef[]
+    };
     depot: {
         name: string
         Id: string
     };
     qty: ASEStockQty;
 
-    QbId: string;
-    // vessel:{
-
-    // }
     fuelType: FuelType;
     price: number;
     Id: string;
-    active: boolean; // 1 for active, 0 for inactive
+    active: boolean;
 }
-
-
 export const emptyASEs: ASE = {
     Id: null,
     fuelType: null,
-    QbId: null,
     Amount: null,
     ase: null,
     price: 0,
