@@ -1,25 +1,25 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 
-import {BatchesComponent} from './entries.component';
+import { EntriesComponent } from "./entries.component";
 
-describe('BatchesComponent', () => {
-  let component: BatchesComponent;
-  let fixture: ComponentFixture<BatchesComponent>;
+describe("BatchesComponent", () => {
+  let component: EntriesComponent;
+  let fixture: ComponentFixture<EntriesComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [BatchesComponent]
+      declarations: [EntriesComponent]
     })
       .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(BatchesComponent);
+    fixture = TestBed.createComponent(EntriesComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

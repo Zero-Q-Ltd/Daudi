@@ -256,7 +256,7 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
    */
   getTotalAvailableEntry(index: number, fueltype: FuelType) {
     const totalqty = this.depotEntries[fueltype][index].qty.total;
-    const loadedqty = this.depotEntries[fueltype][index].qty.directLoad.total + this.depotEntries[fueltype][index].qty.transfered.total;
+    const loadedqty = this.depotEntries[fueltype][index].qty.directLoad.total + this.depotEntries[fueltype][index].qty.transferred.total;
     return totalqty - loadedqty;
   }
   /**

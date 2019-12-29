@@ -23,59 +23,61 @@
                     <table [dataSource]="datasource[fueltype]" mat-table style="width: 100%">
 
                         <ng-container matColumnDef="id">
-                            <th *matHeaderCellDef mat-header-cell> Batch ID</th>
-                            <td *matCellDef="let batch" mat-cell> {{batch.Id}}</td>
+                            <th *matHeaderCellDef mat-header-cell> Entry ID</th>
+                            <td *matCellDef="let ase" mat-cell> {{ase.Id}}</td>
 
                         </ng-container>
 
                         <ng-container matColumnDef="date">
                             <th *matHeaderCellDef mat-header-cell> Date</th>
-                            <td *matCellDef="let batch" mat-cell> {{batch.date?.toDate() | date: 'dd/MM/yyyy, h:mm a'}}
+                            <td *matCellDef="let ase" mat-cell> {{ase.date?.toDate() | date: 'dd/MM/yyyy, h:mm a'}}
                             </td>
                         </ng-container>
 
                         <!-- Item Column -->
 
-                        <ng-container matColumnDef="batch">
-                            <th *matHeaderCellDef mat-header-cell> Batch #</th>
-                            <td *matCellDef="let batch" mat-cell> {{batch.batch}}</td>
+                        <ng-container matColumnDef="entry">
+                            <th *matHeaderCellDef mat-header-cell> Entry #</th>
+                            <td *matCellDef="let ase" mat-cell> {{ase.ase.id}}</td>
                         </ng-container>
 
                         <!-- Cost Column -->
                         <ng-container matColumnDef="totalqty">
                             <th *matHeaderCellDef mat-header-cell> Total Batch Qty</th>
-                            <td *matCellDef="let batch" mat-cell>{{batch.qty}}</td>
+                            <td *matCellDef="let ase" mat-cell>{{ase.qty.total}}</td>
                         </ng-container>
 
                         <!-- Cost Column -->
-                        <ng-container matColumnDef="accumulated">
-                            <th *matHeaderCellDef mat-header-cell>Total Accumulated Qty</th>
-                            <td *matCellDef="let batch" mat-cell>{{batch.accumulated.total}}</td>
+                        <ng-container matColumnDef="transferred">
+                            <th *matHeaderCellDef mat-header-cell>Transferred</th>
+                            <td *matCellDef="let ase" mat-cell>{{ase.qty.transferred.total}}</td>
                         </ng-container>
+
                         <!-- Cost Column -->
-                        <ng-container matColumnDef="usableaccumulated">
-                            <th *matHeaderCellDef mat-header-cell>Usable Accumulated Qty</th>
-                            <td *matCellDef="let batch" mat-cell>{{batch.accumulated.usable}}</td>
+                        <ng-container matColumnDef="accumuated">
+                            <th *matHeaderCellDef mat-header-cell>Accumulated</th>
+                            <td *matCellDef="let ase" mat-cell>{{ase.qty.transferred.total}}</td>
                         </ng-container>
+
                         <!-- Cost Column -->
                         <ng-container matColumnDef="loadedqty">
                             <th *matHeaderCellDef mat-header-cell> Loaded Qty</th>
-                            <td *matCellDef="let batch" mat-cell> {{batch.loadedqty}}</td>
+                            <td *matCellDef="let ase" mat-cell> {{ase.qty.directLoad.total}}</td>
                         </ng-container>
                         <!-- Cost Column -->
                         <ng-container matColumnDef="availableqty">
                             <th *matHeaderCellDef mat-header-cell> Available Qty</th>
-                            <td *matCellDef="let batch" mat-cell>
-                                {{batch.qty + batch.accumulated.usable - batch.loadedqty}}</td>
+                            <td *matCellDef="let ase" mat-cell>
+                                {{ase.qty.total - ase.qty.transferred.total - ase.qty.directLoad.total}}</td>
                         </ng-container>
                         <!-- Cost Column -->
                         <ng-container matColumnDef="status">
-                            <th *matHeaderCellDef mat-header-cell> Batch Status</th>
-                            <td *matCellDef="let batch ;let i = index" mat-cell>
-                                <button *ngIf="batch.status === 1" class="btn btn-outline-success btn-sm">
+                            <th *matHeaderCellDef mat-header-cell> Entry Status</th>
+                            <td *matCellDef="let ase ;let i = index" mat-cell>
+                                <button *ngIf="ase.active" class="btn btn-outline-success btn-sm">
                                     ACTIVE
                                 </button>
-                                <button *ngIf="batch.status === 0" class="btn btn-outline-danger btn-sm">
+                                <button *ngIf="!ase.active" class="btn btn-outline-danger btn-sm">
                                     INACTIVE
                                 </button>
                             </td>

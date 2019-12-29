@@ -109,6 +109,8 @@ export function syncEntry(qbo: QuickBooks, omcId: string, fuelConfig: { [key in 
                             /**
                              * Add the quantity to the existing batch
                              */
+                            console.log("Entry exists, merging values");
+
                             const newEntry: Entry = existingEntry.docs[0].data() as Entry
                             newEntry.qty.total += convertedEntry.qty.total
                             return await batchesdir.doc(existingEntry.docs[0].id);

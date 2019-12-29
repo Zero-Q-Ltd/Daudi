@@ -1,8 +1,6 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
 import { MatPaginator, MatTableDataSource } from "@angular/material";
-import { Entry, emptyEntries } from "../../../../models/Daudi/fuel/Entry";
 import { DepotService } from "../../../services/core/depot.service";
-import { EntriesService } from "../../../services/entries.service";
 import { NotificationService } from "../../../../shared/services/notification.service";
 import { AngularFireFunctions } from "@angular/fire/functions";
 import { ReplaySubject } from "rxjs";
@@ -11,6 +9,9 @@ import { ConfigService } from "../../../services/core/config.service";
 import { FuelType, FuelNamesArray } from "../../../../models/Daudi/fuel/FuelType";
 import { SyncRequest } from "../../../../models/Cloud/Sync";
 import { MyTimestamp } from "../../../../models/firestore/firestoreTypes";
+import { ASE } from "../../../../models/Daudi/fuel/ASE";
+import { AseService } from "../../../services/ase.service";
+import { emptyASEs } from "../../../../models/Daudi/fuel/ASE";
 
 @Component({
   selector: "app-ase",
@@ -20,15 +21,15 @@ import { MyTimestamp } from "../../../../models/firestore/firestoreTypes";
 export class AseComponent implements OnInit {
   fueltypesArray = FuelNamesArray;
   datasource = {
-    pms: new MatTableDataSource<Entry>(),
-    ago: new MatTableDataSource<Entry>(),
-    ik: new MatTableDataSource<Entry>()
+    pms: new MatTableDataSource<ASE>(),
+    ago: new MatTableDataSource<ASE>(),
+    ik: new MatTableDataSource<ASE>()
   };
   creatingsync = false;
   @ViewChild(MatPaginator, { static: true }) pmspaginator: MatPaginator;
   @ViewChild(MatPaginator, { static: true }) agopaginator: MatPaginator;
   @ViewChild(MatPaginator, { static: true }) ikpaginator: MatPaginator;
-  displayedColumns: string[] = ["id", "date", "batch", "totalqty", "accumulated", "usableaccumulated", "loadedqty", "availableqty", "status"];
+  displayedColumns: string[] = ["id", "date", "entry", "totalqty", "transferred", "accumuated", "loadedqty", "availableqty", "status"];
   loading: {
     pms: boolean,
     ago: boolean,
@@ -58,9 +59,8 @@ export class AseComponent implements OnInit {
     private depotsservice: DepotService,
     private notification: NotificationService,
     private functions: AngularFireFunctions,
-    private batcheservice: EntriesService,
     private config: ConfigService,
-    private batchesservice: EntriesService) {
+    private aseService: AseService) {
     depotsservice.activedepot.pipe(takeUntil(this.comopnentDestroyed)).subscribe(depotvata => {
       this.loading = {
         pms: true,
@@ -73,12 +73,12 @@ export class AseComponent implements OnInit {
           /**
            * Create a subscrition for 1000 batches history
            */
-          const subscription = this.batchesservice.getEntries(fueltype).limit(100)
+          const subscription = this.aseService.getASEs(fueltype).limit(100)
             .onSnapshot(snapshot => {
               this.loading[fueltype] = false;
-              this.datasource[fueltype].data = snapshot.docs.map(batch => {
-                const value: Entry = Object.assign({}, emptyEntries, batch.data());
-                value.Id = batch.id;
+              this.datasource[fueltype].data = snapshot.docs.map(ase => {
+                const value: ASE = Object.assign({}, emptyASEs, ase.data()) as any;
+                value.Id = ase.id;
                 return value;
               });
             });
@@ -87,15 +87,15 @@ export class AseComponent implements OnInit {
            * Because all these batches might take time to load, take the totals
            * from the already loaded batches within that depot
            */
-          this.batcheservice.depotEntries[fueltype]
+          this.aseService.depotASEs[fueltype]
             .pipe(takeUntil(this.comopnentDestroyed))
-            .subscribe((batches: Array<Entry>) => {
+            .subscribe((ases: Array<ASE>) => {
               /**
                * Reset the values every time batches change
                */
               this.availablefuel[fueltype] = 0;
-              batches.forEach(batch => {
-                this.availablefuel[fueltype] += this.getTotalAvailable(batch);
+              ases.forEach(ase => {
+                this.availablefuel[fueltype] += this.getTotalAvailable(ase);
               });
             });
         });
@@ -131,10 +131,11 @@ export class AseComponent implements OnInit {
     });
   }
 
-  getTotalAvailable(batch: Entry) {
-    const totalqty = batch.qty.total;
-    const totalLoaded = batch.qty.directLoad.total + batch.qty.transfered.total;
-    return totalqty - totalLoaded;
+  getTotalAvailable(batch: ASE) {
+    // const totalqty = batch.qty.total;
+    // const totalLoaded = batch.qty.directLoad.total + batch.qty.transferred.total;
+    // return totalqty - totalLoaded;
+    return 0;
   }
 
   ngOnInit() {
