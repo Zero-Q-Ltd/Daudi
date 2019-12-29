@@ -22,12 +22,21 @@ export function syncAse(qbo: QuickBooks, omcId: string, fuelConfig: { [key in Fu
              */
             { field: "Balance", value: "1", operator: "<" },
             /**
-             * fetch only bills that have been paid for Entry
-             * Fetch all the fuel types at once
-             */
-            FuelNamesArray.map(fuel => {
-                return { field: "Line.ItemBasedExpenseLineDetail.ItemRef.value", value: fuelConfig[fuel].aseId, operator: "==" }
-            }),
+           * fetch only bills that have been paid for Entry
+           * Fetch all the fuel types at once
+           */
+            // {
+            //     field: "Line.ItemBasedExpenseLineDetail.ItemRef.value",
+            //     value: fuelConfig.pms.entryId, operator: "LIKE"
+            // },
+            // {
+            //     field: "Line.ItemBasedExpenseLineDetail.ItemRef.value",
+            //     value: fuelConfig.ago.entryId, operator: "LIKE"
+            // },
+            // {
+            //     field: "Line.ItemBasedExpenseLineDetail.ItemRef.value",
+            //     value: fuelConfig.ik.entryId, operator: "LIKE"
+            // },
             { desc: "MetaData.LastUpdatedTime" },
             /**
              * Use the update time to compare with sync request time
@@ -35,7 +44,7 @@ export function syncAse(qbo: QuickBooks, omcId: string, fuelConfig: { [key in Fu
             {
                 field: "TxnDate",
                 value: moment()
-                    .subtract(1, "day")
+                    .subtract(100, "day")
                     .startOf("day")
                     .format("YYYY-MM-DD"),
                 operator: ">="
@@ -44,46 +53,83 @@ export function syncAse(qbo: QuickBooks, omcId: string, fuelConfig: { [key in Fu
         .then(billpayments => {
             const allbillpayment = (billpayments.QueryResponse.Bill as Array<Bill>) || [];
 
-            return Promise.all(
-                allbillpayment.map(async payment => {
-                    const convertedbacth = covertbilltobatch(payment);
+            let fueltype: FuelType
+            /**
+             * @todo allow the same bill to have mutiple fuel types
+             */
+            return Promise.all(allbillpayment.map(async bill => {
+                if (bill.Line) {
+                    const LineitemIndex = bill.Line.findIndex(t => {
+                        if (t.ItemBasedExpenseLineDetail) {
+                            {
+                                if (t.ItemBasedExpenseLineDetail.ItemRef.value === fuelConfig.pms.aseId) {
+                                    fueltype = FuelType.pms
+                                    return true
+                                } else if (t.ItemBasedExpenseLineDetail.ItemRef.value === fuelConfig.ago.aseId) {
+                                    fueltype = FuelType.ago
+                                    return true
+                                } else if (t.ItemBasedExpenseLineDetail.ItemRef.value === fuelConfig.ik.aseId) {
+                                    fueltype = FuelType.ik
+                                    return true
+                                } else {
+                                    return false
+                                }
+                            }
+                        } else {
+                            return false
+                        }
+                    })
+
+                    if (!LineitemIndex || LineitemIndex < 0) {
+                        console.error("ITEM CONFIG NOT FOUND")
+                        return true
+
+                    }
+
+
+                    const convertedASE = covertBillToASE(bill, fueltype, LineitemIndex);
 
                     const batchesdir = firestore()
                         .collection("omc")
                         .doc(omcId)
                         .collection("ase")
 
-                    const fetchedbatch = await batchesdir.where("QbId", "==", payment.Id).get();
+                    const fetchedbatch = await batchesdir.where("ase.id", "==", convertedASE.ase.id).get();
                     /**
                      * make sure the Entry doenst alread exist before writing to db
                      */
                     if (fetchedbatch.empty) {
-                        console.log("creating new batch");
+                        console.log("creating new ASE");
                         /**
                          * Update the prices as well
                          */
-                        return await batchesdir.add(convertedbacth);
+                        return await batchesdir.add(convertedASE);
                     } else {
-                        return true
+                        return false
                     }
-                })
-            );
-
+                } else {
+                    return false
+                }
+            }))
         });
 }
 
 
 
-function covertbilltobatch(convertedBill: Bill): ASE | null {
-    console.log("converting bill to ASE");
+function covertBillToASE(convertedBill: Bill, fueltype: FuelType, LineitemIndex: number): ASE {
+    // console.log("converting bill to ASE");
 
-    const ASEQty = convertedBill.Line[0].ItemBasedExpenseLineDetail.Qty ? convertedBill.Line[0].ItemBasedExpenseLineDetail.Qty : 0;
-    const fueltype = FuelType[convertedBill.Line[0].ItemBasedExpenseLineDetail.ItemRef.name.toLowerCase()];
-
+    const ASEQty = convertedBill.Line[LineitemIndex].ItemBasedExpenseLineDetail.Qty ? convertedBill.Line[LineitemIndex].ItemBasedExpenseLineDetail.Qty : 0;
 
     const newASE: ASE = {
-        Amount: convertedBill.Line[0].Amount ? convertedBill.Line[0].Amount : 0,
-        ase: convertedBill.DocNumber ? convertedBill.DocNumber : "Null",
+        Amount: convertedBill.Line[LineitemIndex].Amount ? convertedBill.Line[LineitemIndex].Amount : 0,
+        ase: {
+            id: convertedBill.DocNumber ? convertedBill.DocNumber : "Null",
+            refs: [{
+                QbId: convertedBill.Id,
+                qty: ASEQty
+            }]
+        },
         depot: {
             Id: null,
             name: null
@@ -99,12 +145,15 @@ function covertbilltobatch(convertedBill: Bill): ASE | null {
                 total: 0
             },
             total: ASEQty,
-            transfered: 0
+            transfered: {
+                total: 0,
+                transfers: []
+            }
         },
-        QbId: convertedBill.Id,
         active: true,
         fuelType: fueltype,
         date: firestore.Timestamp.fromDate(new Date())
     };
+    console.log(newASE)
     return newASE;
 }

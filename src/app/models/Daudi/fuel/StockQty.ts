@@ -9,7 +9,7 @@ export interface StockQty {
     /**
      * Quantity transferred to private depots
      */
-    transfered?: StockTransfer;
+    transfered: StockTransfer;
     /**
      * Qty loaded directly at KPC
      */

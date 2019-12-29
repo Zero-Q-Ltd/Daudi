@@ -190,3 +190,427 @@ exports.onUserStatusChanged = functions.database
       });
     }
   });
+
+const h = {
+  "QueryResponse": {
+    "Bill": [
+      {
+        "SalesTermRef": {
+          "value": "6"
+        },
+        "DueDate": "2019-12-18",
+        "Balance": 0,
+        "domain": "QBO",
+        "sparse": false,
+        "Id": "193",
+        "SyncToken": "1",
+        "MetaData": {
+          "CreateTime": "2019-12-18T02:39:15-08:00",
+          "LastUpdatedTime": "2019-12-18T02:40:07-08:00"
+        },
+        "DocNumber": "ASE-097890/GUL",
+        "TxnDate": "2019-12-18",
+        "CurrencyRef": {
+          "value": "KES",
+          "name": "Kenyan Shilling"
+        },
+        "ExchangeRate": 1,
+        "PrivateNote": "NEW SHIP PMS",
+        "LinkedTxn": [
+          {
+            "TxnId": "194",
+            "TxnType": "BillPaymentCheck"
+          }
+        ],
+        "Line": [
+          {
+            "Id": "1",
+            "LineNum": 1,
+            "Description": "ASE-097890",
+            "Amount": 0,
+            "DetailType": "ItemBasedExpenseLineDetail",
+            "ItemBasedExpenseLineDetail": {
+              "BillableStatus": "NotBillable",
+              "ItemRef": {
+                "value": "43",
+                "name": "PMS ASE"
+              },
+              "Qty": 1500,
+              "TaxCodeRef": {
+                "value": "NON"
+              }
+            }
+          },
+          {
+            "Id": "2",
+            "LineNum": 2,
+            "Description": "KES Component pms",
+            "Amount": 9800,
+            "DetailType": "AccountBasedExpenseLineDetail",
+            "AccountBasedExpenseLineDetail": {
+              "CustomerRef": {
+                "value": "60",
+                "name": "EMKAY PET:GULF HORIZON"
+              },
+              "AccountRef": {
+                "value": "129",
+                "name": "Cost of Goods Sold"
+              },
+              "BillableStatus": "NotBillable",
+              "TaxCodeRef": {
+                "value": "NON"
+              }
+            }
+          }
+        ],
+        "VendorRef": {
+          "value": "62",
+          "name": "GULF OIL"
+        },
+        "APAccountRef": {
+          "value": "142",
+          "name": "Accounts Payable (A/P)"
+        },
+        "TotalAmt": 9800
+      },
+      {
+        "SalesTermRef": {
+          "value": "6"
+        },
+        "DueDate": "2019-12-18",
+        "Balance": 0,
+        "domain": "QBO",
+        "sparse": false,
+        "Id": "190",
+        "SyncToken": "1",
+        "MetaData": {
+          "CreateTime": "2019-12-18T02:23:39-08:00",
+          "LastUpdatedTime": "2019-12-18T02:24:21-08:00"
+        },
+        "DocNumber": "2020MSA7654321",
+        "TxnDate": "2019-12-18",
+        "CurrencyRef": {
+          "value": "KES",
+          "name": "Kenyan Shilling"
+        },
+        "ExchangeRate": 1,
+        "LinkedTxn": [
+          {
+            "TxnId": "191",
+            "TxnType": "BillPaymentCheck"
+          },
+          {
+            "TxnId": "168",
+            "TxnType": "BillPaymentCheck"
+          }
+        ],
+        "Line": [
+          {
+            "Id": "1",
+            "LineNum": 1,
+            "Description": "PMS Tax Entry#s 2020MSA7654321",
+            "Amount": 0,
+            "DetailType": "ItemBasedExpenseLineDetail",
+            "ItemBasedExpenseLineDetail": {
+              "CustomerRef": {
+                "value": "60",
+                "name": "EMKAY PET:GULF HORIZON"
+              },
+              "BillableStatus": "NotBillable",
+              "ItemRef": {
+                "value": "44",
+                "name": "PMS ENTRY"
+              },
+              "UnitPrice": 0,
+              "Qty": 1500,
+              "TaxCodeRef": {
+                "value": "NON"
+              }
+            }
+          },
+          {
+            "Id": "2",
+            "LineNum": 2,
+            "Amount": 19000,
+            "DetailType": "AccountBasedExpenseLineDetail",
+            "AccountBasedExpenseLineDetail": {
+              "CustomerRef": {
+                "value": "60",
+                "name": "EMKAY PET:GULF HORIZON"
+              },
+              "AccountRef": {
+                "value": "129",
+                "name": "Cost of Goods Sold"
+              },
+              "BillableStatus": "NotBillable",
+              "TaxCodeRef": {
+                "value": "NON"
+              }
+            }
+          }
+        ],
+        "VendorRef": {
+          "value": "61",
+          "name": "KRA"
+        },
+        "APAccountRef": {
+          "value": "142",
+          "name": "Accounts Payable (A/P)"
+        },
+        "TotalAmt": 19000
+      },
+      {
+        "SalesTermRef": {
+          "value": "6"
+        },
+        "DueDate": "2019-12-03",
+        "Balance": 0,
+        "domain": "QBO",
+        "sparse": false,
+        "Id": "175",
+        "SyncToken": "1",
+        "MetaData": {
+          "CreateTime": "2019-12-03T04:17:33-08:00",
+          "LastUpdatedTime": "2019-12-11T01:10:22-08:00"
+        },
+        "TxnDate": "2019-12-03",
+        "CurrencyRef": {
+          "value": "KES",
+          "name": "Kenyan Shilling"
+        },
+        "ExchangeRate": 1,
+        "Line": [
+          {
+            "Id": "1",
+            "LineNum": 1,
+            "Amount": 0,
+            "DetailType": "ItemBasedExpenseLineDetail",
+            "ItemBasedExpenseLineDetail": {
+              "CustomerRef": {
+                "value": "60",
+                "name": "EMKAY PET:GULF HORIZON"
+              },
+              "BillableStatus": "NotBillable",
+              "ItemRef": {
+                "value": "40",
+                "name": "2020MSA1234568 (deleted)"
+              },
+              "UnitPrice": 0,
+              "Qty": 1,
+              "TaxCodeRef": {
+                "value": "NON"
+              }
+            }
+          }
+        ],
+        "VendorRef": {
+          "value": "61",
+          "name": "KRA"
+        },
+        "APAccountRef": {
+          "value": "142",
+          "name": "Accounts Payable (A/P)"
+        },
+        "TotalAmt": 0
+      },
+      {
+        "SalesTermRef": {
+          "value": "6"
+        },
+        "DueDate": "2019-11-30",
+        "Balance": 0,
+        "domain": "QBO",
+        "sparse": false,
+        "Id": "165",
+        "SyncToken": "3",
+        "MetaData": {
+          "CreateTime": "2019-11-29T16:19:20-08:00",
+          "LastUpdatedTime": "2019-11-30T00:43:44-08:00"
+        },
+        "DocNumber": "GU-0001",
+        "TxnDate": "2019-11-30",
+        "CurrencyRef": {
+          "value": "USD",
+          "name": "United States Dollar"
+        },
+        "ExchangeRate": 103,
+        "LinkedTxn": [
+          {
+            "TxnId": "167",
+            "TxnType": "BillPaymentCheck"
+          }
+        ],
+        "Line": [
+          {
+            "Id": "1",
+            "LineNum": 1,
+            "Description": "50000 LTRS PMS",
+            "Amount": 2567000,
+            "DetailType": "AccountBasedExpenseLineDetail",
+            "AccountBasedExpenseLineDetail": {
+              "CustomerRef": {
+                "value": "60",
+                "name": "EMKAY PET:GULF HORIZON"
+              },
+              "AccountRef": {
+                "value": "129",
+                "name": "Cost of Goods Sold"
+              },
+              "BillableStatus": "NotBillable",
+              "TaxCodeRef": {
+                "value": "NON"
+              }
+            }
+          }
+        ],
+        "VendorRef": {
+          "value": "63",
+          "name": "GULF OIL usd"
+        },
+        "APAccountRef": {
+          "value": "143",
+          "name": "Accounts Payable (A/P) - USD"
+        },
+        "TotalAmt": 2567000
+      },
+      {
+        "SalesTermRef": {
+          "value": "6"
+        },
+        "DueDate": "2019-11-30",
+        "Balance": 0,
+        "domain": "QBO",
+        "sparse": false,
+        "Id": "163",
+        "SyncToken": "2",
+        "MetaData": {
+          "CreateTime": "2019-11-29T16:07:47-08:00",
+          "LastUpdatedTime": "2019-11-30T00:36:11-08:00"
+        },
+        "DocNumber": "ASE-987",
+        "TxnDate": "2019-11-30",
+        "CurrencyRef": {
+          "value": "KES",
+          "name": "Kenyan Shilling"
+        },
+        "ExchangeRate": 1,
+        "LinkedTxn": [
+          {
+            "TxnId": "166",
+            "TxnType": "BillPaymentCheck"
+          }
+        ],
+        "Line": [
+          {
+            "Id": "1",
+            "LineNum": 1,
+            "Amount": 0,
+            "DetailType": "ItemBasedExpenseLineDetail",
+            "ItemBasedExpenseLineDetail": {
+              "CustomerRef": {
+                "value": "60",
+                "name": "EMKAY PET:GULF HORIZON"
+              },
+              "BillableStatus": "NotBillable",
+              "ItemRef": {
+                "value": "35",
+                "name": "ENTRY (deleted)"
+              },
+              "UnitPrice": 0,
+              "Qty": 50001,
+              "TaxCodeRef": {
+                "value": "NON"
+              }
+            }
+          },
+          {
+            "Id": "2",
+            "LineNum": 2,
+            "Description": "Kenys shilling component",
+            "Amount": 23000,
+            "DetailType": "AccountBasedExpenseLineDetail",
+            "AccountBasedExpenseLineDetail": {
+              "CustomerRef": {
+                "value": "60",
+                "name": "EMKAY PET:GULF HORIZON"
+              },
+              "AccountRef": {
+                "value": "129",
+                "name": "Cost of Goods Sold"
+              },
+              "BillableStatus": "NotBillable",
+              "TaxCodeRef": {
+                "value": "NON"
+              }
+            }
+          }
+        ],
+        "VendorRef": {
+          "value": "62",
+          "name": "GULF OIL"
+        },
+        "APAccountRef": {
+          "value": "142",
+          "name": "Accounts Payable (A/P)"
+        },
+        "TotalAmt": 23000
+      },
+      {
+        "SalesTermRef": {
+          "value": "6"
+        },
+        "DueDate": "2019-11-30",
+        "Balance": 0,
+        "domain": "QBO",
+        "sparse": false,
+        "Id": "162",
+        "SyncToken": "1",
+        "MetaData": {
+          "CreateTime": "2019-11-29T16:01:39-08:00",
+          "LastUpdatedTime": "2019-11-29T16:01:59-08:00"
+        },
+        "DocNumber": "2020MSA1234567",
+        "TxnDate": "2019-11-30",
+        "CurrencyRef": {
+          "value": "KES",
+          "name": "Kenyan Shilling"
+        },
+        "ExchangeRate": 1,
+        "Line": [
+          {
+            "Id": "1",
+            "LineNum": 1,
+            "Description": "AGO BATCH # 50000",
+            "Amount": 0,
+            "DetailType": "ItemBasedExpenseLineDetail",
+            "ItemBasedExpenseLineDetail": {
+              "BillableStatus": "NotBillable",
+              "ItemRef": {
+                "value": "25",
+                "name": "2020MSA1234567 (deleted)"
+              },
+              "UnitPrice": 0,
+              "Qty": 50000,
+              "TaxCodeRef": {
+                "value": "NON"
+              }
+            }
+          }
+        ],
+        "VendorRef": {
+          "value": "61",
+          "name": "KRA"
+        },
+        "APAccountRef": {
+          "value": "142",
+          "name": "Accounts Payable (A/P)"
+        },
+        "TotalAmt": 0
+      }
+    ],
+    "startPosition": 1,
+    "maxResults": 6,
+    "totalCount": 6
+  },
+  "time": "2019-12-28T10:07:33.035-08:00"
+}

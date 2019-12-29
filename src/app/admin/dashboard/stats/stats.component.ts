@@ -113,7 +113,7 @@ export class StatsComponent implements OnInit, OnDestroy {
            */
           this.dateControl.reset({ begin: new Date(moment().subtract(1, "M").startOf("day").toDate()), end: new Date() });
           this.fueltypesArray.forEach(fueltype => {
-            this.batcheservice.depotbatches[fueltype].pipe(takeUntil(this.comopnentDestroyed)).subscribe((batches: Array<Entry>) => {
+            this.batcheservice.depotEntries[fueltype].pipe(takeUntil(this.comopnentDestroyed)).subscribe((batches: Array<Entry>) => {
               /**
                * Reset the values every time the batches change
                */
@@ -155,11 +155,11 @@ export class StatsComponent implements OnInit, OnDestroy {
     return localvar;
   }
 
+
   getTotalAvailable(batch: Entry) {
     const totalqty = batch.qty.total;
-    const totalLoaded = batch.qty.directLoad.total + batch.qty.transfered;
-    const accumulated = batch.qty.directLoad.accumulated;
-    return totalqty - totalLoaded + accumulated.usable;
+    const totalLoaded = batch.qty.directLoad.total + batch.qty.transfered.total;
+    return totalqty - totalLoaded;
   }
 
   /**

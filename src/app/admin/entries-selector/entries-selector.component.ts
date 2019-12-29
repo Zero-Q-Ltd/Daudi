@@ -14,6 +14,7 @@ import { OrdersService } from "../services/orders.service";
 import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { MyTimestamp } from "../../models/firestore/firestoreTypes";
+import { ASE } from "../../models/Daudi/fuel/ASE";
 
 
 interface batchContent {
@@ -40,6 +41,15 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
     pms: Array<Entry>,
     ago: Array<Entry>,
     ik: Array<Entry>
+  } = {
+      pms: [],
+      ago: [],
+      ik: []
+    };
+  depotASEs: {
+    pms: Array<ASE>,
+    ago: Array<ASE>,
+    ik: Array<ASE>
   } = {
       pms: [],
       ago: [],
@@ -80,7 +90,7 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
     private entriesService: EntriesService,
     private ordersservice: OrdersService) {
     this.fueltypesArray.forEach((fueltype: FuelType) => {
-      this.entriesService.depotbatches[fueltype]
+      this.entriesService.depotEntries[fueltype]
         .pipe(takeUntil(this.comopnentDestroyed))
         .subscribe((entries: Array<Entry>) => {
           console.log(entries);
@@ -88,7 +98,7 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
           this.calculateqty();
         });
     });
-    this.entriesService.fetchingbatches.pipe(takeUntil(this.comopnentDestroyed)).subscribe(value => {
+    this.entriesService.fetchingEntry.pipe(takeUntil(this.comopnentDestroyed)).subscribe(value => {
       this.fetchingbatches = value;
     });
     const ordersubscription = this.ordersservice.getorder(orderid)
@@ -127,17 +137,17 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
         /**
          * Check if there is a rollover in the batches
          */
-        if (this.getTotalAvailable(0, fueltype) >= this.order.fuel[fueltype].qty) {
+        if (this.getTotalAvailableEntry(0, fueltype) >= this.order.fuel[fueltype].qty) {
           this.drawnEntry[fueltype][0] = {
             id: this.depotEntries[fueltype][0].Id,
             /**
              * Since there is only 1 batch to be assigned, the new qty is direct
              */
             qtydrawn: this.order.fuel[fueltype].qty,
-            name: this.depotEntries[fueltype][0].batch,
+            name: this.depotEntries[fueltype][0].entry.id,
             totalqty: this.depotEntries[fueltype][0].qty.total,
-            resultstatus: this.getTotalAvailable(0, fueltype) > this.order.fuel[fueltype].qty,
-            remainqty: this.getTotalAvailable(0, fueltype) - this.order.fuel[fueltype].qty
+            resultstatus: this.getTotalAvailableEntry(0, fueltype) > this.order.fuel[fueltype].qty,
+            remainqty: this.getTotalAvailableEntry(0, fueltype) - this.order.fuel[fueltype].qty
           };
           this.donecalculating = true;
 
@@ -156,7 +166,7 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
           /**
            * The value that should e deducted as a result of assigning the first batch number
            */
-          const assignedamount = this.getTotalAvailable(0, fueltype);
+          const assignedamount = this.getTotalAvailableEntry(0, fueltype);
 
           this.depotEntries[fueltype].forEach((batch: Entry, index) => {
             /**
@@ -173,7 +183,7 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
               /**
                * Check if the batch number at that position has enough fuel to be assigned, otherwise error
                */
-              if (this.getTotalAvailable(index, fueltype) >= (this.order.fuel[fueltype].qty - assignedamount)) {
+              if (this.getTotalAvailableEntry(index, fueltype) >= (this.order.fuel[fueltype].qty - assignedamount)) {
                 /**
                  * Only assign a batch if not already containing a value, hence have affinity for the order of display as the second assigned batch
                  */
@@ -187,10 +197,10 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
                   batch1 = {
                     id: batch.Id,
                     qtydrawn,
-                    name: batch.batch,
+                    name: batch.entry,
                     totalqty: batch.qty.total,
-                    resultstatus: this.getTotalAvailable(index, fueltype) > assignedamount,
-                    remainqty: this.getTotalAvailable(index, fueltype) - qtydrawn
+                    resultstatus: this.getTotalAvailableEntry(index, fueltype) > assignedamount,
+                    remainqty: this.getTotalAvailableEntry(index, fueltype) - qtydrawn
                   };
                 }
               } else {
@@ -211,8 +221,8 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
             /**
              * the qty drown
              */
-            qtydrawn: this.getTotalAvailable(0, fueltype),
-            name: this.depotEntries[fueltype][0].batch,
+            qtydrawn: this.getTotalAvailableEntry(0, fueltype),
+            name: this.depotEntries[fueltype][0].entry,
             totalqty: this.depotEntries[fueltype][0].qty.total,
             resultstatus: false,
             remainqty: 0
@@ -238,12 +248,28 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
       return index;
     }
   }
-
-  getTotalAvailable(index: number, fueltype: FuelType) {
+  /**
+   * Returns the total available fuel within an entry
+   * We used the index because it is the crucial element when working with rollovers
+   * @param index of the Entry within the depot entries array
+   * @param fueltype fueltype of the ASE
+   */
+  getTotalAvailableEntry(index: number, fueltype: FuelType) {
     const totalqty = this.depotEntries[fueltype][index].qty.total;
-    const loadedqty = this.depotEntries[fueltype][index].qty.directLoad.total + this.depotEntries[fueltype][index].qty.transfered;
-    const accumulated = this.depotEntries[fueltype][index].qty.directLoad.accumulated;
-    return totalqty - loadedqty + accumulated.usable;
+    const loadedqty = this.depotEntries[fueltype][index].qty.directLoad.total + this.depotEntries[fueltype][index].qty.transfered.total;
+    return totalqty - loadedqty;
+  }
+  /**
+   * Returns the total available fuel within an ASE
+   * We used the index because it is the crucial element when working with rollovers
+   * @param index of the Entry within the depot entries array
+   * @param fueltype fueltype of the ASE
+   */
+  getTotalAvailableASE(index: number, fueltype: FuelType) {
+    const totalqty = this.depotASEs[fueltype][index].qty.total;
+    const loadedqty = this.depotASEs[fueltype][index].qty.directLoad.total + this.depotASEs[fueltype][index].qty.transfered.total;
+    const accumulated = this.depotASEs[fueltype][index].qty.directLoad.accumulated.total;
+    return totalqty - loadedqty + accumulated;
   }
 
   /***

@@ -2,19 +2,22 @@
 import { FuelType } from "./FuelType";
 import { MyTimestamp } from "../../firestore/firestoreTypes";
 import { StockQty } from "./StockQty";
+import { QbRef } from "./QbRef";
 
 
 export interface Entry {
 
   Amount: number;
   date: MyTimestamp;
-  entry: string;
+  entry: {
+    id: string,
+    refs: QbRef[]
+  };
   depot: {
     name: string
     Id: string
   };
   qty: StockQty;
-  QbId: string;
   fuelType: FuelType;
   price: number;
   Id: string;
@@ -26,10 +29,9 @@ export interface StockTransfer {
   transfers: StockQty[];
 }
 
-export const emptybatches: Entry = {
+export const emptyEntries: Entry = {
   Id: null,
   fuelType: null,
-  QbId: null,
   Amount: null,
   entry: null,
   price: 0,
@@ -38,6 +40,10 @@ export const emptybatches: Entry = {
     directLoad: {
       total: 0
     },
+    transfered: {
+      total: 0,
+      transfers: []
+    }
   },
 
   depot: {

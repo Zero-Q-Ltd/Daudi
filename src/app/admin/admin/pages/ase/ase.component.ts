@@ -11,16 +11,13 @@ import { ConfigService } from "../../../services/core/config.service";
 import { FuelType, FuelNamesArray } from "../../../../models/Daudi/fuel/FuelType";
 import { SyncRequest } from "../../../../models/Cloud/Sync";
 import { MyTimestamp } from "../../../../models/firestore/firestoreTypes";
-import { CompanySync } from "../../../../models/Cloud/CompanySync";
-import { OmcService } from "../../../services/core/omc.service";
-
 
 @Component({
-  selector: "app-entries",
-  templateUrl: "./entries.component.html",
-  styleUrls: ["./entries.component.scss"]
+  selector: "app-ase",
+  templateUrl: "./ase.component.html",
+  styleUrls: ["./ase.component.scss"]
 })
-export class BatchesComponent implements OnInit {
+export class AseComponent implements OnInit {
   fueltypesArray = FuelNamesArray;
   datasource = {
     pms: new MatTableDataSource<Entry>(),
@@ -63,8 +60,7 @@ export class BatchesComponent implements OnInit {
     private functions: AngularFireFunctions,
     private batcheservice: EntriesService,
     private config: ConfigService,
-    private omc: OmcService,
-    private entriesService: EntriesService) {
+    private batchesservice: EntriesService) {
     depotsservice.activedepot.pipe(takeUntil(this.comopnentDestroyed)).subscribe(depotvata => {
       this.loading = {
         pms: true,
@@ -77,7 +73,7 @@ export class BatchesComponent implements OnInit {
           /**
            * Create a subscrition for 1000 batches history
            */
-          const subscription = this.entriesService.getEntries(fueltype).limit(100)
+          const subscription = this.batchesservice.getEntries(fueltype).limit(100)
             .onSnapshot(snapshot => {
               this.loading[fueltype] = false;
               this.datasource[fueltype].data = snapshot.docs.map(batch => {
@@ -120,24 +116,16 @@ export class BatchesComponent implements OnInit {
 
   syncdb() {
     this.creatingsync = true;
-
-    const req: SyncRequest = {
+    const syncobject: SyncRequest = {
       time: MyTimestamp.now(),
       synctype: ["BillPayment"]
-    };
-
-    const syncobject: CompanySync = {
-      config: this.config.omcconfig.value,
-      environment: this.config.environment.value,
-      omc: this.omc.currentOmc.value,
-      sync: req
     };
 
     this.functions.httpsCallable("requestsync")(syncobject).subscribe(res => {
       this.creatingsync = false;
       this.notification.notify({
         alert_type: "success",
-        body: "Entries updated",
+        body: "ASE's updated",
         title: "Success"
       });
     });
