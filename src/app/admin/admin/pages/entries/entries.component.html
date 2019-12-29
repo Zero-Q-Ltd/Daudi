@@ -13,9 +13,9 @@
             <mat-form-field appearance="legacy">
               <input (keyup)="filterbatches(fueltype, $event.target.value)" matInput placeholder="Filter">
               <button (click)='syncdb()' *ngIf='!creatingsync' mat-icon-button matSuffix type="button">
-              <span class="nav-icon nav-dot material-icons kra-save" matTooltip="Update">
-                autorenew
-              </span>
+                <span class="nav-icon nav-dot material-icons kra-save" matTooltip="Update">
+                  autorenew
+                </span>
               </button>
               <mat-spinner *ngIf='creatingsync' [diameter]="19" matSuffix></mat-spinner>
             </mat-form-field>
@@ -23,57 +23,54 @@
           <table [dataSource]="datasource[fueltype]" mat-table style="width: 100%">
 
             <ng-container matColumnDef="id">
-              <th *matHeaderCellDef mat-header-cell> Batch ID</th>
-              <td *matCellDef="let batch" mat-cell> {{batch.Id}}</td>
+              <th *matHeaderCellDef mat-header-cell> Entry ID</th>
+              <td *matCellDef="let entry" mat-cell> {{entry.Id}}</td>
 
             </ng-container>
 
             <ng-container matColumnDef="date">
               <th *matHeaderCellDef mat-header-cell> Date</th>
-              <td *matCellDef="let batch" mat-cell> {{batch.date?.toDate() | date: 'dd/MM/yyyy, h:mm a'}}</td>
+              <td *matCellDef="let entry" mat-cell> {{entry.date?.toDate() | date: 'dd/MM/yyyy, h:mm a'}}</td>
             </ng-container>
 
             <!-- Item Column -->
 
-            <ng-container matColumnDef="batch">
-              <th *matHeaderCellDef mat-header-cell> Batch #</th>
-              <td *matCellDef="let batch" mat-cell> {{batch.batch}}</td>
+            <ng-container matColumnDef="entry">
+              <th *matHeaderCellDef mat-header-cell> Entry #</th>
+              <td *matCellDef="let entry" mat-cell> {{entry.entry.id}}</td>
             </ng-container>
 
             <!-- Cost Column -->
             <ng-container matColumnDef="totalqty">
               <th *matHeaderCellDef mat-header-cell> Total Batch Qty</th>
-              <td *matCellDef="let batch" mat-cell>{{batch.qty}}</td>
+              <td *matCellDef="let entry" mat-cell>{{entry.qty.total}}</td>
             </ng-container>
 
             <!-- Cost Column -->
-            <ng-container matColumnDef="accumulated">
-              <th *matHeaderCellDef mat-header-cell>Total Accumulated Qty</th>
-              <td *matCellDef="let batch" mat-cell>{{batch.accumulated.total}}</td>
+            <ng-container matColumnDef="transferred">
+              <th *matHeaderCellDef mat-header-cell>Transferred</th>
+              <td *matCellDef="let entry" mat-cell>{{entry.qty.transferred.total}}</td>
             </ng-container>
-            <!-- Cost Column -->
-            <ng-container matColumnDef="usableaccumulated">
-              <th *matHeaderCellDef mat-header-cell>Usable Accumulated Qty</th>
-              <td *matCellDef="let batch" mat-cell>{{batch.accumulated.usable}}</td>
-            </ng-container>
+
             <!-- Cost Column -->
             <ng-container matColumnDef="loadedqty">
               <th *matHeaderCellDef mat-header-cell> Loaded Qty</th>
-              <td *matCellDef="let batch" mat-cell> {{batch.loadedqty}}</td>
+              <td *matCellDef="let entry" mat-cell> {{entry.qty.directLoad.total}}</td>
             </ng-container>
             <!-- Cost Column -->
             <ng-container matColumnDef="availableqty">
               <th *matHeaderCellDef mat-header-cell> Available Qty</th>
-              <td *matCellDef="let batch" mat-cell>{{batch.qty + batch.accumulated.usable - batch.loadedqty}}</td>
+              <td *matCellDef="let entry" mat-cell>
+                {{entry.qty.total - entry.qty.transferred.total - entry.qty.directLoad.total}}</td>
             </ng-container>
             <!-- Cost Column -->
             <ng-container matColumnDef="status">
-              <th *matHeaderCellDef mat-header-cell> Batch Status</th>
-              <td *matCellDef="let batch ;let i = index" mat-cell>
-                <button *ngIf="batch.status === 1" class="btn btn-outline-success btn-sm">
+              <th *matHeaderCellDef mat-header-cell> Entry Status</th>
+              <td *matCellDef="let entry ;let i = index" mat-cell>
+                <button *ngIf="entry.active" class="btn btn-outline-success btn-sm">
                   ACTIVE
                 </button>
-                <button *ngIf="batch.status === 0" class="btn btn-outline-danger btn-sm">
+                <button *ngIf="!entry.active" class="btn btn-outline-danger btn-sm">
                   INACTIVE
                 </button>
               </td>

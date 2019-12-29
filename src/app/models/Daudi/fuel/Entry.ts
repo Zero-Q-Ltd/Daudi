@@ -24,11 +24,6 @@ export interface Entry {
   active: boolean; // 1 for active, 0 for inactive
 }
 
-export interface StockTransfer {
-  total: number;
-  transfers: StockQty[];
-}
-
 export const emptyEntries: Entry = {
   Id: null,
   fuelType: null,
@@ -40,7 +35,7 @@ export const emptyEntries: Entry = {
     directLoad: {
       total: 0
     },
-    transfered: {
+    transferred: {
       total: 0,
       transfers: []
     }

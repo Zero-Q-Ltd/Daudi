@@ -53,7 +53,7 @@ export class EntriesService {
         .where("fuelType", "==", fueltype)
         .onSnapshot(snapshot => {
           this.fetchingEntry.next(false);
-          // if(!snapshot.empty) console.log(snapshot.docs[0].data())
+          if (!snapshot.empty) { console.log(snapshot.docs[0].data()) }
           this.depotEntries[fueltype].next(snapshot.docs.map(doc => {
             const value = Object.assign({}, emptyEntries, doc.data());
             value.Id = doc.id;

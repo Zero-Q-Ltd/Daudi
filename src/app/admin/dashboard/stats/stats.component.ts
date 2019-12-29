@@ -158,7 +158,7 @@ export class StatsComponent implements OnInit, OnDestroy {
 
   getTotalAvailable(batch: Entry) {
     const totalqty = batch.qty.total;
-    const totalLoaded = batch.qty.directLoad.total + batch.qty.transfered.total;
+    const totalLoaded = batch.qty.directLoad.total + batch.qty.transferred.total;
     return totalqty - totalLoaded;
   }
 

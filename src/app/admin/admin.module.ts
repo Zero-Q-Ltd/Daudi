@@ -84,7 +84,7 @@ import { OrdersService } from "./services/orders.service";
 import { PricesService } from "./services/prices.service";
 import { OmcService } from "./services/core/omc.service";
 import { OmcManagementComponent } from "./admin/pages/omc-management/omc-management.component";
-import { BatchesComponent } from "./admin/pages/entries/entries.component";
+import { EntriesComponent } from "./admin/pages/entries/entries.component";
 import { NgxEchartsModule } from "ngx-echarts";
 import { SatDatepickerModule, SatNativeDateModule } from "saturn-datepicker";
 import { CalendarRangesComponent } from "./dashboard/calendar-ranges/calendar-ranges.component";
@@ -189,7 +189,7 @@ import { PriceComparisonComponent } from "./price-comparison/price-comparison.co
     ColumnsCustomizerComponent,
     DepotManagementComponent,
     OmcManagementComponent,
-    BatchesComponent,
+    EntriesComponent,
     CalendarRangesComponent,
     ConfirmDepotComponent,
     StatsComponent,

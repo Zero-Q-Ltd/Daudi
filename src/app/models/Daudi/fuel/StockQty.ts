@@ -1,4 +1,4 @@
-import { StockTransfer } from "./Entry";
+import { StockTransfer } from "./StockTransfer";
 import { StockLoadDetail } from "./StockLoadDetail";
 export interface StockQty {
     /**
@@ -9,7 +9,7 @@ export interface StockQty {
     /**
      * Quantity transferred to private depots
      */
-    transfered: StockTransfer;
+    transferred: StockTransfer;
     /**
      * Qty loaded directly at KPC
      */

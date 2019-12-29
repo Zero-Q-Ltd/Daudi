@@ -20,7 +20,7 @@ import { OmcService } from "../../../services/core/omc.service";
   templateUrl: "./entries.component.html",
   styleUrls: ["./entries.component.scss"]
 })
-export class BatchesComponent implements OnInit {
+export class EntriesComponent implements OnInit {
   fueltypesArray = FuelNamesArray;
   datasource = {
     pms: new MatTableDataSource<Entry>(),
@@ -31,7 +31,7 @@ export class BatchesComponent implements OnInit {
   @ViewChild(MatPaginator, { static: true }) pmspaginator: MatPaginator;
   @ViewChild(MatPaginator, { static: true }) agopaginator: MatPaginator;
   @ViewChild(MatPaginator, { static: true }) ikpaginator: MatPaginator;
-  displayedColumns: string[] = ["id", "date", "batch", "totalqty", "accumulated", "usableaccumulated", "loadedqty", "availableqty", "status"];
+  displayedColumns: string[] = ["id", "date", "entry", "totalqty", "transferred", "loadedqty", "availableqty", "status"];
   loading: {
     pms: boolean,
     ago: boolean,
@@ -61,7 +61,6 @@ export class BatchesComponent implements OnInit {
     private depotsservice: DepotService,
     private notification: NotificationService,
     private functions: AngularFireFunctions,
-    private batcheservice: EntriesService,
     private config: ConfigService,
     private omc: OmcService,
     private entriesService: EntriesService) {
@@ -80,9 +79,9 @@ export class BatchesComponent implements OnInit {
           const subscription = this.entriesService.getEntries(fueltype).limit(100)
             .onSnapshot(snapshot => {
               this.loading[fueltype] = false;
-              this.datasource[fueltype].data = snapshot.docs.map(batch => {
-                const value: Entry = Object.assign({}, emptyEntries, batch.data());
-                value.Id = batch.id;
+              this.datasource[fueltype].data = snapshot.docs.map(entry => {
+                const value: Entry = Object.assign({}, emptyEntries, entry.data());
+                value.Id = entry.id;
                 return value;
               });
             });
@@ -91,7 +90,7 @@ export class BatchesComponent implements OnInit {
            * Because all these batches might take time to load, take the totals
            * from the already loaded batches within that depot
            */
-          this.batcheservice.depotEntries[fueltype]
+          this.entriesService.depotEntries[fueltype]
             .pipe(takeUntil(this.comopnentDestroyed))
             .subscribe((batches: Array<Entry>) => {
               /**
@@ -145,7 +144,7 @@ export class BatchesComponent implements OnInit {
 
   getTotalAvailable(batch: Entry) {
     const totalqty = batch.qty.total;
-    const totalLoaded = batch.qty.directLoad.total + batch.qty.transfered.total;
+    const totalLoaded = batch.qty.directLoad.total + batch.qty.transferred.total;
     return totalqty - totalLoaded;
   }
 

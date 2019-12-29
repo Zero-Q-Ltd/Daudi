@@ -1,15 +1,16 @@
 <h2 mat-dialog-title>Truck for {{order.customer.name}} <span class="color-pms">PMS:</span>{{order.fuel.pms.qty}} <span
-    class="color-ago">AGO:</span> {{order.fuel.ago.qty}} <span class="color-ik">IK:</span> {{order.fuel.ik.qty}}</h2>
-
+    class="color-ago">AGO:</span> {{order.fuel.ago.qty}} <span class="color-ik">IK:</span> {{order.fuel.ik.qty}}
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  Total ASE:
+</h2>
 <mat-dialog-content *ngIf="donecalculating">
   <table class="table table-stripped">
     <thead class="thead-primary">
       <tr>
-        <th> Entry ID</th>
         <th> Entry #</th>
         <th> Entry Qty</th>
-        <th> Accum Qty</th>
         <th> Loaded Qty</th>
+        <th> Transferred Qty</th>
         <th> Available Qty</th>
         <th> Qty to be Drawn</th>
         <th> New Entry Qty</th>
@@ -19,24 +20,23 @@
 
     <tbody *ngFor="let fueltype of fueltypesArray" [ngClass]="{ 'mat-elevation-z4' :  order.fuel[fueltype].qty > 0} ">
       <tr *ngFor="let entry of depotEntries[fueltype];let i = index">
-        <td>{{entry.Id}}</td>
-        <td><span class="color-{{fueltype}}">{{entry.batch}}</span></td>
-        <td>{{entry.qty}}</td>
-        <td>{{entry.accumulated.usable}}</td>
-        <td>{{entry.loadedqty}}</td>
-        <td>{{entry.qty + entry.accumulated.usable - entry.loadedqty}}</td>
+        <td><span class="color-{{fueltype}}">{{entry.entry.id}}</span></td>
+        <td>{{entry.qty.total}}</td>
+        <td>{{entry.qty.directLoad.total}}</td>
+        <td>{{entry.qty.transferred.total}}</td>
+        <td>{{entry.qty.total - entry.qty.directLoad.total - entry.qty.transferred.total}}</td>
         <td>
-          {{drawnEntry[fueltype]['batch' + resolveindex(i)].name == entry.batch ?
-          drawnEntry[fueltype]['batch' + resolveindex(i)].qtydrawn : 0 }}
+          <!-- {{drawnEntry[fueltype]['batch' + resolveindex(i)].name == entry.batch ?
+          drawnEntry[fueltype]['batch' + resolveindex(i)].qtydrawn : 0 }} -->
         </td>
         <td>
-          {{(drawnEntry[fueltype]['batch' + resolveindex(i)].name == entry.batch ?
-          drawnEntry[fueltype]['batch' + resolveindex(i)].remainqty : 0) }}
+          <!-- {{(drawnEntry[fueltype]['batch' + resolveindex(i)].name == entry.batch ?
+          drawnEntry[fueltype]['batch' + resolveindex(i)].remainqty : 0) }} -->
         </td>
         <td>
           <button class="btn btn-outline-success btn-sm">
-            {{drawnEntry[fueltype]['batch' + resolveindex(i)].name == entry.batch ?
-            drawnEntry[fueltype]['batch' + resolveindex(i)].resultstatus ? 'Active' : 'Inactive' : 'Active' }}
+            <!-- {{drawnEntry[fueltype]['batch' + resolveindex(i)].name == entry.batch ?
+            drawnEntry[fueltype]['batch' + resolveindex(i)].resultstatus ? 'Active' : 'Inactive' : 'Active' }} -->
           </button>
         </td>
       </tr>

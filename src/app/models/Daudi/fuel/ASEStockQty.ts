@@ -1,4 +1,4 @@
-import { StockTransfer } from "./Entry";
+import { StockTransfer } from "./StockTransfer";
 import { ASELoadDetail } from "./ASELoadDetail";
 export interface ASEStockQty {
     /**
