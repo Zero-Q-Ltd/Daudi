@@ -28,7 +28,17 @@ export interface Config {
     taxExempt: {
         [key in Environment]: {
             [subKey in FuelType]: TaxExempt
-        } };
+        }
+    };
+    qty: {
+        [key in FuelType]: {
+            allocation: number;
+            /**
+             * Total amount of ASE in KPC depots
+             */
+            ase: number
+        };
+    };
 }
 
 export interface QboEnvironment {
@@ -78,6 +88,20 @@ const emptytaxExempt: TaxExempt = {
 };
 
 export const emptyConfig: Config = {
+    qty: {
+        ago: {
+            allocation: 0,
+            ase: 0
+        },
+        ik: {
+            allocation: 0,
+            ase: 0
+        },
+        pms: {
+            allocation: 0,
+            ase: 0
+        }
+    },
     depotconfig: {
         live: [],
         sandbox: []

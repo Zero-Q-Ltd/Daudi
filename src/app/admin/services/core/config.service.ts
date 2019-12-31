@@ -1,50 +1,34 @@
 import { Injectable } from "@angular/core";
 import { AngularFirestore } from "@angular/fire/firestore";
 import { AdminService } from "./admin.service";
-import { BehaviorSubject } from "rxjs";
+import { BehaviorSubject, Observable } from "rxjs";
 import { Config, emptyConfig, QboEnvironment } from "../../../models/Daudi/omc/Config";
 import { Admin } from "../../../models/Daudi/admin/Admin";
 import { Environment } from "../../../models/Daudi/omc/Environments";
+import { map } from "rxjs/operators";
 
 @Injectable({
   providedIn: "root"
 })
 export class ConfigService {
-  omcconfig: BehaviorSubject<Config> = new BehaviorSubject<Config>({ ...emptyConfig });
-  environment: BehaviorSubject<Environment> = new BehaviorSubject<Environment>(Environment.sandbox);
 
   constructor(private db: AngularFirestore, private adminservice: AdminService) {
-    adminservice.observableuserdata
-      .subscribe(admin => {
-        if (admin) {
-          this.fetchcompany(admin);
-        }
-      });
+
   }
-  fetchcompany(admin: Admin) {
-    this.db.firestore.collection("omc")
+
+
+  fetchConfig(admin: Admin): Observable<Config> {
+    return this.db.collection("omc")
       .doc(admin.config.omcid)
       .collection("config")
-      .doc("main")
-      .onSnapshot(companydata => {
-        if (!companydata.exists) {
-          this.initConfig(admin);
-          return;
-        }
-        this.omcconfig.next({ ...emptyConfig, ...{ id: companydata.id }, ...companydata.data() });
-      });
+      .doc<Admin>("main")
+      .snapshotChanges()
+      .pipe(
+        map(companydata => {
+          return { ...emptyConfig, ...{ id: companydata.payload.id }, ...companydata.payload.data() };
+        }));
   }
-  /**
-   *
-   * @param envString
-   */
-  getEnvironment(envString?: Environment): QboEnvironment {
-    if (!envString) {
-      return this.omcconfig.value.Qbo[this.environment.value];
-    } else {
-      return this.omcconfig.value.Qbo[envString];
-    }
-  }
+
 
   initConfig(admin: Admin) {
     const newConfig: Config = { ...emptyConfig };
