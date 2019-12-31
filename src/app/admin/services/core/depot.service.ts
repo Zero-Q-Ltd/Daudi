@@ -1,14 +1,9 @@
 import { Injectable } from "@angular/core";
-import { AngularFirestore, FieldPath, QueryFn } from "@angular/fire/firestore";
-import { Depot, emptydepot } from "../../../models/Daudi/depot/Depot";
-import { emptyDepotConfig } from "../../../models/Daudi/depot/DepotConfig";
-import { AdminService } from "./admin.service";
-import { ConfigService } from "./config.service";
-import { CoreService } from "./core.service";
-import { map } from "rxjs/operators";
+import { AngularFirestore, QueryFn } from "@angular/fire/firestore";
 import { Observable } from "rxjs";
-import { WhereFilterOp, FieldPath, OrderByDirection } from "@google-cloud/firestore";
-import { query } from "@angular/animations";
+import { map } from "rxjs/operators";
+import { Depot, emptydepot } from "../../../models/Daudi/depot/Depot";
+import { CoreService } from "./core.service";
 
 @Injectable({
   providedIn: "root"
@@ -18,9 +13,7 @@ export class DepotService {
 
   constructor(
     private core: CoreService,
-    private db: AngularFirestore,
-    private adminservice: AdminService,
-    private config: ConfigService) {
+    private db: AngularFirestore) {
 
   }
 

@@ -1,79 +1,46 @@
 import { Injectable } from "@angular/core";
-import { Entry, emptyEntries } from "../../models/Daudi/fuel/Entry";
+import { AngularFirestore, QueryFn } from "@angular/fire/firestore";
 import { BehaviorSubject } from "rxjs";
-import { AngularFirestore } from "@angular/fire/firestore";
+import { skipWhile, map } from "rxjs/operators";
+import { emptyEntries, Entry } from "../../models/Daudi/fuel/Entry";
+import { FuelNamesArray, FuelType } from "../../models/Daudi/fuel/FuelType";
+import { CoreService } from "./core/core.service";
 import { DepotService } from "./core/depot.service";
-import { FuelType, FuelNamesArray } from "../../models/Daudi/fuel/FuelType";
 import { OmcService } from "./core/omc.service";
-import { skipWhile } from "rxjs/operators";
 
 @Injectable({
   providedIn: "root"
 })
 export class EntriesService {
-  fetchingEntry = new BehaviorSubject(true);
-  depotEntries: {
-    pms: BehaviorSubject<Array<Entry>>,
-    ago: BehaviorSubject<Array<Entry>>,
-    ik: BehaviorSubject<Array<Entry>>,
-  } = {
-      pms: new BehaviorSubject([]),
-      ago: new BehaviorSubject([]),
-      ik: new BehaviorSubject([])
-    };
-  /**
-   * this keeps a local copy of all the subscriptions within this service
-   */
-  subscriptions: Map<string, any> = new Map<string, any>();
-  fueltypesArray = FuelNamesArray;
 
   constructor(
     private db: AngularFirestore,
-    private omc: OmcService,
-    private depotsservice: DepotService) {
-    this.omc.currentOmc.pipe(
-      skipWhile(t => !t.Id)
-    ).subscribe(() => {
-      this.unsubscribeAll();
-      this.fetchentries();
-    });
+    private core: CoreService) {
+
   }
 
-  fetchentries() {
-    this.fetchingEntry.next(true);
-    this.fueltypesArray.forEach((fueltype) => {
-      if (!this.depotsservice.activedepot.value.depot.Id) {
-        return;
+  fetchEntries(queryFn: QueryFn) {
+    return this.db.collection<Entry>("omc", queryFn)
+      .doc(this.core.currentOmc.value.Id)
+      .collection("entry")
+      .snapshotChanges()
+      .pipe(map(t => {
+        return {
+          ...t.map(data => {
+            return {
+              ...emptyEntries, ...{ Id: data.payload.doc.id }, ...data.payload.doc.data()
+            };
+          })
+        };
       }
-      const subscriprion = this.db.firestore.collection("omc")
-        .doc(this.omc.currentOmc.value.Id)
-        .collection("entry")
-        .orderBy("date", "asc")
-        .where("active", "==", true)
-        .where("fuelType", "==", fueltype)
-        .onSnapshot(snapshot => {
-          this.fetchingEntry.next(false);
-          if (!snapshot.empty) { console.log(snapshot.docs[0].data()) }
-          this.depotEntries[fueltype].next(snapshot.docs.map(doc => {
-            const value = Object.assign({}, emptyEntries, doc.data());
-            value.Id = doc.id;
-            return value as Entry;
-          }));
-        });
-      this.subscriptions.set(`${fueltype}entry`, subscriprion);
-    });
+      ));
   }
 
-  unsubscribeAll() {
-    this.subscriptions.forEach(value => {
-      value();
-    });
-  }
 
-  getEntries(type: FuelType) {
 
+  getAllEntries(type: FuelType) {
     return this.db.firestore.collection("omc")
-      .doc(this.omc.currentOmc.value.Id)
+      .doc(this.core.currentOmc.value.Id)
       .collection("entry")
       .where("fuelType", "==", type)
       .orderBy("active", "desc");
@@ -81,7 +48,7 @@ export class EntriesService {
 
   updateEntry(entryId: string) {
     return this.db.firestore.collection("omc")
-      .doc(this.omc.currentOmc.value.Id)
+      .doc(this.core.currentOmc.value.Id)
       .collection("entry")
       .doc(entryId);
   }

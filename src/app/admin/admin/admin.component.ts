@@ -7,6 +7,7 @@ import { AdminService } from "../services/core/admin.service";
 import { DepotService } from "../services/core/depot.service";
 import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
+import { CoreService } from "../services/core/core.service";
 
 
 @Component({
@@ -24,11 +25,13 @@ export class AdminComponent implements OnInit, OnDestroy {
   alldepots: Array<Depot>;
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
 
-  constructor(private adminservice: AdminService,
+  constructor(
+    private adminservice: AdminService,
     private dialog: MatDialog,
+    private core: CoreService,
     private depotsservice: DepotService) {
 
-    this.depotsservice.alldepots.pipe(takeUntil(this.comopnentDestroyed)).subscribe(depots => {
+    this.core.alldepots.pipe(takeUntil(this.comopnentDestroyed)).subscribe(depots => {
       this.alldepots = depots;
     });
   }

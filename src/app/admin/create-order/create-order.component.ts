@@ -1,32 +1,24 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild, OnChanges } from "@angular/core";
+import { Component, OnDestroy } from "@angular/core";
+import { MatDialog } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
-import { MatDialog, MatSort, MatTableDataSource } from "@angular/material";
+import { firestore } from "firebase";
 // import our interface
-import { Observable, ReplaySubject, combineLatest } from "rxjs";
-import { FormArray, FormControl, FormGroup, FormBuilder } from "ngx-strongly-typed-forms";
-import { MapsComponent } from "../maps/maps.component";
-import { NotificationService } from "../../shared/services/notification.service";
-import { DaudiCustomer, emptyDaudiCustomer } from "../../models/Daudi/customer/Customer";
-import { emptyorder, Order } from "../../models/Daudi/order/Order";
-import { CustomerDetail } from "../../models/Daudi/customer/CustomerDetail";
+import { combineLatest, ReplaySubject } from "rxjs";
+import { skipWhile, takeUntil } from "rxjs/operators";
+import { DaudiCustomer } from "../../models/Daudi/customer/Customer";
 import { Depot, emptydepot } from "../../models/Daudi/depot/Depot";
+import { DepotConfig, emptyDepotConfig } from "../../models/Daudi/depot/DepotConfig";
+import { FuelNamesArray } from "../../models/Daudi/fuel/FuelType";
+import { Config, emptyConfig } from "../../models/Daudi/omc/Config";
+import { Environment } from "../../models/Daudi/omc/Environments";
+import { emptyorder, Order } from "../../models/Daudi/order/Order";
+import { NotificationService } from "../../shared/services/notification.service";
+import { MapsComponent } from "../maps/maps.component";
 import { AdminService } from "../services/core/admin.service";
-import { DepotService } from "../services/core/depot.service";
+import { CoreService } from "../services/core/core.service";
 import { CustomerService } from "../services/customers.service";
 import { OrdersService } from "../services/orders.service";
-import { PricesService } from "../services/prices.service";
-import { AngularFireFunctions } from "@angular/fire/functions";
-import { map, startWith, takeUntil, skipWhile } from "rxjs/operators";
-import { FuelType, FuelNamesArray } from "../../models/Daudi/fuel/FuelType";
 import { ConfirmDepotComponent } from "./components/confirm-depot/confirm-depot.component";
-import { OmcService } from "../services/core/omc.service";
-import { ConfigService } from "../services/core/config.service";
-import { Config, emptyConfig } from "../../models/Daudi/omc/Config";
-import { DepotConfig, emptyDepotConfig } from "../../models/Daudi/depot/DepotConfig";
-import { Environment } from "../../models/Daudi/omc/Environments";
-import { Validators } from "@angular/forms";
-import { CreateOrder, OrderFuel } from "../../models/Daudi/forms/CreateOrder";
-import { firestore } from "firebase";
 
 @Component({
   selector: "create-order",
@@ -71,26 +63,23 @@ export class CreateOrderComponent implements OnDestroy {
     private dialog: MatDialog,
     private route: ActivatedRoute,
     private adminservice: AdminService,
-    private depotService: DepotService,
     private customerService: CustomerService,
     private orderservice: OrdersService,
-    private omcservice: OmcService,
-    private configService: ConfigService,
-    private priceservice: PricesService,
-    private functions: AngularFireFunctions) {
+    private core: CoreService,
+  ) {
 
     combineLatest([
       this.route.params.pipe(
         takeUntil(this.comopnentDestroyed)),
-      this.depotService.activedepot.pipe(
+      this.core.activedepot.pipe(
         takeUntil(this.comopnentDestroyed),
         skipWhile(t => !t.depot.Id)),
-      this.configService.omcconfig.pipe(
+      this.core.omcconfig.pipe(
         takeUntil(this.comopnentDestroyed),
         skipWhile(t => !t)),
-      this.configService.environment
+      this.core.environment
         .pipe(takeUntil(this.comopnentDestroyed)),
-      this.omcservice.currentOmc.pipe(
+      this.core.currentOmc.pipe(
         takeUntil(this.comopnentDestroyed),
         skipWhile(t => !t.Id))
     ]).subscribe(res => {
@@ -223,10 +212,10 @@ export class CreateOrderComponent implements OnDestroy {
     };
     this.temporder.config = {
       depot: {
-        id: this.depotService.activedepot.value.depot.Id,
-        name: this.depotService.activedepot.value.depot.Name
+        id: this.core.activedepot.value.depot.Id,
+        name: this.core.activedepot.value.depot.Name
       },
-      environment: this.configService.environment.value
+      environment: this.core.environment.value
     };
     if (!this.temporder.customer.QbId) {
       // check if KRA pin is unique

@@ -17,6 +17,7 @@ import { Metadata } from "../../../../models/Daudi/universal/Metadata";
 import { AdminService } from "../../../services/core/admin.service";
 import { ConfirmDialogComponent } from "../../../confirm-dialog/confirm-dialog.component";
 import { deepCopy } from "../../../../models/utils/deepCopy";
+import { CoreService } from "../../../services/core/core.service";
 
 @Component({
   selector: "app-admin-levels",
@@ -33,6 +34,7 @@ export class AdminLevelsComponent implements OnInit, OnDestroy {
     private companyservice: ConfigService,
     private formBuilder: FormBuilder,
     private _matDialog: MatDialog,
+    private core: CoreService,
     private notificationservice: NotificationService,
     private adminService: AdminService,
 
@@ -49,7 +51,7 @@ export class AdminLevelsComponent implements OnInit, OnDestroy {
     this.comopnentDestroyed.complete();
   }
   initvalues(): void {
-    this.companyservice.omcconfig.pipe(takeUntil(this.comopnentDestroyed)).subscribe(co => {
+    this.core.omcconfig.pipe(takeUntil(this.comopnentDestroyed)).subscribe(co => {
       // this.originalCompany = co;
       // this.tempcompany = Object.assign({}, co);
       this.initforms();

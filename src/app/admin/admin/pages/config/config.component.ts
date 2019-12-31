@@ -10,6 +10,7 @@ import { NotificationService } from "../../../../shared/services/notification.se
 import * as firebase from "firebase";
 import { ConfirmDialogComponent } from "../../../confirm-dialog/confirm-dialog.component";
 import { deepCopy } from "../../../../models/utils/deepCopy";
+import { CoreService } from "../../../services/core/core.service";
 @Component({
   selector: "app-company",
   templateUrl: "./config.component.html",
@@ -34,6 +35,7 @@ export class ConfigComponent implements OnInit, OnDestroy {
     private notificationservice: NotificationService,
     communicatioservice: CommunicationService,
     private companyservice: ConfigService,
+    private core: CoreService,
     private _matDialog: MatDialog) {
 
     /**
@@ -54,7 +56,7 @@ export class ConfigComponent implements OnInit, OnDestroy {
     this.comopnentDestroyed.complete();
   }
   initvalues(): void {
-    this.companyservice.omcconfig.pipe(takeUntil(this.comopnentDestroyed)).subscribe(co => {
+    this.core.omcconfig.pipe(takeUntil(this.comopnentDestroyed)).subscribe(co => {
       console.log(co);
       // this.originalCompany = co;
       // this.tempcompany = Object.assign({}, co);

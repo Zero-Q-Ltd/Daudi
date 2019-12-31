@@ -21,6 +21,7 @@ import "echarts/theme/macarons.js";
 import { ReplaySubject } from "rxjs";
 import { takeUntil, skipWhile } from "rxjs/operators";
 import { FuelType, FuelNamesArray } from "../../../models/Daudi/fuel/FuelType";
+import { CoreService } from "../../services/core/core.service";
 
 @Component({
   selector: "app-stats",
@@ -85,8 +86,9 @@ export class StatsComponent implements OnInit, OnDestroy {
     private depotservice: DepotService,
     private batcheservice: EntriesService,
     private statservice: StatsService,
+    private core: CoreService,
     private priceservice: PricesService) {
-    this.depotservice.activedepot.pipe(
+    this.core.activedepot.pipe(
       skipWhile(d => !d.depot.Id),
       takeUntil(this.comopnentDestroyed))
       .subscribe(depot => {

@@ -8,46 +8,21 @@ import { BehaviorSubject, combineLatest } from "rxjs";
 import { Price } from "../../models/Daudi/depot/Price";
 import { skipWhile } from "rxjs/operators";
 import { OmcService } from "./core/omc.service";
+import { CoreService } from "./core/core.service";
 
 @Injectable({
   providedIn: "root"
 })
 export class PricesService {
 
-  avgprices: {
-    [key in FuelType]: {
-      total: BehaviorSubject<number>,
-      avg: BehaviorSubject<number>,
-      prices: BehaviorSubject<Array<Price>>
-    }
-  } = {
-      pms: {
-        total: new BehaviorSubject<number>(0),
-        avg: new BehaviorSubject<number>(0),
-        prices: new BehaviorSubject<Array<Price>>([])
-      },
-      ago: {
-        total: new BehaviorSubject<number>(0),
-        avg: new BehaviorSubject<number>(0),
-        prices: new BehaviorSubject<Array<Price>>([])
-      },
-      ik: {
-        total: new BehaviorSubject<number>(0),
-        avg: new BehaviorSubject<number>(0),
-        prices: new BehaviorSubject<Array<Price>>([])
-      }
-    };
-  /**
-   * this keeps a local copy of all the subscriptions within this service
-   */
-  subscriptions: Map<string, any> = new Map<string, any>();
-  fueltypesArray = FuelNamesArray;
+
 
   constructor(
     private db: AngularFirestore,
     private omc: OmcService,
+    private core: CoreService,
     private depotservice: DepotService) {
-    combineLatest([this.depotservice.activedepot, this.omc.currentOmc])
+    combineLatest([this.core.activedepot, this.core.currentOmc])
       .pipe(
         skipWhile(t => !t[0].depot.Id || !t[1].Id)
       ).subscribe(() => {
@@ -97,7 +72,7 @@ export class PricesService {
 
   getavgprices(fueltye: FuelType) {
     return this.db.firestore.collection("omc")
-      .doc(this.omc.currentOmc.value.Id)
+      .doc(this.core.currentOmc.value.Id)
       .collection("avgprices")
       .where("fueltytype", "==", fueltye)
       .where("depotId", "==", this.depotservice.activedepot.value.depot.Id)

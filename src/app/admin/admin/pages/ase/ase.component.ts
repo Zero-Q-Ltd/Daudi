@@ -1,17 +1,17 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
-import { MatPaginator, MatTableDataSource } from "@angular/material";
-import { DepotService } from "../../../services/core/depot.service";
-import { NotificationService } from "../../../../shared/services/notification.service";
 import { AngularFireFunctions } from "@angular/fire/functions";
+import { MatPaginator, MatTableDataSource } from "@angular/material";
 import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
-import { ConfigService } from "../../../services/core/config.service";
-import { FuelType, FuelNamesArray } from "../../../../models/Daudi/fuel/FuelType";
 import { SyncRequest } from "../../../../models/Cloud/Sync";
+import { ASE, emptyASEs } from "../../../../models/Daudi/fuel/ASE";
+import { FuelNamesArray, FuelType } from "../../../../models/Daudi/fuel/FuelType";
 import { MyTimestamp } from "../../../../models/firestore/firestoreTypes";
-import { ASE } from "../../../../models/Daudi/fuel/ASE";
+import { NotificationService } from "../../../../shared/services/notification.service";
 import { AseService } from "../../../services/ase.service";
-import { emptyASEs } from "../../../../models/Daudi/fuel/ASE";
+import { ConfigService } from "../../../services/core/config.service";
+import { DepotService } from "../../../services/core/depot.service";
+import { CoreService } from "../../../services/core/core.service";
 
 @Component({
   selector: "app-ase",
@@ -59,9 +59,9 @@ export class AseComponent implements OnInit {
     private depotsservice: DepotService,
     private notification: NotificationService,
     private functions: AngularFireFunctions,
-    private config: ConfigService,
+    private core: CoreService,
     private aseService: AseService) {
-    depotsservice.activedepot.pipe(takeUntil(this.comopnentDestroyed)).subscribe(depotvata => {
+    this.core.activedepot.pipe(takeUntil(this.comopnentDestroyed)).subscribe(depotvata => {
       this.loading = {
         pms: true,
         ago: true,

@@ -17,6 +17,7 @@ import { SyncRequest } from "../../../../models/Cloud/Sync";
 import { MyTimestamp } from "../../../../models/firestore/firestoreTypes";
 import { OmcService } from "../../../services/core/omc.service";
 import { CompanySync } from "../../../../models/Cloud/CompanySync";
+import { CoreService } from "../../../services/core/core.service";
 
 
 @Component({
@@ -46,12 +47,11 @@ export class CustomerManagementComponent implements OnInit, OnDestroy {
     private adminservice: AdminService,
     private customerservice: CustomerService,
     private functions: AngularFireFunctions,
-    private config: ConfigService,
-    private depot: DepotService,
+    private core: CoreService,
     private omc: OmcService,
     @Optional() public dialogRef: MatDialogRef<CustomerManagementComponent>,
     @Optional() @Inject(MAT_DIALOG_DATA) public purpose: "SMS" | "Attach") {
-    this.depot.activedepot
+    this.core.activedepot
       .pipe(takeUntil(this.comopnentDestroyed))
       .subscribe(depotvata => {
         this.companiesdatasource.data = [];
@@ -162,9 +162,9 @@ export class CustomerManagementComponent implements OnInit, OnDestroy {
       synctype: ["Customer"]
     };
     const syncObject: CompanySync = {
-      config: this.config.omcconfig.value,
-      environment: this.config.environment.value,
-      omc: this.omc.currentOmc.value,
+      config: this.core.omcconfig.value,
+      environment: this.core.environment.value,
+      omc: this.core.currentOmc.value,
       sync: req
     };
     const sync = this.functions.httpsCallable("requestsync")(syncObject)

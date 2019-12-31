@@ -13,6 +13,7 @@ import { SyncRequest } from "../../../../models/Cloud/Sync";
 import { MyTimestamp } from "../../../../models/firestore/firestoreTypes";
 import { CompanySync } from "../../../../models/Cloud/CompanySync";
 import { OmcService } from "../../../services/core/omc.service";
+import { CoreService } from "../../../services/core/core.service";
 
 
 @Component({
@@ -63,8 +64,9 @@ export class EntriesComponent implements OnInit {
     private functions: AngularFireFunctions,
     private config: ConfigService,
     private omc: OmcService,
+    private core: CoreService,
     private entriesService: EntriesService) {
-    depotsservice.activedepot.pipe(takeUntil(this.comopnentDestroyed)).subscribe(depotvata => {
+    this.core.activedepot.pipe(takeUntil(this.comopnentDestroyed)).subscribe(depotvata => {
       this.loading = {
         pms: true,
         ago: true,
@@ -76,7 +78,7 @@ export class EntriesComponent implements OnInit {
           /**
            * Create a subscrition for 1000 batches history
            */
-          const subscription = this.entriesService.getEntries(fueltype).limit(100)
+          const subscription = this.entriesService.getAllEntries(fueltype).limit(100)
             .onSnapshot(snapshot => {
               this.loading[fueltype] = false;
               this.datasource[fueltype].data = snapshot.docs.map(entry => {
@@ -126,9 +128,9 @@ export class EntriesComponent implements OnInit {
     };
 
     const syncobject: CompanySync = {
-      config: this.config.omcconfig.value,
-      environment: this.config.environment.value,
-      omc: this.omc.currentOmc.value,
+      config: this.core.omcconfig.value,
+      environment: this.core.environment.value,
+      omc: this.core.currentOmc.value,
       sync: req
     };
 
