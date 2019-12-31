@@ -94,7 +94,7 @@ export class EditPriceComponent implements OnInit, OnDestroy {
       .subscribe((value) => {
         this.depotsdataSource.data = value.filter((n) => n);
       });
-    this.omcservice.omcs
+    this.core.omcs
       .pipe(takeUntil(this.comopnentDestroyed))
       .subscribe(value => {
         this.omcs = value;
@@ -120,12 +120,12 @@ export class EditPriceComponent implements OnInit, OnDestroy {
         this.activedepot = depot;
         this.taxconfigform.disable();
         this.fueltypesArray.forEach(fueltyp => {
-          this.priceservice.avgprices[fueltyp].total
+          this.core.avgprices[fueltyp].total
             .pipe(takeUntil(this.comopnentDestroyed))
             .subscribe(total => {
               this.avgprices[fueltyp].total = total;
             });
-          this.priceservice.avgprices[fueltyp].prices
+          this.core.avgprices[fueltyp].prices
             .pipe(takeUntil(this.comopnentDestroyed))
             .subscribe(prices => {
               this.avgprices[fueltyp].prices = prices;

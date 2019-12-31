@@ -1,37 +1,24 @@
 import { Injectable } from "@angular/core";
-import { DaudiCustomer } from "../../models/Daudi/customer/Customer";
-import { AngularFirestore } from "@angular/fire/firestore";
-import { DepotService } from "./core/depot.service";
-import { BehaviorSubject, Observable, combineLatest } from "rxjs";
+import { AngularFirestore, QueryFn } from "@angular/fire/firestore";
 import { AngularFireFunctions } from "@angular/fire/functions";
-import { distinctUntilKeyChanged, distinctUntilChanged, skipWhile } from "rxjs/operators";
+import { Observable } from "rxjs";
+import { DaudiCustomer, emptyDaudiCustomer } from "../../models/Daudi/customer/Customer";
+import { Environment } from "../../models/Daudi/omc/Environments";
 import { ConfigService } from "./core/config.service";
 import { OmcService } from "./core/omc.service";
+import { map } from "rxjs/operators";
 
 @Injectable({
   providedIn: "root"
 })
 export class CustomerService {
-  allcustomers: BehaviorSubject<Array<DaudiCustomer>> = new BehaviorSubject<Array<DaudiCustomer>>([]);
-  loadingcustomers: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
-
-  /**
-   * this keeps a local copy of all the subscriptions within this service
-   */
-  subscriptions: Map<string, any> = new Map<string, any>();
 
   constructor(
     private db: AngularFirestore,
-    private depotsservice: DepotService,
     private config: ConfigService,
     private omc: OmcService,
     private functions: AngularFireFunctions) {
-    combineLatest(this.config.environment, this.omc.currentOmc)
-      .pipe(skipWhile(t => !t[1].Id))
-      .subscribe(t => {
-        this.unsubscribeAll();
-        this.getallcustomers();
-      });
+
 
   }
 
@@ -39,9 +26,9 @@ export class CustomerService {
    * When a new company is created, it's unique identifier is the KRA pin but we need the QbID when creating any order, hence we use this vaue to cross-check
    * @param krapin
    */
-  queryActivecompany(krapin: string) {
+  queryActivecompany(krapin: string, omcid: string) {
     return this.db.firestore.collection("omc")
-      .doc(this.omc.currentOmc.value.Id)
+      .doc(omcid)
       .collection("customer")
       .where("krapin", "==", krapin)
       .where("Active", "==", true)
@@ -53,48 +40,31 @@ export class CustomerService {
       .doc(companyid);
   }
 
-  getallcustomers() {
-    this.loadingcustomers.next(true);
-    const subscriprion = this.db.firestore.collection("omc")
-      .doc(this.omc.currentOmc.value.Id)
-      .collection("customer")
-      .where("environment", "==", this.config.environment.value)
-      .onSnapshot(snapshot => {
-        this.allcustomers.next(snapshot.docs.map(value => {
-          const co: DaudiCustomer = value.data() as DaudiCustomer;
-          co.Id = value.id;
-          return co;
-        }));
-        this.loadingcustomers.next(false);
-      });
-    this.subscriptions.set("allcustomers", subscriprion);
-  }
-
-  unsubscribeAll() {
-    this.subscriptions.forEach(value => {
-      value();
-    });
-  }
 
   /**
    * The KRA PIN to checked for uniqueness
    * @param {string} krapin
    */
-  verifykra(krapin: string) {
+  verifykra(krapin: string, omcid: string) {
     return this.db.firestore.collection("omc")
-      .doc(this.omc.currentOmc.value.Id)
+      .doc(omcid)
       .collection("customer")
       .where("krapin", "==", krapin);
   }
 
-  querycustomers(customer: string, maxstring: string) {
-    return this.db.firestore.collection("omc")
-      .doc(this.omc.currentOmc.value.Id)
-      .collection("customer")
-      .where("name", ">=", customer)
-      .where("name", "<", maxstring)
-      .where("Active", "==", true)
-      .where("environment", "==", this.config.environment.value);
+  queryCustomers(queryFn: QueryFn, omcid: string, environment: Environment) {
+    return this.db.collection<DaudiCustomer>("omc", queryFn)
+      .doc(omcid)
+      .collection("order")
+      .snapshotChanges()
+      .pipe(map(t => {
+        return t.map(data => {
+            return {
+              ...emptyDaudiCustomer, ...{ Id: data.payload.doc.id }, ...data.payload.doc.data()
+            };
+          })
+      }
+      ));
   }
 
   createcompany(company: DaudiCustomer): Observable<any> {
@@ -102,11 +72,12 @@ export class CustomerService {
   }
 
 
-  updatecompany(companyid: string) {
+  updateCustomer(companyid: string, omcid: string) {
     return this.db.firestore.collection("omc")
-      .doc(this.omc.currentOmc.value.Id)
+      .doc(omcid)
       .collection("customer")
       .doc(companyid);
+    // .update(customer);
   }
 
 }

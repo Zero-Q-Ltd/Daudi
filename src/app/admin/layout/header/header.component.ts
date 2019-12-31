@@ -103,7 +103,7 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
         this.alldepots = alldepots;
       });
     OrderStageIds.forEach(stage => {
-      this.orderservice.orders[stage]
+      this.core.orders[stage]
         .pipe(takeUntil(this.comopnentDestroyed))
         .subscribe(orders => this.orderscount[stage] = orders.length);
     });
@@ -122,12 +122,12 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
       });
 
     this.fueltypesArray.forEach(fueltyp => {
-      this.priceservice.avgprices[fueltyp].total
+      this.core.avgprices[fueltyp].total
         .pipe(takeUntil(this.comopnentDestroyed))
         .subscribe(total => {
           this.avgprices[fueltyp].total = total;
         });
-      this.priceservice.avgprices[fueltyp].prices
+      this.core.avgprices[fueltyp].prices
         .pipe(takeUntil(this.comopnentDestroyed))
         .subscribe(prices => {
           this.avgprices[fueltyp].prices = prices;

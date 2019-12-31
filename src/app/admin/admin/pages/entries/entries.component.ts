@@ -92,7 +92,7 @@ export class EntriesComponent implements OnInit {
            * Because all these batches might take time to load, take the totals
            * from the already loaded batches within that depot
            */
-          this.entriesService.depotEntries[fueltype]
+          this.core.depotEntries[fueltype]
             .pipe(takeUntil(this.comopnentDestroyed))
             .subscribe((batches: Array<Entry>) => {
               /**

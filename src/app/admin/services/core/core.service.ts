@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { AngularFirestore } from "@angular/fire/firestore";
 import * as moment from "moment";
-import { BehaviorSubject } from "rxjs";
+import { BehaviorSubject, Subscription } from "rxjs";
 import { distinctUntilChanged } from "rxjs/operators";
 import { Depot, emptydepot } from "../../../models/Daudi/depot/Depot";
 import { DepotConfig, emptyDepotConfig } from "../../../models/Daudi/depot/DepotConfig";
@@ -18,6 +18,7 @@ import { AdminService } from "./admin.service";
 import { ConfigService } from "./config.service";
 import { DepotService } from "./depot.service";
 import { OmcService } from "./omc.service";
+import { DaudiCustomer } from "../../../models/Daudi/customer/Customer";
 
 @Injectable({
   providedIn: "root"
@@ -29,6 +30,8 @@ export class CoreService {
   omcconfig: BehaviorSubject<Config> = new BehaviorSubject<Config>({ ...emptyConfig });
   environment: BehaviorSubject<Environment> = new BehaviorSubject<Environment>(Environment.sandbox);
   alldepots: BehaviorSubject<Array<Depot>> = new BehaviorSubject([]);
+  allcustomers: BehaviorSubject<Array<DaudiCustomer>> = new BehaviorSubject<Array<DaudiCustomer>>([]);
+  loadingcustomers: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
 
   omcs: BehaviorSubject<Array<OMC>> = new BehaviorSubject<Array<OMC>>([]);
   currentOmc: BehaviorSubject<OMC> = new BehaviorSubject<OMC>(emptyomc);
@@ -39,7 +42,7 @@ export class CoreService {
   /**
    * this keeps a local copy of all the subscriptions within this service
    */
-  subscriptions: Map<string, any> = new Map<string, any>();
+  subscriptions: Map<string, Subscription> = new Map<string, Subscription>();
 
   fetchingEntry = new BehaviorSubject(true);
   depotEntries: {
@@ -114,9 +117,8 @@ export class CoreService {
           this.subscriptions.set("alldepots", this.depotService
             .fetchDepots(ref => ref.where("Active", "==", true).
               orderBy("Name", "asc"))
-            .subscribe(alldepots => {
+            .subscribe((alldepots) => {
               const tempdepot: Depot = alldepots[0];
-
               if (alldepots.find(depot => depot.Id === this.activedepot.value.depot.Id)) {
                 this.changeactivedepot(alldepots.find(depot => depot.Id === this.activedepot.value.depot.Id));
               } else {
@@ -127,16 +129,45 @@ export class CoreService {
                * only get OMC's when a valid depot has been assigned
                * only take the first element, OMC's are not dependent on depot
                */
-              this.subscriptions.set("allomcs", this.omc.getomcs(ref => ref.orderBy("name", "asc"))
-                .subscribe(allomc => {
-                  this.omcs.next(allomc);
-                }));
-              this.getOrdersPipeline();
+
+              this.getOmcs();
+
+
               this.alldepots.next(alldepots);
             })
           );
         }
       });
+  }
+  getOmcs() {
+    this.subscriptions.set("allomcs", this.omc.getomcs(ref => ref.orderBy("name", "asc"))
+      .subscribe(allomc => {
+        this.omcs.next(allomc);
+        allomc.forEach(co => {
+          if (co.Id === this.adminservice.userdata.config.omcid) {
+            /**
+             * Only make the pipeline subscription once
+             */
+            if (this.currentOmc.value.Id !== this.adminservice.userdata.config.omcid) {
+              this.currentOmc.next(co);
+
+              this.getOrdersPipeline();
+              this.getallcustomers();
+            }
+            this.currentOmc.next(co);
+          }
+        });
+
+      }));
+  }
+
+  getallcustomers() {
+    this.loadingcustomers.next(true);
+    this.subscriptions.set("allcustomers", this.omc.getomcs(ref => ref.where("sandbox", "==", this.environment.value))
+      .subscribe(allomc => {
+        this.loadingcustomers.next(false);
+        this.omcs.next(allomc);
+      }));
   }
   /**
    *
@@ -163,8 +194,6 @@ export class CoreService {
         return t.depotId === depot.Id;
       }) || { ...emptyDepotConfig };
       console.log("changing to:", depot, config);
-
-
       this.activedepot.next({ depot, config: { ...emptyDepotConfig, ...config } });
     } else {
       return;
@@ -177,7 +206,9 @@ export class CoreService {
    */
   unsubscribeAll() {
     this.subscriptions.forEach(value => {
-      value();
+      console.log(value);
+      if (!value) { return; }
+      value.unsubscribe();
     });
   }
 
@@ -203,16 +234,17 @@ export class CoreService {
        * cancel any previous queries
        */
       if (this.subscriptions.get(`orders${stage}`)) {
-        this.subscriptions.get(`orders${stage}`)();
+        this.subscriptions.get(`orders${stage}`).unsubscribe();
       }
       const subscriprion = this.orderService.getOrders(ref => {
         return ref.where("stage", "==", stage)
           .where("config.depot.id", "==", this.activedepot.value.depot.Id)
           .orderBy("stagedata.1.user.time", "asc");
-      }).subscribe(data => {
+      }, this.currentOmc.value.Id).subscribe(data => {
         /**
          * reset the array at the postion when data changes
          */
+        console.log(stage, data);
         this.orders[stage].next(data);
         this.loadingorders.next(false);
       });
@@ -229,7 +261,7 @@ export class CoreService {
       return ref.where("stage", "==", 5)
         .where("stagedata.5.user.time", ">=", startofweek)
         .orderBy("stagedata.5.user.time", "desc");
-    })
+    }, this.currentOmc.value.Id)
       .subscribe(data => {
         this.orders["5"].next(data);
       });

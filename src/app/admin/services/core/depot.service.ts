@@ -12,13 +12,12 @@ export class DepotService {
 
 
   constructor(
-    private core: CoreService,
     private db: AngularFirestore) {
 
   }
 
   updatedepot() {
-    return this.db.firestore.collection("depot").doc(this.core.activedepot.value.depot.Id);
+    // return this.db.firestore.collection("depot").doc(this.core.activedepot.value.depot.Id);
   }
 
 
@@ -28,16 +27,14 @@ export class DepotService {
   }
 
   fetchDepots(queryFn: QueryFn): Observable<Depot[]> {
-    return this.db.collection<Depot>("depot", queryFn)
+    return this.db.collection<Depot[]>("depot", queryFn)
       .snapshotChanges()
       .pipe(map(t => {
-        return {
-          ...t.map(depot => {
-            return {
-              ...emptydepot, ...{ Id: depot.payload.doc.id }, ...depot.payload.doc.data()
-            };
-          })
-        };
+        return t.map(depot => {
+          return {
+            ...emptydepot, ...{ Id: depot.payload.doc.id }, ...depot.payload.doc.data()
+          };
+        });
       }
       ));
   }

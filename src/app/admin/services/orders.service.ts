@@ -26,30 +26,29 @@ export class OrdersService {
 
   constructor(
     private db: AngularFirestore,
-    private functions: AngularFireFunctions,
-    private core: CoreService) {
+    private functions: AngularFireFunctions) {
 
   }
 
-  createOrder(order: Order): Promise<any> {
-    order.Id = this.db.createId();
+  createOrder(orderCteate: OrderCreate): Promise<any> {
+    // order.Id = this.db.createId();
     /**
      * add a counter for the number of pending orders in the queue
      */
-    const orderdata: OrderCreate = {
-      config: this.core.omcconfig.value,
-      environment: this.core.environment.value,
-      omcId: this.core.currentOmc.value.Id,
-      order
-    };
-    this.queuedorders.value.push(order.Id);
-    console.log(orderdata);
+    // const orderdata: OrderCreate = {
+    //   config: this.core.omcconfig.value,
+    //   environment: this.core.environment.value,
+    //   omcId: this.core.currentOmc.value.Id,
+    //   order
+    // };
+    this.queuedorders.value.push(orderCteate.order.Id);
+    console.log(orderCteate);
 
-    return this.functions.httpsCallable("createEstimate")(orderdata).toPromise().then(value => {
+    return this.functions.httpsCallable("createEstimate")(orderCteate).toPromise().then(value => {
       /**
        * delete the orderid after the operation is complete
        */
-      const index = this.queuedorders.value.indexOf(order.Id);
+      const index = this.queuedorders.value.indexOf(orderCteate.order.Id);
       if (index > -1) {
         this.queuedorders.value.splice(index, 1);
       }
@@ -57,7 +56,7 @@ export class OrdersService {
       /**
        * delete the orderid after the operation is complete
        */
-      const index = this.queuedorders.value.indexOf(order.Id);
+      const index = this.queuedorders.value.indexOf(orderCteate.order.Id);
       if (index > -1) {
         this.queuedorders.value.splice(index, 1);
       }
@@ -68,21 +67,21 @@ export class OrdersService {
     });
 
   }
-  approveOrder(order: Order): Promise<any> {
-    const orderdata: OrderCreate = {
-      config: this.core.omcconfig.value,
-      environment: this.core.environment.value,
-      omcId: this.core.currentOmc.value.Id,
-      order
-    };
-    this.queuedorders.value.push(order.Id);
-    console.log(orderdata);
+  approveOrder(orderCteate: OrderCreate): Promise<any> {
+    // const orderdata: OrderCreate = {
+    //   config: this.core.omcconfig.value,
+    //   environment: this.core.environment.value,
+    //   omcId: this.core.currentOmc.value.Id,
+    //   order
+    // };
+    // this.queuedorders.value.push(order.Id);
+    console.log(orderCteate);
 
-    return this.functions.httpsCallable("createInvoice")(orderdata).toPromise().then(value => {
+    return this.functions.httpsCallable("createInvoice")(orderCteate).toPromise().then(value => {
       /**
        * delete the orderid after the operation is complete
        */
-      const index = this.queuedorders.value.indexOf(order.Id);
+      const index = this.queuedorders.value.indexOf(orderCteate.order.Id);
       if (index > -1) {
         this.queuedorders.value.splice(index, 1);
       }
@@ -90,7 +89,7 @@ export class OrdersService {
       /**
        * delete the orderid after the operation is complete
        */
-      const index = this.queuedorders.value.indexOf(order.Id);
+      const index = this.queuedorders.value.indexOf(orderCteate.order.Id);
       if (index > -1) {
         this.queuedorders.value.splice(index, 1);
       }
@@ -104,33 +103,33 @@ export class OrdersService {
 
 
 
-  updateorder(orderid: string, order: Order) {
+  updateorder(orderid: string, omcid: string, order: Order) {
     return this.db.firestore.collection("omc")
-      .doc(this.core.currentOmc.value.Id)
+      .doc(omcid)
       .collection("order")
       .doc(orderid).update(order);
   }
 
-  getorder(orderid: string) {
+  getorder(orderid: string, omcid: string) {
     return this.db.firestore.collection("omc")
-      .doc(this.core.currentOmc.value.Id)
+      .doc(omcid)
       .collection("order")
       .doc(orderid);
   }
 
-  getOrders(queryFn: QueryFn) {
+  getOrders(queryFn: QueryFn, omcid: string) {
     return this.db.collection<Order>("omc", queryFn)
-      .doc(this.core.currentOmc.value.Id)
+      .doc(omcid)
       .collection("order")
       .snapshotChanges()
       .pipe(map(t => {
-        return {
-          ...t.map(data => {
-            return {
-              ...emptyorder, ...{ Id: data.payload.doc.id }, ...data.payload.doc.data()
-            };
-          })
-        };
+        console.log(queryFn);
+        console.log(t);
+        return t.map(data => {
+          return {
+            ...emptyorder, ...{ Id: data.payload.doc.id }, ...data.payload.doc.data()
+          };
+        });
       }
       ));
   }

@@ -18,6 +18,7 @@ import { ComponentCommunicationService } from "../services/component-communicati
 import { switchMap, takeUntil } from "rxjs/operators";
 import { ReplaySubject } from "rxjs";
 import { MyTimestamp } from "../../models/firestore/firestoreTypes";
+import { CoreService } from "../services/core/core.service";
 
 
 const EXCEL_TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
@@ -72,9 +73,10 @@ export class OrdersTableComponent implements OnInit, OnDestroy {
     private adminservice: AdminService,
     private orderservice: OrdersService,
     private router: Router,
+    private core: CoreService,
     private componentcommunication: ComponentCommunicationService) {
 
-    this.orderservice.loadingorders.subscribe(value => {
+    this.core.loadingorders.subscribe(value => {
       this.loadingordders = value;
     });
 
@@ -83,7 +85,7 @@ export class OrdersTableComponent implements OnInit, OnDestroy {
         if (paramdata.stage === 4) {
           this.ordercolumns.splice(4, 0, "Time Approved");
         }
-        return orderservice.orders[paramdata.stage].pipe(takeUntil(this.comopnentDestroyed));
+        return core.orders[paramdata.stage].pipe(takeUntil(this.comopnentDestroyed));
       }))
       .subscribe((stageorders: Array<Order>) => {
         this.ordersdataSource.data = stageorders;
@@ -206,7 +208,7 @@ export class OrdersTableComponent implements OnInit, OnDestroy {
         order.stagedata["6"].user = this.adminservice.createuserobject();
         order.stagedata["6"].data = { reason: result };
 
-        this.orderservice.updateorder(order.Id, order).then(result => {
+        this.orderservice.updateorder(order.Id, this.core.currentOmc.value.Id, order).then(result => {
           this.notification.notify({
             body: `Order # ${order.QbConfig} Deleted. It will be permanently deleted after 1 week`,
             title: "Deleted",
@@ -235,7 +237,7 @@ export class OrdersTableComponent implements OnInit, OnDestroy {
       uid: null,
       name: null
     };
-    this.orderservice.updateorder(order.Id, order).then(result => {
+    this.orderservice.updateorder(order.Id, this.core.currentOmc.value.Id, order).then(result => {
       this.notification.notify({
         body: `Order # ${order.QbConfig} Restored`,
         alert_type: "success",
@@ -258,7 +260,7 @@ export class OrdersTableComponent implements OnInit, OnDestroy {
         return;
       }
 
-      this.orderservice.updateorder(result.order.Id, result.order).then(result => {
+      this.orderservice.updateorder(result.order.Id, this.core.currentOmc.value.Id, result.order).then(result => {
         this.notification.notify({
           body: "Truck created",
           alert_type: "success",

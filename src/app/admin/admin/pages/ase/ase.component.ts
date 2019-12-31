@@ -87,17 +87,17 @@ export class AseComponent implements OnInit {
            * Because all these batches might take time to load, take the totals
            * from the already loaded batches within that depot
            */
-          this.aseService.depotASEs[fueltype]
-            .pipe(takeUntil(this.comopnentDestroyed))
-            .subscribe((ases: Array<ASE>) => {
-              /**
-               * Reset the values every time batches change
-               */
-              this.availablefuel[fueltype] = 0;
-              ases.forEach(ase => {
-                this.availablefuel[fueltype] += this.getTotalAvailable(ase);
-              });
-            });
+          // this.core.depotASEs[fueltype]
+          //   .pipe(takeUntil(this.comopnentDestroyed))
+          //   .subscribe((ases: Array<ASE>) => {
+          //     /**
+          //      * Reset the values every time batches change
+          //      */
+          //     this.availablefuel[fueltype] = 0;
+          //     ases.forEach(ase => {
+          //       this.availablefuel[fueltype] += this.getTotalAvailable(ase);
+          //     });
+          //   });
         });
       }
     });

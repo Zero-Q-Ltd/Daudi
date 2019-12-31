@@ -6,6 +6,7 @@ import { DepotService } from "../services/core/depot.service";
 import { ReplaySubject } from "rxjs";
 import { FuelNamesArray } from "../../models/Daudi/fuel/FuelType";
 import { DepotConfig, emptyDepotConfig } from "../../models/Daudi/depot/DepotConfig";
+import { CoreService } from "../services/core/core.service";
 
 @Component({
   selector: "app-price-comparison",
@@ -22,11 +23,11 @@ export class PriceComparisonComponent implements OnInit {
   activedepot: { depot: Depot, config: DepotConfig } = { depot: { ...emptydepot }, config: { ...emptyDepotConfig } };
 
   constructor(
-    private depotService: DepotService,
+    private core: CoreService,
 
   ) {
 
-    this.depotService.alldepots
+    this.core.alldepots
       .pipe(takeUntil(this.comopnentDestroyed))
       .subscribe((value) => {
         this.depotsdataSource.data = value.filter((n) => n);

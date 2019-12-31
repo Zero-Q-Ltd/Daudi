@@ -10,9 +10,9 @@ export class SmsService {
   constructor(private db: AngularFirestore, private omc: OmcService) {
   }
 
-  createsms() {
+  createsms(omcid: string) {
     return this.db.firestore.collection("omc")
-      .doc(this.omc.currentOmc.value.Id)
+      .doc(omcid)
       .collection("sms").doc(this.db.createId());
   }
 

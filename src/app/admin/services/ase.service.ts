@@ -25,13 +25,11 @@ export class AseService {
       .collection("ase")
       .snapshotChanges()
       .pipe(map(t => {
-        return {
-          ...t.map(data => {
-            return {
-              ...emptyASEs, ...{ Id: data.payload.doc.id }, ...data.payload.doc.data()
-            };
-          })
-        };
+        return t.map(data => {
+          return {
+            ...emptyASEs, ...{ Id: data.payload.doc.id }, ...data.payload.doc.data()
+          };
+        });
       }
       ));
   }

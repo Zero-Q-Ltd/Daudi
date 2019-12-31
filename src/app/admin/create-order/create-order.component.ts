@@ -96,7 +96,7 @@ export class CreateOrderComponent implements OnDestroy {
           return console.error("Empty params for Order approval");
         }
         this.newOrder = false;
-        const subscription = this.orderservice.getorder(res[0].id)
+        const subscription = this.orderservice.getorder(res[0].id, this.core.currentOmc.value.Id)
           .onSnapshot(ordersnapshot => {
             if (ordersnapshot.exists) {
               this.temporder = ordersnapshot.data() as Order;
@@ -165,7 +165,7 @@ export class CreateOrderComponent implements OnDestroy {
    * Returns true if this KRA pin has not been used
    */
   searchkra(krapin: string): DaudiCustomer | undefined {
-    return this.customerService.allcustomers.value.filter(value => {
+    return this.core.allcustomers.value.filter(value => {
       return value.krapin === krapin;
     })[0];
   }
@@ -279,14 +279,14 @@ export class CreateOrderComponent implements OnDestroy {
   }
 
   updatecompany() {
-    return this.customerService.updatecompany(this.temporder.customer.Id).update(this.temporder.customer);
+    return this.customerService.updateCustomer(this.temporder.customer.Id, this.core.currentOmc.value.Id).update(this.temporder.customer);
   }
 
   createorder(redirect) {
     if (this.temporder.Id) {
-      this.orderservice.approveOrder(this.temporder);
+      // this.orderservice.approveOrder(this.temporder);
     } else {
-      this.orderservice.createOrder(this.temporder);
+      // this.orderservice.createOrder(this.temporder);
     }
     if (redirect) {
       /**

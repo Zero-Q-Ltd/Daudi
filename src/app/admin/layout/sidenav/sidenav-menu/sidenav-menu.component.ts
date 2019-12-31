@@ -6,6 +6,7 @@ import { DepotService } from "../../../services/core/depot.service";
 import { Depot, emptydepot } from "../../../../models/Daudi/depot/Depot";
 import { OrderStageIds } from "../../../../models/Daudi/order/OrderStages";
 import { TruckStageNames } from "../../../../models/Daudi/order/TruckStages";
+import { CoreService } from "../../..//services/core/core.service";
 
 @Component({
   selector: "my-app-sidenav-menu",
@@ -32,18 +33,20 @@ export class AppSidenavMenuComponent implements OnDestroy {
   alldepots: Array<Depot>;
   activedepot: Depot = Object.assign({}, emptydepot);
 
-  constructor(private orderservice: OrdersService,
+  constructor(
+    private orderservice: OrdersService,
+    private core: CoreService,
     private depotservice: DepotService) {
     OrderStageIds.forEach(stage => {
-      this.orderservice.orders[stage].pipe(takeUntil(this.comopnentDestroyed)).subscribe(orders => this.orderscount[stage] = orders.length);
+      this.core.orders[stage].pipe(takeUntil(this.comopnentDestroyed)).subscribe(orders => this.orderscount[stage] = orders.length);
     });
     TruckStageNames.forEach(stage => {
       // this.truckservice.trucks[stage].pipe(takeUntil(this.comopnentDestroyed)).subscribe(trucks => this.truckscount[stage] = trucks.length);
     });
-    this.depotservice.alldepots.pipe(takeUntil(this.comopnentDestroyed)).subscribe((alldepots: Array<Depot>) => {
+    this.core.alldepots.pipe(takeUntil(this.comopnentDestroyed)).subscribe((alldepots: Array<Depot>) => {
       this.alldepots = alldepots;
     });
-    this.depotservice.activedepot.pipe(takeUntil(this.comopnentDestroyed)).subscribe((depot) => {
+    this.core.activedepot.pipe(takeUntil(this.comopnentDestroyed)).subscribe((depot) => {
       // this.activedepot = depot;
     });
   }
@@ -53,7 +56,7 @@ export class AppSidenavMenuComponent implements OnDestroy {
     this.comopnentDestroyed.complete();
   }
   changeactivedepot(depot: Depot) {
-    this.depotservice.changeactivedepot(depot);
+    this.core.changeactivedepot(depot);
 
   }
 

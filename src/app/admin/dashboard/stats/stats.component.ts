@@ -84,7 +84,7 @@ export class StatsComponent implements OnInit, OnDestroy {
     private router: Router,
     public snackBar: MatSnackBar,
     private depotservice: DepotService,
-    private batcheservice: EntriesService,
+    private entriesService: EntriesService,
     private statservice: StatsService,
     private core: CoreService,
     private priceservice: PricesService) {
@@ -115,7 +115,7 @@ export class StatsComponent implements OnInit, OnDestroy {
            */
           this.dateControl.reset({ begin: new Date(moment().subtract(1, "M").startOf("day").toDate()), end: new Date() });
           this.fueltypesArray.forEach(fueltype => {
-            this.batcheservice.depotEntries[fueltype].pipe(takeUntil(this.comopnentDestroyed)).subscribe((batches: Array<Entry>) => {
+            this.core.depotEntries[fueltype].pipe(takeUntil(this.comopnentDestroyed)).subscribe((batches: Array<Entry>) => {
               /**
                * Reset the values every time the batches change
                */

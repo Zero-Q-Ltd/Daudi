@@ -15,15 +15,12 @@ export class OmcService {
 
   getomcs(queryFn: QueryFn) {
 
-    return this.db.collection<OMC>("omc", queryFn).snapshotChanges()
+    return this.db.collection<OMC[]>("omc", queryFn).snapshotChanges()
       .pipe(map(t => {
-        return {
-          ...t.map(data => {
-            return {
-              ...emptyomc, ...{ Id: data.payload.doc.id }, ...data.payload.doc.data()
-            };
-          })
-        };
+        return t.map(data => {
+          return { ...emptyomc, ...{ Id: data.payload.doc.id }, ...data.payload.doc.data() };
+        });
+
       }
       ));
   }

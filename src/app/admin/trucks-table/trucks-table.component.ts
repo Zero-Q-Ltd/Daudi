@@ -15,6 +15,7 @@ import { switchMap, takeUntil } from "rxjs/operators";
 import { OrdersService as OrderService } from "../services/orders.service";
 import { Order } from "../../models/Daudi/order/Order";
 import { MyTimestamp } from "../../models/firestore/firestoreTypes";
+import { CoreService } from "../services/core/core.service";
 
 
 @Component({
@@ -64,12 +65,13 @@ export class TrucksTableComponent implements OnInit {
     private route: ActivatedRoute,
     private excelService: ExcelService,
     private orderService: OrderService,
+    private core: CoreService,
     private depotservice: DepotService) {
 
     /**
      * propagate changes when depot changes
      */
-    this.orderService.loadingorders.pipe(takeUntil(this.comopnentDestroyed)).subscribe(value => {
+    this.core.loadingorders.pipe(takeUntil(this.comopnentDestroyed)).subscribe(value => {
       this.loadingtrucks = value;
     });
 
