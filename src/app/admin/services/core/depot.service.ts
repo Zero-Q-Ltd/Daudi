@@ -26,16 +26,7 @@ export class DepotService {
       .add(depot);
   }
 
-  fetchDepots(queryFn: QueryFn): Observable<Depot[]> {
-    return this.db.collection<Depot[]>("depot", queryFn)
-      .snapshotChanges()
-      .pipe(map(t => {
-        return t.map(depot => {
-          return {
-            ...emptydepot, ...{ Id: depot.payload.doc.id }, ...depot.payload.doc.data()
-          };
-        });
-      }
-      ));
+  depotsCollection() {
+    return this.db.firestore.collection("depot");
   }
 }

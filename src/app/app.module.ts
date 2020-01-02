@@ -24,7 +24,9 @@ import { TextMaskModule } from "angular2-text-mask"; // for input mask
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { PipeModuleModule } from "./pipe-module/pipe-module.module";
 
-import { NotificationComponent } from "./shared/notification/notification.component";
+import { NotificationComponent } from "./shared/components/notification/notification.component";
+import { SharedModule } from "./shared/shared.module";
+import { AttachId } from "./shared/pipes/attach-id.pipe";
 // import { AgmCoreModule } from '@agm/core';
 // Custom Error handler and Logging Service
 // import { ErrorHandler } from '@angular/core';
@@ -63,7 +65,8 @@ const firebaseConfig = {
     // AgmCoreModule.forRoot({
     //   apiKey: 'AIzaSyBLs7FSznETgYbDW0E3tR26lKFBzE43iaQ'
     // })
-    PipeModuleModule
+    PipeModuleModule,
+
   ],
   declarations: [
     AppComponent,
@@ -72,7 +75,7 @@ const firebaseConfig = {
     PageNotFoundComponent
 
   ],
-  providers: [AngularFireAuth, AngularFireModule, AngularFireDatabase, AuthGuard],
+  providers: [AngularFireAuth, AngularFireModule, AngularFireDatabase, AuthGuard, AttachId],
   bootstrap: [AppComponent],
   exports: [PipeModuleModule, MyMaterialModule
   ],

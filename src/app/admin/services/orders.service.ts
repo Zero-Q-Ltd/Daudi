@@ -1,15 +1,16 @@
 import { Injectable } from "@angular/core";
-import { AngularFirestore, QueryFn } from "@angular/fire/firestore";
+import { AngularFirestore, QueryFn, Query } from "@angular/fire/firestore";
 import { AngularFireFunctions } from "@angular/fire/functions";
 import { emptyorder } from "../../models/Daudi/order/Order";
-import { BehaviorSubject } from "rxjs";
-import { map } from "rxjs/operators";
+import { BehaviorSubject, Observable, of } from "rxjs";
+import { map, switchMap, take } from "rxjs/operators";
 import { OrderCreate } from "../../models/Cloud/OrderCreate";
 import { Order } from "../../models/Daudi/order/Order";
 import { ConfigService } from "./core/config.service";
 import { CoreService } from "./core/core.service";
 import { DepotService } from "./core/depot.service";
 import { OmcService } from "./core/omc.service";
+import { FirestoreQuery } from "src/app/models/firestore/FirestoreQuery";
 
 
 @Injectable({
@@ -107,31 +108,28 @@ export class OrdersService {
     return this.db.firestore.collection("omc")
       .doc(omcid)
       .collection("order")
-      .doc(orderid).update(order);
+      .doc(orderid)
+      .update(order);
   }
 
-  getorder(orderid: string, omcid: string) {
+  getOrder(orderid: string, omcid: string) {
     return this.db.firestore.collection("omc")
       .doc(omcid)
       .collection("order")
       .doc(orderid);
   }
 
+  ordersCollection(omcid: string) {
+    return this.db.firestore.collection("omc")
+      .doc(omcid)
+      .collection("order");
+  }
+
   getOrders(queryFn: QueryFn, omcid: string) {
-    return this.db.collection<Order>("omc", queryFn)
+    return of(this.db.collection("omc", queryFn)
       .doc(omcid)
       .collection("order")
-      .snapshotChanges()
-      .pipe(map(t => {
-        console.log(queryFn);
-        console.log(t);
-        return t.map(data => {
-          return {
-            ...emptyorder, ...{ Id: data.payload.doc.id }, ...data.payload.doc.data()
-          };
-        });
-      }
-      ));
+      .valueChanges());
   }
 
 

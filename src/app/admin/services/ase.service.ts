@@ -14,39 +14,38 @@ import { CoreService } from "./core/core.service";
 export class AseService {
 
   constructor(
-    private db: AngularFirestore,
-    private core: CoreService, ) {
+    private db: AngularFirestore, ) {
 
   }
 
-  fetchASEs(queryFn: QueryFn) {
-    return this.db.collection<ASE>("omc", queryFn)
-      .doc(this.core.currentOmc.value.Id)
-      .collection("ase")
-      .snapshotChanges()
-      .pipe(map(t => {
-        return t.map(data => {
-          return {
-            ...emptyASEs, ...{ Id: data.payload.doc.id }, ...data.payload.doc.data()
-          };
-        });
-      }
-      ));
+  fetchASEs(omcid: string) {
+    return this.db.firestore.collection("omc")
+      .doc(omcid)
+      .collection("ase");
+    // .snapshotChanges()
+    // .pipe(map(t => {
+    //   return t.map(data => {
+    //     return {
+    //       ...emptyASEs, ...{ Id: data.payload.doc.id }, ...data.payload.doc.data()
+    //     };
+    //   });
+    // }
+    // ));
   }
 
 
-  getASEs(type: FuelType) {
+  getASEs(omcid: string, type: FuelType) {
 
     return this.db.firestore.collection("omc")
-      .doc(this.core.currentOmc.value.Id)
+      .doc(omcid)
       .collection("ase")
       .where("fuelType", "==", type)
       .orderBy("active", "desc");
   }
 
-  updateASE(ASEId: string) {
+  updateASE(omcid: string, ASEId: string) {
     return this.db.firestore.collection("omc")
-      .doc(this.core.currentOmc.value.Id)
+      .doc(omcid)
       .collection("ase")
       .doc(ASEId);
   }

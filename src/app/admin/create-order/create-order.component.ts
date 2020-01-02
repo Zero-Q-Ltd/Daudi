@@ -96,7 +96,7 @@ export class CreateOrderComponent implements OnDestroy {
           return console.error("Empty params for Order approval");
         }
         this.newOrder = false;
-        const subscription = this.orderservice.getorder(res[0].id, this.core.currentOmc.value.Id)
+        const subscription = this.orderservice.ordersCollection(this.core.currentOmc.value.Id)
           .onSnapshot(ordersnapshot => {
             if (ordersnapshot.exists) {
               this.temporder = ordersnapshot.data() as Order;

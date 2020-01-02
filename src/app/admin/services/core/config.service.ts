@@ -16,16 +16,11 @@ export class ConfigService {
   }
 
 
-  fetchConfig(admin: Admin): Observable<Config> {
-    return this.db.collection("omc")
+  configCollection(admin: Admin) {
+    return this.db.firestore.collection("omc")
       .doc(admin.config.omcid)
       .collection("config")
-      .doc<Admin>("main")
-      .snapshotChanges()
-      .pipe(
-        map(companydata => {
-          return { ...emptyConfig, ...{ id: companydata.payload.id }, ...companydata.payload.data() };
-        }));
+      .doc("main");
   }
 
 

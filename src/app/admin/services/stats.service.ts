@@ -15,23 +15,21 @@ export class StatsService {
     private config: ConfigService,
     private omc: OmcService,
     private db: AngularFirestore,
-    private depotservice: DepotService) {
-    depotservice.activedepot.subscribe(depot => {
-      // this.activedepot = depot;
-    });
+    private core: DepotService) {
+
   }
 
 
-  getstats(statsid) {
+  getstats(statsid: string, omcid: string) {
     return this.db.firestore.collection("omc")
-      .doc(this.omc.currentOmc.value.Id)
+      .doc(omcid)
       .collection("stats")
       .doc(statsid);
   }
 
-  getstatsrange(start, stop) {
+  getstatsrange(omcid: string, start, stop) {
     return this.db.firestore.collection("omc")
-      .doc(this.omc.currentOmc.value.Id)
+      .doc(omcid)
       .collection("stats")
       .where("date", ">=", start)
       .where("date", "<=", stop);
