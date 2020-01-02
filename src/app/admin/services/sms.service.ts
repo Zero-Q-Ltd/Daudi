@@ -13,7 +13,7 @@ export class SmsService {
   createsms(omcid: string) {
     return this.db.firestore.collection("omc")
       .doc(omcid)
-      .collection("sms").doc(this.db.createId());
+      .collection("sms").doc(this.db.createId()).onSnapshot();
   }
 
 

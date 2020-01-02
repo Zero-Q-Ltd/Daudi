@@ -206,7 +206,6 @@ export class CoreService {
    */
   unsubscribeAll() {
     this.subscriptions.forEach(value => {
-      console.log(value);
       if (!value) { return; }
       value.unsubscribe();
     });

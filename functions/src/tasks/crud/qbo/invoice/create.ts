@@ -25,8 +25,8 @@ export class createInvoice {
     environment: Environment;
     constructor(_orderdata: Order, _qbo: QuickBooks, _config: Config, environment: Environment) {
         /**
-    * format the timestamp again as it loses it when it doesnt directly go to the database
-    */
+         * format the timestamp again as it loses it when it doesnt directly go to the database
+         */
         _orderdata.stagedata["1"].user.time = moment().toDate() as any;
         this.orderdata = _orderdata;
         this.qbo = _qbo;
@@ -39,7 +39,7 @@ export class createInvoice {
         FuelNamesArray.forEach(fuel => {
             if (this.orderdata.fuel[fuel].qty > 0) {
                 values.push({
-                    Amount: this.orderdata.fuel[fuel].priceconfig.nonTaxprice * this.orderdata.fuel[fuel].qty,
+                    Amount: this.orderdata.fuel[fuel].priceconfig.nonTaxtotal,
                     DetailType: LineDetailType.GroupLineDetail,
                     Description: `VAT-Exempt : ${this.orderdata.fuel[fuel].priceconfig.nonTax} \t Taxable Amount: ${this.orderdata.fuel[fuel].priceconfig.taxableAmnt} \t VAT Total : ${this.orderdata.fuel[fuel].priceconfig.taxAmnt} \t`,
                     Id: this.config.Qbo[this.environment].fuelconfig[fuel].groupId,
@@ -55,7 +55,7 @@ export class createInvoice {
                              * The entry component doesnt have an amount attached to it
                              */
                             {
-                                Amount: this.orderdata.fuel[fuel].priceconfig.nonTaxprice * this.orderdata.fuel[fuel].qty,
+                                Amount: this.orderdata.fuel[fuel].priceconfig.nonTaxtotal,
                                 Description: "",
                                 DetailType: LineDetailType.SalesItemLineDetail,
                                 Id: this.config.Qbo[this.environment].fuelconfig[fuel].aseId,

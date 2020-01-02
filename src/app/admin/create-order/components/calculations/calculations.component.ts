@@ -101,6 +101,10 @@ export class CalculationsComponent implements OnInit, OnChanges {
             this.initData.fuel[fueltype].priceconfig.taxablePrice = calculatedpirces.taxablePrice;
             this.initData.fuel[fueltype].priceconfig.nonTaxprice = calculatedpirces.pricewithoutvat;
             const totalwithouttax = this.totalswithouttax(this.initData.fuel[fueltype].priceconfig.nonTaxprice, this.initData.fuel[fueltype].qty);
+            /**
+             * modify the nox tax price to be an exact figurea after rounding off
+             */
+            this.initData.fuel[fueltype].priceconfig.nonTaxprice = (totalwithouttax / this.initData.fuel[fueltype].qty);
             this.initData.fuel[fueltype].priceconfig.nonTaxtotal = totalwithouttax;
             // this.initData.fuel[fueltype].priceconfig.total = taxcalculations.taxamount + totalwithouttax;
             this.initData.fuel[fueltype].priceconfig.total = this.initData.fuel[fueltype].priceconfig.price * this.initData.fuel[fueltype].qty;
