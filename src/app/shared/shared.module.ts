@@ -1,14 +1,12 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { CommonPipe } from "./pipes/common.pipe";
-import { AttachIdPipe } from "./pipes/attach-id.pipe";
-
 @NgModule({
   imports: [
     CommonModule
   ],
-  providers: [AttachIdPipe],
-  declarations: [CommonPipe, AttachIdPipe]
+  providers: [],
+  declarations: [CommonPipe]
 })
 export class SharedModule {
 }

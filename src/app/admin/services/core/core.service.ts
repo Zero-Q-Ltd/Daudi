@@ -20,6 +20,8 @@ import { DepotService } from "./depot.service";
 import { OmcService } from "./omc.service";
 import { DaudiCustomer } from "../../../models/Daudi/customer/Customer";
 import { AttachId } from "../../../shared/pipes/attach-id.pipe";
+import { CustomerService } from "../customers.service";
+import { emptyDaudiCustomer } from "../../../models/Daudi/customer/Customer";
 
 @Injectable({
   providedIn: "root"
@@ -100,6 +102,7 @@ export class CoreService {
     private omc: OmcService,
     private orderService: OrdersService,
     private attachId: AttachId,
+    private customerService: CustomerService,
     private adminservice: AdminService) {
     this.adminservice.observableuserdata
       .subscribe(admin => {
@@ -129,10 +132,10 @@ export class CoreService {
             .where("Active", "==", true)
             .orderBy("Name", "asc")
             .onSnapshot((data) => {
-              const alldepots = this.attachId.transformArray<Depot>(emptydepot, data);
-              const tempdepot: Depot = alldepots[0];
-              if (alldepots.find(depot => depot.Id === this.activedepot.value.depot.Id)) {
-                this.changeactivedepot(alldepots.find(depot => depot.Id === this.activedepot.value.depot.Id));
+              this.alldepots.next(this.attachId.transformArray<Depot>(emptydepot, data));
+              const tempdepot: Depot = this.alldepots.value[0];
+              if (this.alldepots.value.find(depot => depot.Id === this.activedepot.value.depot.Id)) {
+                this.changeactivedepot(this.alldepots.value.find(depot => depot.Id === this.activedepot.value.depot.Id));
               } else {
                 this.changeactivedepot(tempdepot);
               }
@@ -143,24 +146,22 @@ export class CoreService {
                */
 
               this.getOmcs();
-
-
-              this.alldepots.next(alldepots);
             })
           );
         }
       });
   }
   getOmcs() {
-    this.subscriptions.set("allomcs", this.omc.getomcs(ref => ref.orderBy("name", "asc"))
-      .subscribe(allomc => {
-        this.omcs.next(allomc);
-        allomc.forEach(co => {
-          if (co.Id === this.adminservice.userdata.config.omcid) {
+    this.subscriptions.set("allomcs", this.omc.omcCollection()
+      .orderBy("name", "asc")
+      .onSnapshot(data => {
+        this.omcs.next(this.attachId.transformArray<OMC>(emptyomc, data));
+        this.omcs.value.forEach(co => {
+          if (co.Id === this.adminservice.userdata.config.omcId) {
             /**
              * Only make the pipeline subscription once
              */
-            if (this.currentOmc.value.Id !== this.adminservice.userdata.config.omcid) {
+            if (this.currentOmc.value.Id !== this.adminservice.userdata.config.omcId) {
               this.currentOmc.next(co);
 
               this.getallcustomers();
@@ -171,13 +172,20 @@ export class CoreService {
 
       }));
   }
+  /**
+   * This is just an accessor to the function
+   */
+  createId() {
+    return this.db.createId();
+  }
 
   getallcustomers() {
     this.loadingcustomers.next(true);
-    this.subscriptions.set("allcustomers", this.omc.getomcs(ref => ref.where("sandbox", "==", this.environment.value))
-      .subscribe(allomc => {
+    this.subscriptions.set("allcustomers", this.customerService.customerCollection(this.currentOmc.value.Id)
+      .where("environment", "==", this.environment.value)
+      .onSnapshot(data => {
         this.loadingcustomers.next(false);
-        this.omcs.next(allomc);
+        this.allcustomers.next(this.attachId.transformArray<DaudiCustomer>(emptyDaudiCustomer, data));
       }));
   }
   /**
@@ -253,58 +261,33 @@ export class CoreService {
            * reset the array at the postion when data changes
            */
           this.orders[stage].next([]);
-          console.log(Data.docs.length, stage);
 
           this.orders[stage].next(this.attachId.transformArray<Order>(emptyorder, Data));
           this.loadingorders.next(false);
         });
 
-      // this.subscriptions.set(`orders${stage}`, subscriprion);
+      this.subscriptions.set(`orders${stage}`, subscriprion);
     });
-
-    //   const subscriprion = this.orderService.getOrders(ref => {
-    //     return ref.where("stage", "==", stage)
-    //       .where("config.depot.id", "==", this.activedepot.value.depot.Id)
-    //       .orderBy("stagedata.1.user.time", "asc");
-    //   }, this.currentOmc.value.Id)
-    //     // .where("stage", "==", stage)
-    //     // .where("config.depot.id", "==", this.activedepot.value.depot.Id)
-    //     // .orderBy("stagedata.1.user.time", "asc")
-    //     .subscribe(data => {
-    //       /**
-    //        * reset the array at the postion when data changes
-    //        */
-    //       console.log(stage, data.length);
-
-    //       // this.orders[stage].next(data);
-    //       // this.loadingorders.next(false);
-
-
-    //       //   return t.docs.map(data => {
-    //       //     return {
-    //       //       ...emptyorder, ...{ Id: data.id }, ...data.data()
-    //       //     };
-    //       //   });
-    //       // });
-    //     });
-
-    //   // this.subscriptions.set(`orders${stage}`, subscriprion);
-    // });
 
     const startofweek = moment().startOf("week").toDate();
 
     /**
      * Fetch completed orders
      */
-    // const stage5subscription = this.orderService.getOrders(ref => {
-    //   return ref.where("stage", "==", 5)
-    //     .where("stagedata.5.user.time", ">=", startofweek)
-    //     .orderBy("stagedata.5.user.time", "desc");
-    // }, this.currentOmc.value.Id)
-    //   .then(data => {
-    //     // this.orders["5"].next(data);
-    //   });
-    // this.subscriptions.set(`orders5`, stage5subscription);
+    const stage5subscriprion = this.orderService.ordersCollection(this.currentOmc.value.Id)
+      .where("stage", "==", 5)
+      .where("config.depot.id", "==", this.activedepot.value.depot.Id)
+      .orderBy("stagedata.1.user.time", "asc")
+      .onSnapshot(Data => {
+        /**
+         * reset the array at the postion when data changes
+         */
+        this.orders[5].next([]);
 
+        this.orders[5].next(this.attachId.transformArray<Order>(emptyorder, Data));
+        this.loadingorders.next(false);
+      });
+
+    this.subscriptions.set(`orders${5}`, stage5subscriprion);
   }
 }

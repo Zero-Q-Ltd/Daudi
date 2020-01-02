@@ -10,12 +10,12 @@ export class GetomcPipe implements PipeTransform {
 
   }
 
-  transform(omcid: string): any {
+  transform(omcId: string): any {
     if (this.core.omcs.value.filter(omc => {
-      return omc.Id === omcid;
+      return omc.Id === omcId;
     }).length !== 0) {
       return this.core.omcs.value.filter(admin => {
-        return admin.Id === omcid;
+        return admin.Id === omcId;
       })[0].name;
     } else {
       return "";

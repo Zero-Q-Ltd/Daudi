@@ -17,7 +17,7 @@ export class PermissionService {
       .pipe(distinctUntilChanged())
       .subscribe(admin => {
         if (admin) {
-          this.fetchpermissions(admin.config.omcid);
+          this.fetchpermissions(admin.config.omcId);
         }
       });
   }
@@ -25,9 +25,9 @@ export class PermissionService {
   /**
    * fetches the OMC's permissions after the user data has been loaded
    */
-  fetchpermissions(omcid: string) {
+  fetchpermissions(omcId: string) {
     this.db.firestore.collection("omc")
-      .doc(omcid)
+      .doc(omcId)
       .collection("permission")
       .doc("page")
       .get()

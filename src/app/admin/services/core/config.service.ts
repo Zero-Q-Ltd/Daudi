@@ -18,7 +18,7 @@ export class ConfigService {
 
   configCollection(admin: Admin) {
     return this.db.firestore.collection("omc")
-      .doc(admin.config.omcid)
+      .doc(admin.config.omcId)
       .collection("config")
       .doc("main");
   }
@@ -26,12 +26,12 @@ export class ConfigService {
 
   initConfig(admin: Admin) {
     const newConfig: Config = { ...emptyConfig };
-    this.saveConfig(admin.config.omcid, newConfig);
+    this.saveConfig(admin.config.omcId, newConfig);
   }
 
-  saveConfig(omcid: string, data: Config) {
+  saveConfig(omcId: string, data: Config) {
     return this.db.firestore.collection("omc")
-      .doc(omcid)
+      .doc(omcId)
       .collection("config")
       .doc("main")
       .set(data);

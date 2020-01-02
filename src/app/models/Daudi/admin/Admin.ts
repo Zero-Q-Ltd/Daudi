@@ -11,7 +11,7 @@ export interface Admin {
       QbId: string,
       environment: Environment;
     }
-    omcid: string,
+    omcId: string,
     level: string,
     app: {
       depotid: string,
@@ -67,7 +67,7 @@ export const emptyadmin: Admin = {
   Active: null,
   Id: null,
   config: {
-    omcid: null,
+    omcId: null,
     level: null,
     qbo: {
       companyid: null,

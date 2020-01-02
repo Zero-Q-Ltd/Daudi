@@ -201,7 +201,7 @@ export class CustomerManagementComponent implements OnInit, OnDestroy {
             status: true,
             user: this.adminservice.createuserobject()
           };
-          this.customerservice.updateCustomer(company.Id, this.core.currentOmc.value.Id).update(company).then(() => {
+          this.customerservice.updateCustomer(company, this.core.currentOmc.value.Id).then(() => {
             this.savingcompany = false;
           });
         } else {

@@ -18,35 +18,22 @@ export class AseService {
 
   }
 
-  fetchASEs(omcid: string) {
+  ASECollection(omcId: string) {
     return this.db.firestore.collection("omc")
-      .doc(omcid)
+      .doc(omcId)
       .collection("ase");
-    // .snapshotChanges()
-    // .pipe(map(t => {
-    //   return t.map(data => {
-    //     return {
-    //       ...emptyASEs, ...{ Id: data.payload.doc.id }, ...data.payload.doc.data()
-    //     };
-    //   });
-    // }
-    // ));
   }
 
 
-  getASEs(omcid: string, type: FuelType) {
+  getASEs(omcId: string, type: FuelType) {
 
-    return this.db.firestore.collection("omc")
-      .doc(omcid)
-      .collection("ase")
+    return this.ASECollection(omcId)
       .where("fuelType", "==", type)
       .orderBy("active", "desc");
   }
 
-  updateASE(omcid: string, ASEId: string) {
-    return this.db.firestore.collection("omc")
-      .doc(omcid)
-      .collection("ase")
+  updateASE(omcId: string, ASEId: string) {
+    return this.ASECollection(omcId)
       .doc(ASEId);
   }
 }

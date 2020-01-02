@@ -217,7 +217,7 @@ export class EditPriceComponent implements OnInit, OnDestroy {
           Id: null,
           omcId: this.selectedOMC.Id
         };
-        batchaction.set(this.priceservice.createavgprice(), tempprice);
+        batchaction.set(this.priceservice.createavgprice(this.core.currentOmc.value.Id), tempprice);
 
         batchaction.commit().then(res => {
           this.saving = false;
@@ -241,7 +241,7 @@ export class EditPriceComponent implements OnInit, OnDestroy {
 
   deleteavg(price: Price) {
     this.saving = true;
-    this.priceservice.deleteavgprice(price.Id).delete().then(res => {
+    this.priceservice.deleteavgprice(this.core.currentOmc.value.Id, price.Id).delete().then(res => {
       this.saving = false;
       this.notificationService.notify({
         body: `${price.fueltytype} in ${this.activedepot.depot.Name} Deleted`,

@@ -16,13 +16,13 @@ export class DepotService {
 
   }
 
-  updatedepot() {
-    // return this.db.firestore.collection("depot").doc(this.core.activedepot.value.depot.Id);
+  updatedepot(depot: Depot) {
+    return this.depotsCollection().doc(depot.Id).update(depot);
   }
 
 
   createDepot(depot: Depot) {
-    this.db.firestore.collection("depot")
+    return this.depotsCollection()
       .add(depot);
   }
 

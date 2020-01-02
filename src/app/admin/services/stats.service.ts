@@ -20,16 +20,16 @@ export class StatsService {
   }
 
 
-  getstats(statsid: string, omcid: string) {
+  getstats(statsid: string, omcId: string) {
     return this.db.firestore.collection("omc")
-      .doc(omcid)
+      .doc(omcId)
       .collection("stats")
       .doc(statsid);
   }
 
-  getstatsrange(omcid: string, start, stop) {
+  getstatsrange(omcId: string, start, stop) {
     return this.db.firestore.collection("omc")
-      .doc(omcid)
+      .doc(omcId)
       .collection("stats")
       .where("date", ">=", start)
       .where("date", "<=", stop);

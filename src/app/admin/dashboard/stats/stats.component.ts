@@ -267,7 +267,8 @@ export class StatsComponent implements OnInit, OnDestroy {
     /**
      * Remove realtimeness to save on performance
      */
-    this.priceservice.getAvgpricesrange(
+    this.priceservice.getAvgpricesrange(this.core.currentOmc.value.Id,
+      this.core.activedepot.value.depot.Id, FuelType.pms,
       moment().startOf("day").subtract(dayCount, "days").toDate(),
       moment().toDate()).orderBy("user.time", "desc")
       .get().then(pricesinrange => {

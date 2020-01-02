@@ -6,7 +6,6 @@ export class AttachId {
 
   public transformArray<T>(emptyValue: T, data: any): T[] {
     return data.docs.map(d => {
-      console.log(d.id);
       return {
         ...emptyValue, ...d.data(), ...{ Id: d.id },
       };

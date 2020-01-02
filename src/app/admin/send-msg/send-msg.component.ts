@@ -50,7 +50,7 @@ export class SendMsgComponent implements OnInit {
             origin: "bulk",
             reason: this.tempbulkmodel.type.reason
           };
-          batchaction.set(this.sms.createsms(this.core.currentOmc.value.Id), sms);
+          batchaction.set(this.sms.smsCollection(this.core.currentOmc.value.Id).doc(this.core.createId()), sms);
         }
       });
       batchaction.commit().then(() => {
@@ -65,7 +65,7 @@ export class SendMsgComponent implements OnInit {
       });
     } else {
       this.tempsms.msg = `ID ${this.tempsms.company.QbId} ${this.tempsms.msg}`;
-      this.sms.createsms(this.core.currentOmc.value.Id).set(this.tempsms).then(result => {
+      this.sms.createsms(this.core.currentOmc.value.Id, this.tempsms).then(result => {
         this.saving = false;
         this.notificationService.notify({
           alert_type: "success",

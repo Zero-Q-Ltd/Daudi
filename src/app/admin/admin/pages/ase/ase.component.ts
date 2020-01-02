@@ -73,7 +73,7 @@ export class AseComponent implements OnInit {
           /**
            * Create a subscrition for 1000 batches history
            */
-          const subscription = this.aseService.getASEs(fueltype).limit(100)
+          const subscription = this.aseService.getASEs(this.core.currentOmc.value.Id, fueltype).limit(100)
             .onSnapshot(snapshot => {
               this.loading[fueltype] = false;
               this.datasource[fueltype].data = snapshot.docs.map(ase => {

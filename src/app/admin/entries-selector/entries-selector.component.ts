@@ -101,7 +101,7 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
     this.core.fetchingEntry.pipe(takeUntil(this.comopnentDestroyed)).subscribe(value => {
       this.fetchingbatches = value;
     });
-    const ordersubscription = this.ordersservice.ordersCollection(orderid, core.currentOmc.value.Id)
+    const ordersubscription = this.ordersservice.getOrder(orderid, core.currentOmc.value.Id)
       .onSnapshot(orderSnapshot => {
         if (orderSnapshot.exists) {
           this.order = Object.assign({}, orderSnapshot.data()) as Order;

@@ -1,16 +1,9 @@
 import { Injectable } from "@angular/core";
-import { AngularFirestore, QueryFn, Query } from "@angular/fire/firestore";
+import { AngularFirestore, QueryFn } from "@angular/fire/firestore";
 import { AngularFireFunctions } from "@angular/fire/functions";
-import { emptyorder } from "../../models/Daudi/order/Order";
-import { BehaviorSubject, Observable, of } from "rxjs";
-import { map, switchMap, take } from "rxjs/operators";
+import { BehaviorSubject, of } from "rxjs";
 import { OrderCreate } from "../../models/Cloud/OrderCreate";
 import { Order } from "../../models/Daudi/order/Order";
-import { ConfigService } from "./core/config.service";
-import { CoreService } from "./core/core.service";
-import { DepotService } from "./core/depot.service";
-import { OmcService } from "./core/omc.service";
-import { FirestoreQuery } from "src/app/models/firestore/FirestoreQuery";
 
 
 @Injectable({
@@ -104,32 +97,21 @@ export class OrdersService {
 
 
 
-  updateorder(orderid: string, omcid: string, order: Order) {
-    return this.db.firestore.collection("omc")
-      .doc(omcid)
-      .collection("order")
+  updateorder(orderid: string, omcId: string, order: Order) {
+    return this.ordersCollection(omcId)
       .doc(orderid)
       .update(order);
   }
 
-  getOrder(orderid: string, omcid: string) {
-    return this.db.firestore.collection("omc")
-      .doc(omcid)
-      .collection("order")
+  getOrder(orderid: string, omcId: string) {
+    return this.ordersCollection(omcId)
       .doc(orderid);
   }
 
-  ordersCollection(omcid: string) {
+  ordersCollection(omcId: string) {
     return this.db.firestore.collection("omc")
-      .doc(omcid)
+      .doc(omcId)
       .collection("order");
-  }
-
-  getOrders(queryFn: QueryFn, omcid: string) {
-    return of(this.db.collection("omc", queryFn)
-      .doc(omcid)
-      .collection("order")
-      .valueChanges());
   }
 
 
