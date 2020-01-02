@@ -60,26 +60,6 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
     4: 0
   };
 
-  avgprices: {
-    [key in FuelType]: {
-      total: number,
-      prices: Array<Price>
-    }
-  } = {
-      pms: {
-        total: 0,
-        prices: []
-      },
-      ago: {
-        total: 0,
-        prices: []
-      },
-      ik: {
-        total: 0,
-        prices: []
-      }
-    };
-
   fueltypesArray = FuelNamesArray;
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
   environment: Environment;
@@ -98,7 +78,7 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
       .subscribe((depot) => {
         this.activedepot = depot;
       });
-    this.core.alldepots
+    this.core.depots
       .pipe(takeUntil(this.comopnentDestroyed)).subscribe((alldepots: Array<Depot>) => {
         this.alldepots = alldepots;
       });
@@ -121,18 +101,6 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
         this.connectionStatus = statuss;
       });
 
-    this.fueltypesArray.forEach(fueltyp => {
-      this.core.avgprices[fueltyp].total
-        .pipe(takeUntil(this.comopnentDestroyed))
-        .subscribe(total => {
-          this.avgprices[fueltyp].total = total;
-        });
-      this.core.avgprices[fueltyp].prices
-        .pipe(takeUntil(this.comopnentDestroyed))
-        .subscribe(prices => {
-          this.avgprices[fueltyp].prices = prices;
-        });
-    });
   }
 
   changeactivedepot(depot: Depot) {

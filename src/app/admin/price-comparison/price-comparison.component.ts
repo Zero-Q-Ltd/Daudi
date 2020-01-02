@@ -3,10 +3,11 @@ import { MatTableDataSource, MatSort } from "@angular/material";
 import { takeUntil } from "rxjs/operators";
 import { Depot, emptydepot } from "../../models/Daudi/depot/Depot";
 import { DepotService } from "../services/core/depot.service";
-import { ReplaySubject } from "rxjs";
-import { FuelNamesArray } from "../../models/Daudi/fuel/FuelType";
+import { ReplaySubject, BehaviorSubject } from "rxjs";
+import { FuelNamesArray, FuelType } from "../../models/Daudi/fuel/FuelType";
 import { DepotConfig, emptyDepotConfig } from "../../models/Daudi/depot/DepotConfig";
 import { CoreService } from "../services/core/core.service";
+import { Price } from "../../models/Daudi/depot/Price";
 
 @Component({
   selector: "app-price-comparison",
@@ -22,12 +23,35 @@ export class PriceComparisonComponent implements OnInit {
   priceColumns = ["depot", "pms_price", "pms_avgprice", "ago_price", "ago_avgprice", "ik_price", "ik_avgprice"];
   activedepot: { depot: Depot, config: DepotConfig } = { depot: { ...emptydepot }, config: { ...emptyDepotConfig } };
 
+  avgprices: {
+    [key in FuelType]: {
+      total: BehaviorSubject<number>,
+      avg: BehaviorSubject<number>,
+      prices: BehaviorSubject<Array<Price>>
+    }
+  } = {
+      pms: {
+        total: new BehaviorSubject<number>(0),
+        avg: new BehaviorSubject<number>(0),
+        prices: new BehaviorSubject<Array<Price>>([])
+      },
+      ago: {
+        total: new BehaviorSubject<number>(0),
+        avg: new BehaviorSubject<number>(0),
+        prices: new BehaviorSubject<Array<Price>>([])
+      },
+      ik: {
+        total: new BehaviorSubject<number>(0),
+        avg: new BehaviorSubject<number>(0),
+        prices: new BehaviorSubject<Array<Price>>([])
+      }
+    };
   constructor(
     private core: CoreService,
 
   ) {
 
-    this.core.alldepots
+    this.core.depots
       .pipe(takeUntil(this.comopnentDestroyed))
       .subscribe((value) => {
         this.depotsdataSource.data = value.filter((n) => n);

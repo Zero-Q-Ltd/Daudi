@@ -37,10 +37,10 @@ export class DepotManagementComponent implements OnInit, OnDestroy {
     this.core.activedepot.pipe(takeUntil(this.comopnentDestroyed)).subscribe(depot => {
       this.activedepot = depot.depot;
     });
-    this.core.alldepots.pipe(takeUntil(this.comopnentDestroyed)).subscribe(alldepots => {
+    this.core.depots.pipe(takeUntil(this.comopnentDestroyed)).subscribe(alldepots => {
       this.alldepots = alldepots;
     });
-    this.core.omcconfig.pipe(takeUntil(this.comopnentDestroyed)).subscribe(co => {
+    this.core.config.pipe(takeUntil(this.comopnentDestroyed)).subscribe(co => {
       // this.company = co;
     });
   }

@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from "@angular/core";
 import { AngularFirestore } from "@angular/fire/firestore";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { MatDialog, MatTableDataSource } from "@angular/material";
-import { ReplaySubject } from "rxjs";
+import { ReplaySubject, BehaviorSubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { Admin, emptyadmin } from "../../models/Daudi/admin/Admin";
 import { Depot, emptydepot } from "../../models/Daudi/depot/Depot";
@@ -31,25 +31,6 @@ export class EditPriceComponent implements OnInit, OnDestroy {
   position2 = "left";
   position3 = "right";
 
-  avgprices: {
-    [key in FuelType]: {
-      total: number,
-      prices: Array<AvgPrice>
-    }
-  } = {
-      pms: {
-        total: 0,
-        prices: []
-      },
-      ago: {
-        total: 0,
-        prices: []
-      },
-      ik: {
-        total: 0,
-        prices: []
-      }
-    };
   activedepot: { depot: Depot, config: DepotConfig } = { depot: { ...emptydepot }, config: { ...emptyDepotConfig } };
   spPricesform: FormGroup = new FormGroup({
     pms: new FormControl("", []),
@@ -79,6 +60,29 @@ export class EditPriceComponent implements OnInit, OnDestroy {
   currentOmcConfig: Config = { ...emptyConfig };
   env: Environment = Environment.sandbox;
 
+  avgprices: {
+    [key in FuelType]: {
+      total: BehaviorSubject<number>,
+      avg: BehaviorSubject<number>,
+      prices: BehaviorSubject<Array<Price>>
+    }
+  } = {
+      pms: {
+        total: new BehaviorSubject<number>(0),
+        avg: new BehaviorSubject<number>(0),
+        prices: new BehaviorSubject<Array<Price>>([])
+      },
+      ago: {
+        total: new BehaviorSubject<number>(0),
+        avg: new BehaviorSubject<number>(0),
+        prices: new BehaviorSubject<Array<Price>>([])
+      },
+      ik: {
+        total: new BehaviorSubject<number>(0),
+        avg: new BehaviorSubject<number>(0),
+        prices: new BehaviorSubject<Array<Price>>([])
+      }
+    };
   constructor(
     private dialog: MatDialog,
     private db: AngularFirestore,
@@ -89,7 +93,7 @@ export class EditPriceComponent implements OnInit, OnDestroy {
 
     private omcservice: OmcService) {
 
-    this.core.alldepots
+    this.core.depots
       .pipe(takeUntil(this.comopnentDestroyed))
       .subscribe((value) => {
         this.depotsdataSource.data = value.filter((n) => n);
@@ -100,7 +104,7 @@ export class EditPriceComponent implements OnInit, OnDestroy {
         this.omcs = value;
       });
 
-    this.core.omcconfig
+    this.core.config
       .pipe(takeUntil(this.comopnentDestroyed))
       .subscribe(config => {
         this.currentOmcConfig = config;
@@ -119,18 +123,18 @@ export class EditPriceComponent implements OnInit, OnDestroy {
         // this.spPricesform.controls.ik.setValidators(Validators.compose([Validators.min(this.activedepot.minpriceconfig.ik.price)]));
         this.activedepot = depot;
         this.taxconfigform.disable();
-        this.fueltypesArray.forEach(fueltyp => {
-          this.core.avgprices[fueltyp].total
-            .pipe(takeUntil(this.comopnentDestroyed))
-            .subscribe(total => {
-              this.avgprices[fueltyp].total = total;
-            });
-          this.core.avgprices[fueltyp].prices
-            .pipe(takeUntil(this.comopnentDestroyed))
-            .subscribe(prices => {
-              this.avgprices[fueltyp].prices = prices;
-            });
-        });
+        // this.fueltypesArray.forEach(fueltyp => {
+        //   this.avgprices[fueltyp].total
+        //     .pipe(takeUntil(this.comopnentDestroyed))
+        //     .subscribe(total => {
+        //       this.avgprices[fueltyp].total = total;
+        //     });
+        //   this.avgprices[fueltyp].prices
+        //     .pipe(takeUntil(this.comopnentDestroyed))
+        //     .subscribe(prices => {
+        //       this.avgprices[fueltyp].prices = prices;
+        //     });
+        // });
 
       });
   }

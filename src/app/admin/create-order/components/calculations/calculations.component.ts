@@ -63,7 +63,7 @@ export class CalculationsComponent implements OnInit, OnChanges {
       this.env = val;
     });
 
-    this.core.omcconfig.pipe(
+    this.core.config.pipe(
       takeUntil(this.comopnentDestroyed)
     ).subscribe(val => {
       this.omcConfig = val;

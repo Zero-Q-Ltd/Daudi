@@ -74,7 +74,7 @@ export class CreateOrderComponent implements OnDestroy {
       this.core.activedepot.pipe(
         takeUntil(this.comopnentDestroyed),
         skipWhile(t => !t.depot.Id)),
-      this.core.omcconfig.pipe(
+      this.core.config.pipe(
         takeUntil(this.comopnentDestroyed),
         skipWhile(t => !t)),
       this.core.environment
@@ -165,7 +165,7 @@ export class CreateOrderComponent implements OnDestroy {
    * Returns true if this KRA pin has not been used
    */
   searchkra(krapin: string): DaudiCustomer | undefined {
-    return this.core.allcustomers.value.filter(value => {
+    return this.core.customers.value.filter(value => {
       return value.krapin === krapin;
     })[0];
   }

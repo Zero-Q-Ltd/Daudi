@@ -1,27 +1,25 @@
 import { Injectable } from "@angular/core";
 import { AngularFirestore } from "@angular/fire/firestore";
 import * as moment from "moment";
-import { BehaviorSubject, Subscription, combineLatest } from "rxjs";
+import { BehaviorSubject, combineLatest } from "rxjs";
 import { distinctUntilChanged, skipWhile } from "rxjs/operators";
+import { DaudiCustomer, emptyDaudiCustomer } from "../../../models/Daudi/customer/Customer";
 import { Depot, emptydepot } from "../../../models/Daudi/depot/Depot";
 import { DepotConfig, emptyDepotConfig } from "../../../models/Daudi/depot/DepotConfig";
-import { Price } from "../../../models/Daudi/depot/Price";
 import { Entry } from "../../../models/Daudi/fuel/Entry";
-import { FuelNamesArray, FuelType } from "../../../models/Daudi/fuel/FuelType";
+import { FuelNamesArray } from "../../../models/Daudi/fuel/FuelType";
 import { Config, emptyConfig, QboEnvironment } from "../../../models/Daudi/omc/Config";
 import { Environment } from "../../../models/Daudi/omc/Environments";
 import { emptyomc, OMC } from "../../../models/Daudi/omc/OMC";
-import { Order, emptyorder } from "../../../models/Daudi/order/Order";
+import { emptyorder, Order } from "../../../models/Daudi/order/Order";
 import { OrderStageIds, OrderStages } from "../../../models/Daudi/order/OrderStages";
+import { AttachId } from "../../../shared/pipes/attach-id.pipe";
+import { CustomerService } from "../customers.service";
 import { OrdersService } from "../orders.service";
 import { AdminService } from "./admin.service";
 import { ConfigService } from "./config.service";
 import { DepotService } from "./depot.service";
 import { OmcService } from "./omc.service";
-import { DaudiCustomer } from "../../../models/Daudi/customer/Customer";
-import { AttachId } from "../../../shared/pipes/attach-id.pipe";
-import { CustomerService } from "../customers.service";
-import { emptyDaudiCustomer } from "../../../models/Daudi/customer/Customer";
 
 @Injectable({
   providedIn: "root"
@@ -30,10 +28,10 @@ import { emptyDaudiCustomer } from "../../../models/Daudi/customer/Customer";
  * This singleton keeps all the variables needed by the app to run and automatically keeps and manages the subscriptions
  */
 export class CoreService {
-  omcconfig: BehaviorSubject<Config> = new BehaviorSubject<Config>({ ...emptyConfig });
+  config: BehaviorSubject<Config> = new BehaviorSubject<Config>({ ...emptyConfig });
   environment: BehaviorSubject<Environment> = new BehaviorSubject<Environment>(Environment.sandbox);
-  alldepots: BehaviorSubject<Array<Depot>> = new BehaviorSubject([]);
-  allcustomers: BehaviorSubject<Array<DaudiCustomer>> = new BehaviorSubject<Array<DaudiCustomer>>([]);
+  depots: BehaviorSubject<Array<Depot>> = new BehaviorSubject([]);
+  customers: BehaviorSubject<Array<DaudiCustomer>> = new BehaviorSubject<Array<DaudiCustomer>>([]);
   loadingcustomers: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
 
   omcs: BehaviorSubject<Array<OMC>> = new BehaviorSubject<Array<OMC>>([]);
@@ -58,29 +56,6 @@ export class CoreService {
       ik: new BehaviorSubject([])
     };
 
-  avgprices: {
-    [key in FuelType]: {
-      total: BehaviorSubject<number>,
-      avg: BehaviorSubject<number>,
-      prices: BehaviorSubject<Array<Price>>
-    }
-  } = {
-      pms: {
-        total: new BehaviorSubject<number>(0),
-        avg: new BehaviorSubject<number>(0),
-        prices: new BehaviorSubject<Array<Price>>([])
-      },
-      ago: {
-        total: new BehaviorSubject<number>(0),
-        avg: new BehaviorSubject<number>(0),
-        prices: new BehaviorSubject<Array<Price>>([])
-      },
-      ik: {
-        total: new BehaviorSubject<number>(0),
-        avg: new BehaviorSubject<number>(0),
-        prices: new BehaviorSubject<Array<Price>>([])
-      }
-    };
   fueltypesArray = FuelNamesArray;
   loadingorders = new BehaviorSubject(true);
   orders: {
@@ -105,11 +80,35 @@ export class CoreService {
     private customerService: CustomerService,
     private adminservice: AdminService) {
     this.adminservice.observableuserdata
+      .pipe(skipWhile(t => !t.Id),
+        distinctUntilChanged())
       .subscribe(admin => {
-        if (admin) {
-          this.subscriptions.set("configSubscription", this.configService.configCollection(admin)
-            .onSnapshot(t => this.omcconfig.next(this.attachId.transformObject<Config>(emptyConfig, t))));
-        }
+        this.subscriptions.set("alldepots", this.depotService
+          .depotsCollection()
+          .where("Active", "==", true)
+          .orderBy("Name", "asc")
+          .onSnapshot((data) => {
+            this.unsubscribeAll();
+            /**
+             * Only subscribe to depot when the user data changes
+             */
+            this.depots.next(this.attachId.transformArray<Depot>(emptydepot, data));
+            const tempdepot: Depot = this.depots.value[0];
+            if (this.depots.value.find(depot => depot.Id === this.activedepot.value.depot.Id)) {
+              this.changeactivedepot(this.depots.value.find(depot => depot.Id === this.activedepot.value.depot.Id));
+            } else {
+              this.changeactivedepot(tempdepot);
+            }
+
+            /**
+             * only get OMC's when a valid depot has been assigned
+             * only take the first element, OMC's are not dependent on depot
+             */
+            this.getOmcs();
+          })
+        );
+        this.subscriptions.set("configSubscription", this.configService.configCollection(admin.Id)
+          .onSnapshot(t => this.config.next(this.attachId.transformObject<Config>(emptyConfig, t))));
       });
 
     /**
@@ -118,43 +117,15 @@ export class CoreService {
     combineLatest([this.activedepot.pipe(skipWhile(t => !t.depot.Id)),
     this.currentOmc.pipe(skipWhile(t => !t.Id))]).subscribe(() => {
       this.getOrdersPipeline();
+      this.getallcustomers();
     });
-    /**
-     * Only subscribe to depot when the user data changes
-     */
-    this.adminservice.observableuserdata
-      .pipe(distinctUntilChanged())
-      .subscribe(admin => {
-        if (admin) {
-          this.unsubscribeAll();
-          this.subscriptions.set("alldepots", this.depotService
-            .depotsCollection()
-            .where("Active", "==", true)
-            .orderBy("Name", "asc")
-            .onSnapshot((data) => {
-              this.alldepots.next(this.attachId.transformArray<Depot>(emptydepot, data));
-              const tempdepot: Depot = this.alldepots.value[0];
-              if (this.alldepots.value.find(depot => depot.Id === this.activedepot.value.depot.Id)) {
-                this.changeactivedepot(this.alldepots.value.find(depot => depot.Id === this.activedepot.value.depot.Id));
-              } else {
-                this.changeactivedepot(tempdepot);
-              }
 
-              /**
-               * only get OMC's when a valid depot has been assigned
-               * only take the first element, OMC's are not dependent on depot
-               */
-
-              this.getOmcs();
-            })
-          );
-        }
-      });
   }
   getOmcs() {
-    this.subscriptions.set("allomcs", this.omc.omcCollection()
+    this.subscriptions.set("omcs", this.omc.omcCollection()
       .orderBy("name", "asc")
       .onSnapshot(data => {
+        // console.log("OMC data fetched");
         this.omcs.next(this.attachId.transformArray<OMC>(emptyomc, data));
         this.omcs.value.forEach(co => {
           if (co.Id === this.adminservice.userdata.config.omcId) {
@@ -162,9 +133,8 @@ export class CoreService {
              * Only make the pipeline subscription once
              */
             if (this.currentOmc.value.Id !== this.adminservice.userdata.config.omcId) {
+              console.log("Current OMC found");
               this.currentOmc.next(co);
-
-              this.getallcustomers();
             }
             this.currentOmc.next(co);
           }
@@ -185,7 +155,7 @@ export class CoreService {
       .where("environment", "==", this.environment.value)
       .onSnapshot(data => {
         this.loadingcustomers.next(false);
-        this.allcustomers.next(this.attachId.transformArray<DaudiCustomer>(emptyDaudiCustomer, data));
+        this.customers.next(this.attachId.transformArray<DaudiCustomer>(emptyDaudiCustomer, data));
       }));
   }
   /**
@@ -194,9 +164,9 @@ export class CoreService {
    */
   getEnvironment(envString?: Environment): QboEnvironment {
     if (!envString) {
-      return this.omcconfig.value.Qbo[this.environment.value];
+      return this.config.value.Qbo[this.environment.value];
     } else {
-      return this.omcconfig.value.Qbo[envString];
+      return this.config.value.Qbo[envString];
     }
   }
 
@@ -206,7 +176,7 @@ export class CoreService {
    */
   changeactivedepot(depot: Depot) {
     if (JSON.stringify(depot) !== JSON.stringify(this.activedepot.value)) {
-      const config = this.omcconfig.value.depotconfig[this.environment.value].find(t => {
+      const config = this.config.value.depotconfig[this.environment.value].find(t => {
         // console.log(t.depotId);
         // console.log(depot.Id);
         // console.log(t.depotId === depot.Id);
@@ -223,7 +193,7 @@ export class CoreService {
   unsubscribeAll() {
     this.subscriptions.forEach(value => {
       if (!value) { return; }
-      // value();
+      value();
     });
   }
 

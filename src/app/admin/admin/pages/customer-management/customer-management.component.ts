@@ -68,7 +68,7 @@ export class CustomerManagementComponent implements OnInit, OnDestroy {
             .subscribe(value => {
               this.loadingcompanies = value;
             });
-          this.core.allcustomers
+          this.core.customers
             .pipe(takeUntil(this.comopnentDestroyed))
             .subscribe(data => {
               this.companiesdatasource.data = data;
@@ -158,7 +158,7 @@ export class CustomerManagementComponent implements OnInit, OnDestroy {
       synctype: ["Customer"]
     };
     const syncObject: CompanySync = {
-      config: this.core.omcconfig.value,
+      config: this.core.config.value,
       environment: this.core.environment.value,
       omc: this.core.currentOmc.value,
       sync: req

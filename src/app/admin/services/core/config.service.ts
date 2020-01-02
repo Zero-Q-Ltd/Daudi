@@ -16,9 +16,9 @@ export class ConfigService {
   }
 
 
-  configCollection(admin: Admin) {
+  configCollection(omcId: string) {
     return this.db.firestore.collection("omc")
-      .doc(admin.config.omcId)
+      .doc(omcId)
       .collection("config")
       .doc("main");
   }

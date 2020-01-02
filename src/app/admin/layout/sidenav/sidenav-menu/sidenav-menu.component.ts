@@ -43,7 +43,7 @@ export class AppSidenavMenuComponent implements OnDestroy {
     TruckStageNames.forEach(stage => {
       // this.truckservice.trucks[stage].pipe(takeUntil(this.comopnentDestroyed)).subscribe(trucks => this.truckscount[stage] = trucks.length);
     });
-    this.core.alldepots.pipe(takeUntil(this.comopnentDestroyed)).subscribe((alldepots: Array<Depot>) => {
+    this.core.depots.pipe(takeUntil(this.comopnentDestroyed)).subscribe((alldepots: Array<Depot>) => {
       this.alldepots = alldepots;
     });
     this.core.activedepot.pipe(takeUntil(this.comopnentDestroyed)).subscribe((depot) => {

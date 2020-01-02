@@ -83,7 +83,7 @@ export class ContactFormComponent implements OnInit, OnChanges {
     }
     const filterValue = value.toLowerCase();
 
-    return this.core.allcustomers.value.filter(option => option.name.toLowerCase().includes(filterValue));
+    return this.core.customers.value.filter(option => option.name.toLowerCase().includes(filterValue));
   }
   companyselect(selectedcompany: DaudiCustomer) {
 

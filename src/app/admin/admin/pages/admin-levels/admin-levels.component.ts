@@ -51,7 +51,7 @@ export class AdminLevelsComponent implements OnInit, OnDestroy {
     this.comopnentDestroyed.complete();
   }
   initvalues(): void {
-    this.core.omcconfig.pipe(takeUntil(this.comopnentDestroyed)).subscribe(co => {
+    this.core.config.pipe(takeUntil(this.comopnentDestroyed)).subscribe(co => {
       // this.originalCompany = co;
       // this.tempcompany = Object.assign({}, co);
       this.initforms();

@@ -6,8 +6,8 @@ import { NotificationService } from "../../shared/services/notification.service"
 import { AdminService } from "../services/core/admin.service";
 import { DepotService } from "../services/core/depot.service"; // get our service
 import { RouteData } from "../../models/Daudi/navigation/RouteData";
-import { PermissionService } from "../services/core/permission.service";
 import { map } from "rxjs/operators";
+import { CoreService } from "../services/core/core.service";
 
 @Injectable()
 export class UsersGuard implements CanActivate {
@@ -15,13 +15,13 @@ export class UsersGuard implements CanActivate {
     private depotserviice: DepotService,
     private adminservice: AdminService,
     private router: Router,
-    private permission: PermissionService,
+    private core: CoreService,
     private notification: NotificationService) {
 
   }
   boolean;
   canActivate(next: ActivatedRouteSnapshot, activated: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
-    return combineLatest([this.adminservice.observableuserdata, this.permission.pagepermissions])
+    return combineLatest([this.adminservice.observableuserdata, this.core.config])
       .pipe(map(s => {
         console.log(next, activated);
 

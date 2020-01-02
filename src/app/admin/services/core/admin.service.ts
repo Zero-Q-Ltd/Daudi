@@ -40,6 +40,7 @@ export class AdminService {
     });
 
     this.observableuserdata.subscribe(userdata => {
+      console.log(userdata);
       this.userdata = userdata;
     });
   }

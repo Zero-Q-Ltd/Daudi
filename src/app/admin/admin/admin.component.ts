@@ -31,7 +31,7 @@ export class AdminComponent implements OnInit, OnDestroy {
     private core: CoreService,
     private depotsservice: DepotService) {
 
-    this.core.alldepots.pipe(takeUntil(this.comopnentDestroyed)).subscribe(depots => {
+    this.core.depots.pipe(takeUntil(this.comopnentDestroyed)).subscribe(depots => {
       this.alldepots = depots;
     });
   }

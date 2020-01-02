@@ -74,12 +74,12 @@ export class UserManagementComponent implements OnInit, OnDestroy {
             return value as Admin;
           });
         });
-        this.core.omcconfig.pipe(takeUntil(this.comopnentDestroyed)).subscribe(co => {
+        this.core.config.pipe(takeUntil(this.comopnentDestroyed)).subscribe(co => {
           // this.originalCompany = co;
         });
       }
     });
-    this.core.alldepots.pipe(takeUntil(this.comopnentDestroyed)).subscribe(depots => {
+    this.core.depots.pipe(takeUntil(this.comopnentDestroyed)).subscribe(depots => {
       this.alldepots = depots;
     });
 
