@@ -267,15 +267,19 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
           duration: 6000
         });
       } else {
-        this.order.fuel[fueltype].entries[0].Name = this.drawnEntry[fueltype][0].name;
-        this.order.fuel[fueltype].entries[0].Id = this.drawnEntry[fueltype][0].id;
-        this.order.fuel[fueltype].entries[0].qty = this.drawnEntry[fueltype][0].qtydrawn;
-        this.order.fuel[fueltype].entries[0].observed = 0;
+        this.order.fuel[fueltype].entries[0] = {
+          Id: this.drawnEntry[fueltype][0].id,
+          qty: this.drawnEntry[fueltype][0].qtydrawn,
+          Name: this.drawnEntry[fueltype][0].name,
+          observed: 0
+        };
 
-        this.order.fuel[fueltype].entries[1].Name = this.drawnEntry[fueltype][0].name;
-        this.order.fuel[fueltype].entries[1].Id = this.drawnEntry[fueltype][0].id;
-        this.order.fuel[fueltype].entries[1].qty = this.drawnEntry[fueltype][0].qtydrawn;
-        this.order.fuel[fueltype].entries[1].observed = 0;
+        this.order.fuel[fueltype].entries[1] = {
+          Id: this.drawnEntry[fueltype][1].id,
+          qty: this.drawnEntry[fueltype][1].qtydrawn,
+          Name: this.drawnEntry[fueltype][1].name,
+          observed: 0
+        };
       }
     });
     /**
@@ -296,9 +300,9 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
       this.order.stagedata["4"].user = this.adminservice.createuserobject();
       this.order.loaded = true;
 
-      // this.truck.stagedata["1"].expiry = data;
-      // this.truck.stagedata["1"].user = this.adminservice.createuserobject();
-      // this.truck.stage = 1;
+      this.order.stagedata["1"].expiry = data;
+      this.order.stagedata["1"].user = this.adminservice.createuserobject();
+      this.order.stage = 1;
 
       const batchaction = this.db.firestore.batch();
       // batchaction.update(this.ordersservice.updateorder(this.orderid, this.order);

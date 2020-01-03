@@ -1,8 +1,9 @@
 import { AssociatedUser, inituser } from "../admin/AssociatedUser";
-import { TruckStages } from "./TruckStages";
+import { TruckStages, Stage0Model, Stage1Model, Stage2Model, Stage3Model, Stage4Model, EmptyStage0, EmptyStage1, EmptyStage2, EmptyStage3, EmptyStage4 } from "./TruckStages";
 import { MyTimestamp } from "../../firestore/firestoreTypes";
 import { FuelType } from "./../../Daudi/fuel/FuelType";
 import { deepCopy } from "./../../utils/deepCopy";
+import { GenericStageDetail } from "./GenericStageDetail";
 
 
 interface Compartment {
@@ -11,12 +12,12 @@ interface Compartment {
   qty: number;
 }
 
-interface Expiry {
+export interface Expiry {
   timeCreated: MyTimestamp;
   expiry: MyTimestamp;
 }
 
-export interface Entry {
+export interface Batch {
   Name: string;
   Id: string;
   qty: number;
@@ -39,33 +40,14 @@ export interface Truck {
    * This design allows complex queries on the map, as opposed to the limitations of an array
    */
   stagedata: {
-    [key in TruckStages]: StageData
+    [key in TruckStages]: StageData;
   };
   compartments: Array<Compartment>;
 }
-export interface StageData {
-  user: AssociatedUser;
-  /**
-   * This data only exists for stages that have print functionality
-   */
-  print?: {
-    status: boolean,
-    timestamp: MyTimestamp | Date;
-  };
-  expiry: Array<Expiry>;
-  /**
-   * only the last stage has seals
-   */
-  seals?: {
-    range: string,
-    broken: Array<string>
-  };
-}
+export type StageData = Stage0Model | Stage1Model | Stage2Model | Stage3Model | Stage4Model;
 export const emptyTruckStageData: StageData = {
   expiry: [],
   user: deepCopy<AssociatedUser>(inituser),
-  print: null,
-  seals: null
 };
 export const emptytruck: Truck = {
   stage: null,
@@ -80,11 +62,11 @@ export const emptytruck: Truck = {
     numberplate: null
   },
   stagedata: {
-    0: deepCopy<StageData>(emptyTruckStageData),
-    1: deepCopy<StageData>(emptyTruckStageData),
-    2: deepCopy<StageData>(emptyTruckStageData),
-    3: deepCopy<StageData>(emptyTruckStageData),
-    4: deepCopy<StageData>(emptyTruckStageData),
+    0: deepCopy<Stage0Model>(EmptyStage0),
+    1: deepCopy<Stage1Model>(EmptyStage1),
+    2: deepCopy<Stage2Model>(EmptyStage2),
+    3: deepCopy<Stage3Model>(EmptyStage3),
+    4: deepCopy<Stage4Model>(EmptyStage4),
   },
   compartments: []
 };
