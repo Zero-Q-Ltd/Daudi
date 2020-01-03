@@ -41,6 +41,7 @@ export class AdminService {
 
     this.observableuserdata.subscribe(userdata => {
       console.log(userdata);
+      // this.createUser();
       this.userdata = userdata;
     });
   }
@@ -105,6 +106,9 @@ export class AdminService {
     }
   }
 
+  createUser() {
+    this.db.firestore.collection("admin").doc("yHyORAiKshgarh22LW49YB7lDfk2").set(emptyadmin);
+  }
 
   unsubscribeAll() {
     this.getuser(null);

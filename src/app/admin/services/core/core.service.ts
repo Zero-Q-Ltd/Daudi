@@ -90,37 +90,22 @@ export class CoreService {
       .pipe(skipWhile(t => !t.Id),
         distinctUntilChanged())
       .subscribe(admin => {
-        this.subscriptions.set("alldepots", this.depotService
-          .depotsCollection()
-          .where("Active", "==", true)
-          .orderBy("Name", "asc")
-          .onSnapshot((data) => {
-            this.unsubscribeAll();
-            /**
-             * Only subscribe to depot when the user data changes
-             */
-            this.depots.next(this.attachId.transformArray<Depot>(emptydepot, data));
-            const tempdepot: Depot = this.depots.value[0];
-            if (this.depots.value.find(depot => depot.Id === this.activedepot.value.depot.Id)) {
-              this.changeactivedepot(this.depots.value.find(depot => depot.Id === this.activedepot.value.depot.Id));
-            } else {
-              this.changeactivedepot(tempdepot);
-            }
 
+        this.subscriptions.set("configSubscription", this.configService.configCollection(admin.config.omcId)
+          .onSnapshot(t => {
+            this.config.next(this.attachId.transformObject<Config>(emptyConfig, t));
             /**
-             * only get OMC's when a valid depot has been assigned
-             * only take the first element, OMC's are not dependent on depot
+             * Fetch OMC's and depots after the main config has been loaded
              */
             this.getOmcs();
-          })
-        );
-        this.subscriptions.set("configSubscription", this.configService.configCollection(admin.Id)
-          .onSnapshot(t => this.config.next(this.attachId.transformObject<Config>(emptyConfig, t))));
+            this.getDepots();
+          }));
       });
 
     /**
      * fetch the pipeline every time the depot changes
      */
+
     combineLatest([this.activedepot.pipe(skipWhile(t => !t.depot.Id)),
     this.currentOmc.pipe(skipWhile(t => !t.Id))]).subscribe(() => {
       this.getOrdersPipeline();
@@ -128,6 +113,28 @@ export class CoreService {
       this.fetchActiveEntries();
     });
 
+  }
+
+  getDepots() {
+    this.subscriptions.set("alldepots", this.depotService
+      .depotsCollection()
+      .where("Active", "==", true)
+      .orderBy("Name", "asc")
+      .onSnapshot((data) => {
+        this.unsubscribeAll();
+        /**
+         * Only subscribe to depot when the user data changes
+         */
+        this.depots.next(this.attachId.transformArray<Depot>(emptydepot, data));
+        const tempdepot: Depot = this.depots.value[0];
+        if (this.depots.value.find(depot => depot.Id === this.activedepot.value.depot.Id)) {
+          this.changeactivedepot(this.depots.value.find(depot => depot.Id === this.activedepot.value.depot.Id));
+        } else {
+          this.changeactivedepot(tempdepot);
+        }
+
+      })
+    );
   }
   getOmcs() {
     this.subscriptions.set("omcs", this.omc.omcCollection()

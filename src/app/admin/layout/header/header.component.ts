@@ -64,12 +64,7 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
   environment: Environment;
   constructor(
-    private router: Router,
-    private orderservice: OrdersService,
     private adminservice: AdminService,
-    private depotservice: DepotService,
-    private priceservice: PricesService,
-    private config: ConfigService,
     private core: CoreService,
     private status: StatusService) {
     this.core.activedepot.pipe(
