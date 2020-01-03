@@ -1,20 +1,19 @@
-import { Component, OnInit, Input, Output, EventEmitter, OnChanges } from "@angular/core";
-import { Order } from "./../../../../models/Daudi/order/Order";
-import { OrderContactForm } from "./../../../../models/Daudi/forms/CreateOrder";
-import { FuelType, FuelNamesArray } from "./../../../../models/Daudi/fuel/FuelType";
-import { OrderFuelConfig } from "./../../../../models/Daudi/order/FuelConfig";
-import { ConfigService } from "./../../../../admin/services/core/config.service";
-import { Config, emptyConfig } from "./../../../../models/Daudi/omc/Config";
-import { Environment } from "./../../../../models/Daudi/omc/Environments";
-import { FormArray, FormControl, Controls, FormGroup, FormBuilder } from "ngx-strongly-typed-forms";
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from "@angular/core";
 import { Validators } from "@angular/forms";
-import { Calculations, FuelCalculation } from "./../../../../models/Daudi/forms/Calculations";
-import { takeUntil, skipWhile } from "rxjs/operators";
+import { FormControl, FormGroup } from "ngx-strongly-typed-forms";
 import { ReplaySubject } from "rxjs";
-import { DepotService } from "./../../../services/core/depot.service";
+import { skipWhile, takeUntil } from "rxjs/operators";
+import { CoreService } from "../../../services/core/core.service";
+import { ConfigService } from "./../../../../admin/services/core/config.service";
 import { Depot, emptydepot } from "./../../../../models/Daudi/depot/Depot";
 import { DepotConfig, emptyDepotConfig } from "./../../../../models/Daudi/depot/DepotConfig";
+import { Calculations, FuelCalculation } from "./../../../../models/Daudi/forms/Calculations";
+import { FuelNamesArray, FuelType } from "./../../../../models/Daudi/fuel/FuelType";
+import { Config, emptyConfig } from "./../../../../models/Daudi/omc/Config";
+import { Environment } from "./../../../../models/Daudi/omc/Environments";
+import { Order } from "./../../../../models/Daudi/order/Order";
 import { NotificationService } from "./../../../../shared/services/notification.service";
+import { DepotService } from "./../../../services/core/depot.service";
 
 @Component({
   selector: "app-calculations",
@@ -54,21 +53,22 @@ export class CalculationsComponent implements OnInit, OnChanges {
   constructor(
     private configService: ConfigService,
     private depot: DepotService,
+    private core: CoreService,
     private notificationService: NotificationService,
 
   ) {
-    this.configService.environment.pipe(
+    this.core.environment.pipe(
       takeUntil(this.comopnentDestroyed)
     ).subscribe(val => {
       this.env = val;
     });
 
-    this.configService.omcconfig.pipe(
+    this.core.config.pipe(
       takeUntil(this.comopnentDestroyed)
     ).subscribe(val => {
       this.omcConfig = val;
     });
-    this.depot.activedepot.pipe(
+    this.core.activedepot.pipe(
       takeUntil(this.comopnentDestroyed),
       skipWhile(t => !t.depot.Id))
       .subscribe(dep => {
@@ -101,6 +101,10 @@ export class CalculationsComponent implements OnInit, OnChanges {
             this.initData.fuel[fueltype].priceconfig.taxablePrice = calculatedpirces.taxablePrice;
             this.initData.fuel[fueltype].priceconfig.nonTaxprice = calculatedpirces.pricewithoutvat;
             const totalwithouttax = this.totalswithouttax(this.initData.fuel[fueltype].priceconfig.nonTaxprice, this.initData.fuel[fueltype].qty);
+            /**
+             * modify the nox tax price to be an exact figurea after rounding off
+             */
+            this.initData.fuel[fueltype].priceconfig.nonTaxprice = (totalwithouttax / this.initData.fuel[fueltype].qty);
             this.initData.fuel[fueltype].priceconfig.nonTaxtotal = totalwithouttax;
             // this.initData.fuel[fueltype].priceconfig.total = taxcalculations.taxamount + totalwithouttax;
             this.initData.fuel[fueltype].priceconfig.total = this.initData.fuel[fueltype].priceconfig.price * this.initData.fuel[fueltype].qty;

@@ -24,13 +24,7 @@ export class PaymentsService {
     private db: AngularFirestore,
     private config: ConfigService,
     private depotservice: DepotService) {
-    /**
-     * only fetch payments when the companyId of activedepot changes
-     */
-    this.config.environment.subscribe(depot => {
-      this.unsubscribeAll();
-      this.getunprocessedpayments();
-    });
+
   }
 
   getrecentpayments() {

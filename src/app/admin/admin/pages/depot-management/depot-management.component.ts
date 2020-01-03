@@ -1,17 +1,15 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
-import { MatDialog } from "@angular/material";
-import { Depot, emptydepot } from "../../../../models/Daudi/depot/Depot";
-import { NotificationService } from "../../../../shared/services/notification.service";
-import { AdminService } from "../../../services/core/admin.service";
-import { DepotService } from "../../../services/core/depot.service";
-import { MapsComponent } from "../../../maps/maps.component";
 import { AngularFireFunctions } from "@angular/fire/functions";
+import { MatDialog } from "@angular/material";
 import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
-import { OMC, emptyomc } from "../../../../models/Daudi/omc/OMC";
-import { ConfigService } from "../../../services/core/config.service";
 import { SyncRequest } from "../../../../models/Cloud/Sync";
+import { Depot, emptydepot } from "../../../../models/Daudi/depot/Depot";
+import { emptyomc, OMC } from "../../../../models/Daudi/omc/OMC";
 import { MyTimestamp } from "../../../../models/firestore/firestoreTypes";
+import { NotificationService } from "../../../../shared/services/notification.service";
+import { MapsComponent } from "../../../maps/maps.component";
+import { CoreService } from "../../../services/core/core.service";
 
 
 @Component({
@@ -33,18 +31,16 @@ export class DepotManagementComponent implements OnInit, OnDestroy {
   constructor(
     private notification: NotificationService,
     private dialog: MatDialog,
-    private adminservice: AdminService,
-    private depotservice: DepotService,
-    private companyservice: ConfigService,
-    private config: ConfigService,
+    private core: CoreService,
+
     private functions: AngularFireFunctions) {
-    this.depotservice.activedepot.pipe(takeUntil(this.comopnentDestroyed)).subscribe(depot => {
+    this.core.activedepot.pipe(takeUntil(this.comopnentDestroyed)).subscribe(depot => {
       this.activedepot = depot.depot;
     });
-    this.depotservice.alldepots.pipe(takeUntil(this.comopnentDestroyed)).subscribe(alldepots => {
+    this.core.depots.pipe(takeUntil(this.comopnentDestroyed)).subscribe(alldepots => {
       this.alldepots = alldepots;
     });
-    this.companyservice.omcconfig.pipe(takeUntil(this.comopnentDestroyed)).subscribe(co => {
+    this.core.config.pipe(takeUntil(this.comopnentDestroyed)).subscribe(co => {
       // this.company = co;
     });
   }

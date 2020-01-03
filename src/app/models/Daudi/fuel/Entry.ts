@@ -24,7 +24,7 @@ export interface Entry {
   active: boolean; // 1 for active, 0 for inactive
 }
 
-export const emptyEntries: Entry = {
+export const emptyEntry: Entry = {
   Id: null,
   fuelType: null,
   Amount: null,

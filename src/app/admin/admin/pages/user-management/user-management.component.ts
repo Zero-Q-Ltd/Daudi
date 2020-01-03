@@ -1,21 +1,20 @@
-import { Component, OnDestroy, OnInit, ViewChild, HostListener } from "@angular/core";
-import { Admin, emptyadmin } from "../../../../models/Daudi/admin/Admin";
+import { animate, sequence, state, style, transition, trigger } from "@angular/animations";
+import { Component, HostListener, OnDestroy, OnInit, ViewChild } from "@angular/core";
+import { AngularFireFunctions } from "@angular/fire/functions";
 import { MatDialog, MatPaginator, MatSnackBar, MatSort, MatTableDataSource } from "@angular/material";
 import * as moment from "moment";
-import { NotificationService } from "../../../../shared/services/notification.service";
-import { firestore } from "firebase";
-import { animate, sequence, state, style, transition, trigger } from "@angular/animations";
-import { FormControl, Validators } from "@angular/forms";
-import { AdminService } from "../../../services/core/admin.service";
-import { DepotService } from "../../../services/core/depot.service";
-import { Depot } from "../../../../models/Daudi/depot/Depot";
-import { AngularFireFunctions } from "@angular/fire/functions";
 import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
-import { OMC, emptyomc } from "../../../../models/Daudi/omc/OMC";
-import { ConfigService } from "../../../services/core/config.service";
 import { SyncRequest } from "../../../../models/Cloud/Sync";
+import { Admin, emptyadmin } from "../../../../models/Daudi/admin/Admin";
+import { Depot } from "../../../../models/Daudi/depot/Depot";
+import { emptyomc, OMC } from "../../../../models/Daudi/omc/OMC";
 import { MyTimestamp } from "../../../../models/firestore/firestoreTypes";
+import { NotificationService } from "../../../../shared/services/notification.service";
+import { AdminService } from "../../../services/core/admin.service";
+import { ConfigService } from "../../../services/core/config.service";
+import { CoreService } from "../../../services/core/core.service";
+import { DepotService } from "../../../services/core/depot.service";
 
 
 @Component({
@@ -57,16 +56,12 @@ export class UserManagementComponent implements OnInit, OnDestroy {
 
 
   constructor(
-    private companyservice: ConfigService,
     private adminservice: AdminService,
     private functions: AngularFireFunctions,
-    private snackBar: MatSnackBar,
-    private dialog: MatDialog,
     private notification: NotificationService,
     private adminsService: AdminService,
-    private config: ConfigService,
-    private depotservice: DepotService) {
-    this.depotservice.activedepot.pipe(takeUntil(this.comopnentDestroyed)).subscribe(depotvata => {
+    private core: CoreService) {
+    this.core.activedepot.pipe(takeUntil(this.comopnentDestroyed)).subscribe(depotvata => {
       if (depotvata.depot.Id) {
         this.adminservice.observableuserdata.pipe(takeUntil(this.comopnentDestroyed)).subscribe(admin => {
           this.activeuser = admin;
@@ -79,12 +74,12 @@ export class UserManagementComponent implements OnInit, OnDestroy {
             return value as Admin;
           });
         });
-        this.companyservice.omcconfig.pipe(takeUntil(this.comopnentDestroyed)).subscribe(co => {
+        this.core.config.pipe(takeUntil(this.comopnentDestroyed)).subscribe(co => {
           // this.originalCompany = co;
         });
       }
     });
-    this.depotservice.alldepots.pipe(takeUntil(this.comopnentDestroyed)).subscribe(depots => {
+    this.core.depots.pipe(takeUntil(this.comopnentDestroyed)).subscribe(depots => {
       this.alldepots = depots;
     });
 

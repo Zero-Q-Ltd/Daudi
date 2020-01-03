@@ -8,6 +8,7 @@ import { Observable, ReplaySubject, Subject } from "rxjs";
 import { DaudiCustomer } from "./../../../../models/Daudi/customer/Customer";
 import { takeUntil, startWith } from "rxjs/operators";
 import { CustomerService } from "./../../../services/customers.service";
+import { CoreService } from "./../../../services/core/core.service";
 
 @Component({
   selector: "app-contact-form",
@@ -38,7 +39,8 @@ export class ContactFormComponent implements OnInit, OnChanges {
   });
   constructor(
     private formBuilder: FormBuilder,
-    private customerService: CustomerService
+    private customerService: CustomerService,
+    private core: CoreService,
   ) {
     this.contactForm.valueChanges
       .pipe(
@@ -68,7 +70,7 @@ export class ContactFormComponent implements OnInit, OnChanges {
           this.formValid.emit(true);
         }
       });
-    this.customerService.loadingcustomers
+    this.core.loaders.customers
       .pipe(takeUntil(this.comopnentDestroyed))
       .subscribe(value => {
         this.loadingcustomers = value;
@@ -81,7 +83,7 @@ export class ContactFormComponent implements OnInit, OnChanges {
     }
     const filterValue = value.toLowerCase();
 
-    return this.customerService.allcustomers.value.filter(option => option.name.toLowerCase().includes(filterValue));
+    return this.core.customers.value.filter(option => option.name.toLowerCase().includes(filterValue));
   }
   companyselect(selectedcompany: DaudiCustomer) {
 

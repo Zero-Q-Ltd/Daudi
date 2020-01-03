@@ -21,6 +21,7 @@ import { ConfigService } from "../../services/core/config.service";
 import { DepotConfig, emptyDepotConfig } from "../../../models/Daudi/depot/DepotConfig";
 import { OrderStageIds } from "../../../models/Daudi/order/OrderStages";
 import { TruckStageNames } from "../../../models/Daudi/order/TruckStages";
+import { CoreService } from "../../services/core/core.service";
 
 @Component({
   selector: "my-app-header",
@@ -59,49 +60,25 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
     4: 0
   };
 
-  avgprices: {
-    [key in FuelType]: {
-      total: number,
-      prices: Array<Price>
-    }
-  } = {
-      pms: {
-        total: 0,
-        prices: []
-      },
-      ago: {
-        total: 0,
-        prices: []
-      },
-      ik: {
-        total: 0,
-        prices: []
-      }
-    };
-
   fueltypesArray = FuelNamesArray;
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
   environment: Environment;
   constructor(
-    private router: Router,
-    private orderservice: OrdersService,
     private adminservice: AdminService,
-    private depotservice: DepotService,
-    private priceservice: PricesService,
-    private config: ConfigService,
+    private core: CoreService,
     private status: StatusService) {
-    this.depotservice.activedepot.pipe(
+    this.core.activedepot.pipe(
       skipWhile(t => !t.depot.Id),
       takeUntil(this.comopnentDestroyed))
       .subscribe((depot) => {
         this.activedepot = depot;
       });
-    this.depotservice.alldepots
+    this.core.depots
       .pipe(takeUntil(this.comopnentDestroyed)).subscribe((alldepots: Array<Depot>) => {
         this.alldepots = alldepots;
       });
     OrderStageIds.forEach(stage => {
-      this.orderservice.orders[stage]
+      this.core.orders[stage]
         .pipe(takeUntil(this.comopnentDestroyed))
         .subscribe(orders => this.orderscount[stage] = orders.length);
     });
@@ -119,22 +96,10 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
         this.connectionStatus = statuss;
       });
 
-    this.fueltypesArray.forEach(fueltyp => {
-      this.priceservice.avgprices[fueltyp].total
-        .pipe(takeUntil(this.comopnentDestroyed))
-        .subscribe(total => {
-          this.avgprices[fueltyp].total = total;
-        });
-      this.priceservice.avgprices[fueltyp].prices
-        .pipe(takeUntil(this.comopnentDestroyed))
-        .subscribe(prices => {
-          this.avgprices[fueltyp].prices = prices;
-        });
-    });
   }
 
   changeactivedepot(depot: Depot) {
-    this.depotservice.changeactivedepot(depot);
+    this.core.changeactivedepot(depot);
   }
 
   ngOnInit() {
@@ -151,7 +116,7 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
   }
   changeEnvironment(change: MatSlideToggleChange) {
     this.environment = change.checked ? Environment.sandbox : Environment.live;
-    this.config.environment.next(this.environment);
+    this.core.environment.next(this.environment);
     const tempappconfig = { ...APPCONFIG };
     tempappconfig.colorOption = change.checked ? "2" : "32";
     this.AppConfig = { ...tempappconfig };

@@ -1,22 +1,20 @@
-import { Component, Inject, OnDestroy, OnInit, Optional, ViewChild } from "@angular/core";
-import { MAT_DIALOG_DATA, MatDialog, MatDialogRef, MatPaginator, MatSnackBar, MatSort, MatTableDataSource } from "@angular/material";
-import { CompanyMembersComponent } from "../company-members/company-members.component";
-import { SendMsgComponent } from "../../../send-msg/send-msg.component";
-import { DaudiCustomer } from "../../../../models/Daudi/customer/Customer";
-import { SMS } from "../../../../models/Daudi/sms/sms";
-import { NotificationService } from "../../../../shared/services/notification.service";
 import { SelectionModel } from "@angular/cdk/collections";
-import { AdminService } from "../../../services/core/admin.service";
-import { CustomerService } from "../../../services/customers.service";
-import { DepotService } from "../../../services/core/depot.service";
+import { Component, Inject, OnDestroy, OnInit, Optional, ViewChild } from "@angular/core";
 import { AngularFireFunctions } from "@angular/fire/functions";
+import { MatDialog, MatDialogRef, MatPaginator, MatSnackBar, MatSort, MatTableDataSource, MAT_DIALOG_DATA } from "@angular/material";
 import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
-import { ConfigService } from "../../../services/core/config.service";
-import { SyncRequest } from "../../../../models/Cloud/Sync";
-import { MyTimestamp } from "../../../../models/firestore/firestoreTypes";
-import { OmcService } from "../../../services/core/omc.service";
 import { CompanySync } from "../../../../models/Cloud/CompanySync";
+import { SyncRequest } from "../../../../models/Cloud/Sync";
+import { DaudiCustomer } from "../../../../models/Daudi/customer/Customer";
+import { SMS } from "../../../../models/Daudi/sms/sms";
+import { MyTimestamp } from "../../../../models/firestore/firestoreTypes";
+import { NotificationService } from "../../../../shared/services/notification.service";
+import { SendMsgComponent } from "../../../send-msg/send-msg.component";
+import { AdminService } from "../../../services/core/admin.service";
+import { CoreService } from "../../../services/core/core.service";
+import { CustomerService } from "../../../services/customers.service";
+import { CompanyMembersComponent } from "../company-members/company-members.component";
 
 
 @Component({
@@ -46,12 +44,10 @@ export class CustomerManagementComponent implements OnInit, OnDestroy {
     private adminservice: AdminService,
     private customerservice: CustomerService,
     private functions: AngularFireFunctions,
-    private config: ConfigService,
-    private depot: DepotService,
-    private omc: OmcService,
+    private core: CoreService,
     @Optional() public dialogRef: MatDialogRef<CustomerManagementComponent>,
     @Optional() @Inject(MAT_DIALOG_DATA) public purpose: "SMS" | "Attach") {
-    this.depot.activedepot
+    this.core.activedepot
       .pipe(takeUntil(this.comopnentDestroyed))
       .subscribe(depotvata => {
         this.companiesdatasource.data = [];
@@ -67,12 +63,12 @@ export class CustomerManagementComponent implements OnInit, OnDestroy {
               }
             }
           }
-          this.customerservice.loadingcustomers
+          this.core.loaders.customers
             .pipe(takeUntil(this.comopnentDestroyed))
             .subscribe(value => {
               this.loadingcompanies = value;
             });
-          customerservice.allcustomers
+          this.core.customers
             .pipe(takeUntil(this.comopnentDestroyed))
             .subscribe(data => {
               this.companiesdatasource.data = data;
@@ -162,9 +158,9 @@ export class CustomerManagementComponent implements OnInit, OnDestroy {
       synctype: ["Customer"]
     };
     const syncObject: CompanySync = {
-      config: this.config.omcconfig.value,
-      environment: this.config.environment.value,
-      omc: this.omc.currentOmc.value,
+      config: this.core.config.value,
+      environment: this.core.environment.value,
+      omc: this.core.currentOmc.value,
       sync: req
     };
     const sync = this.functions.httpsCallable("requestsync")(syncObject)
@@ -197,7 +193,7 @@ export class CustomerManagementComponent implements OnInit, OnDestroy {
 
   approvecompany(company: DaudiCustomer) {
     this.savingcompany = true;
-    this.customerservice.verifykra(company.krapin)
+    this.customerservice.verifykra(company.krapin, this.core.currentOmc.value.Id)
       .get()
       .then((snapshot) => {
         if (snapshot.empty) {
@@ -205,7 +201,7 @@ export class CustomerManagementComponent implements OnInit, OnDestroy {
             status: true,
             user: this.adminservice.createuserobject()
           };
-          this.customerservice.updatecompany(company.Id).update(company).then(() => {
+          this.customerservice.updateCustomer(company, this.core.currentOmc.value.Id).then(() => {
             this.savingcompany = false;
           });
         } else {

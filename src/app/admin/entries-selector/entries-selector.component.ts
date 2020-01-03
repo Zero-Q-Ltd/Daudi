@@ -15,6 +15,7 @@ import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { MyTimestamp } from "../../models/firestore/firestoreTypes";
 import { ASE } from "../../models/Daudi/fuel/ASE";
+import { CoreService } from "../services/core/core.service";
 
 
 interface batchContent {
@@ -73,7 +74,7 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
   order: Order = { ...emptyorder };
   donecalculating = false;
   fueltypesArray = FuelNamesArray;
-  fetchingbatches: boolean;
+  fetchingEntries: boolean;
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
   /**
    * this keeps a local copy of all the subscriptions within this service
@@ -86,11 +87,10 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
     private notification: NotificationService,
     private db: AngularFirestore,
     private adminservice: AdminService,
-    private depotsService: DepotService,
-    private entriesService: EntriesService,
+    private core: CoreService,
     private ordersservice: OrdersService) {
     this.fueltypesArray.forEach((fueltype: FuelType) => {
-      this.entriesService.depotEntries[fueltype]
+      this.core.depotEntries[fueltype]
         .pipe(takeUntil(this.comopnentDestroyed))
         .subscribe((entries: Array<Entry>) => {
           console.log(entries);
@@ -98,10 +98,10 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
           this.calculateqty();
         });
     });
-    this.entriesService.fetchingEntry.pipe(takeUntil(this.comopnentDestroyed)).subscribe(value => {
-      this.fetchingbatches = value;
+    this.core.loaders.entries.pipe(takeUntil(this.comopnentDestroyed)).subscribe(value => {
+      this.fetchingEntries = value;
     });
-    const ordersubscription = this.ordersservice.getorder(orderid)
+    const ordersubscription = this.ordersservice.getOrder(orderid, core.currentOmc.value.Id)
       .onSnapshot(orderSnapshot => {
         if (orderSnapshot.exists) {
           this.order = Object.assign({}, orderSnapshot.data()) as Order;

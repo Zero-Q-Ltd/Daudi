@@ -4,6 +4,7 @@ import { NotificationService } from "../../shared/services/notification.service"
 import { emptysms, SMS } from "../../models/Daudi/sms/sms";
 import { AngularFirestore } from "@angular/fire/firestore";
 import { SmsService } from "../services/sms.service";
+import { CoreService } from "../services/core/core.service";
 
 @Component({
   selector: "send-msg",
@@ -23,7 +24,8 @@ export class SendMsgComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public tempsms: SMS | Array<SMS>,
     private sms: SmsService,
     private notificationService: NotificationService,
-    private db: AngularFirestore
+    private db: AngularFirestore,
+    private core: CoreService
   ) {
     console.log(tempsms);
     if (this.tempsms instanceof Array) {
@@ -48,7 +50,7 @@ export class SendMsgComponent implements OnInit {
             origin: "bulk",
             reason: this.tempbulkmodel.type.reason
           };
-          batchaction.set(this.sms.createsms(), sms);
+          batchaction.set(this.sms.smsCollection(this.core.currentOmc.value.Id).doc(this.core.createId()), sms);
         }
       });
       batchaction.commit().then(() => {
@@ -63,7 +65,7 @@ export class SendMsgComponent implements OnInit {
       });
     } else {
       this.tempsms.msg = `ID ${this.tempsms.company.QbId} ${this.tempsms.msg}`;
-      this.sms.createsms().set(this.tempsms).then(result => {
+      this.sms.createsms(this.core.currentOmc.value.Id, this.tempsms).then(result => {
         this.saving = false;
         this.notificationService.notify({
           alert_type: "success",

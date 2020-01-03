@@ -3,7 +3,7 @@ import { Subject } from "rxjs";
 import { Alert } from "../../models/Daudi/notification/Alert";
 import { MatSnackBar } from "@angular/material";
 import { Howl } from "howler";
-import { NotificationComponent } from "../notification/notification.component";
+import { NotificationComponent } from "../components/notification/notification.component";
 
 @Injectable({
   providedIn: "root"

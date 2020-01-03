@@ -1,17 +1,17 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
-import { MatPaginator, MatTableDataSource } from "@angular/material";
-import { DepotService } from "../../../services/core/depot.service";
-import { NotificationService } from "../../../../shared/services/notification.service";
 import { AngularFireFunctions } from "@angular/fire/functions";
+import { MatPaginator, MatTableDataSource } from "@angular/material";
 import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
-import { ConfigService } from "../../../services/core/config.service";
-import { FuelType, FuelNamesArray } from "../../../../models/Daudi/fuel/FuelType";
 import { SyncRequest } from "../../../../models/Cloud/Sync";
+import { ASE, emptyASEs } from "../../../../models/Daudi/fuel/ASE";
+import { FuelNamesArray, FuelType } from "../../../../models/Daudi/fuel/FuelType";
 import { MyTimestamp } from "../../../../models/firestore/firestoreTypes";
-import { ASE } from "../../../../models/Daudi/fuel/ASE";
+import { NotificationService } from "../../../../shared/services/notification.service";
 import { AseService } from "../../../services/ase.service";
-import { emptyASEs } from "../../../../models/Daudi/fuel/ASE";
+import { ConfigService } from "../../../services/core/config.service";
+import { DepotService } from "../../../services/core/depot.service";
+import { CoreService } from "../../../services/core/core.service";
 
 @Component({
   selector: "app-ase",
@@ -59,9 +59,9 @@ export class AseComponent implements OnInit {
     private depotsservice: DepotService,
     private notification: NotificationService,
     private functions: AngularFireFunctions,
-    private config: ConfigService,
+    private core: CoreService,
     private aseService: AseService) {
-    depotsservice.activedepot.pipe(takeUntil(this.comopnentDestroyed)).subscribe(depotvata => {
+    this.core.activedepot.pipe(takeUntil(this.comopnentDestroyed)).subscribe(depotvata => {
       this.loading = {
         pms: true,
         ago: true,
@@ -73,7 +73,7 @@ export class AseComponent implements OnInit {
           /**
            * Create a subscrition for 1000 batches history
            */
-          const subscription = this.aseService.getASEs(fueltype).limit(100)
+          const subscription = this.aseService.getASEs(this.core.currentOmc.value.Id, fueltype).limit(100)
             .onSnapshot(snapshot => {
               this.loading[fueltype] = false;
               this.datasource[fueltype].data = snapshot.docs.map(ase => {
@@ -87,17 +87,17 @@ export class AseComponent implements OnInit {
            * Because all these batches might take time to load, take the totals
            * from the already loaded batches within that depot
            */
-          this.aseService.depotASEs[fueltype]
-            .pipe(takeUntil(this.comopnentDestroyed))
-            .subscribe((ases: Array<ASE>) => {
-              /**
-               * Reset the values every time batches change
-               */
-              this.availablefuel[fueltype] = 0;
-              ases.forEach(ase => {
-                this.availablefuel[fueltype] += this.getTotalAvailable(ase);
-              });
-            });
+          // this.core.depotASEs[fueltype]
+          //   .pipe(takeUntil(this.comopnentDestroyed))
+          //   .subscribe((ases: Array<ASE>) => {
+          //     /**
+          //      * Reset the values every time batches change
+          //      */
+          //     this.availablefuel[fueltype] = 0;
+          //     ases.forEach(ase => {
+          //       this.availablefuel[fueltype] += this.getTotalAvailable(ase);
+          //     });
+          //   });
         });
       }
     });
