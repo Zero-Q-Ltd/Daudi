@@ -6,7 +6,7 @@ import { distinctUntilChanged, skipWhile } from "rxjs/operators";
 import { DaudiCustomer, emptyDaudiCustomer } from "../../../models/Daudi/customer/Customer";
 import { Depot, emptydepot } from "../../../models/Daudi/depot/Depot";
 import { DepotConfig, emptyDepotConfig } from "../../../models/Daudi/depot/DepotConfig";
-import { Entry } from "../../../models/Daudi/fuel/Entry";
+import { Entry, emptyEntry } from "../../../models/Daudi/fuel/Entry";
 import { FuelNamesArray } from "../../../models/Daudi/fuel/FuelType";
 import { Config, emptyConfig, QboEnvironment } from "../../../models/Daudi/omc/Config";
 import { Environment } from "../../../models/Daudi/omc/Environments";
@@ -20,6 +20,7 @@ import { AdminService } from "./admin.service";
 import { ConfigService } from "./config.service";
 import { DepotService } from "./depot.service";
 import { OmcService } from "./omc.service";
+import { EntriesService } from "../entries.service";
 
 @Injectable({
   providedIn: "root"
@@ -32,8 +33,6 @@ export class CoreService {
   environment: BehaviorSubject<Environment> = new BehaviorSubject<Environment>(Environment.sandbox);
   depots: BehaviorSubject<Array<Depot>> = new BehaviorSubject([]);
   customers: BehaviorSubject<Array<DaudiCustomer>> = new BehaviorSubject<Array<DaudiCustomer>>([]);
-  loadingcustomers: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
-
   omcs: BehaviorSubject<Array<OMC>> = new BehaviorSubject<Array<OMC>>([]);
   currentOmc: BehaviorSubject<OMC> = new BehaviorSubject<OMC>(emptyomc);
   /**
@@ -44,8 +43,16 @@ export class CoreService {
    * this keeps a local copy of all the subscriptions within this service
    */
   subscriptions: Map<string, () => void> = new Map<string, () => void>();
-
-  fetchingEntry = new BehaviorSubject(true);
+  /**
+   * keeps an updated copy of core variables fetch status
+   */
+  loaders = {
+    depots: new BehaviorSubject<boolean>(true),
+    customers: new BehaviorSubject<boolean>(true),
+    entries: new BehaviorSubject<boolean>(true),
+    omc: new BehaviorSubject<boolean>(true),
+    orders: new BehaviorSubject<boolean>(true)
+  };
   depotEntries: {
     pms: BehaviorSubject<Array<Entry>>,
     ago: BehaviorSubject<Array<Entry>>,
@@ -57,7 +64,6 @@ export class CoreService {
     };
 
   fueltypesArray = FuelNamesArray;
-  loadingorders = new BehaviorSubject(true);
   orders: {
     [key in OrderStages]: BehaviorSubject<Array<Order>>
   } = {
@@ -78,6 +84,7 @@ export class CoreService {
     private orderService: OrdersService,
     private attachId: AttachId,
     private customerService: CustomerService,
+    private entriesService: EntriesService,
     private adminservice: AdminService) {
     this.adminservice.observableuserdata
       .pipe(skipWhile(t => !t.Id),
@@ -118,6 +125,7 @@ export class CoreService {
     this.currentOmc.pipe(skipWhile(t => !t.Id))]).subscribe(() => {
       this.getOrdersPipeline();
       this.getallcustomers();
+      this.fetchActiveEntries();
     });
 
   }
@@ -150,11 +158,11 @@ export class CoreService {
   }
 
   getallcustomers() {
-    this.loadingcustomers.next(true);
+    this.loaders.customers.next(true);
     this.subscriptions.set("allcustomers", this.customerService.customerCollection(this.currentOmc.value.Id)
       .where("environment", "==", this.environment.value)
       .onSnapshot(data => {
-        this.loadingcustomers.next(false);
+        this.loaders.customers.next(false);
         this.customers.next(this.attachId.transformArray<DaudiCustomer>(emptyDaudiCustomer, data));
       }));
   }
@@ -205,7 +213,7 @@ export class CoreService {
     /**
      * reset the trucks and orders array when this function is invoked
      */
-    this.loadingorders.next(true);
+    this.loaders.orders.next(true);
     this.orders[1].next([]);
     this.orders[2].next([]);
     this.orders[3].next([]);
@@ -233,20 +241,20 @@ export class CoreService {
           this.orders[stage].next([]);
 
           this.orders[stage].next(this.attachId.transformArray<Order>(emptyorder, Data));
-          this.loadingorders.next(false);
+          this.loaders.orders.next(false);
         });
 
       this.subscriptions.set(`orders${stage}`, subscriprion);
     });
 
     const startofweek = moment().startOf("week").toDate();
-
     /**
      * Fetch completed orders
      */
     const stage5subscriprion = this.orderService.ordersCollection(this.currentOmc.value.Id)
       .where("stage", "==", 5)
       .where("config.depot.id", "==", this.activedepot.value.depot.Id)
+      .where("stagedata.1.user.time", "<=", startofweek)
       .orderBy("stagedata.1.user.time", "asc")
       .onSnapshot(Data => {
         /**
@@ -255,9 +263,23 @@ export class CoreService {
         this.orders[5].next([]);
 
         this.orders[5].next(this.attachId.transformArray<Order>(emptyorder, Data));
-        this.loadingorders.next(false);
+        this.loaders.orders.next(false);
       });
 
     this.subscriptions.set(`orders${5}`, stage5subscriprion);
+  }
+
+
+  fetchActiveEntries() {
+    this.loaders.entries.next(true);
+    this.fueltypesArray.forEach(fuelType => {
+      this.subscriptions.set("entries", this.entriesService.entryCollection(this.currentOmc.value.Id)
+        .where("active", "==", true)
+        .where("fuelType", "==", fuelType)
+        .onSnapshot(data => {
+          this.loaders.entries.next(false);
+          this.depotEntries[fuelType].next(this.attachId.transformArray<Entry>(emptyEntry, data));
+        }));
+    });
   }
 }

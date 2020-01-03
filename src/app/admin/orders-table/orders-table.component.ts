@@ -76,7 +76,7 @@ export class OrdersTableComponent implements OnInit, OnDestroy {
     private core: CoreService,
     private componentcommunication: ComponentCommunicationService) {
 
-    this.core.loadingorders.subscribe(value => {
+    this.core.loaders.orders.subscribe(value => {
       this.loadingordders = value;
     });
 

@@ -74,7 +74,7 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
   order: Order = { ...emptyorder };
   donecalculating = false;
   fueltypesArray = FuelNamesArray;
-  fetchingbatches: boolean;
+  fetchingEntries: boolean;
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
   /**
    * this keeps a local copy of all the subscriptions within this service
@@ -98,8 +98,8 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
           this.calculateqty();
         });
     });
-    this.core.fetchingEntry.pipe(takeUntil(this.comopnentDestroyed)).subscribe(value => {
-      this.fetchingbatches = value;
+    this.core.loaders.entries.pipe(takeUntil(this.comopnentDestroyed)).subscribe(value => {
+      this.fetchingEntries = value;
     });
     const ordersubscription = this.ordersservice.getOrder(orderid, core.currentOmc.value.Id)
       .onSnapshot(orderSnapshot => {

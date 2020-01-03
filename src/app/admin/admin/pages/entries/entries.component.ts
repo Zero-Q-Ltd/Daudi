@@ -1,19 +1,16 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
-import { MatPaginator, MatTableDataSource } from "@angular/material";
-import { Entry, emptyEntries } from "../../../../models/Daudi/fuel/Entry";
-import { DepotService } from "../../../services/core/depot.service";
-import { EntriesService } from "../../../services/entries.service";
-import { NotificationService } from "../../../../shared/services/notification.service";
 import { AngularFireFunctions } from "@angular/fire/functions";
+import { MatPaginator, MatTableDataSource } from "@angular/material";
 import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
-import { ConfigService } from "../../../services/core/config.service";
-import { FuelType, FuelNamesArray } from "../../../../models/Daudi/fuel/FuelType";
-import { SyncRequest } from "../../../../models/Cloud/Sync";
-import { MyTimestamp } from "../../../../models/firestore/firestoreTypes";
 import { CompanySync } from "../../../../models/Cloud/CompanySync";
-import { OmcService } from "../../../services/core/omc.service";
+import { SyncRequest } from "../../../../models/Cloud/Sync";
+import { emptyEntry, Entry } from "../../../../models/Daudi/fuel/Entry";
+import { FuelNamesArray, FuelType } from "../../../../models/Daudi/fuel/FuelType";
+import { MyTimestamp } from "../../../../models/firestore/firestoreTypes";
+import { NotificationService } from "../../../../shared/services/notification.service";
 import { CoreService } from "../../../services/core/core.service";
+import { EntriesService } from "../../../services/entries.service";
 
 
 @Component({
@@ -59,11 +56,8 @@ export class EntriesComponent implements OnInit {
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
 
   constructor(
-    private depotsservice: DepotService,
     private notification: NotificationService,
     private functions: AngularFireFunctions,
-    private config: ConfigService,
-    private omc: OmcService,
     private core: CoreService,
     private entriesService: EntriesService) {
     this.core.activedepot.pipe(takeUntil(this.comopnentDestroyed)).subscribe(depotvata => {
@@ -78,11 +72,13 @@ export class EntriesComponent implements OnInit {
           /**
            * Create a subscrition for 1000 batches history
            */
-          const subscription = this.entriesService.getAllEntries(fueltype).limit(100)
+          const subscription = this.entriesService.entryCollection(this.core.currentOmc.value.Id)
+            .where("fuelType", "==", fueltype)
+            .limit(100)
             .onSnapshot(snapshot => {
               this.loading[fueltype] = false;
               this.datasource[fueltype].data = snapshot.docs.map(entry => {
-                const value: Entry = Object.assign({}, emptyEntries, entry.data());
+                const value: Entry = Object.assign({}, emptyEntry, entry.data());
                 value.Id = entry.id;
                 return value;
               });

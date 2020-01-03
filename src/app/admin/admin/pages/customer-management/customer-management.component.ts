@@ -63,7 +63,7 @@ export class CustomerManagementComponent implements OnInit, OnDestroy {
               }
             }
           }
-          this.core.loadingcustomers
+          this.core.loaders.customers
             .pipe(takeUntil(this.comopnentDestroyed))
             .subscribe(value => {
               this.loadingcompanies = value;

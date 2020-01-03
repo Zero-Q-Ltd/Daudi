@@ -71,7 +71,7 @@ export class TrucksTableComponent implements OnInit {
     /**
      * propagate changes when depot changes
      */
-    this.core.loadingorders.pipe(takeUntil(this.comopnentDestroyed)).subscribe(value => {
+    this.core.loaders.orders.pipe(takeUntil(this.comopnentDestroyed)).subscribe(value => {
       this.loadingtrucks = value;
     });
 

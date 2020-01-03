@@ -70,7 +70,7 @@ export class ContactFormComponent implements OnInit, OnChanges {
           this.formValid.emit(true);
         }
       });
-    this.core.loadingcustomers
+    this.core.loaders.customers
       .pipe(takeUntil(this.comopnentDestroyed))
       .subscribe(value => {
         this.loadingcustomers = value;
