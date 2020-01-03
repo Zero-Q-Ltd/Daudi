@@ -4,7 +4,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material";
 import * as moment from "moment";
 import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
-import { Config } from "src/app/models/Daudi/omc/Config";
+import { Config } from "../../models/Daudi/omc/Config";
 import { Entry } from "../../models/Daudi/fuel/Entry";
 import { FuelNamesArray, FuelType } from "../../models/Daudi/fuel/FuelType";
 import { emptyorder, Order } from "../../models/Daudi/order/Order";
@@ -136,7 +136,7 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
              * Since there is only 1 batch to be assigned, the new qty is direct
              */
             qtydrawn: this.order.fuel[fueltype].qty,
-            name: this.depotEntries[fueltype][0].entry.id,
+            name: this.depotEntries[fueltype][0].entry.name,
             totalqty: this.depotEntries[fueltype][0].qty.total,
             resultstatus: this.getTotalAvailableEntry(0, fueltype) > this.order.fuel[fueltype].qty,
             remainqty: this.getTotalAvailableEntry(0, fueltype) - this.order.fuel[fueltype].qty
@@ -267,15 +267,15 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
           duration: 6000
         });
       } else {
-        this.order.fuel[fueltype].batches[0].Name = this.drawnEntry[fueltype][0].name;
-        this.order.fuel[fueltype].batches[0].Id = this.drawnEntry[fueltype][0].id;
-        this.order.fuel[fueltype].batches[0].qty = this.drawnEntry[fueltype][0].qtydrawn;
-        this.order.fuel[fueltype].batches[0].observed = 0;
+        this.order.fuel[fueltype].entries[0].Name = this.drawnEntry[fueltype][0].name;
+        this.order.fuel[fueltype].entries[0].Id = this.drawnEntry[fueltype][0].id;
+        this.order.fuel[fueltype].entries[0].qty = this.drawnEntry[fueltype][0].qtydrawn;
+        this.order.fuel[fueltype].entries[0].observed = 0;
 
-        this.order.fuel[fueltype].batches[1].Name = this.drawnEntry[fueltype][0].name;
-        this.order.fuel[fueltype].batches[1].Id = this.drawnEntry[fueltype][0].id;
-        this.order.fuel[fueltype].batches[1].qty = this.drawnEntry[fueltype][0].qtydrawn;
-        this.order.fuel[fueltype].batches[1].observed = 0;
+        this.order.fuel[fueltype].entries[1].Name = this.drawnEntry[fueltype][0].name;
+        this.order.fuel[fueltype].entries[1].Id = this.drawnEntry[fueltype][0].id;
+        this.order.fuel[fueltype].entries[1].qty = this.drawnEntry[fueltype][0].qtydrawn;
+        this.order.fuel[fueltype].entries[1].observed = 0;
       }
     });
     /**

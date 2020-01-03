@@ -16,7 +16,7 @@ interface Expiry {
   expiry: MyTimestamp;
 }
 
-export interface Batch {
+export interface Entry {
   Name: string;
   Id: string;
   qty: number;

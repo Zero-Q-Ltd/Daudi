@@ -10,7 +10,7 @@ export interface Entry {
   Amount: number;
   date: MyTimestamp;
   entry: {
-    id: string,
+    name: string,
     refs: QbRef[]
   };
   depot: {
