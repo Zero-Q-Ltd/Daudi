@@ -4,11 +4,11 @@ import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material";
 import * as moment from "moment";
 import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
-import { Config } from "../../models/Daudi/omc/Config";
 import { Entry } from "../../models/Daudi/fuel/Entry";
 import { FuelNamesArray, FuelType } from "../../models/Daudi/fuel/FuelType";
+import { Config } from "../../models/Daudi/omc/Config";
 import { emptyorder, Order } from "../../models/Daudi/order/Order";
-import { StageData } from "../../models/Daudi/order/Truck";
+import { Stage1Model } from "../../models/Daudi/order/TruckStages";
 import { MyTimestamp } from "../../models/firestore/firestoreTypes";
 import { NotificationService } from "../../shared/services/notification.service";
 import { AdminService } from "../services/core/admin.service";
@@ -16,7 +16,7 @@ import { CoreService } from "../services/core/core.service";
 import { OrdersService } from "../services/orders.service";
 
 
-interface batchContent {
+interface EntryContent {
   id: string;
   qtydrawn: number;
   name: string;
@@ -48,16 +48,14 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = ["id", "batch", "totalqty", "accumulated", "loadedqty", "availableqty", "drawnqty", "remainingqty", "status"];
 
   drawnEntry: {
-    [key in FuelType]: batchContent[]
+    [key in FuelType]: EntryContent[]
   } = {
       pms: [],
       ago: [],
       ik: [],
     };
-  fuelerror = {
-    pms: false,
-    ago: false,
-    ik: false
+  fuelerror: {
+    [key in FuelType]: { status: boolean, errorString: string }
   };
   saving = false;
   order: Order = { ...emptyorder };
@@ -121,113 +119,140 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
   calculateqty() {
     this.donecalculating = false;
     this.fueltypesArray.forEach((fueltype: FuelType) => {
-      this.fuelerror[fueltype] = false;
+      this.fuelerror[fueltype].status = false;
       /**
-       * Check if there are batches to assign
+       * check if there is enough ASE for that fuel
        */
-      if ((this.depotEntries[fueltype].length > 0) && (this.order.fuel[fueltype].qty > 0)) {
+      if (this.config.qty[fueltype].ase >= this.order.fuel[fueltype].qty) {
+
         /**
-         * Check if there is a rollover in the batches
+         * Check if there are batches to assign
          */
-        if (this.getTotalAvailableEntry(0, fueltype) >= this.order.fuel[fueltype].qty) {
-          this.drawnEntry[fueltype][0] = {
-            id: this.depotEntries[fueltype][0].Id,
-            /**
-             * Since there is only 1 batch to be assigned, the new qty is direct
-             */
-            qtydrawn: this.order.fuel[fueltype].qty,
-            name: this.depotEntries[fueltype][0].entry.name,
-            totalqty: this.depotEntries[fueltype][0].qty.total,
-            resultstatus: this.getTotalAvailableEntry(0, fueltype) > this.order.fuel[fueltype].qty,
-            remainqty: this.getTotalAvailableEntry(0, fueltype) - this.order.fuel[fueltype].qty
-          };
-          this.donecalculating = true;
-
-        } else {
+        if ((this.depotEntries[fueltype].length > 0) && (this.order.fuel[fueltype].qty > 0)) {
           /**
-           * Loop through all the batches to get the next available batch number that will be able to completely fill the truck
+           * Check if there is a rollover in the batches
            */
-          let batch1 = {
-            id: null,
-            qtydrawn: 0,
-            name: null,
-            totalqty: 0,
-            resultstatus: true,
-            remainqty: 0
-          };
-          /**
-           * The value that should e deducted as a result of assigning the first batch number
-           */
-          const assignedamount = this.getTotalAvailableEntry(0, fueltype);
-
-          this.depotEntries[fueltype].forEach((batch: Entry, index) => {
-            /**
-             * Check if there is fuel to rollover
-             */
-            if (this.depotEntries[fueltype].length < 2) {
-              this.fuelerror[fueltype] = true;
-              return;
-            }
-            /**
-             * Start at pos 1 because pos 0 MUST be used in batch0
-             */
-            if (index > 0) {
+          if (this.getTotalAvailableEntry(0, fueltype) >= this.order.fuel[fueltype].qty) {
+            this.drawnEntry[fueltype][0] = {
+              id: this.depotEntries[fueltype][0].Id,
               /**
-               * Check if the batch number at that position has enough fuel to be assigned, otherwise error
+               * Since there is only 1 batch to be assigned, the new qty is direct
                */
-              if (this.getTotalAvailableEntry(index, fueltype) >= (this.order.fuel[fueltype].qty - assignedamount)) {
+              qtydrawn: this.order.fuel[fueltype].qty,
+              name: this.depotEntries[fueltype][0].entry.name,
+              totalqty: this.depotEntries[fueltype][0].qty.total,
+              resultstatus: this.getTotalAvailableEntry(0, fueltype) > this.order.fuel[fueltype].qty,
+              remainqty: this.getTotalAvailableEntry(0, fueltype) - this.order.fuel[fueltype].qty
+            };
+            this.donecalculating = true;
+
+          } else {
+            /**
+             * Loop through all the batches to get the next available batch number that will be able to completely fill the truck
+             */
+            let batch1 = {
+              id: null,
+              qtydrawn: 0,
+              name: null,
+              totalqty: 0,
+              resultstatus: true,
+              remainqty: 0
+            };
+            /**
+             * The value that should e deducted as a result of assigning the first batch number
+             */
+            const assignedamount = this.getTotalAvailableEntry(0, fueltype);
+
+            this.depotEntries[fueltype].forEach((batch: Entry, index) => {
+              /**
+               * Check if there is fuel to rollover
+               */
+              if (this.depotEntries[fueltype].length < 2) {
+                this.fuelerror[fueltype] = {
+                  errorString: `Insufficient ENTRY ${fueltype.toUpperCase()}.Expected amount is ${this.order.fuel[fueltype].qty}`,
+                  status: true
+                };
+                return;
+              }
+              /**
+               * Start at pos 1 because pos 0 MUST be used in batch0
+               */
+              if (index > 0) {
                 /**
-                 * Only assign a batch if not already containing a value, hence have affinity for the order of display as the second assigned batch
+                 * Check if the batch number at that position has enough fuel to be assigned, otherwise error
                  */
-                if (!batch1.id) {
+                if (this.getTotalAvailableEntry(index, fueltype) >= (this.order.fuel[fueltype].qty - assignedamount)) {
                   /**
-                   * remove the error in case it was caused by a batch within the loop not being enough
-                   * If all the batches are not enough it will remain true
+                   * Only assign a batch if not already containing a value, hence have affinity for the order of display as the second assigned batch
                    */
-                  this.fuelerror[fueltype] = false;
-                  const qtydrawn = this.order.fuel[fueltype].qty - assignedamount;
-                  batch1 = {
-                    id: batch.Id,
-                    qtydrawn,
-                    name: batch.entry,
-                    totalqty: batch.qty.total,
-                    resultstatus: this.getTotalAvailableEntry(index, fueltype) > assignedamount,
-                    remainqty: this.getTotalAvailableEntry(index, fueltype) - qtydrawn
-                  };
-                }
-              } else {
-                /**
-                 * Olny set error if batch 1 doesnt exist
-                 */
-                if (!batch1.id) {
-                  this.fuelerror[fueltype] = true;
+                  if (!batch1.id) {
+                    /**
+                     * remove the error in case it was caused by a batch within the loop not being enough
+                     * If all the batches are not enough it will remain true
+                     */
+                    this.fuelerror[fueltype].status = false;
+                    const qtydrawn = this.order.fuel[fueltype].qty - assignedamount;
+                    batch1 = {
+                      id: batch.Id,
+                      qtydrawn,
+                      name: batch.entry,
+                      totalqty: batch.qty.total,
+                      resultstatus: this.getTotalAvailableEntry(index, fueltype) > assignedamount,
+                      remainqty: this.getTotalAvailableEntry(index, fueltype) - qtydrawn
+                    };
+                  }
+                } else {
+                  /**
+                   * Olny set error if batch 1 doesnt exist
+                   */
+                  if (!batch1.id) {
+                    this.fuelerror[fueltype] = {
+                      errorString: `Insufficient ENTRY ${fueltype.toUpperCase()}.Expected amount is ${this.order.fuel[fueltype].qty}`,
+                      status: true
+                    };
+                  }
                 }
               }
+            });
+            if (!batch1) {
+              this.fuelerror[fueltype] = {
+                errorString: `Insufficient ENTRY ${fueltype.toUpperCase()}.Expected amount is ${this.order.fuel[fueltype].qty}`,
+                status: true
+              };
             }
-          });
-          if (!batch1) {
-            this.fuelerror[fueltype] = true;
-          }
-          this.drawnEntry[fueltype] = [{
-            id: this.depotEntries[fueltype][0].Id,
-            /**
-             * the qty drown
-             */
-            qtydrawn: this.getTotalAvailableEntry(0, fueltype),
-            name: this.depotEntries[fueltype][0].entry,
-            totalqty: this.depotEntries[fueltype][0].qty.total,
-            resultstatus: false,
-            remainqty: 0
-          }, batch1];
-          this.donecalculating = true;
+            this.drawnEntry[fueltype] = [{
+              id: this.depotEntries[fueltype][0].Id,
+              /**
+               * the qty drown
+               */
+              qtydrawn: this.getTotalAvailableEntry(0, fueltype),
+              name: this.depotEntries[fueltype][0].entry,
+              totalqty: this.depotEntries[fueltype][0].qty.total,
+              resultstatus: false,
+              remainqty: 0
+            }, batch1];
+            this.donecalculating = true;
 
+          }
+        } else {
+          this.donecalculating = true;
+          if (this.order.fuel[fueltype].qty > 0 && this.depotEntries[fueltype].length === 0) {
+            this.fuelerror[fueltype] = {
+              errorString: `Insufficient ENTRY ${fueltype.toUpperCase()}.Expected amount is ${this.order.fuel[fueltype].qty}`,
+              status: true
+            };;
+          }
         }
       } else {
         this.donecalculating = true;
         if (this.order.fuel[fueltype].qty > 0 && this.depotEntries[fueltype].length === 0) {
-          this.fuelerror[fueltype] = true;
+          this.fuelerror[fueltype] = {
+            errorString: `Insufficient ASE ${fueltype.toUpperCase()}.Expected amount is ${this.order.fuel[fueltype].qty}`,
+            status: true
+          };;
         }
       }
+
       // console.log(this.drawnbatch)
 
     });
@@ -257,13 +282,13 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
     this.saving = true;
     this.dialogRef.disableClose = true;
     this.fueltypesArray.forEach((fueltype: FuelType) => {
-      if (this.fuelerror[fueltype]) {
+      if (this.fuelerror[fueltype].status) {
         this.saving = false;
         this.dialogRef.disableClose = false;
         return this.notification.notify({
           alert_type: "error",
           title: `Error`,
-          body: `Insufficient ${fueltype.toUpperCase()}.Expected amount is ${this.order.fuel[fueltype].qty}`,
+          body: this.fuelerror[fueltype].errorString,
           duration: 6000
         });
       } else {
@@ -287,21 +312,24 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
      * .... again
      */
     if (!this.fuelerror.pms && !this.fuelerror.ago && !this.fuelerror.ik) {
-      const data: StageData = {
+      const data: Stage1Model = {
         user: this.adminservice.createuserobject(),
         expiry: [
           {
             timeCreated: MyTimestamp.now(),
             expiry: MyTimestamp.fromDate(moment().add(45, "minutes").toDate()),
           }],
+        print: {
+          status: false,
+          timestamp: MyTimestamp.now()
+        }
       };
       this.order.stage = 4;
-      this.order.stagedata["4"] = {} as any;
-      this.order.stagedata["4"].user = this.adminservice.createuserobject();
       this.order.loaded = true;
 
-      this.order.stagedata["1"].expiry = data;
-      this.order.stagedata["1"].user = this.adminservice.createuserobject();
+      this.order.stagedata["4"].user = data.user;
+
+      this.order.truck.stagedata["1"] = data;
       this.order.stage = 1;
 
       const batchaction = this.db.firestore.batch();

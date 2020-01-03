@@ -17,7 +17,7 @@ export interface Expiry {
   expiry: MyTimestamp;
 }
 
-export interface Batch {
+export interface Entry {
   Name: string;
   Id: string;
   qty: number;
@@ -40,12 +40,12 @@ export interface Truck {
    * This design allows complex queries on the map, as opposed to the limitations of an array
    */
   stagedata: {
-    [key in TruckStages]: StageData;
+    [key in TruckStages]: TruckStageData;
   };
   compartments: Array<Compartment>;
 }
-export type StageData = Stage0Model | Stage1Model | Stage2Model | Stage3Model | Stage4Model;
-export const emptyTruckStageData: StageData = {
+export type TruckStageData = Stage0Model | Stage1Model | Stage2Model | Stage3Model | Stage4Model;
+export const emptyTruckStageData: TruckStageData = {
   expiry: [],
   user: deepCopy<AssociatedUser>(inituser),
 };
