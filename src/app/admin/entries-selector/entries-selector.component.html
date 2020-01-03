@@ -1,7 +1,14 @@
-<h2 mat-dialog-title>Truck for {{order.customer.name}} <span class="color-pms">PMS:</span>{{order.fuel.pms.qty}} <span
-    class="color-ago">AGO:</span> {{order.fuel.ago.qty}} <span class="color-ik">IK:</span> {{order.fuel.ik.qty}}
+<h2 mat-dialog-title>Truck for {{order.customer.name}}
+  <span class="color-pms">
+    PMS:<span matTooltip="PMS Available ASE"> {{config.qty.pms.ase}}</span>
+  </span>{{order.fuel.pms.qty}}
+  <span class="color-ago">AGO:
+    <span matTooltip="AGO Available ASE"> {{config.qty.ago.ase}}</span>
+  </span> {{order.fuel.ago.qty}}
+  <span class="color-ik">IK:
+    <span matTooltip="IK Available ASE"> {{config.qty.ik.ase}}</span>
+  </span> {{order.fuel.ik.qty}}
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-  Total ASE:
 </h2>
 <mat-dialog-content *ngIf="donecalculating">
   <table class="table table-stripped">
@@ -52,7 +59,7 @@
   <button [disabled]="saving || !donecalculating" class="float-left" color="warn" mat-dialog-close mat-stroked-button>
     CLOSE
   </button>
-  <mat-spinner *ngIf='saving || !donecalculating || fetchingbatches' [diameter]="27"></mat-spinner>
+  <mat-spinner *ngIf='saving || !donecalculating || fetchingEntries' [diameter]="27"></mat-spinner>
   <button (click)="approvetruck()" [disabled]="saving || !donecalculating" class="float-right" color="primary"
     mat-stroked-button>APPROVE
   </button>

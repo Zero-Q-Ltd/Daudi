@@ -16,6 +16,7 @@ import { takeUntil } from "rxjs/operators";
 import { MyTimestamp } from "../../models/firestore/firestoreTypes";
 import { ASE } from "../../models/Daudi/fuel/ASE";
 import { CoreService } from "../services/core/core.service";
+import { Config } from "src/app/models/Daudi/omc/Config";
 
 
 interface batchContent {
@@ -47,15 +48,6 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
       ago: [],
       ik: []
     };
-  depotASEs: {
-    pms: Array<ASE>,
-    ago: Array<ASE>,
-    ik: Array<ASE>
-  } = {
-      pms: [],
-      ago: [],
-      ik: []
-    };
   displayedColumns: string[] = ["id", "batch", "totalqty", "accumulated", "loadedqty", "availableqty", "drawnqty", "remainingqty", "status"];
 
   drawnEntry: {
@@ -80,7 +72,7 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
    * this keeps a local copy of all the subscriptions within this service
    */
   subscriptions: Map<string, any> = new Map<string, any>();
-
+  config: Config;
   constructor(
     public dialogRef: MatDialogRef<EntriesSelectorComponent>,
     @Inject(MAT_DIALOG_DATA) private orderid: string,
@@ -100,6 +92,9 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
     });
     this.core.loaders.entries.pipe(takeUntil(this.comopnentDestroyed)).subscribe(value => {
       this.fetchingEntries = value;
+    });
+    this.core.config.pipe(takeUntil(this.comopnentDestroyed)).subscribe(config => {
+      this.config = config;
     });
     const ordersubscription = this.ordersservice.getOrder(orderid, core.currentOmc.value.Id)
       .onSnapshot(orderSnapshot => {
@@ -265,12 +260,6 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
    * @param index of the Entry within the depot entries array
    * @param fueltype fueltype of the ASE
    */
-  getTotalAvailableASE(index: number, fueltype: FuelType) {
-    const totalqty = this.depotASEs[fueltype][index].qty.total;
-    const loadedqty = this.depotASEs[fueltype][index].qty.directLoad.total + this.depotASEs[fueltype][index].qty.transfered.total;
-    const accumulated = this.depotASEs[fueltype][index].qty.directLoad.accumulated.total;
-    return totalqty - loadedqty + accumulated;
-  }
 
   /***
    *
