@@ -33,17 +33,17 @@
         <td>{{entry.qty.transferred.total}}</td>
         <td>{{entry.qty.total - entry.qty.directLoad.total - entry.qty.transferred.total}}</td>
         <td>
-          <!-- {{drawnEntry[fueltype]['batch' + resolveindex(i)].name == entry.batch ?
-          drawnEntry[fueltype]['batch' + resolveindex(i)].qtydrawn : 0 }} -->
+          {{drawnEntry[fueltype][i]?.name == entry.entry.id ?
+          drawnEntry[fueltype][i].qtydrawn : 0 }}
         </td>
         <td>
-          <!-- {{(drawnEntry[fueltype]['batch' + resolveindex(i)].name == entry.batch ?
-          drawnEntry[fueltype]['batch' + resolveindex(i)].remainqty : 0) }} -->
+          {{(drawnEntry[fueltype][i]?.name == entry.entry.id ?
+          drawnEntry[fueltype][i].remainqty : 0) }}
         </td>
         <td>
           <button class="btn btn-outline-success btn-sm">
-            <!-- {{drawnEntry[fueltype]['batch' + resolveindex(i)].name == entry.batch ?
-            drawnEntry[fueltype]['batch' + resolveindex(i)].resultstatus ? 'Active' : 'Inactive' : 'Active' }} -->
+            {{drawnEntry[fueltype][i]?.name == entry.entry.id ?
+            drawnEntry[fueltype][i].resultstatus ? 'Active' : 'Inactive' : 'Active' }}
           </button>
         </td>
       </tr>

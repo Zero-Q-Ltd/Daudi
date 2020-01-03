@@ -1,22 +1,19 @@
 import { Component, Inject, OnDestroy, OnInit } from "@angular/core";
-import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material";
-import { NotificationService } from "../../shared/services/notification.service";
-import * as moment from "moment";
 import { AngularFirestore } from "@angular/fire/firestore";
-import { Entry } from "../../models/Daudi/fuel/Entry";
-import { emptytruck, Truck, StageData } from "../../models/Daudi/order/Truck";
-import { FuelType, FuelNamesArray, } from "../../models/Daudi/fuel/FuelType";
-import { emptyorder, Order } from "../../models/Daudi/order/Order";
-import { AdminService } from "../services/core/admin.service";
-import { DepotService } from "../services/core/depot.service";
-import { EntriesService } from "../services/entries.service";
-import { OrdersService } from "../services/orders.service";
+import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material";
+import * as moment from "moment";
 import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
-import { MyTimestamp } from "../../models/firestore/firestoreTypes";
-import { ASE } from "../../models/Daudi/fuel/ASE";
-import { CoreService } from "../services/core/core.service";
 import { Config } from "src/app/models/Daudi/omc/Config";
+import { Entry } from "../../models/Daudi/fuel/Entry";
+import { FuelNamesArray, FuelType } from "../../models/Daudi/fuel/FuelType";
+import { emptyorder, Order } from "../../models/Daudi/order/Order";
+import { StageData } from "../../models/Daudi/order/Truck";
+import { MyTimestamp } from "../../models/firestore/firestoreTypes";
+import { NotificationService } from "../../shared/services/notification.service";
+import { AdminService } from "../services/core/admin.service";
+import { CoreService } from "../services/core/core.service";
+import { OrdersService } from "../services/orders.service";
 
 
 interface batchContent {
@@ -235,14 +232,6 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
 
     });
   }
-
-  resolveindex(index: number) {
-    if (index > 1) {
-      return 1;
-    } else {
-      return index;
-    }
-  }
   /**
    * Returns the total available fuel within an entry
    * We used the index because it is the crucial element when working with rollovers
@@ -278,15 +267,15 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
           duration: 6000
         });
       } else {
-        this.order.fuel[fueltype].batches["0"].Name = this.drawnEntry[fueltype][0].name;
-        this.order.fuel[fueltype].batches["0"].Id = this.drawnEntry[fueltype][0].id;
-        this.order.fuel[fueltype].batches["0"].qty = this.drawnEntry[fueltype][0].qtydrawn;
-        this.order.fuel[fueltype].batches["0"].observed = 0;
+        this.order.fuel[fueltype].batches[0].Name = this.drawnEntry[fueltype][0].name;
+        this.order.fuel[fueltype].batches[0].Id = this.drawnEntry[fueltype][0].id;
+        this.order.fuel[fueltype].batches[0].qty = this.drawnEntry[fueltype][0].qtydrawn;
+        this.order.fuel[fueltype].batches[0].observed = 0;
 
-        this.order.fuel[fueltype].batches["1"].Name = this.drawnEntry[fueltype][0].name;
-        this.order.fuel[fueltype].batches["1"].Id = this.drawnEntry[fueltype][0].id;
-        this.order.fuel[fueltype].batches["1"].qty = this.drawnEntry[fueltype][0].qtydrawn;
-        this.order.fuel[fueltype].batches["1"].observed = 0;
+        this.order.fuel[fueltype].batches[1].Name = this.drawnEntry[fueltype][0].name;
+        this.order.fuel[fueltype].batches[1].Id = this.drawnEntry[fueltype][0].id;
+        this.order.fuel[fueltype].batches[1].qty = this.drawnEntry[fueltype][0].qtydrawn;
+        this.order.fuel[fueltype].batches[1].observed = 0;
       }
     });
     /**
@@ -313,7 +302,7 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
 
       const batchaction = this.db.firestore.batch();
       // batchaction.update(this.ordersservice.updateorder(this.orderid, this.order);
-      // fueltypesArray.forEach((fueltype: fuelTypes) => {
+      // this.fueltypesArray.forEach((fueltype: FuelType) => {
       //   /**
       //    * check if the truck contained that fueltype
       //    */
@@ -334,7 +323,7 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
       //         },
       //         status: 0
       //       };
-      //       batchaction.update(this.batchesservice.updatebatch(this.order.fuel[fueltype].batches["0"].Id), batch1value);
+      //       batchaction.update(this.batchesservice.updatebatch(this.order.fuel[fueltype].batches[0].Id), batch1value);
       //       /**
       //        * Leave the second batch number active if neccessary
       //        */
@@ -347,15 +336,14 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
       //       /**
       //        * Only one batch number assigned, hence leave it active
       //        */
-      //       batchaction.update(this.batchesservice.updatebatch(this.order.fuel[fueltype].batches["0"].Id),
+      //       batchaction.update(this.batchesservice.updatebatch(this.order.fuel[fueltype].batches[0].Id),
       //         {
-      //           loadedqty: this.depotbatches[fueltype][0].loadedqty + this.order.fuel[fueltype].batches["0"].qty,
+      //           loadedqty: this.depotbatches[fueltype][0].loadedqty + this.order.fuel[fueltype].batches[0].qty,
       //           accumulated: {
       //             usable: 0,
       //             total: this.depotbatches[fueltype][0].accumulated.total
       //           },
       //           status: this.drawnbatch[fueltype].batch0.resultstatus ? 1 : 0
-
       //         });
       //     }
       //   }
