@@ -56,7 +56,11 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
     };
   fuelerror: {
     [key in FuelType]: { status: boolean, errorString: string }
-  };
+  } = {
+      ago: { status: false, errorString: null },
+      ik: { status: false, errorString: null },
+      pms: { status: false, errorString: null }
+    };
   saving = false;
   order: Order = { ...emptyorder };
   donecalculating = false;
@@ -66,7 +70,7 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
   /**
    * this keeps a local copy of all the subscriptions within this service
    */
-  subscriptions: Map<string, any> = new Map<string, any>();
+  subscriptions: Map<string, () => void> = new Map<string, any>();
   config: Config;
   constructor(
     public dialogRef: MatDialogRef<EntriesSelectorComponent>,
@@ -90,6 +94,7 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
     });
     this.core.config.pipe(takeUntil(this.comopnentDestroyed)).subscribe(config => {
       this.config = config;
+      this.calculateqty();
     });
     const ordersubscription = this.ordersservice.getOrder(orderid, core.currentOmc.value.Id)
       .onSnapshot(orderSnapshot => {
