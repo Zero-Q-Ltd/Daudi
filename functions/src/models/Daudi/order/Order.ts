@@ -6,8 +6,6 @@ import { Environment } from "../omc/Environments";
 import { AssociatedUser } from "../admin/AssociatedUser";
 import { deepCopy } from "../../utils/deepCopy";
 import { CustomerDetail } from "../customer/CustomerDetail";
-import { AngularFirestore, CollectionReference } from "@angular/fire/firestore";
-
 export interface Order {
   Id: string; // used to temporarily store the key, used later for looping
   customer: CustomerDetail;

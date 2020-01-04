@@ -1,11 +1,11 @@
 import * as moment from "moment";
 import { QuickBooks, QbApiConfig } from "../libs/qbmain"; // quickbooks sdk
 import { firestore } from "firebase-admin";
-import { Config } from "../models/Daudi/omc/Config";
+import { OMCConfig } from "../models/Daudi/omc/Config";
 import { Environment } from "../models/Daudi/omc/Environments";
 import { QBOAuthCOnfig, AuthConfig } from "../models/Daudi/omc/QboAuthConfig";
 
-export function createQbo(omcId: string, config: Config, enviromnent: Environment): Promise<QuickBooks> {
+export function createQbo(omcId: string, config: OMCConfig, enviromnent: Environment): Promise<QuickBooks> {
   const apiconfig: QbApiConfig = {
     clientID: config.Qbo[enviromnent].auth.clientId,
     clientSecret: config.Qbo[enviromnent].auth.clientSecret,

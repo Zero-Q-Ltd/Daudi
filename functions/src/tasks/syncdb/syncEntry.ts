@@ -100,7 +100,7 @@ export function syncEntry(qbo: QuickBooks, omcId: string, fuelConfig: { [key in 
                         /**
                          * Check if the same batch number previously existed for addition purposes
                          */
-                        const existingEntry = await batchesdir.where("entry.refs", "array-contains", convertedEntry.entry.id).get();
+                        const existingEntry = await batchesdir.where("entry.refs", "array-contains", convertedEntry.entry.name).get();
 
                         if (existingEntry.empty) {
                             console.log("creating new Entry");
@@ -134,7 +134,7 @@ function covertBillToEntry(convertedBill: Bill, fueltype: FuelType, LineitemInde
     const newEntry: Entry = {
         Amount: convertedBill.Line[LineitemIndex].Amount ? convertedBill.Line[LineitemIndex].Amount : 0,
         entry: {
-            id: convertedBill.DocNumber ? convertedBill.DocNumber : "Null",
+            name: convertedBill.DocNumber ? convertedBill.DocNumber : "Null",
             refs: [{
                 QbId: convertedBill.Id,
                 qty: entryQty
@@ -148,13 +148,18 @@ function covertBillToEntry(convertedBill: Bill, fueltype: FuelType, LineitemInde
         price: entryPrice,
         qty: {
             directLoad: {
-                total: 0
+                total: 0,
+                accumulated: {
+                    total: 0,
+                    usable: 0
+                }
             },
             total: entryQty,
-            transfered: {
+            transferred: {
                 total: 0,
                 transfers: []
-            }
+            },
+            used: 0
         },
         active: true,
         fuelType: fueltype,

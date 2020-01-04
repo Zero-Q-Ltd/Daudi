@@ -6,7 +6,8 @@ import { Order } from "../../../../models/Daudi/order/Order";
 import { QuickBooks } from "../../../../libs/qbmain";
 import { Estimate } from "../../../../models/Qbo/Estimate";
 import { PrintStatus } from "../../../../models/Qbo/enums/PrintStatus";
-import { Config, QboEnvironment } from "../../../../models/Daudi/omc/Config";
+import { OMCConfig } from "../../../../models/Daudi/omc/Config";
+import { QboEnvironment } from "../../../../models/Daudi/omc/QboEnvironment";
 import { Environment } from "../../../../models/Daudi/omc/Environments";
 import { TxnStatus } from "../../../../models/Qbo/enums/TxnStatus";
 import { EmailStatus } from "../../../../models/Qbo/enums/EmailStatus";
@@ -21,9 +22,9 @@ export class createInvoice {
 
     orderdata: Order;
     qbo: QuickBooks;
-    config: Config;
+    config: OMCConfig;
     environment: Environment;
-    constructor(_orderdata: Order, _qbo: QuickBooks, _config: Config, environment: Environment) {
+    constructor(_orderdata: Order, _qbo: QuickBooks, _config: OMCConfig, environment: Environment) {
         /**
          * format the timestamp again as it loses it when it doesnt directly go to the database
          */

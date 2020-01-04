@@ -1,11 +1,11 @@
 import { OMC } from "../../../../models/Daudi/omc/OMC";
-import { Config } from "../../../../models/Daudi/omc/Config";
+import { OMCConfig } from "../../../../models/Daudi/omc/Config";
 import { createQbo } from "../../../sharedqb";
 import { firestore } from "firebase-admin";
 import { Environment } from "../../../../models/Daudi/omc/Environments";
 import { CompanyInfo } from "../../../../models/Qbo/CompanyInfo";
 import { QuickBooks } from "../../../../libs/qbmain";
-export function initCompanyInfo(omc: OMC, config: Config, environment: Environment, qbo: QuickBooks) {
+export function initCompanyInfo(omc: OMC, config: OMCConfig, environment: Environment, qbo: QuickBooks) {
     /**
      * Convert Daudi OMC to QBO company Info
        */

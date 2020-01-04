@@ -1,5 +1,5 @@
 import { OMC } from "../../../../models/Daudi/omc/OMC";
-import { Config } from "../../../../models/Daudi/omc/Config";
+import { OMCConfig } from "../../../../models/Daudi/omc/Config";
 import { firestore } from "firebase-admin";
 import { Environment } from "../../../../models/Daudi/omc/Environments";
 import { QuickBooks } from "../../../../libs/qbmain";
@@ -14,7 +14,7 @@ import { TaxAgency } from "../../../../models/Qbo/TaxAgency";
  * @param config 
  * @param environment 
  */
-export function initTaxService(omc: OMC, config: Config, environment: Environment, qbo: QuickBooks) {
+export function initTaxService(omc: OMC, config: OMCConfig, environment: Environment, qbo: QuickBooks) {
 
     return initTaxAgency(qbo).then(response => {
         const res = response.TaxAgency as TaxAgency
@@ -39,7 +39,7 @@ export function initTaxService(omc: OMC, config: Config, environment: Environmen
 
             return firestore().runTransaction(t => {
                 return t.get(ref).then(data => {
-                    const newconfig = data.data() as Config
+                    const newconfig = data.data() as OMCConfig
                     const taxres = operationresult.Class as TaxService
 
                     const createdTaxRate = taxres.TaxRateDetails.find(rate => {

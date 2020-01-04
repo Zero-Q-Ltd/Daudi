@@ -174,7 +174,10 @@ function resolveTrucksText(order: Order): string {
     case 4:
       text +=
         " [PASSED] Seal Numbers: " +
-        order.truck.stagedata[4].seals.range +
+        /**
+         * @todo fix union type linitng problem
+         */
+        // order.truck.stagedata[4].seals.range +
         " Always check your seals";
       break;
     default:

@@ -4,7 +4,7 @@ import { sendsms } from './tasks/sms/sms';
 import { SMS } from './models/Daudi/sms/sms';
 import { initCompanyInfo } from './tasks/crud/qbo/CompanyInfo/init';
 import { OMC } from './models/Daudi/omc/OMC';
-import { Config } from './models/Daudi/omc/Config';
+import { OMCConfig } from './models/Daudi/omc/Config';
 import { Environment } from './models/Daudi/omc/Environments';
 import { initFuels } from './tasks/crud/qbo/Item/Init';
 import { Depot } from './models/Daudi/depot/Depot';
@@ -109,7 +109,7 @@ exports.customerUpdated = functions.firestore
       }
       return readConfig(context.params.omcId)
         .then(val => {
-          const config: Config = val.data() as Config
+          const config: OMCConfig = val.data() as OMCConfig
           const customer: DaudiCustomer = snap.after.data() as DaudiCustomer
           const env: Environment = customer.environment
           return createQbo(context.params.omcId, config, env).then(qbo => {
