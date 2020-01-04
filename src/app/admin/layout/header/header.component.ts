@@ -54,6 +54,7 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
   fueltypesArray = FuelNamesArray;
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
   environment: Environment;
+  loadingDepots = true;
   constructor(
     private adminservice: AdminService,
     private core: CoreService,
@@ -68,6 +69,9 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.comopnentDestroyed)).subscribe((alldepots: Array<Depot>) => {
         this.alldepots = alldepots;
       });
+    this.core.loaders.depots.subscribe(loading => {
+      this.loadingDepots = loading;
+    });
     OrderStageIds.forEach(stage => {
       this.core.orders[stage]
         .pipe(takeUntil(this.comopnentDestroyed))

@@ -29,4 +29,10 @@ export class DepotService {
   depotsCollection() {
     return this.db.firestore.collection("depot");
   }
+
+  depotConfigCollection(omcId: string) {
+    return this.db.firestore.collection("omc")
+      .doc(omcId)
+      .collection("depotConfig");
+  }
 }

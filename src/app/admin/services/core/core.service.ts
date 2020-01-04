@@ -118,8 +118,32 @@ export class CoreService {
   }
 
   getDepots() {
+    this.loaders.depots.next(true);
+
     this.subscriptions.set("alldepots", this.depotService
       .depotsCollection()
+      .where("Active", "==", true)
+      .orderBy("Name", "asc")
+      .onSnapshot((data) => {
+        this.unsubscribeAll();
+        /**
+         * Only subscribe to depot when the user data changes
+         */
+        this.depots.next(this.attachId.transformArray<Depot>(emptydepot, data));
+        const tempdepot: Depot = this.depots.value[0];
+        if (this.depots.value.find(depot => depot.Id === this.activedepot.value.depot.Id)) {
+          this.changeactivedepot(this.depots.value.find(depot => depot.Id === this.activedepot.value.depot.Id));
+        } else {
+          this.changeactivedepot(tempdepot);
+        }
+
+      })
+    );
+    /**
+     * @todo potential security risk assuming that the user actually has an omc attached
+     */
+    this.subscriptions.set("currentDepotConfig", this.depotService
+      .depotConfigCollection(this.adminservice.userdata.config.omcId)
       .where("Active", "==", true)
       .orderBy("Name", "asc")
       .onSnapshot((data) => {
@@ -147,7 +171,7 @@ export class CoreService {
         this.omcs.value.forEach(co => {
           if (co.Id === this.adminservice.userdata.config.omcId) {
             /**
-             * Only make the pipeline subscription once
+             * make the pipeline subscription Only once
              */
             if (this.currentOmc.value.Id !== this.adminservice.userdata.config.omcId) {
               console.log("Current OMC found");
