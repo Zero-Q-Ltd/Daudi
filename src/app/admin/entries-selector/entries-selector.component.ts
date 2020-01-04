@@ -15,6 +15,7 @@ import { AdminService } from "../services/core/admin.service";
 import { CoreService } from "../services/core/core.service";
 import { OrdersService } from "../services/orders.service";
 import { EntriesService } from "../services/entries.service";
+import { StockLoadDetail } from "src/app/models/Daudi/fuel/StockLoadDetail";
 
 
 interface EntryContent {
@@ -352,24 +353,26 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
              * Update the batch number quantity and disable the batch
              * A max of 2 batch numbers may be assigned to the truck
              */
-            const batch1value = {
-              loadedqty: this.depotEntries[fueltype][0].qty,
+            const Entry1value: StockLoadDetail = {
+              total: this.depotEntries[fueltype][0].qty.total,
               accumulated: {
                 usable: 0,
-                total: this.depotEntries[fueltype][0].accumulated.total
+                total: this.depotEntries[fueltype][0].qty.directLoad.accumulated.total
               },
-              status: 0
             };
+            this.depotEntries[fueltype][0].qty.directLoad = Entry1value;
             batchaction.update(this.entriesService.entryCollection(this.core.currentOmc.value.Id)
-              .doc(this.order.fuel[fueltype].entries[0].Id), batch1value);
+              .doc(this.order.fuel[fueltype].entries[0].Id), Entry1value);
             /**
              * Leave the second batch number active if neccessary
              */
-            const batch2value = {
+            const Entry2value = {
               loadedqty: this.drawnEntry[fueltype][1].totalqty - this.drawnEntry[fueltype][1].remainqty,
               status: this.drawnEntry[fueltype][1].resultstatus ? 1 : 0
             };
-            batchaction.update(this.batchesservice.entryCollection(this.order.fuel[fueltype].batches["1"].Id), batch2value);
+
+            batchaction.update(this.entriesService.entryCollection(this.core.currentOmc.value.Id)
+              .doc(this.order.fuel[fueltype].entries[0].Id), Entry2value);
           } else {
             /**
              * Only one batch number assigned, hence leave it active

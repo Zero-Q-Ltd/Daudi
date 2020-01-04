@@ -6,6 +6,7 @@ export interface StockQty {
      * any KPC Depot
      */
     total: number;
+    used: number;
     /**
      * Quantity transferred to private depots
      */
@@ -18,6 +19,7 @@ export interface StockQty {
 
 export const EmptyStockQty: StockQty = {
     total: 0,
+    used: 0,
     directLoad: {
         total: 0,
         accumulated: {
@@ -29,4 +31,4 @@ export const EmptyStockQty: StockQty = {
         total: 0,
         transfers: []
     },
-}, ;
+};
