@@ -51,6 +51,7 @@ export class CoreService {
    */
   loaders = {
     depots: new BehaviorSubject<boolean>(true),
+    depotConfig: new BehaviorSubject<boolean>(true),
     customers: new BehaviorSubject<boolean>(true),
     entries: new BehaviorSubject<boolean>(true),
     omc: new BehaviorSubject<boolean>(true),
@@ -119,7 +120,6 @@ export class CoreService {
 
   getDepots() {
     this.loaders.depots.next(true);
-
     this.subscriptions.set("alldepots", this.depotService
       .depotsCollection()
       .where("Active", "==", true)
@@ -130,29 +130,11 @@ export class CoreService {
          * Only subscribe to depot when the user data changes
          */
         this.depots.next(this.attachId.transformArray<Depot>(emptydepot, data));
+        this.loaders.depots.next(false);
         const tempdepot: Depot = this.depots.value[0];
-        if (this.depots.value.find(depot => depot.Id === this.activedepot.value.depot.Id)) {
-          this.changeactivedepot(this.depots.value.find(depot => depot.Id === this.activedepot.value.depot.Id));
-        } else {
-          this.changeactivedepot(tempdepot);
-        }
-
-      })
-    );
-    /**
-     * @todo potential security risk assuming that the user actually has an omc attached
-     */
-    this.subscriptions.set("currentDepotConfig", this.depotService
-      .depotConfigCollection(this.adminservice.userdata.config.omcId)
-      .where("Active", "==", true)
-      .orderBy("Name", "asc")
-      .onSnapshot((data) => {
-        this.unsubscribeAll();
         /**
-         * Only subscribe to depot when the user data changes
+         * Trigger a depot change if this is the first load
          */
-        this.depots.next(this.attachId.transformArray<Depot>(emptydepot, data));
-        const tempdepot: Depot = this.depots.value[0];
         if (this.depots.value.find(depot => depot.Id === this.activedepot.value.depot.Id)) {
           this.changeactivedepot(this.depots.value.find(depot => depot.Id === this.activedepot.value.depot.Id));
         } else {
@@ -162,6 +144,7 @@ export class CoreService {
       })
     );
   }
+
   getOmcs() {
     this.subscriptions.set("omcs", this.omc.omcCollection()
       .orderBy("name", "asc")
@@ -212,19 +195,38 @@ export class CoreService {
   }
 
   /**
-   *
+   * Chnages the values of the activeDepot if the value provided is different
    * @param {Depot} depot
    */
   changeactivedepot(depot: Depot) {
+    // this.depotService
+    //   .depotConfigCollection(this.adminservice.userdata.config.omcId)
+    //   .add(emptyDepotConfig);
+    this.loaders.depotConfig.next(true);
     if (JSON.stringify(depot) !== JSON.stringify(this.activedepot.value)) {
-      const config = this.config.value.depotconfig[this.environment.value].find(t => {
-        // console.log(t.depotId);
-        // console.log(depot.Id);
-        // console.log(t.depotId === depot.Id);
-        return t.depotId === depot.Id;
-      }) || { ...emptyDepotConfig };
-      console.log("changing to:", depot, config.depotId, config.QbId);
-      this.activedepot.next({ depot, config: { ...emptyDepotConfig, ...config } });
+      this.subscriptions.set("currentDepotConfig", this.depotService
+        .depotConfigCollection(this.adminservice.userdata.config.omcId)
+        .where("environment", "==", this.environment.value)
+        .where("depotId", "==", depot.Id)
+        .onSnapshot(configData => {
+          if (!configData.empty) {
+            /**
+             * Only one config SHOULD exist per environment, hence safe to take first value
+             */
+            if (configData.docs.length > 1) {
+              console.error("Multiple Configs found for the same Depot");
+            }
+            const config: DepotConfig = { ...emptyDepotConfig, ...configData.docs[0].data(), ...{ depotId: configData.docs[0].id } };
+            console.log("changing to:", depot.Name, config.depotId, config.Id);
+            this.activedepot.next({ depot, config });
+            this.loaders.depotConfig.next(false);
+          } else {
+            console.log("this depot doesnt have a valid config");
+            this.activedepot.next({ depot, config: { ...emptyDepotConfig } });
+            this.loaders.depotConfig.next(false);
+          }
+        })
+      );
 
     }
   }

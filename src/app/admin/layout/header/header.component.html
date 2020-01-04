@@ -157,7 +157,7 @@
                   {{activedepot.depot.Name}}
                 </span>
               </button>
-              <mat-spinner *ngIf="loadingDepots"></mat-spinner>
+              <mat-spinner *ngIf="loadingDepots" [diameter]="19" matSuffix></mat-spinner>
             </div>
             <mat-menu #mymenu="matMenu">
               <button (click)='changeactivedepot(depot)' *ngFor='let depot of alldepots; let i = index'
