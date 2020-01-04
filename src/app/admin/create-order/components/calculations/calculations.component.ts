@@ -4,16 +4,14 @@ import { FormControl, FormGroup } from "ngx-strongly-typed-forms";
 import { ReplaySubject } from "rxjs";
 import { skipWhile, takeUntil } from "rxjs/operators";
 import { CoreService } from "../../../services/core/core.service";
-import { ConfigService } from "./../../../../admin/services/core/config.service";
 import { Depot, emptydepot } from "./../../../../models/Daudi/depot/Depot";
 import { DepotConfig, emptyDepotConfig } from "./../../../../models/Daudi/depot/DepotConfig";
 import { Calculations, FuelCalculation } from "./../../../../models/Daudi/forms/Calculations";
 import { FuelNamesArray, FuelType } from "./../../../../models/Daudi/fuel/FuelType";
-import { Config, emptyConfig } from "./../../../../models/Daudi/omc/Config";
+import { emptyConfig, OMCConfig } from "./../../../../models/Daudi/omc/Config";
 import { Environment } from "./../../../../models/Daudi/omc/Environments";
 import { Order } from "./../../../../models/Daudi/order/Order";
 import { NotificationService } from "./../../../../shared/services/notification.service";
-import { DepotService } from "./../../../services/core/depot.service";
 
 @Component({
   selector: "app-calculations",
@@ -28,7 +26,7 @@ export class CalculationsComponent implements OnInit, OnChanges {
   @Output() formValid = new EventEmitter<boolean>();
 
   fueltypesArray = FuelNamesArray;
-  omcConfig: Config = { ...emptyConfig };
+  omcConfig: OMCConfig = { ...emptyConfig };
   activedepot: { depot: Depot, config: DepotConfig } = { depot: { ...emptydepot }, config: { ...emptyDepotConfig } };
 
   env: Environment = Environment.sandbox;
@@ -51,8 +49,6 @@ export class CalculationsComponent implements OnInit, OnChanges {
 
 
   constructor(
-    private configService: ConfigService,
-    private depot: DepotService,
     private core: CoreService,
     private notificationService: NotificationService,
 
@@ -148,7 +144,7 @@ export class CalculationsComponent implements OnInit, OnChanges {
        */
       this.initData.fuel[fueltype].priceconfig.retailprice = this.activedepot.config.price[fueltype].price;
       this.initData.fuel[fueltype].priceconfig.minsp = this.activedepot.config.price[fueltype].minPrice;
-      this.initData.fuel[fueltype].priceconfig.nonTax = this.omcConfig.taxExempt[this.env][fueltype].amount;
+      // this.initData.fuel[fueltype].priceconfig.nonTax = this.omcConfig.taxExempt[this.env][fueltype].amount;
 
       this.calculationsForm.get([fueltype, "price"]).setValidators(Validators.min(this.activedepot.config.price[fueltype].minPrice));
 

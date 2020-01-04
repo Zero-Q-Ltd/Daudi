@@ -1,18 +1,14 @@
-import { AdminType } from "../admin/AdminType";
-import { FuelType } from "../fuel/FuelType";
-import { Metadata, emptymetadata } from "../universal/Metadata";
-
-import { Meta } from "../universal/Meta";
-import { DepotConfig } from "../depot/DepotConfig";
-import { FuelConfig, emptyFuelConfig } from "./FuelConfig";
-import { Environment } from "./Environments";
-import { QBOAuthCOnfig } from "./QboAuthConfig";
-import { TaxConfig } from "./TaxConfig";
-import { deepCopy } from "../../utils/deepCopy";
 import { MyTimestamp } from "../../firestore/firestoreTypes";
+import { deepCopy } from "../../utils/deepCopy";
+import { AdminType } from "../admin/AdminType";
+import { Meta } from "../universal/Meta";
+import { Metadata } from "../universal/Metadata";
+import { Environment } from "./Environments";
+import { emptyFuelConfig, FuelConfig } from "./FuelConfig";
+import { QBOAuthCOnfig } from "./QboAuthConfig";
+import { QboEnvironment } from "./QboEnvironment";
 
-
-export interface Config {
+export interface OMCConfig {
     adminTypes: Array<AdminType>;
     Qbo: {
         /**
@@ -20,39 +16,9 @@ export interface Config {
          */
         [key in Environment]: QboEnvironment
     };
-    /**
-     * Depot configurations remains constant across different environments
-     */
-    depotconfig: {
-        [key in Environment]: Array<DepotConfig> };
-    taxExempt: {
-        [key in Environment]: {
-            [subKey in FuelType]: TaxExempt
-        }
-    };
-    qty: {
-        [key in FuelType]: {
-            allocation: number;
-            /**
-             * Total amount of ASE in KPC depots
-             */
-            ase: number
-        };
-    };
+
 }
 
-export interface QboEnvironment {
-    auth: QBOAuthCOnfig;
-    fuelconfig: {
-        [key in FuelType]: FuelConfig
-    };
-    taxConfig: TaxConfig;
-}
-
-interface TaxExempt {
-    amount: number;
-    metadata: Metadata;
-}
 /**
  * This is an initialization variable for the undeletable level for System Admins
  * More levels can be added via db, but these init values are forced to exist
@@ -82,42 +48,9 @@ export const emptyqboAuth: QBOAuthCOnfig = {
         time: MyTimestamp.fromDate(new Date())
     }
 };
-const emptytaxExempt: TaxExempt = {
-    amount: 0,
-    metadata: deepCopy<Metadata>(emptymetadata)
-};
 
-export const emptyConfig: Config = {
-    qty: {
-        ago: {
-            allocation: 0,
-            ase: 0
-        },
-        ik: {
-            allocation: 0,
-            ase: 0
-        },
-        pms: {
-            allocation: 0,
-            ase: 0
-        }
-    },
-    depotconfig: {
-        live: [],
-        sandbox: []
-    },
-    taxExempt: {
-        live: {
-            ago: deepCopy<TaxExempt>(emptytaxExempt),
-            ik: deepCopy<TaxExempt>(emptytaxExempt),
-            pms: deepCopy<TaxExempt>(emptytaxExempt)
-        },
-        sandbox: {
-            ago: deepCopy<TaxExempt>(emptytaxExempt),
-            ik: deepCopy<TaxExempt>(emptytaxExempt),
-            pms: deepCopy<TaxExempt>(emptytaxExempt)
-        }
-    },
+
+export const emptyConfig: OMCConfig = {
     Qbo: {
         live: {
             auth: deepCopy<QBOAuthCOnfig>(emptyqboAuth),

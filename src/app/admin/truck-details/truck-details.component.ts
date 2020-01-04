@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnDestroy, OnInit } from "@angular/core";
-import { emptytruck, Truck } from "../../models/Daudi/order/Truck";
+import { emptytruck, Truck } from "../../models/Daudi/order/truck/Truck";
 import { Order } from "../../models/Daudi/order/Order";
 import * as moment from "moment";
 import { ConfirmDialogComponent } from "../confirm-dialog/confirm-dialog.component";

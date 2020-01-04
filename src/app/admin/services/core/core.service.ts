@@ -6,21 +6,23 @@ import { distinctUntilChanged, skipWhile } from "rxjs/operators";
 import { DaudiCustomer, emptyDaudiCustomer } from "../../../models/Daudi/customer/Customer";
 import { Depot, emptydepot } from "../../../models/Daudi/depot/Depot";
 import { DepotConfig, emptyDepotConfig } from "../../../models/Daudi/depot/DepotConfig";
-import { Entry, emptyEntry } from "../../../models/Daudi/fuel/Entry";
+import { emptyEntry, Entry } from "../../../models/Daudi/fuel/Entry";
 import { FuelNamesArray } from "../../../models/Daudi/fuel/FuelType";
-import { Config, emptyConfig, QboEnvironment } from "../../../models/Daudi/omc/Config";
+import { emptyConfig, OMCConfig } from "../../../models/Daudi/omc/Config";
 import { Environment } from "../../../models/Daudi/omc/Environments";
 import { emptyomc, OMC } from "../../../models/Daudi/omc/OMC";
+import { QboEnvironment } from "../../../models/Daudi/omc/QboEnvironment";
+import { EmptyOMCStock, OMCStock } from "../../../models/Daudi/omc/Stock";
 import { emptyorder, Order } from "../../../models/Daudi/order/Order";
 import { OrderStageIds, OrderStages } from "../../../models/Daudi/order/OrderStages";
 import { AttachId } from "../../../shared/pipes/attach-id.pipe";
 import { CustomerService } from "../customers.service";
+import { EntriesService } from "../entries.service";
 import { OrdersService } from "../orders.service";
 import { AdminService } from "./admin.service";
 import { ConfigService } from "./config.service";
 import { DepotService } from "./depot.service";
 import { OmcService } from "./omc.service";
-import { EntriesService } from "../entries.service";
 
 @Injectable({
   providedIn: "root"
@@ -29,11 +31,12 @@ import { EntriesService } from "../entries.service";
  * This singleton keeps all the variables needed by the app to run and automatically keeps and manages the subscriptions
  */
 export class CoreService {
-  config: BehaviorSubject<Config> = new BehaviorSubject<Config>({ ...emptyConfig });
+  config: BehaviorSubject<OMCConfig> = new BehaviorSubject<OMCConfig>({ ...emptyConfig });
   environment: BehaviorSubject<Environment> = new BehaviorSubject<Environment>(Environment.sandbox);
   depots: BehaviorSubject<Array<Depot>> = new BehaviorSubject([]);
   customers: BehaviorSubject<Array<DaudiCustomer>> = new BehaviorSubject<Array<DaudiCustomer>>([]);
   omcs: BehaviorSubject<Array<OMC>> = new BehaviorSubject<Array<OMC>>([]);
+  stock: BehaviorSubject<OMCStock> = new BehaviorSubject<OMCStock>({ ...EmptyOMCStock });
   currentOmc: BehaviorSubject<OMC> = new BehaviorSubject<OMC>(emptyomc);
   /**
    * Be careful when subscribing to this value because it will always emit a value
@@ -92,7 +95,7 @@ export class CoreService {
         this.subscriptions.set("configSubscription", this.configService.configCollection(admin.config.omcId)
           .onSnapshot(t => {
             // console.log(t.data());
-            this.config.next(this.attachId.transformObject<Config>(emptyConfig, t));
+            this.config.next(this.attachId.transformObject<OMCConfig>(emptyConfig, t));
             /**
              * Fetch OMC's and depots after the main config has been loaded
              */

@@ -1,6 +1,6 @@
 import { MyTimestamp } from "../../firestore/firestoreTypes";
 import { GenericStageDetail } from "./GenericStageDetail";
-import { Expiry } from "./Truck";
+import { Expiry } from "./truck/Truck";
 import { deepCopy } from "./../../utils/deepCopy";
 import { AssociatedUser, inituser } from "../admin/AssociatedUser";
 export interface StageWithPrinting extends GenericStageDetail {

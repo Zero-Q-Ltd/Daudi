@@ -4,7 +4,7 @@ import * as moment from "moment";
 import { ActivatedRoute } from "@angular/router";
 import { animate, sequence, state, style, transition, trigger } from "@angular/animations";
 import { SendMsgComponent } from "../send-msg/send-msg.component";
-import { emptytruck, Truck } from "../../models/Daudi/order/Truck";
+import { emptytruck, Truck } from "../../models/Daudi/order/truck/Truck";
 import { SMS } from "../../models/Daudi/sms/sms";
 import { firestore } from "firebase";
 import { ExcelService } from "../services/excel-service.service";

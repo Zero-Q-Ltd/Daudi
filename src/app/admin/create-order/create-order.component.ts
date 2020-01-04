@@ -9,7 +9,7 @@ import { DaudiCustomer } from "../../models/Daudi/customer/Customer";
 import { Depot, emptydepot } from "../../models/Daudi/depot/Depot";
 import { DepotConfig, emptyDepotConfig } from "../../models/Daudi/depot/DepotConfig";
 import { FuelNamesArray } from "../../models/Daudi/fuel/FuelType";
-import { Config, emptyConfig } from "../../models/Daudi/omc/Config";
+import { OMCConfig, emptyConfig } from "../../models/Daudi/omc/Config";
 import { Environment } from "../../models/Daudi/omc/Environments";
 import { emptyorder, Order } from "../../models/Daudi/order/Order";
 import { NotificationService } from "../../shared/services/notification.service";
@@ -40,7 +40,7 @@ export class CreateOrderComponent implements OnDestroy {
   subscriptions: Map<string, any> = new Map<string, any>();
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
   activedepot: { depot: Depot, config: DepotConfig } = { depot: { ...emptydepot }, config: { ...emptyDepotConfig } };
-  omcConfig: Config = { ...emptyConfig };
+  omcConfig: OMCConfig = { ...emptyConfig };
   env: Environment = Environment.sandbox;
 
   kraModified = false;

@@ -1,9 +1,7 @@
 import { Injectable } from "@angular/core";
 import { AngularFirestore } from "@angular/fire/firestore";
-import { Observable } from "rxjs";
-import { map } from "rxjs/operators";
 import { Admin } from "../../../models/Daudi/admin/Admin";
-import { Config, emptyConfig } from "../../../models/Daudi/omc/Config";
+import { emptyConfig, OMCConfig } from "../../../models/Daudi/omc/Config";
 import { AdminService } from "./admin.service";
 
 @Injectable({
@@ -25,11 +23,11 @@ export class ConfigService {
 
 
   initConfig(admin: Admin) {
-    const newConfig: Config = { ...emptyConfig };
+    const newConfig: OMCConfig = { ...emptyConfig };
     this.saveConfig(admin.config.omcId, newConfig);
   }
 
-  saveConfig(omcId: string, data: Config) {
+  saveConfig(omcId: string, data: OMCConfig) {
     return this.db.firestore.collection("omc")
       .doc(omcId)
       .collection("config")

@@ -6,9 +6,9 @@ import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { Entry } from "../../models/Daudi/fuel/Entry";
 import { FuelNamesArray, FuelType } from "../../models/Daudi/fuel/FuelType";
-import { Config } from "../../models/Daudi/omc/Config";
+import { OMCConfig } from "../../models/Daudi/omc/Config";
 import { emptyorder, Order } from "../../models/Daudi/order/Order";
-import { Stage1Model } from "../../models/Daudi/order/TruckStages";
+import { Stage1Model } from "../../models/Daudi/order/truck/TruckStages";
 import { MyTimestamp } from "../../models/firestore/firestoreTypes";
 import { NotificationService } from "../../shared/services/notification.service";
 import { AdminService } from "../services/core/admin.service";
@@ -72,7 +72,7 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
    * this keeps a local copy of all the subscriptions within this service
    */
   subscriptions: Map<string, () => void> = new Map<string, any>();
-  config: Config;
+  config: OMCConfig;
   constructor(
     public dialogRef: MatDialogRef<EntriesSelectorComponent>,
     @Inject(MAT_DIALOG_DATA) private orderId: string,
