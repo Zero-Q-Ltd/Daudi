@@ -84,9 +84,15 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
       this.core.depotEntries[fueltype]
         .pipe(takeUntil(this.comopnentDestroyed))
         .subscribe((entries: Array<Entry>) => {
-          console.log(entries);
+          // console.log(entries);
           this.depotEntries[fueltype] = entries;
-          this.calculateqty();
+          /**
+           * make sure the config exists before making any calculations,
+           * otherwise wait for fetching config trigger making calculations
+           */
+          if (this.config) {
+            this.calculateqty();
+          }
         });
     });
     this.core.loaders.entries.pipe(takeUntil(this.comopnentDestroyed)).subscribe(value => {
@@ -104,7 +110,13 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
         } else {
           this.order = Object.assign({}, emptyorder);
         }
-        this.calculateqty();
+        /**
+         * make sure the config exists before making any calculations,
+         * otherwise wait for fetching config trigger making calculations
+         */
+        if (this.config) {
+          this.calculateqty();
+        }
       });
     this.subscriptions.set(`order`, ordersubscription);
 
@@ -174,7 +186,7 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
                */
               if (this.depotEntries[fueltype].length < 2) {
                 this.fuelerror[fueltype] = {
-                  errorString: `Insufficient ENTRY ${fueltype.toUpperCase()}.Expected amount is ${this.order.fuel[fueltype].qty}`,
+                  errorString: `Insufficient ${fueltype.toUpperCase()}ENTRY. Expected amount is ${this.order.fuel[fueltype].qty}`,
                   status: true
                 };
                 return;
@@ -212,7 +224,7 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
                    */
                   if (!batch1.id) {
                     this.fuelerror[fueltype] = {
-                      errorString: `Insufficient ENTRY ${fueltype.toUpperCase()}.Expected amount is ${this.order.fuel[fueltype].qty}`,
+                      errorString: `Insufficient ${fueltype.toUpperCase()} ENTRY. Expected amount is ${this.order.fuel[fueltype].qty}`,
                       status: true
                     };
                   }
@@ -221,7 +233,7 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
             });
             if (!batch1) {
               this.fuelerror[fueltype] = {
-                errorString: `Insufficient ENTRY ${fueltype.toUpperCase()}.Expected amount is ${this.order.fuel[fueltype].qty}`,
+                errorString: `Insufficient ${fueltype.toUpperCase()} ENTRY.Expected amount is ${this.order.fuel[fueltype].qty}`,
                 status: true
               };
             }
@@ -243,19 +255,17 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
           this.donecalculating = true;
           if (this.order.fuel[fueltype].qty > 0 && this.depotEntries[fueltype].length === 0) {
             this.fuelerror[fueltype] = {
-              errorString: `Insufficient ENTRY ${fueltype.toUpperCase()}.Expected amount is ${this.order.fuel[fueltype].qty}`,
+              errorString: `Insufficient ${fueltype.toUpperCase()} ENTRY. Expected amount is ${this.order.fuel[fueltype].qty}`,
               status: true
-            };;
+            };
           }
         }
       } else {
         this.donecalculating = true;
-        if (this.order.fuel[fueltype].qty > 0 && this.depotEntries[fueltype].length === 0) {
-          this.fuelerror[fueltype] = {
-            errorString: `Insufficient ASE ${fueltype.toUpperCase()}.Expected amount is ${this.order.fuel[fueltype].qty}`,
-            status: true
-          };;
-        }
+        this.fuelerror[fueltype] = {
+          errorString: `Insufficient ${fueltype.toUpperCase()} ASE. Expected amount is ${this.order.fuel[fueltype].qty}`,
+          status: true
+        };
       }
 
       // console.log(this.drawnbatch)
@@ -283,13 +293,16 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
   /***
    *
    */
-  approvetruck() {
+  approvetruck(): void {
     this.saving = true;
     this.dialogRef.disableClose = true;
+    let HasError = false;
     this.fueltypesArray.forEach((fueltype: FuelType) => {
+
       if (this.fuelerror[fueltype].status) {
         this.saving = false;
         this.dialogRef.disableClose = false;
+        HasError = true;
         return this.notification.notify({
           alert_type: "error",
           title: `Error`,
@@ -297,26 +310,11 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
           duration: 6000
         });
       } else {
-        this.order.fuel[fueltype].entries[0] = {
-          Id: this.drawnEntry[fueltype][0].id,
-          qty: this.drawnEntry[fueltype][0].qtydrawn,
-          Name: this.drawnEntry[fueltype][0].name,
-          observed: 0
-        };
-
-        this.order.fuel[fueltype].entries[1] = {
-          Id: this.drawnEntry[fueltype][1].id,
-          qty: this.drawnEntry[fueltype][1].qtydrawn,
-          Name: this.drawnEntry[fueltype][1].name,
-          observed: 0
-        };
+        this.order.fuel[fueltype].entries = [];
       }
     });
-    /**
-     * I know that this seems like repetition but calling return above does not complete the function execution so I have to check
-     * .... again
-     */
-    if (!this.fuelerror.pms && !this.fuelerror.ago && !this.fuelerror.ik) {
+
+    if (!HasError) {
       const data: Stage1Model = {
         user: this.adminservice.createuserobject(),
         expiry: [
