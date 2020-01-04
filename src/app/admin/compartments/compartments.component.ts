@@ -4,7 +4,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material"; // added dial
 import { NotificationService } from "../../shared/services/notification.service";
 import { FormControl, Validators } from "@angular/forms";
 import { Order } from "../../models/Daudi/order/Order";
-import { emptytruck, Truck, emptyTruckStageData } from "../../models/Daudi/order/Truck";
+import { emptytruck, Truck, emptyTruckStageData } from "../../models/Daudi/order/truck/Truck";
 import { AdminService } from "../services/core/admin.service";
 import { OrdersService } from "../services/orders.service";
 import { DepotService } from "../services/core/depot.service";

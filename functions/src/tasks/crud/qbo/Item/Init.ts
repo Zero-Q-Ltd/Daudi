@@ -1,5 +1,5 @@
 import { OMC } from "../../../../models/Daudi/omc/OMC";
-import { Config } from "../../../../models/Daudi/omc/Config";
+import { OMCConfig } from "../../../../models/Daudi/omc/Config";
 import { createQbo } from "../../../sharedqb";
 import { firestore } from "firebase-admin";
 import { Environment } from "../../../../models/Daudi/omc/Environments";
@@ -14,7 +14,7 @@ import { FuelType } from '../../../../models/Daudi/fuel/FuelType';
  * @param config 
  * @param environment 
  */
-export function initFuels(omc: OMC, config: Config, environment: Environment, qbo: QuickBooks) {
+export function initFuels(omc: OMC, config: OMCConfig, environment: Environment, qbo: QuickBooks) {
     /**
      * Simultaneously create the 3 fuel types on initialisation
      */
@@ -58,7 +58,7 @@ export function initFuels(omc: OMC, config: Config, environment: Environment, qb
 
         return firestore().runTransaction(t => {
             return t.get(ref).then(data => {
-                const newconfig = data.data() as Config
+                const newconfig = data.data() as OMCConfig
                 const res = operationresult.Item as Array<Item>
                 res.forEach(item => {
                     newconfig.Qbo[environment].fuelconfig[item.Name].groupId = item.Id

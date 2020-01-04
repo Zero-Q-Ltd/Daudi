@@ -1,27 +1,18 @@
-import { Component, OnDestroy, OnInit, EventEmitter } from "@angular/core";
-import { APPCONFIG } from "../../config";
-import { Router } from "@angular/router";
-// interfaces
-import { AngularFireAuth } from "@angular/fire/auth";
-import { Depot, emptydepot } from "../../../models/Daudi/depot/Depot";
-import { AdminService } from "../../services/core/admin.service";
-import { DepotService } from "../../services/core/depot.service";
-import { Admin, emptyadmin } from "../../../models/Daudi/admin/Admin";
-import { OrdersService } from "../../services/orders.service";
-import { PricesService } from "../../services/prices.service";
-import { FuelType, FuelNamesArray } from "../../../models/Daudi/fuel/FuelType";
-import { Price } from "../../../models/Daudi/depot/Price";
-import { ReplaySubject } from "rxjs";
-import { takeUntil, skipWhile } from "rxjs/operators";
-import { StatusService } from "../../services/core/status.service";
-import { Config, emptyConfig } from "../../../models/Daudi/omc/Config";
+import { Component, OnDestroy, OnInit } from "@angular/core";
 import { MatSlideToggleChange } from "@angular/material";
-import { Environment } from "../../../models/Daudi/omc/Environments";
-import { ConfigService } from "../../services/core/config.service";
+import { ReplaySubject } from "rxjs";
+import { skipWhile, takeUntil } from "rxjs/operators";
+import { Admin, emptyadmin } from "../../../models/Daudi/admin/Admin";
+import { Depot, emptydepot } from "../../../models/Daudi/depot/Depot";
 import { DepotConfig, emptyDepotConfig } from "../../../models/Daudi/depot/DepotConfig";
+import { FuelNamesArray } from "../../../models/Daudi/fuel/FuelType";
+import { Environment } from "../../../models/Daudi/omc/Environments";
 import { OrderStageIds } from "../../../models/Daudi/order/OrderStages";
-import { TruckStageNames } from "../../../models/Daudi/order/TruckStages";
+import { TruckStageNames } from "../../../models/Daudi/order/truck/TruckStages";
+import { APPCONFIG } from "../../config";
+import { AdminService } from "../../services/core/admin.service";
 import { CoreService } from "../../services/core/core.service";
+import { StatusService } from "../../services/core/status.service";
 
 @Component({
   selector: "my-app-header",
@@ -63,6 +54,7 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
   fueltypesArray = FuelNamesArray;
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
   environment: Environment;
+  loadingDepots = true;
   constructor(
     private adminservice: AdminService,
     private core: CoreService,
@@ -77,6 +69,9 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.comopnentDestroyed)).subscribe((alldepots: Array<Depot>) => {
         this.alldepots = alldepots;
       });
+    this.core.loaders.depots.subscribe(loading => {
+      this.loadingDepots = loading;
+    });
     OrderStageIds.forEach(stage => {
       this.core.orders[stage]
         .pipe(takeUntil(this.comopnentDestroyed))

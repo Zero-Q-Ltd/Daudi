@@ -1,5 +1,4 @@
 import { firestore, messaging } from "firebase-admin";
-import { Truck } from "../../models/Daudi/order/Truck";
 import { Admin } from "../../models/Daudi/admin/Admin";
 import { Order } from "../../models/Daudi/order/Order";
 

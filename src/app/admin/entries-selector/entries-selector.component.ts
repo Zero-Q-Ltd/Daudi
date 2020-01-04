@@ -4,18 +4,20 @@ import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material";
 import * as moment from "moment";
 import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
+import { Depot, emptydepot } from "../../models/Daudi/depot/Depot";
+import { DepotConfig, emptyDepotConfig } from "../../models/Daudi/depot/DepotConfig";
 import { Entry } from "../../models/Daudi/fuel/Entry";
 import { FuelNamesArray, FuelType } from "../../models/Daudi/fuel/FuelType";
-import { Config } from "../../models/Daudi/omc/Config";
+import { EmptyOMCStock, OMCStock } from "../../models/Daudi/omc/Stock";
 import { emptyorder, Order } from "../../models/Daudi/order/Order";
-import { Stage1Model } from "../../models/Daudi/order/TruckStages";
+import { Stage1Model } from "../../models/Daudi/order/truck/TruckStages";
 import { MyTimestamp } from "../../models/firestore/firestoreTypes";
 import { NotificationService } from "../../shared/services/notification.service";
 import { AdminService } from "../services/core/admin.service";
-import { CoreService } from "../services/core/core.service";
-import { OrdersService } from "../services/orders.service";
-import { EntriesService } from "../services/entries.service";
 import { ConfigService } from "../services/core/config.service";
+import { CoreService } from "../services/core/core.service";
+import { EntriesService } from "../services/entries.service";
+import { OrdersService } from "../services/orders.service";
 
 interface EntryContent {
   id: string;
@@ -72,7 +74,9 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
    * this keeps a local copy of all the subscriptions within this service
    */
   subscriptions: Map<string, () => void> = new Map<string, any>();
-  config: Config;
+  stock: OMCStock = { ...EmptyOMCStock };
+  activedepot: { depot: Depot, config: DepotConfig } = { depot: { ...emptydepot }, config: { ...emptyDepotConfig } };
+
   constructor(
     public dialogRef: MatDialogRef<EntriesSelectorComponent>,
     @Inject(MAT_DIALOG_DATA) private orderId: string,
@@ -93,7 +97,7 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
            * make sure the config exists before making any calculations,
            * otherwise wait for fetching config trigger making calculations
            */
-          if (this.config) {
+          if (this.stock) {
             this.calculateqty();
           }
         });
@@ -101,8 +105,9 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
     this.core.loaders.entries.pipe(takeUntil(this.comopnentDestroyed)).subscribe(value => {
       this.fetchingEntries = value;
     });
-    this.core.config.pipe(takeUntil(this.comopnentDestroyed)).subscribe(config => {
-      this.config = config;
+
+    this.core.stock.pipe(takeUntil(this.comopnentDestroyed)).subscribe(stock => {
+      this.stock = stock;
       this.calculateqty();
     });
     const ordersubscription = this.ordersservice.getOrder(orderId, core.currentOmc.value.Id)
@@ -117,7 +122,7 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
          * make sure the config exists before making any calculations,
          * otherwise wait for fetching config trigger making calculations
          */
-        if (this.config) {
+        if (this.stock) {
           this.calculateqty();
         }
       });
@@ -141,9 +146,16 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
     this.fueltypesArray.forEach((fueltype: FuelType) => {
       this.fuelerror[fueltype].status = false;
       /**
+       * Check if its a private depot as calculations will use the local depot values
+       * Entries are already filtered for private depots, so calculations are the same
+       */
+      const value = this.core.activedepot.value.depot.config.private ?
+        this.activedepot.config.stock[fueltype].ase.available : this.stock.qty[fueltype].ase.available;
+
+      /**
        * check if there is enough ASE for that fuel
        */
-      if (this.config.qty[fueltype].ase >= this.order.fuel[fueltype].qty) {
+      if (value >= this.order.fuel[fueltype].qty) {
 
         /**
          * Check if there are batches to assign
@@ -395,10 +407,15 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
             batchaction.update(this.ordersservice.ordersCollection(this.core.currentOmc.value.Id).doc(this.orderId), this.order);
             /**
              * Update Global ASE values
+             * Check if it's a private depot
              */
-            this.config.qty[fueltype].ase = this.config.qty[fueltype].ase - this.order.fuel[fueltype].qty;
-            batchaction.update(this.configService.configCollection(this.core.currentOmc.value.Id), this.config);
-
+            if (this.core.activedepot.value.depot.config.private) {
+              this.activedepot.config.stock[fueltype].ase.available = this.activedepot.config.stock[fueltype].ase.available - this.order.fuel[fueltype].qty;
+              batchaction.update(this.configService.configCollection(this.core.currentOmc.value.Id), this.activedepot.config);
+            } else {
+              this.stock.qty[fueltype].ase.available = this.stock.qty[fueltype].ase.available - this.order.fuel[fueltype].qty;
+              batchaction.update(this.configService.stockCollection(this.core.currentOmc.value.Id), this.stock);
+            }
           }
         }
       });

@@ -14,10 +14,10 @@ export interface Depot {
   Location: MyGeoPoint;
   config: {
     /**
-     * indicates whether it's part of KPC or not
-     * private depots are NOT part of KPC and require additional config for parent depot
+     * Every depot is attached to a specific exit location, including private depots
      */
-    parent: string | null,
+    exitLocationId: string,
+    private: boolean,
     /**
      * indicates whether this depot can be seen by all OMC's
      */
@@ -36,8 +36,9 @@ export const emptydepot: Depot = {
     name: null
   },
   config: {
-    parent: null,
+    exitLocationId: null,
     externalVisibility: false,
+    private: false,
     creator: {
       adminId: null,
       date: MyTimestamp.now(),

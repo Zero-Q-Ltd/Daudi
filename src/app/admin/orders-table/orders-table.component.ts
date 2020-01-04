@@ -6,7 +6,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { NotificationService } from "../../shared/services/notification.service";
 import { AngularFirestore } from "@angular/fire/firestore";
 import { animate, sequence, state, style, transition, trigger } from "@angular/animations";
-import { Truck } from "../../models/Daudi/order/Truck";
+import { Truck } from "../../models/Daudi/order/truck/Truck";
 import { Order } from "../../models/Daudi/order/Order";
 import { SMS } from "../../models/Daudi/sms/sms";
 import { ReasonComponent } from "../reason/reason.component";

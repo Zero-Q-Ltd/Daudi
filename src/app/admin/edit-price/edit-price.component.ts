@@ -9,7 +9,7 @@ import { Depot, emptydepot } from "../../models/Daudi/depot/Depot";
 import { DepotConfig, emptyDepotConfig } from "../../models/Daudi/depot/DepotConfig";
 import { Price } from "../../models/Daudi/depot/Price";
 import { FuelNamesArray, FuelType } from "../../models/Daudi/fuel/FuelType";
-import { Config, emptyConfig } from "../../models/Daudi/omc/Config";
+import { OMCConfig, emptyConfig } from "../../models/Daudi/omc/Config";
 import { Environment } from "../../models/Daudi/omc/Environments";
 import { OMC } from "../../models/Daudi/omc/OMC";
 import { AvgPrice } from "../../models/Daudi/price/AvgPrice";
@@ -57,7 +57,7 @@ export class EditPriceComponent implements OnInit, OnDestroy {
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
   selectedOMC: OMC;
 
-  currentOmcConfig: Config = { ...emptyConfig };
+  currentOmcConfig: OMCConfig = { ...emptyConfig };
   env: Environment = Environment.sandbox;
 
   avgprices: {

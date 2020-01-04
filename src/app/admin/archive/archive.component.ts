@@ -3,7 +3,7 @@ import { MatDialog, MatSnackBar, MatTreeNestedDataSource } from "@angular/materi
 import { FormControl } from "@angular/forms";
 import { NestedTreeControl } from "@angular/cdk/tree";
 import { emptyorder } from "../../models/Daudi/order/Order";
-import { emptytruck } from "../../models/Daudi/order/Truck";
+import { emptytruck } from "../../models/Daudi/order/truck/Truck";
 import { ReplaySubject } from "rxjs";
 
 

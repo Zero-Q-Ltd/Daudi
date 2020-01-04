@@ -3,7 +3,7 @@ import { Component, Input, OnDestroy, OnInit } from "@angular/core";
 import { MatDialog } from "@angular/material"; // added dialog data receive
 import { NotificationService } from "../../shared/services/notification.service";
 import { AngularFirestore } from "@angular/fire/firestore";
-import { Truck } from "../../models/Daudi/order/Truck";
+import { Truck } from "../../models/Daudi/order/truck/Truck";
 import { Order } from "../../models/Daudi/order/Order";
 import { ReplaySubject } from "rxjs";
 
@@ -28,8 +28,8 @@ export class OrderDetailsComponent implements OnInit, OnDestroy {
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
 
   constructor(private dialog: MatDialog,
-              private db: AngularFirestore,
-              private notificationService: NotificationService) {
+    private db: AngularFirestore,
+    private notificationService: NotificationService) {
     if (!this.truck) {
       return;
     }

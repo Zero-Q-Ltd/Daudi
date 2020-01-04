@@ -94,7 +94,7 @@ export function syncAse(qbo: QuickBooks, omcId: string, fuelConfig: { [key in Fu
                         .doc(omcId)
                         .collection("ase")
 
-                    const fetchedbatch = await batchesdir.where("ase.id", "==", convertedASE.ase.id).get();
+                    const fetchedbatch = await batchesdir.where("ase.id", "==", convertedASE.ase.name).get();
                     /**
                      * make sure the Entry doenst alread exist before writing to db
                      */
@@ -124,7 +124,7 @@ function covertBillToASE(convertedBill: Bill, fueltype: FuelType, LineitemIndex:
     const newASE: ASE = {
         Amount: convertedBill.Line[LineitemIndex].Amount ? convertedBill.Line[LineitemIndex].Amount : 0,
         ase: {
-            id: convertedBill.DocNumber ? convertedBill.DocNumber : "Null",
+            name: convertedBill.DocNumber ? convertedBill.DocNumber : "Null",
             refs: [{
                 QbId: convertedBill.Id,
                 qty: ASEQty
@@ -145,10 +145,11 @@ function covertBillToASE(convertedBill: Bill, fueltype: FuelType, LineitemIndex:
                 total: 0
             },
             total: ASEQty,
-            transfered: {
+            transferred: {
                 total: 0,
                 transfers: []
-            }
+            },
+            used: 0
         },
         active: true,
         fuelType: fueltype,

@@ -6,21 +6,23 @@ import { distinctUntilChanged, skipWhile } from "rxjs/operators";
 import { DaudiCustomer, emptyDaudiCustomer } from "../../../models/Daudi/customer/Customer";
 import { Depot, emptydepot } from "../../../models/Daudi/depot/Depot";
 import { DepotConfig, emptyDepotConfig } from "../../../models/Daudi/depot/DepotConfig";
-import { Entry, emptyEntry } from "../../../models/Daudi/fuel/Entry";
+import { emptyEntry, Entry } from "../../../models/Daudi/fuel/Entry";
 import { FuelNamesArray } from "../../../models/Daudi/fuel/FuelType";
-import { Config, emptyConfig, QboEnvironment } from "../../../models/Daudi/omc/Config";
+import { emptyConfig, OMCConfig } from "../../../models/Daudi/omc/Config";
 import { Environment } from "../../../models/Daudi/omc/Environments";
 import { emptyomc, OMC } from "../../../models/Daudi/omc/OMC";
+import { QboEnvironment } from "../../../models/Daudi/omc/QboEnvironment";
+import { EmptyOMCStock, OMCStock } from "../../../models/Daudi/omc/Stock";
 import { emptyorder, Order } from "../../../models/Daudi/order/Order";
 import { OrderStageIds, OrderStages } from "../../../models/Daudi/order/OrderStages";
 import { AttachId } from "../../../shared/pipes/attach-id.pipe";
 import { CustomerService } from "../customers.service";
+import { EntriesService } from "../entries.service";
 import { OrdersService } from "../orders.service";
 import { AdminService } from "./admin.service";
 import { ConfigService } from "./config.service";
 import { DepotService } from "./depot.service";
 import { OmcService } from "./omc.service";
-import { EntriesService } from "../entries.service";
 
 @Injectable({
   providedIn: "root"
@@ -29,11 +31,12 @@ import { EntriesService } from "../entries.service";
  * This singleton keeps all the variables needed by the app to run and automatically keeps and manages the subscriptions
  */
 export class CoreService {
-  config: BehaviorSubject<Config> = new BehaviorSubject<Config>({ ...emptyConfig });
+  config: BehaviorSubject<OMCConfig> = new BehaviorSubject<OMCConfig>({ ...emptyConfig });
   environment: BehaviorSubject<Environment> = new BehaviorSubject<Environment>(Environment.sandbox);
   depots: BehaviorSubject<Array<Depot>> = new BehaviorSubject([]);
   customers: BehaviorSubject<Array<DaudiCustomer>> = new BehaviorSubject<Array<DaudiCustomer>>([]);
   omcs: BehaviorSubject<Array<OMC>> = new BehaviorSubject<Array<OMC>>([]);
+  stock: BehaviorSubject<OMCStock> = new BehaviorSubject<OMCStock>({ ...EmptyOMCStock });
   currentOmc: BehaviorSubject<OMC> = new BehaviorSubject<OMC>(emptyomc);
   /**
    * Be careful when subscribing to this value because it will always emit a value
@@ -48,6 +51,7 @@ export class CoreService {
    */
   loaders = {
     depots: new BehaviorSubject<boolean>(true),
+    depotConfig: new BehaviorSubject<boolean>(true),
     customers: new BehaviorSubject<boolean>(true),
     entries: new BehaviorSubject<boolean>(true),
     omc: new BehaviorSubject<boolean>(true),
@@ -92,7 +96,7 @@ export class CoreService {
         this.subscriptions.set("configSubscription", this.configService.configCollection(admin.config.omcId)
           .onSnapshot(t => {
             // console.log(t.data());
-            this.config.next(this.attachId.transformObject<Config>(emptyConfig, t));
+            this.config.next(this.attachId.transformObject<OMCConfig>(emptyConfig, t));
             /**
              * Fetch OMC's and depots after the main config has been loaded
              */
@@ -115,6 +119,7 @@ export class CoreService {
   }
 
   getDepots() {
+    this.loaders.depots.next(true);
     this.subscriptions.set("alldepots", this.depotService
       .depotsCollection()
       .where("Active", "==", true)
@@ -125,7 +130,11 @@ export class CoreService {
          * Only subscribe to depot when the user data changes
          */
         this.depots.next(this.attachId.transformArray<Depot>(emptydepot, data));
+        this.loaders.depots.next(false);
         const tempdepot: Depot = this.depots.value[0];
+        /**
+         * Trigger a depot change if this is the first load
+         */
         if (this.depots.value.find(depot => depot.Id === this.activedepot.value.depot.Id)) {
           this.changeactivedepot(this.depots.value.find(depot => depot.Id === this.activedepot.value.depot.Id));
         } else {
@@ -135,6 +144,7 @@ export class CoreService {
       })
     );
   }
+
   getOmcs() {
     this.subscriptions.set("omcs", this.omc.omcCollection()
       .orderBy("name", "asc")
@@ -144,7 +154,7 @@ export class CoreService {
         this.omcs.value.forEach(co => {
           if (co.Id === this.adminservice.userdata.config.omcId) {
             /**
-             * Only make the pipeline subscription once
+             * make the pipeline subscription Only once
              */
             if (this.currentOmc.value.Id !== this.adminservice.userdata.config.omcId) {
               console.log("Current OMC found");
@@ -185,19 +195,38 @@ export class CoreService {
   }
 
   /**
-   *
+   * Chnages the values of the activeDepot if the value provided is different
    * @param {Depot} depot
    */
   changeactivedepot(depot: Depot) {
+    // this.depotService
+    //   .depotConfigCollection(this.adminservice.userdata.config.omcId)
+    //   .add(emptyDepotConfig);
+    this.loaders.depotConfig.next(true);
     if (JSON.stringify(depot) !== JSON.stringify(this.activedepot.value)) {
-      const config = this.config.value.depotconfig[this.environment.value].find(t => {
-        // console.log(t.depotId);
-        // console.log(depot.Id);
-        // console.log(t.depotId === depot.Id);
-        return t.depotId === depot.Id;
-      }) || { ...emptyDepotConfig };
-      console.log("changing to:", depot, config.depotId, config.QbId);
-      this.activedepot.next({ depot, config: { ...emptyDepotConfig, ...config } });
+      this.subscriptions.set("currentDepotConfig", this.depotService
+        .depotConfigCollection(this.adminservice.userdata.config.omcId)
+        .where("environment", "==", this.environment.value)
+        .where("depotId", "==", depot.Id)
+        .onSnapshot(configData => {
+          if (!configData.empty) {
+            /**
+             * Only one config SHOULD exist per environment, hence safe to take first value
+             */
+            if (configData.docs.length > 1) {
+              console.error("Multiple Configs found for the same Depot");
+            }
+            const config: DepotConfig = { ...emptyDepotConfig, ...configData.docs[0].data(), ...{ depotId: configData.docs[0].id } };
+            console.log("changing to:", depot.Name, config.depotId, config.Id);
+            this.activedepot.next({ depot, config });
+            this.loaders.depotConfig.next(false);
+          } else {
+            console.log("this depot doesnt have a valid config");
+            this.activedepot.next({ depot, config: { ...emptyDepotConfig } });
+            this.loaders.depotConfig.next(false);
+          }
+        })
+      );
 
     }
   }
@@ -275,7 +304,10 @@ export class CoreService {
     this.subscriptions.set(`orders${5}`, stage5subscriprion);
   }
 
-
+  /**@todo
+   * Fetches the active entries
+   * Checks whether its a private depot or not
+   */
   fetchActiveEntries() {
     this.loaders.entries.next(true);
     this.fueltypesArray.forEach(fuelType => {

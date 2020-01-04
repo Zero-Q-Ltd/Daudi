@@ -20,13 +20,7 @@
     <div class="brand hidden-md-down">
       <img alt="" class="img daudi-banner" src="assets/images/DAUDI-3-Logo.svg">
     </div>
-    <mat-menu #mymenu="matMenu">
-      <button (click)='changeactivedepot(depot)' *ngFor='let depot of alldepots; let i = index'
-        [disabled]='depot.Id === activedepot.depot.Id' mat-menu-item>
-        <mat-icon>local_gas_station</mat-icon>
-        <span>{{depot.Name}}</span>
-      </button>
-    </mat-menu>
+
 
     <div class="top-nav-left hidden-md-down deskContent" style="margin-top: 20px;">
       <ul class="list-inline">
@@ -156,14 +150,22 @@
               </div>
             </div>
             <div class="col-md-6">
-              <button [matMenuTriggerFor]="mymenu" [matTooltipPosition]="position2" class="btn btn-primary"
-                matTooltip="Change Depot" type="button">
+              <button *ngIf="!loadingDepots" [matMenuTriggerFor]="mymenu" [matTooltipPosition]="position2"
+                class="btn btn-primary" matTooltip="Change Depot" type="button">
                 <span>
                   <i aria-hidden="true" class="fa fa-ellipsis-v color-secondary"></i>
                   {{activedepot.depot.Name}}
                 </span>
               </button>
+              <mat-spinner *ngIf="loadingDepots" [diameter]="19" matSuffix></mat-spinner>
             </div>
+            <mat-menu #mymenu="matMenu">
+              <button (click)='changeactivedepot(depot)' *ngFor='let depot of alldepots; let i = index'
+                [disabled]='depot.Id === activedepot.depot.Id' mat-menu-item>
+                <mat-icon>local_gas_station</mat-icon>
+                <span>{{depot.Name}}</span>
+              </button>
+            </mat-menu>
           </div>
         </li>
       </ul>
