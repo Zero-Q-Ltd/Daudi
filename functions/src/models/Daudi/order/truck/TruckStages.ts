@@ -1,7 +1,7 @@
-import { GenericStageDetail, EmptyGenericDetail } from "./GenericStageDetail";
-import { StageWithPrinting, EmptyStageWithPrinting } from "./StageWithPrinting";
-import { deepCopy } from "./../../utils/deepCopy";
-import { AssociatedUser, inituser } from "../admin/AssociatedUser";
+import { GenericStageDetail, EmptyGenericDetail } from "../GenericStageDetail";
+import { StageWithPrinting, EmptyStageWithPrinting } from "../StageWithPrinting";
+import { deepCopy } from "../../../utils/deepCopy";
+import { AssociatedUser, inituser } from "../../admin/AssociatedUser";
 
 export enum TruckStages {
     "Created",

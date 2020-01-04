@@ -2,11 +2,16 @@ import { FuelType } from "../fuel/FuelType";
 import { DepotPrice } from "./DepotPrice";
 import { inituser, AssociatedUser } from "../admin/AssociatedUser";
 import { deepCopy } from "../../utils/deepCopy";
-import { DepotQty, EmptyDepotQty } from "./DepotQty";
+import { DepotStock, EmptyDepotQty } from "./DepotStock";
+import { Environment } from "../omc/Environments";
 export interface DepotConfig {
+    /**
+     * The same depot can have 2 different configs due to live and sandbox environments
+     */
+    Id: string;
     depotId: string;
+    environment: Environment;
     QbId: string;
-    private: boolean;
     CompanyRep: {
         phone: null;
         name: null;
@@ -17,8 +22,8 @@ export interface DepotConfig {
     hospitality: {
         amnt: number;
     };
-    qty: {
-        [key in FuelType]: DepotQty;
+    stock: {
+        [key in FuelType]: DepotStock;
     };
 }
 const initPrice: DepotPrice = {
@@ -28,16 +33,17 @@ const initPrice: DepotPrice = {
 };
 export const emptyDepotConfig: DepotConfig = {
     depotId: null,
-    private: false,
+    Id: null,
+    environment: Environment.sandbox,
     QbId: null,
     CompanyRep: {
         name: null,
         phone: null
     },
-    qty: {
-        ago: deepCopy<DepotQty>(EmptyDepotQty),
-        pms: deepCopy<DepotQty>(EmptyDepotQty),
-        ik: deepCopy<DepotQty>(EmptyDepotQty)
+    stock: {
+        ago: deepCopy<DepotStock>(EmptyDepotQty),
+        pms: deepCopy<DepotStock>(EmptyDepotQty),
+        ik: deepCopy<DepotStock>(EmptyDepotQty)
     },
     hospitality: {
         amnt: 0

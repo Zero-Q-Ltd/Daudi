@@ -1,5 +1,5 @@
 import { FuelType } from "../fuel/FuelType";
-import { Truck, emptytruck } from "./Truck";
+import { Truck, emptytruck } from "./truck/Truck";
 import { OrderFuelConfig } from "./FuelConfig";
 import { OrderStages } from "./OrderStages";
 import { Environment } from "../omc/Environments";

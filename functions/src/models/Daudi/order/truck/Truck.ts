@@ -1,23 +1,16 @@
-import { AssociatedUser, inituser } from "../admin/AssociatedUser";
-import { TruckStages, Stage0Model, Stage1Model, Stage2Model, Stage3Model, Stage4Model, EmptyStage0, EmptyStage1, EmptyStage2, EmptyStage3, EmptyStage4 } from "./TruckStages";
-import { MyTimestamp } from "../../firestore/firestoreTypes";
-import { FuelType } from "./../../Daudi/fuel/FuelType";
-import { deepCopy } from "./../../utils/deepCopy";
-import { GenericStageDetail } from "./GenericStageDetail";
+import { MyTimestamp } from "../../../firestore/firestoreTypes";
+import { AssociatedUser, inituser } from "../../admin/AssociatedUser";
+import { deepCopy } from "../../../utils/deepCopy";
+import { EmptyStage0, EmptyStage1, EmptyStage2, EmptyStage3, EmptyStage4, Stage0Model, Stage1Model, Stage2Model, Stage3Model, Stage4Model, TruckStages } from "./TruckStages";
+import { Compartment } from "./Compartment";
 
-
-interface Compartment {
-  position: number;
-  fueltype: FuelType;
-  qty: number;
-}
 
 export interface Expiry {
   timeCreated: MyTimestamp;
   expiry: MyTimestamp;
 }
 
-export interface Entry {
+export interface TruckEntry {
   Name: string;
   Id: string;
   qty: number;
