@@ -16,3 +16,17 @@ export interface StockQty {
     directLoad: StockLoadDetail;
 }
 
+export const EmptyStockQty: StockQty = {
+    total: 0,
+    directLoad: {
+        total: 0,
+        accumulated: {
+            total: 0,
+            usable: 0
+        }
+    },
+    transferred: {
+        total: 0,
+        transfers: []
+    },
+}, ;

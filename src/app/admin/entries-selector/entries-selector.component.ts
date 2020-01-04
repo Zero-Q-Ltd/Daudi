@@ -14,6 +14,7 @@ import { NotificationService } from "../../shared/services/notification.service"
 import { AdminService } from "../services/core/admin.service";
 import { CoreService } from "../services/core/core.service";
 import { OrdersService } from "../services/orders.service";
+import { EntriesService } from "../services/entries.service";
 
 
 interface EntryContent {
@@ -74,11 +75,12 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
   config: Config;
   constructor(
     public dialogRef: MatDialogRef<EntriesSelectorComponent>,
-    @Inject(MAT_DIALOG_DATA) private orderid: string,
+    @Inject(MAT_DIALOG_DATA) private orderId: string,
     private notification: NotificationService,
     private db: AngularFirestore,
     private adminservice: AdminService,
     private core: CoreService,
+    private entriesService: EntriesService,
     private ordersservice: OrdersService) {
     this.fueltypesArray.forEach((fueltype: FuelType) => {
       this.core.depotEntries[fueltype]
@@ -102,7 +104,7 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
       this.config = config;
       this.calculateqty();
     });
-    const ordersubscription = this.ordersservice.getOrder(orderid, core.currentOmc.value.Id)
+    const ordersubscription = this.ordersservice.getOrder(orderId, core.currentOmc.value.Id)
       .onSnapshot(orderSnapshot => {
         if (orderSnapshot.exists) {
           this.order = Object.assign({}, orderSnapshot.data()) as Order;
@@ -167,7 +169,7 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
             /**
              * Loop through all the batches to get the next available batch number that will be able to completely fill the truck
              */
-            let batch1 = {
+            let batch1: EntryContent = {
               id: null,
               qtydrawn: 0,
               name: null,
@@ -212,7 +214,7 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
                     batch1 = {
                       id: batch.Id,
                       qtydrawn,
-                      name: batch.entry,
+                      name: batch.entry.name,
                       totalqty: batch.qty.total,
                       resultstatus: this.getTotalAvailableEntry(index, fueltype) > assignedamount,
                       remainqty: this.getTotalAvailableEntry(index, fueltype) - qtydrawn
@@ -243,7 +245,7 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
                * the qty drown
                */
               qtydrawn: this.getTotalAvailableEntry(0, fueltype),
-              name: this.depotEntries[fueltype][0].entry,
+              name: this.depotEntries[fueltype][0].entry.name,
               totalqty: this.depotEntries[fueltype][0].qty.total,
               resultstatus: false,
               remainqty: 0
@@ -336,53 +338,54 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
       this.order.stage = 1;
 
       const batchaction = this.db.firestore.batch();
-      // batchaction.update(this.ordersservice.updateorder(this.orderid, this.order);
-      // this.fueltypesArray.forEach((fueltype: FuelType) => {
-      //   /**
-      //    * check if the truck contained that fueltype
-      //    */
-      //   if (this.order.fuel[fueltype].qty > 0) {
-      //     /**
-      //      * check if two batch numbers have been assigned to the truck for that fueltype
-      //      */
-      //     if (this.order.fuel[fueltype].batches["1"].qty > 0) {
-      //       /**
-      //        * Update the batch number quantity and disable the batch
-      //        * A max of 2 batch numbers may be assigned to the truck
-      //        */
-      //       const batch1value = {
-      //         loadedqty: this.depotbatches[fueltype][0].qty,
-      //         accumulated: {
-      //           usable: 0,
-      //           total: this.depotbatches[fueltype][0].accumulated.total
-      //         },
-      //         status: 0
-      //       };
-      //       batchaction.update(this.batchesservice.updatebatch(this.order.fuel[fueltype].batches[0].Id), batch1value);
-      //       /**
-      //        * Leave the second batch number active if neccessary
-      //        */
-      //       const batch2value = {
-      //         loadedqty: this.drawnbatch[fueltype].batch1.totalqty - this.drawnbatch[fueltype].batch1.remainqty,
-      //         status: this.drawnbatch[fueltype].batch1.resultstatus ? 1 : 0
-      //       };
-      //       batchaction.update(this.batchesservice.updatebatch(this.order.fuel[fueltype].batches["1"].Id), batch2value);
-      //     } else {
-      //       /**
-      //        * Only one batch number assigned, hence leave it active
-      //        */
-      //       batchaction.update(this.batchesservice.updatebatch(this.order.fuel[fueltype].batches[0].Id),
-      //         {
-      //           loadedqty: this.depotbatches[fueltype][0].loadedqty + this.order.fuel[fueltype].batches[0].qty,
-      //           accumulated: {
-      //             usable: 0,
-      //             total: this.depotbatches[fueltype][0].accumulated.total
-      //           },
-      //           status: this.drawnbatch[fueltype].batch0.resultstatus ? 1 : 0
-      //         });
-      //     }
-      //   }
-      // });
+      batchaction.update(this.ordersservice.ordersCollection(this.core.currentOmc.value.Id).doc(this.orderId), this.order);
+      this.fueltypesArray.forEach((fueltype: FuelType) => {
+        /**
+         * check if the truck contained that fueltype
+         */
+        if (this.order.fuel[fueltype].qty > 0) {
+          /**
+           * check if two batch numbers have been assigned to the truck for that fueltype
+           */
+          if (this.order.fuel[fueltype].entries[0].qty > 0) {
+            /**
+             * Update the batch number quantity and disable the batch
+             * A max of 2 batch numbers may be assigned to the truck
+             */
+            const batch1value = {
+              loadedqty: this.depotEntries[fueltype][0].qty,
+              accumulated: {
+                usable: 0,
+                total: this.depotEntries[fueltype][0].accumulated.total
+              },
+              status: 0
+            };
+            batchaction.update(this.entriesService.entryCollection(this.core.currentOmc.value.Id)
+              .doc(this.order.fuel[fueltype].entries[0].Id), batch1value);
+            /**
+             * Leave the second batch number active if neccessary
+             */
+            const batch2value = {
+              loadedqty: this.drawnEntry[fueltype][1].totalqty - this.drawnEntry[fueltype][1].remainqty,
+              status: this.drawnEntry[fueltype][1].resultstatus ? 1 : 0
+            };
+            batchaction.update(this.batchesservice.entryCollection(this.order.fuel[fueltype].batches["1"].Id), batch2value);
+          } else {
+            /**
+             * Only one batch number assigned, hence leave it active
+             */
+            batchaction.update(this.batchesservice.entryCollection(this.order.fuel[fueltype].batches[0].Id),
+              {
+                loadedqty: this.depotbatches[fueltype][0].loadedqty + this.order.fuel[fueltype].batches[0].qty,
+                accumulated: {
+                  usable: 0,
+                  total: this.depotbatches[fueltype][0].accumulated.total
+                },
+                status: this.drawnbatch[fueltype].batch0.resultstatus ? 1 : 0
+              });
+          }
+        }
+      });
       batchaction.commit().then(value => {
         this.notification.notify({
           alert_type: "success",

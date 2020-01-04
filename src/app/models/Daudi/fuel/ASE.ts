@@ -1,49 +1,25 @@
 import { MyTimestamp } from "../../firestore/firestoreTypes";
 import { FuelType } from "./FuelType";
-import { StockQty } from "./StockQty";
-import { ASEStockQty } from "./ASEStockQty";
+import { StockQty, EmptyStockQty } from "./StockQty";
 import { QbRef } from "./QbRef";
+import { deepCopy } from "../../../models/utils/deepCopy";
+import { BaseStockModel } from "./BaseStockModel";
+import { StockRef } from "./StockRef";
 
-export interface ASE {
-
-    Amount: number;
-    date: MyTimestamp;
-    ase: {
-        id: string,
-        refs: QbRef[]
-    };
-    depot: {
-        name: string
-        Id: string
-    };
-    qty: ASEStockQty;
-
-    fuelType: FuelType;
-    price: number;
-    Id: string;
-    active: boolean;
+export interface ASE extends BaseStockModel {
+    ase: StockRef;
 }
+
 export const emptyASEs: ASE = {
     Id: null,
     fuelType: null,
     Amount: null,
-    ase: null,
-    price: 0,
-    qty: {
-        total: 0,
-        directLoad: {
-            total: 0,
-            accumulated: {
-                total: 0,
-                usable: 0
-            }
-        },
-        transfered: {
-            total: 0,
-            transfers: []
-        }
+    ase: {
+        name: null,
+        refs: []
     },
-
+    price: 0,
+    qty: deepCopy<StockQty>(EmptyStockQty),
     depot: {
         name: null,
         Id: null
