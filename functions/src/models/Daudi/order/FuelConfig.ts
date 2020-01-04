@@ -1,7 +1,7 @@
-import { Batch } from "./Truck";
+import { Entry } from "./Truck";
 import { PriceConfig } from "./PriceConfig";
 export interface OrderFuelConfig {
     qty: number;
     priceconfig: PriceConfig;
-    batches: Array<Batch>;
+    entries: Array<Entry>;
 }

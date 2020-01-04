@@ -1,51 +1,25 @@
 
-import { FuelType } from "./FuelType";
+import { deepCopy } from "../../../models/utils/deepCopy";
 import { MyTimestamp } from "../../firestore/firestoreTypes";
-import { StockQty } from "./StockQty";
-import { QbRef } from "./QbRef";
+import { BaseStockModel } from "./BaseStockModel";
+import { StockQty, EmptyStockQty } from "./StockQty";
+import { StockRef } from "./StockRef";
 
 
-export interface Entry {
-
-  Amount: number;
-  date: MyTimestamp;
-  entry: {
-    id: string,
-    refs: QbRef[]
-  };
-  depot: {
-    name: string
-    Id: string
-  };
-  qty: StockQty;
-  fuelType: FuelType;
-  price: number;
-  Id: string;
-  active: boolean; // 1 for active, 0 for inactive
+export interface Entry extends BaseStockModel {
+  entry: StockRef;
 }
 
-export interface StockTransfer {
-  total: number;
-  transfers: StockQty[];
-}
-
-export const emptyEntries: Entry = {
+export const emptyEntry: Entry = {
   Id: null,
   fuelType: null,
   Amount: null,
-  entry: null,
-  price: 0,
-  qty: {
-    total: 0,
-    directLoad: {
-      total: 0
-    },
-    transfered: {
-      total: 0,
-      transfers: []
-    }
+  entry: {
+    name: null,
+    refs: []
   },
-
+  price: 0,
+  qty: deepCopy<StockQty>(EmptyStockQty),
   depot: {
     name: null,
     Id: null

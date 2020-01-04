@@ -162,7 +162,7 @@ function resolveTrucksText(order: Order): string {
         " [ORDER SUBMITTED] at " +
         order.config.depot.name +
         " Est-Time " +
-        order.truck.stagedata["1"].expiry[0].expiry +
+        order.truck.stagedata[1].expiry[0].expiry +
         " Thank you for making it Emkay today.";
       break;
     case 2:
@@ -174,7 +174,7 @@ function resolveTrucksText(order: Order): string {
     case 4:
       text +=
         " [PASSED] Seal Numbers: " +
-        order.truck.stagedata["4"].seals.range +
+        order.truck.stagedata[4].seals.range +
         " Always check your seals";
       break;
     default:
