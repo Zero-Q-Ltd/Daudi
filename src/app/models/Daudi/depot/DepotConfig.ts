@@ -12,7 +12,6 @@ export interface DepotConfig {
     depotId: string;
     environment: Environment;
     QbId: string;
-    private: boolean;
     CompanyRep: {
         phone: null;
         name: null;
@@ -34,7 +33,6 @@ const initPrice: DepotPrice = {
 };
 export const emptyDepotConfig: DepotConfig = {
     depotId: null,
-    private: false,
     Id: null,
     environment: Environment.sandbox,
     QbId: null,

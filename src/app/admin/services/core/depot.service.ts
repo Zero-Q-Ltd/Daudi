@@ -9,8 +9,6 @@ import { CoreService } from "./core.service";
   providedIn: "root"
 })
 export class DepotService {
-
-
   constructor(
     private db: AngularFirestore) {
 

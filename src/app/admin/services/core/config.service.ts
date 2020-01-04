@@ -13,12 +13,21 @@ export class ConfigService {
 
   }
 
+  /**
+   * @param omcId
+   */
 
   configCollection(omcId: string) {
     return this.db.firestore.collection("omc")
       .doc(omcId)
-      .collection("config")
-      .doc("main");
+      .collection("values")
+      .doc("config");
+  }
+  stockCollection(omcId: string) {
+    return this.db.firestore.collection("omc")
+      .doc(omcId)
+      .collection("values")
+      .doc("stock");
   }
 
 
@@ -28,10 +37,7 @@ export class ConfigService {
   }
 
   saveConfig(omcId: string, data: OMCConfig) {
-    return this.db.firestore.collection("omc")
-      .doc(omcId)
-      .collection("config")
-      .doc("main")
+    return this.configCollection(omcId)
       .set(data);
   }
 }

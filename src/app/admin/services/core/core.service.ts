@@ -304,7 +304,10 @@ export class CoreService {
     this.subscriptions.set(`orders${5}`, stage5subscriprion);
   }
 
-
+  /**@todo
+   * Fetches the active entries
+   * Checks whether its a private depot or not
+   */
   fetchActiveEntries() {
     this.loaders.entries.next(true);
     this.fueltypesArray.forEach(fuelType => {

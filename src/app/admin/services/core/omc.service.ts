@@ -16,4 +16,10 @@ export class OmcService {
   omcCollection() {
     return this.db.firestore.collection("omc");
   }
+
+  omcStockCollection(imcId: string) {
+    return this.db.firestore.collection("omc")
+      .doc("values")
+      .collection("stock");
+  }
 }
