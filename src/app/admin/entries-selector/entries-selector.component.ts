@@ -15,6 +15,7 @@ import { AdminService } from "../services/core/admin.service";
 import { CoreService } from "../services/core/core.service";
 import { OrdersService } from "../services/orders.service";
 import { EntriesService } from "../services/entries.service";
+import { ConfigService } from "../services/core/config.service";
 
 interface EntryContent {
   id: string;
@@ -80,6 +81,7 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
     private adminservice: AdminService,
     private core: CoreService,
     private entriesService: EntriesService,
+    private configService: ConfigService,
     private ordersservice: OrdersService) {
     this.fueltypesArray.forEach((fueltype: FuelType) => {
       this.core.depotEntries[fueltype]
@@ -391,17 +393,12 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
               },
             };
             batchaction.update(this.ordersservice.ordersCollection(this.core.currentOmc.value.Id).doc(this.orderId), this.order);
+            /**
+             * Update Global ASE values
+             */
+            this.config.qty[fueltype].ase = this.config.qty[fueltype].ase - this.order.fuel[fueltype].qty;
+            batchaction.update(this.configService.configCollection(this.core.currentOmc.value.Id), this.config);
 
-            //   batchaction.update(this.batchesservice.entryCollection(this.order.fuel[fueltype].batches[0].Id),
-            //     {
-            //       loadedqty: this.depotbatches[fueltype][0].loadedqty + this.order.fuel[fueltype].batches[0].qty,
-            //       accumulated: {
-            //         usable: 0,
-            //         total: this.depotbatches[fueltype][0].accumulated.total
-            //       },
-            //       status: this.drawnbatch[fueltype].batch0.resultstatus ? 1 : 0
-            //     });
-            // }
           }
         }
       });
