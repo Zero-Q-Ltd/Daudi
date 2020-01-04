@@ -4,21 +4,20 @@ import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material";
 import * as moment from "moment";
 import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
+import { Depot, emptydepot } from "../../models/Daudi/depot/Depot";
+import { DepotConfig, emptyDepotConfig } from "../../models/Daudi/depot/DepotConfig";
 import { Entry } from "../../models/Daudi/fuel/Entry";
 import { FuelNamesArray, FuelType } from "../../models/Daudi/fuel/FuelType";
-import { OMCConfig } from "../../models/Daudi/omc/Config";
+import { EmptyOMCStock, OMCStock } from "../../models/Daudi/omc/Stock";
 import { emptyorder, Order } from "../../models/Daudi/order/Order";
 import { Stage1Model } from "../../models/Daudi/order/truck/TruckStages";
 import { MyTimestamp } from "../../models/firestore/firestoreTypes";
 import { NotificationService } from "../../shared/services/notification.service";
 import { AdminService } from "../services/core/admin.service";
-import { CoreService } from "../services/core/core.service";
-import { OrdersService } from "../services/orders.service";
-import { EntriesService } from "../services/entries.service";
 import { ConfigService } from "../services/core/config.service";
-import { OMCStock } from "../../models/Daudi/omc/Stock";
-import { Depot } from "../../models/Daudi/depot/Depot";
-import { DepotConfig } from "../../models/Daudi/depot/DepotConfig";
+import { CoreService } from "../services/core/core.service";
+import { EntriesService } from "../services/entries.service";
+import { OrdersService } from "../services/orders.service";
 
 interface EntryContent {
   id: string;
@@ -75,8 +74,8 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
    * this keeps a local copy of all the subscriptions within this service
    */
   subscriptions: Map<string, () => void> = new Map<string, any>();
-  stock: OMCStock;
-  activedepot: { depot: Depot, config: DepotConfig };
+  stock: OMCStock = { ...EmptyOMCStock };
+  activedepot: { depot: Depot, config: DepotConfig } = { depot: { ...emptydepot }, config: { ...emptyDepotConfig } };
 
   constructor(
     public dialogRef: MatDialogRef<EntriesSelectorComponent>,

@@ -1,8 +1,6 @@
 import { firestore } from "firebase-admin";
-import * as moment from "moment";
 import { Order } from "../../models/Daudi/order/Order";
 import { SMS } from "../../models/Daudi/sms/sms";
-import { Truck } from "../../models/Daudi/order/Truck";
 
 export function ordersms(order: Order, omcId: string) {
   /**
