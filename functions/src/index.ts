@@ -1,30 +1,23 @@
-import * as functions from 'firebase-functions';
 import * as admin from "firebase-admin";
-import { sendsms } from './tasks/sms/sms';
-import { SMS } from './models/Daudi/sms/sms';
-import { initCompanyInfo } from './tasks/crud/qbo/CompanyInfo/init';
-import { OMC } from './models/Daudi/omc/OMC';
-import { OMCConfig } from './models/Daudi/omc/Config';
-import { Environment } from './models/Daudi/omc/Environments';
-import { initFuels } from './tasks/crud/qbo/Item/Init';
-import { Depot } from './models/Daudi/depot/Depot';
-import { initDepots } from './tasks/crud/qbo/Class/init';
-import { initTaxService } from './tasks/crud/qbo/tax/init';
-import { createQbo } from './tasks/sharedqb';
-import { createInvoice } from './tasks/crud/qbo/invoice/create';
-import { Order } from './models/Daudi/order/Order';
-import { createEstimate } from './tasks/crud/qbo/Estimate/create';
-import { ordersms } from './tasks/sms/smscompose';
-import { validorderupdate } from './validators/orderupdate';
-import { MyTimestamp } from './models/firestore/firestoreTypes';
+import * as functions from 'firebase-functions';
 import { QuickBooks } from './libs/qbmain';
 import { CompanySync } from "./models/Cloud/CompanySync";
-import { processSync } from './tasks/syncdb/processSync';
-import { readConfig } from './tasks/crud/daudi/readConfig';
-import { DaudiCustomer } from './models/Daudi/customer/Customer';
-import { updateCustomer } from './tasks/crud/qbo/customer/update';
 import { OrderCreate } from './models/Cloud/OrderCreate';
+import { DaudiCustomer } from './models/Daudi/customer/Customer';
+import { OMCConfig } from './models/Daudi/omc/Config';
+import { Environment } from './models/Daudi/omc/Environments';
+import { SMS } from './models/Daudi/sms/sms';
+import { MyTimestamp } from './models/firestore/firestoreTypes';
 import { creteOrder, updateOrder } from './tasks/crud/daudi/Order';
+import { readConfig } from './tasks/crud/daudi/readConfig';
+import { updateCustomer } from './tasks/crud/qbo/customer/update';
+import { createEstimate } from './tasks/crud/qbo/Estimate/create';
+import { createInvoice } from './tasks/crud/qbo/invoice/create';
+import { createQbo } from './tasks/sharedqb';
+import { sendsms } from './tasks/sms/sms';
+import { ordersms } from './tasks/sms/smscompose';
+import { processSync } from './tasks/syncdb/processSync';
+import { validorderupdate } from './validators/orderupdate';
 
 admin.initializeApp(functions.config().firebase);
 admin.firestore().settings({ timestampsInSnapshots: true });
@@ -44,7 +37,7 @@ function markAsRunning(eventID: string) {
  */
 exports.createEstimate = functions.https.onCall((data: OrderCreate, context) => {
 
-  return createQbo(data.omcId, data.config, data.environment).then(async result => {
+  return createQbo(data.omc.Id, data.config, data.environment).then(async result => {
     console.log(result)
     const est = new createEstimate(data.order, result, data.config, data.environment)
     return result.createEstimate(est.formulateEstimate()).then((createResult) => {
@@ -55,7 +48,7 @@ exports.createEstimate = functions.https.onCall((data: OrderCreate, context) => 
       /**
        * @todo update the Estimate ID
        */
-      return Promise.all([ordersms(data.order, data.omcId), validorderupdate(data.order, result), creteOrder(data.order, data.omcId)])
+      return Promise.all([ordersms(data.order, data.omc.Id), validorderupdate(data.order, result), creteOrder(data.order, data.omc.Id)])
     });
   })
 
@@ -66,7 +59,7 @@ exports.createEstimate = functions.https.onCall((data: OrderCreate, context) => 
  */
 exports.createInvoice = functions.https.onCall((data: OrderCreate, context) => {
 
-  return createQbo(data.omcId, data.config, data.environment).then(async result => {
+  return createQbo(data.omc.Id, data.config, data.environment).then(async result => {
     console.log(result)
     const inv = new createInvoice(data.order, result, data.config, data.environment)
     return result.createInvoice(inv.formulateInvoice()).then((createResult) => {
@@ -78,7 +71,7 @@ exports.createInvoice = functions.https.onCall((data: OrderCreate, context) => {
        * @todo update the invoice id
        */
       data.order.stage = 2
-      return Promise.all([ordersms(data.order, data.omcId), validorderupdate(data.order, result), updateOrder(data.order, data.omcId)]);
+      return Promise.all([ordersms(data.order, data.omc.Id), validorderupdate(data.order, result), updateOrder(data.order, data.omc.Id)]);
     });
   })
 
@@ -86,7 +79,7 @@ exports.createInvoice = functions.https.onCall((data: OrderCreate, context) => {
 
 
 exports.customerUpdated = functions.firestore
-  .document("/omc/{omcId}/customer/{customerId}")
+  .document("/omc/{omc.Id}/customer/{customerId}")
   .onUpdate((snap, context) => {
     console.log(snap);
     const eventID = context.eventId;
@@ -107,12 +100,12 @@ exports.customerUpdated = functions.firestore
         // this customer has just been created
         return true;
       }
-      return readConfig(context.params.omcId)
+      return readConfig(context.params.omc.Id)
         .then(val => {
           const config: OMCConfig = val.data() as OMCConfig
           const customer: DaudiCustomer = snap.after.data() as DaudiCustomer
           const env: Environment = customer.environment
-          return createQbo(context.params.omcId, config, env).then(qbo => {
+          return createQbo(context.params.omc.Id, config, env).then(qbo => {
             return updateCustomer(customer, qbo);
           })
         })
@@ -132,7 +125,7 @@ exports.customerUpdated = functions.firestore
  * @todo Add a callback for when the SMS is successfully sent and possibly when it's read
  */
 exports.smscreated = functions.firestore
-  .document("/omc/{omcId}/sms/{smsID}")
+  .document("/omc/{omc.Id}/sms/{smsID}")
   .onCreate((data, context) => {
     console.log(data);
     const eventID = context.eventId;
