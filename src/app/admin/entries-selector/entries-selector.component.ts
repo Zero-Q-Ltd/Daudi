@@ -15,8 +15,6 @@ import { AdminService } from "../services/core/admin.service";
 import { CoreService } from "../services/core/core.service";
 import { OrdersService } from "../services/orders.service";
 import { EntriesService } from "../services/entries.service";
-import { StockLoadDetail } from "src/app/models/Daudi/fuel/StockLoadDetail";
-
 
 interface EntryContent {
   id: string;
@@ -282,9 +280,7 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
    * @param fueltype fueltype of the ASE
    */
   getTotalAvailableEntry(index: number, fueltype: FuelType) {
-    const totalqty = this.depotEntries[fueltype][index].qty.total;
-    const loadedqty = this.depotEntries[fueltype][index].qty.directLoad.total + this.depotEntries[fueltype][index].qty.transferred.total;
-    return totalqty - loadedqty;
+    return this.depotEntries[fueltype][index].qty.total - this.depotEntries[fueltype][index].qty.used;
   }
   /**
    * Returns the total available fuel within an ASE
@@ -353,39 +349,59 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
              * Update the batch number quantity and disable the batch
              * A max of 2 batch numbers may be assigned to the truck
              */
-            const Entry1value: StockLoadDetail = {
+            this.depotEntries[fueltype][0].qty.directLoad = {
               total: this.depotEntries[fueltype][0].qty.total,
               accumulated: {
                 usable: 0,
                 total: this.depotEntries[fueltype][0].qty.directLoad.accumulated.total
               },
             };
-            this.depotEntries[fueltype][0].qty.directLoad = Entry1value;
-            batchaction.update(this.entriesService.entryCollection(this.core.currentOmc.value.Id)
-              .doc(this.order.fuel[fueltype].entries[0].Id), Entry1value);
             /**
-             * Leave the second batch number active if neccessary
+             * Deactivate this entry since we're sure a second once has been assigned
              */
-            const Entry2value = {
-              loadedqty: this.drawnEntry[fueltype][1].totalqty - this.drawnEntry[fueltype][1].remainqty,
-              status: this.drawnEntry[fueltype][1].resultstatus ? 1 : 0
-            };
-
+            this.depotEntries[fueltype][0].active = false;
             batchaction.update(this.entriesService.entryCollection(this.core.currentOmc.value.Id)
-              .doc(this.order.fuel[fueltype].entries[0].Id), Entry2value);
+              .doc(this.order.fuel[fueltype].entries[0].Id), this.depotEntries[fueltype][0]);
+
+            /**
+             * update the secoond Entry quantities
+             */
+            this.depotEntries[fueltype][1].qty.directLoad = {
+              total: this.depotEntries[fueltype][1].qty.total - this.drawnEntry[fueltype][1].remainqty,
+              accumulated: {
+                usable: 0,
+                total: this.depotEntries[fueltype][1].qty.directLoad.accumulated.total
+              },
+            };
+            /**
+             * Leave the second entry active if neccessary
+             */
+            this.depotEntries[fueltype][1].active = this.depotEntries[fueltype][1].qty.total - this.drawnEntry[fueltype][1].remainqty > 0;
+            batchaction.update(this.entriesService.entryCollection(this.core.currentOmc.value.Id)
+              .doc(this.order.fuel[fueltype].entries[1].Id), this.depotEntries[fueltype][0]);
           } else {
             /**
              * Only one batch number assigned, hence leave it active
              */
-            batchaction.update(this.batchesservice.entryCollection(this.order.fuel[fueltype].batches[0].Id),
-              {
-                loadedqty: this.depotbatches[fueltype][0].loadedqty + this.order.fuel[fueltype].batches[0].qty,
-                accumulated: {
-                  usable: 0,
-                  total: this.depotbatches[fueltype][0].accumulated.total
-                },
-                status: this.drawnbatch[fueltype].batch0.resultstatus ? 1 : 0
-              });
+            this.depotEntries[fueltype][0].qty.directLoad = {
+              total: this.depotEntries[fueltype][0].qty.total + this.order.fuel[fueltype].entries[0].qty,
+              accumulated: {
+                usable: 0,
+                total: this.depotEntries[fueltype][0].qty.directLoad.accumulated.total
+              },
+            };
+            batchaction.update(this.ordersservice.ordersCollection(this.core.currentOmc.value.Id).doc(this.orderId), this.order);
+
+            //   batchaction.update(this.batchesservice.entryCollection(this.order.fuel[fueltype].batches[0].Id),
+            //     {
+            //       loadedqty: this.depotbatches[fueltype][0].loadedqty + this.order.fuel[fueltype].batches[0].qty,
+            //       accumulated: {
+            //         usable: 0,
+            //         total: this.depotbatches[fueltype][0].accumulated.total
+            //       },
+            //       status: this.drawnbatch[fueltype].batch0.resultstatus ? 1 : 0
+            //     });
+            // }
           }
         }
       });
