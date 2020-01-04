@@ -87,12 +87,11 @@ export class CoreService {
     private entriesService: EntriesService,
     private adminservice: AdminService) {
     this.adminservice.observableuserdata
-      .pipe(skipWhile(t => !t.Id),
-        distinctUntilChanged())
+      .pipe(distinctUntilChanged())
       .subscribe(admin => {
-
         this.subscriptions.set("configSubscription", this.configService.configCollection(admin.config.omcId)
           .onSnapshot(t => {
+            // console.log(t.data());
             this.config.next(this.attachId.transformObject<Config>(emptyConfig, t));
             /**
              * Fetch OMC's and depots after the main config has been loaded

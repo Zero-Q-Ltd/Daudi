@@ -1,7 +1,14 @@
-<h2 mat-dialog-title>Truck for {{order.customer.name}} <span class="color-pms">PMS:</span>{{order.fuel.pms.qty}} <span
-    class="color-ago">AGO:</span> {{order.fuel.ago.qty}} <span class="color-ik">IK:</span> {{order.fuel.ik.qty}}
+<h2 mat-dialog-title>Truck for {{order.customer.name}}
+  <span class="color-pms">
+    PMS:<span matTooltip="PMS Available ASE"> {{config.qty.pms.ase}}</span>
+  </span>{{order.fuel.pms.qty}}
+  <span class="color-ago">AGO:
+    <span matTooltip="AGO Available ASE"> {{config.qty.ago.ase}}</span>
+  </span> {{order.fuel.ago.qty}}
+  <span class="color-ik">IK:
+    <span matTooltip="IK Available ASE"> {{config.qty.ik.ase}}</span>
+  </span> {{order.fuel.ik.qty}}
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-  Total ASE:
 </h2>
 <mat-dialog-content *ngIf="donecalculating">
   <table class="table table-stripped">
@@ -20,23 +27,23 @@
 
     <tbody *ngFor="let fueltype of fueltypesArray" [ngClass]="{ 'mat-elevation-z4' :  order.fuel[fueltype].qty > 0} ">
       <tr *ngFor="let entry of depotEntries[fueltype];let i = index">
-        <td><span class="color-{{fueltype}}">{{entry.entry.id}}</span></td>
+        <td><span class="color-{{fueltype}}">{{entry.entry.name}}</span></td>
         <td>{{entry.qty.total}}</td>
         <td>{{entry.qty.directLoad.total}}</td>
         <td>{{entry.qty.transferred.total}}</td>
         <td>{{entry.qty.total - entry.qty.directLoad.total - entry.qty.transferred.total}}</td>
         <td>
-          <!-- {{drawnEntry[fueltype]['batch' + resolveindex(i)].name == entry.batch ?
-          drawnEntry[fueltype]['batch' + resolveindex(i)].qtydrawn : 0 }} -->
+          {{drawnEntry[fueltype][i]?.name === entry.entry.name ?
+          drawnEntry[fueltype][i].qtydrawn : 0 }}
         </td>
         <td>
-          <!-- {{(drawnEntry[fueltype]['batch' + resolveindex(i)].name == entry.batch ?
-          drawnEntry[fueltype]['batch' + resolveindex(i)].remainqty : 0) }} -->
+          {{(drawnEntry[fueltype][i]?.name === entry.entry.name ?
+          drawnEntry[fueltype][i].remainqty : 0) }}
         </td>
         <td>
           <button class="btn btn-outline-success btn-sm">
-            <!-- {{drawnEntry[fueltype]['batch' + resolveindex(i)].name == entry.batch ?
-            drawnEntry[fueltype]['batch' + resolveindex(i)].resultstatus ? 'Active' : 'Inactive' : 'Active' }} -->
+            {{drawnEntry[fueltype][i]?.name === entry.entry.name ?
+            drawnEntry[fueltype][i].resultstatus ? 'Active' : 'Inactive' : 'Active' }}
           </button>
         </td>
       </tr>
@@ -52,7 +59,7 @@
   <button [disabled]="saving || !donecalculating" class="float-left" color="warn" mat-dialog-close mat-stroked-button>
     CLOSE
   </button>
-  <mat-spinner *ngIf='saving || !donecalculating || fetchingbatches' [diameter]="27"></mat-spinner>
+  <mat-spinner *ngIf='saving || !donecalculating || fetchingEntries' [diameter]="27"></mat-spinner>
   <button (click)="approvetruck()" [disabled]="saving || !donecalculating" class="float-right" color="primary"
     mat-stroked-button>APPROVE
   </button>

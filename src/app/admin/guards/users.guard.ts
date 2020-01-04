@@ -12,7 +12,6 @@ import { CoreService } from "../services/core/core.service";
 @Injectable()
 export class UsersGuard implements CanActivate {
   constructor(
-    private depotserviice: DepotService,
     private adminservice: AdminService,
     private router: Router,
     private core: CoreService,
@@ -21,13 +20,16 @@ export class UsersGuard implements CanActivate {
   }
   boolean;
   canActivate(next: ActivatedRouteSnapshot, activated: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
-    return combineLatest([this.adminservice.observableuserdata, this.core.config])
+    return combineLatest([
+      this.adminservice.observableuserdata,
+      this.core.config
+    ])
       .pipe(map(s => {
         console.log(next, activated);
 
         const data: RouteData = next.data as RouteData;
         if (data.configurable) {
-          return this.checkPermission(next.routeConfig.path, s[0], s[1]);
+          return this.checkPermission(next.routeConfig.path, s[0], s[0]);
         } else {
           return true;
         }

@@ -58,11 +58,11 @@ export interface Order {
     }
   };
   stagedata: {
-    [key in OrderStages]: StageData
+    [key in OrderStages]: OrderStageData
   };
 }
 
-export interface StageData {
+export interface OrderStageData {
   user: AssociatedUser;
   data: any;
 }
@@ -82,11 +82,11 @@ const initorderfuel: OrderFuelConfig = {
     taxablePrice: 0,
     taxableAmnt: 0,
   },
-  batches: []
+  entries: []
 };
 
 
-const initstages: StageData = {
+const initstages: OrderStageData = {
   data: null,
   user: {
     name: null,
@@ -126,12 +126,12 @@ export const emptyorder: Order = {
   stage: null,
   loaded: null,
   stagedata: {
-    1: deepCopy<StageData>(initstages),
-    2: deepCopy<StageData>(initstages),
-    3: deepCopy<StageData>(initstages),
-    4: deepCopy<StageData>(initstages),
-    5: deepCopy<StageData>(initstages),
-    6: deepCopy<StageData>(initstages)
+    1: deepCopy<OrderStageData>(initstages),
+    2: deepCopy<OrderStageData>(initstages),
+    3: deepCopy<OrderStageData>(initstages),
+    4: deepCopy<OrderStageData>(initstages),
+    5: deepCopy<OrderStageData>(initstages),
+    6: deepCopy<OrderStageData>(initstages)
   },
 
 
