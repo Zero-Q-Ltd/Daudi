@@ -11,7 +11,6 @@ import { FuelNamesArray } from "../../../models/Daudi/fuel/FuelType";
 import { emptyConfig, OMCConfig } from "../../../models/Daudi/omc/Config";
 import { Environment } from "../../../models/Daudi/omc/Environments";
 import { emptyomc, OMC } from "../../../models/Daudi/omc/OMC";
-import { QboEnvironment } from "../../../models/Daudi/omc/QboEnvironment";
 import { EmptyOMCStock, OMCStock } from "../../../models/Daudi/omc/Stock";
 import { emptyorder, Order } from "../../../models/Daudi/order/Order";
 import { OrderStageIds, OrderStages } from "../../../models/Daudi/order/OrderStages";
@@ -23,7 +22,6 @@ import { AdminService } from "./admin.service";
 import { ConfigService } from "./config.service";
 import { DepotService } from "./depot.service";
 import { OmcService } from "./omc.service";
-import { AseService } from "../ase.service";
 
 @Injectable({
   providedIn: "root"
@@ -56,7 +54,8 @@ export class CoreService {
     customers: new BehaviorSubject<boolean>(true),
     entries: new BehaviorSubject<boolean>(true),
     omc: new BehaviorSubject<boolean>(true),
-    orders: new BehaviorSubject<boolean>(true)
+    orders: new BehaviorSubject<boolean>(true),
+    stock: new BehaviorSubject<boolean>(true)
   };
   depotEntries: {
     pms: BehaviorSubject<Array<Entry>>,
@@ -80,7 +79,7 @@ export class CoreService {
       6: new BehaviorSubject<Array<Order>>([])
     };
   queuedorders = new BehaviorSubject([]);
-
+  omcId: string;
   constructor(
     private db: AngularFirestore,
     private configService: ConfigService,
@@ -94,31 +93,44 @@ export class CoreService {
     this.adminservice.observableuserdata
       .pipe(distinctUntilChanged())
       .subscribe(admin => {
-        this.subscriptions.set("configSubscription", this.configService.configCollection(admin.config.omcId)
+        this.subscriptions.set("configSubscription", this.configService.configDoc(admin.config.omcId)
           .onSnapshot(t => {
-            // console.log(t.data());
-            this.config.next(this.attachId.transformObject<OMCConfig>(emptyConfig, t));
+            const config = this.attachId.transformObject<OMCConfig>(emptyConfig, t);
+            if (!config.status) {
+              console.log("OMC Account not active");
+              return;
+            }
+            this.omcId = admin.config.omcId;
+            this.config.next(config);
             /**
              * Fetch OMC's and depots after the main config has been loaded
              */
             this.getOmcs();
             this.getDepots();
+            this.getallcustomers();
+            this.getStocks();
           }));
       });
 
     /**
      * fetch the pipeline every time the depot changes
      */
-
-    combineLatest([this.activedepot.pipe(skipWhile(t => !t.depot.Id)),
-    this.currentOmc.pipe(skipWhile(t => !t.Id))]).subscribe(() => {
-      this.getOrdersPipeline();
-      this.getallcustomers();
+    this.activedepot.pipe(skipWhile(t => !t.depot.Id)).subscribe((t) => {
+      this.getOrdersPipeline(t.depot.Id);
       this.fetchActiveEntries();
     });
-
   }
-
+  getStocks() {
+    this.loaders.stock.next(true);
+    this.subscriptions.set("stocks", this.configService.stockDoc(this.omcId)
+      .onSnapshot(t => {
+        this.stock.next(this.attachId.transformObject<OMCStock>(EmptyOMCStock, t));
+        this.loaders.stock.next(false);
+      }));
+  }
+  /**
+   * Fetches all the active depots
+   */
   getDepots() {
     this.loaders.depots.next(true);
     this.subscriptions.set("alldepots", this.depotService
@@ -126,7 +138,6 @@ export class CoreService {
       .where("Active", "==", true)
       .orderBy("Name", "asc")
       .onSnapshot((data) => {
-        this.unsubscribeAll();
         /**
          * Only subscribe to depot when the user data changes
          */
@@ -145,7 +156,9 @@ export class CoreService {
       })
     );
   }
-
+  /**
+   * fetches all omc's and filters the one belonging the the currently logged in user
+   */
   getOmcs() {
     this.subscriptions.set("omcs", this.omc.omcCollection()
       .orderBy("name", "asc")
@@ -153,11 +166,11 @@ export class CoreService {
         // console.log("OMC data fetched");
         this.omcs.next(this.attachId.transformArray<OMC>(emptyomc, data));
         this.omcs.value.forEach(co => {
-          if (co.Id === this.adminservice.userdata.config.omcId) {
+          if (co.Id === this.omcId) {
             /**
              * make the pipeline subscription Only once
              */
-            if (this.currentOmc.value.Id !== this.adminservice.userdata.config.omcId) {
+            if (this.omcId !== this.omcId) {
               console.log("Current OMC found");
               this.currentOmc.next(co);
             }
@@ -173,26 +186,17 @@ export class CoreService {
   createId() {
     return this.db.createId();
   }
-
+  /**
+   * fetches all active customers belonging the OMC
+   */
   getallcustomers() {
     this.loaders.customers.next(true);
-    this.subscriptions.set("allcustomers", this.customerService.customerCollection(this.currentOmc.value.Id)
+    this.subscriptions.set("allcustomers", this.customerService.customerCollection(this.omcId)
       .where("environment", "==", this.environment.value)
       .onSnapshot(data => {
         this.loaders.customers.next(false);
         this.customers.next(this.attachId.transformArray<DaudiCustomer>(emptyDaudiCustomer, data));
       }));
-  }
-  /**
-   *
-   * @param envString
-   */
-  getEnvironment(envString?: Environment): QboEnvironment {
-    if (!envString) {
-      return this.config.value.Qbo[this.environment.value];
-    } else {
-      return this.config.value.Qbo[envString];
-    }
   }
 
   /**
@@ -201,12 +205,12 @@ export class CoreService {
    */
   changeactivedepot(depot: Depot) {
     // this.depotService
-    //   .depotConfigCollection(this.adminservice.userdata.config.omcId)
+    //   .depotConfigCollection(this.omcId)
     //   .add(emptyDepotConfig);
     this.loaders.depotConfig.next(true);
     if (JSON.stringify(depot) !== JSON.stringify(this.activedepot.value)) {
       this.subscriptions.set("currentDepotConfig", this.depotService
-        .depotConfigCollection(this.adminservice.userdata.config.omcId)
+        .depotConfigCollection(this.omcId)
         .where("environment", "==", this.environment.value)
         .where("depotId", "==", depot.Id)
         .onSnapshot(configData => {
@@ -245,7 +249,7 @@ export class CoreService {
   /**
    * Fetches all orders and trucks Relevant to the header
    */
-  getOrdersPipeline() {
+  getOrdersPipeline(depotId: string) {
     /**
      * reset the trucks and orders array when this function is invoked
      */
@@ -266,9 +270,9 @@ export class CoreService {
         this.subscriptions.get(`orders${stage}`)();
       }
 
-      const subscriprion = this.orderService.ordersCollection(this.currentOmc.value.Id)
+      const subscriprion = this.orderService.ordersCollection(this.omcId)
         .where("stage", "==", stage)
-        .where("config.depot.id", "==", this.activedepot.value.depot.Id)
+        .where("config.depot.id", "==", depotId)
         .orderBy("stagedata.1.user.time", "asc")
         .onSnapshot(Data => {
           /**
@@ -287,9 +291,9 @@ export class CoreService {
     /**
      * Fetch completed orders
      */
-    const stage5subscriprion = this.orderService.ordersCollection(this.currentOmc.value.Id)
+    const stage5subscriprion = this.orderService.ordersCollection(this.omcId)
       .where("stage", "==", 5)
-      .where("config.depot.id", "==", this.activedepot.value.depot.Id)
+      .where("config.depot.id", "==", depotId)
       .where("stagedata.1.user.time", "<=", startofweek)
       .orderBy("stagedata.1.user.time", "asc")
       .onSnapshot(Data => {
@@ -312,7 +316,7 @@ export class CoreService {
   fetchActiveEntries() {
     this.loaders.entries.next(true);
     this.fueltypesArray.forEach(fuelType => {
-      this.subscriptions.set("entries", this.entriesService.entryCollection(this.currentOmc.value.Id)
+      this.subscriptions.set("entries", this.entriesService.entryCollection(this.omcId)
         .where("active", "==", true)
         .where("fuelType", "==", fuelType)
         .onSnapshot(data => {

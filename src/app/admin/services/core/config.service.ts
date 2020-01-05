@@ -17,13 +17,13 @@ export class ConfigService {
    * @param omcId
    */
 
-  configCollection(omcId: string) {
+  configDoc(omcId: string) {
     return this.db.firestore.collection("omc")
       .doc(omcId)
       .collection("values")
       .doc("config");
   }
-  stockCollection(omcId: string) {
+  stockDoc(omcId: string) {
     return this.db.firestore.collection("omc")
       .doc(omcId)
       .collection("values")
@@ -37,7 +37,7 @@ export class ConfigService {
   }
 
   saveConfig(omcId: string, data: OMCConfig) {
-    return this.configCollection(omcId)
+    return this.configDoc(omcId)
       .set(data);
   }
 }

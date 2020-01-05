@@ -1,10 +1,8 @@
-import { MyTimestamp } from "../../firestore/firestoreTypes";
-import { FuelType } from "./FuelType";
-import { StockQty, EmptyStockQty } from "./StockQty";
-import { QbRef } from "./QbRef";
 import { deepCopy } from "../../../models/utils/deepCopy";
+import { MyTimestamp } from "../../firestore/firestoreTypes";
 import { BaseStockModel } from "./BaseStockModel";
-import { EntryRef } from "./StockRef";
+import { QbRef } from "./QbRef";
+import { EmptyStockQty, StockQty } from "./StockQty";
 
 export interface ASE extends BaseStockModel {
     ase: QbRef;

@@ -150,7 +150,8 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
        * Entries are already filtered for private depots, so calculations are the same
        */
       const value = this.core.activedepot.value.depot.config.private ?
-        this.activedepot.config.stock[fueltype].ase.available : this.stock.qty[fueltype].ase.available;
+        (this.activedepot.config.stock[fueltype].ase.totalActive - this.activedepot.config.stock[fueltype].ase.used) :
+        (this.stock.qty[fueltype].ase.totalActive - this.stock.qty[fueltype].ase.used);
 
       /**
        * check if there is enough ASE for that fuel
@@ -410,11 +411,11 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
              * Check if it's a private depot
              */
             if (this.core.activedepot.value.depot.config.private) {
-              this.activedepot.config.stock[fueltype].ase.available = this.activedepot.config.stock[fueltype].ase.available - this.order.fuel[fueltype].qty;
-              batchaction.update(this.configService.configCollection(this.core.currentOmc.value.Id), this.activedepot.config);
+              this.activedepot.config.stock[fueltype].ase.used += this.order.fuel[fueltype].qty;
+              batchaction.update(this.configService.configDoc(this.core.currentOmc.value.Id), this.activedepot.config);
             } else {
-              this.stock.qty[fueltype].ase.available = this.stock.qty[fueltype].ase.available - this.order.fuel[fueltype].qty;
-              batchaction.update(this.configService.stockCollection(this.core.currentOmc.value.Id), this.stock);
+              this.stock.qty[fueltype].ase.used += this.order.fuel[fueltype].qty;
+              batchaction.update(this.configService.stockDoc(this.core.currentOmc.value.Id), this.stock);
             }
           }
         }
