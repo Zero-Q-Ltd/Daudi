@@ -58,8 +58,9 @@ export function syncAse(omcId: string, fuelConfig: { [key in FuelType]: FuelConf
     }
     const batch = firestore().batch()
     /**
-     * Record the total amount of fuel added in this transaction to update the stock doc
-     */
+    * Record the total amount of fuel added in this transaction to update the stock doc
+    * By consilidating totals to one var, we allow the possibility of having the same fueltype in the same bill payment multiple times
+    */
     const totalAdded: { [key in FuelType]: number } = { ago: 0, ik: 0, pms: 0 }
     return Promise.all(ValidLineItems.map(async item => {
         const convertedASE = covertBillToASE(item.bill, item.fueltype, item.index);
@@ -74,10 +75,7 @@ export function syncAse(omcId: string, fuelConfig: { [key in FuelType]: FuelConf
          */
         if (fetchedbatch.empty) {
             console.log("creating new ASE");
-            /**
-             * Update the prices as well
-             */
-            totalAdded[item.fueltype] += convertedASE.ase.qty
+            totalAdded[item.fueltype] += convertedASE.qty.total
             return batch.set(directory.doc(), convertedASE);
         } else {
             console.log("ASE exists")

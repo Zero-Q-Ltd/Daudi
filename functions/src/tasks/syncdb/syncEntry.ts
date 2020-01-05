@@ -1,8 +1,10 @@
 import { firestore } from "firebase-admin";
 import { Entry } from "../../models/Daudi/fuel/Entry";
-import { FuelType } from "../../models/Daudi/fuel/FuelType";
+import { FuelType, FuelNamesArray } from "../../models/Daudi/fuel/FuelType";
 import { FuelConfig } from "../../models/Daudi/omc/FuelConfig";
 import { Bill } from "../../models/Qbo/Bill";
+import { readStock, stockCollection } from "../crud/daudi/Stock";
+import { OMCStock, EmptyOMCStock } from "../../models/Daudi/omc/Stock";
 
 /**
  * 
@@ -55,6 +57,11 @@ export function syncEntry(omcId: string, fuelConfig: { [key in FuelType]: FuelCo
         return new Promise(res => res())
     }
     const batch = firestore().batch()
+    /**
+     * Record the total amount of fuel added in this transaction to update the stock doc
+     * By consilidating totals to one var, we allow the possibility of having the same fueltype in the same bill payment multiple times
+     */
+    const totalAdded: { [key in FuelType]: number } = { ago: 0, ik: 0, pms: 0 }
     return Promise.all(ValidLineItems.map(async item => {
         const convertedEntry = covertBillToEntry(item.bill, item.fueltype, item.index);
         const directory = firestore()
@@ -69,6 +76,7 @@ export function syncEntry(omcId: string, fuelConfig: { [key in FuelType]: FuelCo
 
         if (fetchedEntry.empty) {
             console.log("creating new Entry");
+            totalAdded[item.fueltype] += convertedEntry.qty.total
             return batch.set(directory.doc(), convertedEntry)
         } else {
             /**
@@ -81,17 +89,31 @@ export function syncEntry(omcId: string, fuelConfig: { [key in FuelType]: FuelCo
                * Add the quantity to the existing batch
                */
                 console.log("Entry exists, merging values");
-
+                totalAdded[item.fueltype] += convertedEntry.qty.total
                 const newEntry: Entry = existingEntry.docs[0].data() as Entry
+                /**
+                 * add the totals
+                 */
                 newEntry.qty.total += convertedEntry.qty.total
+                /**
+                 * Add the object to the list of ids
+                 */
+                newEntry.entry.refs.push(convertedEntry.entry.refs[0])
                 return batch.update(directory.doc(existingEntry.docs[0].id), newEntry)
             } else {
                 console.log("Entry exists")
                 return Promise.resolve()
             }
         }
-    })).then(() => {
-        return batch.commit()
+    })).then(async () => {
+        return await readStock(omcId).then(snapshot => {
+            const stockObject: OMCStock = { ...EmptyOMCStock, ...snapshot.data() }
+            FuelNamesArray.forEach(fueltype => {
+                stockObject.qty[fueltype].entry.totalActive += totalAdded[fueltype]
+            })
+            batch.set(stockCollection(omcId), stockObject);
+            return batch.commit()
+        })
     })
 }
 
