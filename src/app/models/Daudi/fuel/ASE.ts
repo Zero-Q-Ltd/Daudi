@@ -4,10 +4,10 @@ import { StockQty, EmptyStockQty } from "./StockQty";
 import { QbRef } from "./QbRef";
 import { deepCopy } from "../../../models/utils/deepCopy";
 import { BaseStockModel } from "./BaseStockModel";
-import { StockRef } from "./StockRef";
+import { EntryRef } from "./StockRef";
 
 export interface ASE extends BaseStockModel {
-    ase: StockRef;
+    ase: QbRef;
 }
 
 export const emptyASEs: ASE = {
@@ -15,8 +15,8 @@ export const emptyASEs: ASE = {
     fuelType: null,
     Amount: null,
     ase: {
-        name: null,
-        refs: []
+        QbId: null,
+        qty: 0
     },
     price: 0,
     qty: deepCopy<StockQty>(EmptyStockQty),

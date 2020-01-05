@@ -1,5 +1,5 @@
 import { QbRef } from "./QbRef";
-export interface StockRef {
+export interface EntryRef {
     name: string;
     refs: QbRef[];
 }

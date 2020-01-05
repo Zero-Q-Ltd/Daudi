@@ -52,7 +52,7 @@ export function syncAse(omcId: string, fuelConfig: { [key in FuelType]: FuelConf
 
     if (ValidLineItems.length < 1) {
         console.error("ITEM CONFIG NOT FOUND")
-        return new Promise(res => res)
+        return new Promise(res => res())
     }
     const batch = firestore().batch()
 
@@ -63,7 +63,7 @@ export function syncAse(omcId: string, fuelConfig: { [key in FuelType]: FuelConf
             .doc(omcId)
             .collection("ase")
 
-        const fetchedbatch = await directory.where("ase.name", "==", convertedASE.ase.name).get();
+        const fetchedbatch = await directory.where("ase.QbId", "==", convertedASE.ase.QbId).get();
         /**
          * make sure the Entry doenst alread exist before writing to db
          */
@@ -74,7 +74,8 @@ export function syncAse(omcId: string, fuelConfig: { [key in FuelType]: FuelConf
              */
             return batch.set(directory.doc(), convertedASE);
         } else {
-            return new Promise(res => res)
+            console.log("ASE exists")
+            return Promise.resolve()
         }
     })).then(() => {
         return batch.commit()
@@ -90,11 +91,8 @@ function covertBillToASE(convertedBill: Bill, fueltype: FuelType, LineitemIndex:
     const newASE: ASE = {
         Amount: convertedBill.Line[LineitemIndex].Amount ? convertedBill.Line[LineitemIndex].Amount : 0,
         ase: {
-            name: convertedBill.DocNumber ? convertedBill.DocNumber : "Null",
-            refs: [{
-                QbId: convertedBill.Id,
-                qty: ASEQty
-            }]
+            QbId: convertedBill.Id,
+            qty: ASEQty
         },
         depot: {
             Id: null,

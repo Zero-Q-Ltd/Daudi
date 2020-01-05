@@ -3,11 +3,11 @@ import { deepCopy } from "../../../models/utils/deepCopy";
 import { MyTimestamp } from "../../firestore/firestoreTypes";
 import { BaseStockModel } from "./BaseStockModel";
 import { StockQty, EmptyStockQty } from "./StockQty";
-import { StockRef } from "./StockRef";
+import { EntryRef } from "./StockRef";
 
 
 export interface Entry extends BaseStockModel {
-  entry: StockRef;
+  entry: EntryRef;
 }
 
 export const emptyEntry: Entry = {

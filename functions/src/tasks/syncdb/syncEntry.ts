@@ -52,7 +52,7 @@ export function syncEntry(omcId: string, fuelConfig: { [key in FuelType]: FuelCo
 
     if (ValidLineItems.length < 1) {
         console.error("ITEM CONFIG NOT FOUND")
-        return new Promise(res => res)
+        return new Promise(res => res())
     }
     const batch = firestore().batch()
     return Promise.all(ValidLineItems.map(async item => {
@@ -77,25 +77,23 @@ export function syncEntry(omcId: string, fuelConfig: { [key in FuelType]: FuelCo
             const existingEntry = await directory.where("entry.refs", "array-contains", convertedEntry.entry.refs[0]).get();
 
             if (existingEntry.empty) {
-                console.log("creating new Entry")
-                return batch.set(directory.doc(), convertedEntry)
-            } else {
                 /**
-                 * Add the quantity to the existing batch
-                 */
+               * Add the quantity to the existing batch
+               */
                 console.log("Entry exists, merging values");
 
                 const newEntry: Entry = existingEntry.docs[0].data() as Entry
                 newEntry.qty.total += convertedEntry.qty.total
                 return batch.update(directory.doc(existingEntry.docs[0].id), newEntry)
+            } else {
+                console.log("Entry exists")
+                return Promise.resolve()
             }
         }
     })).then(() => {
         return batch.commit()
     })
 }
-
-
 
 function covertBillToEntry(convertedBill: Bill, fueltype: FuelType, LineitemIndex: number): Entry {
     const entryQty = convertedBill.Line[LineitemIndex].ItemBasedExpenseLineDetail.Qty;

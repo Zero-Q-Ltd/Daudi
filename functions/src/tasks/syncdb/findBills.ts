@@ -31,7 +31,7 @@ export function findBills(qbo: QuickBooks) {
             {
                 field: "TxnDate",
                 value: moment()
-                    .subtract(100, "day")
+                    .subtract(30, "day")
                     .startOf("day")
                     .format("YYYY-MM-DD"),
                 operator: ">="
