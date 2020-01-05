@@ -57,26 +57,28 @@ export function syncEntry(omcId: string, fuelConfig: { [key in FuelType]: FuelCo
     const batch = firestore().batch()
     return Promise.all(ValidLineItems.map(async item => {
         const convertedEntry = covertBillToEntry(item.bill, item.fueltype, item.index);
-        const batchesdir = firestore()
+        const directory = firestore()
             .collection("omc")
             .doc(omcId)
             .collection("entry")
-        const fetchedEntry = await batchesdir
-            .where("entry.refs", "array-contains", convertedEntry.entry.refs).get();                    /**
-                     * make sure the Entry doenst already exist before writing to db
-                     */
+
+        /**
+         * make sure the Entry doenst already exist before writing to db
+         */
+        const fetchedEntry = await directory
+            .where("entry.refs", "array-contains", convertedEntry.entry.refs[0]).get();
         if (fetchedEntry.empty) {
             console.log("creating new Entry");
-            return batch.set(batchesdir.doc(), convertedEntry)
+            return batch.set(directory.doc(), convertedEntry)
         } else {
             /**
-             * Check if the same batch number previously existed for addition purposes
+             * Check if the same entry previously existed for addition purposes
              */
-            const existingEntry = await batchesdir.where("entry.refs", "array-contains", convertedEntry.entry.name).get();
+            const existingEntry = await directory.where("entry.name", "array-contains", convertedEntry.entry.name).get();
 
             if (existingEntry.empty) {
-                console.log("creating new Entry");
-                return batch.set(batchesdir.doc(), convertedEntry)
+                console.log("creating new Entry")
+                return batch.set(directory.doc(), convertedEntry)
             } else {
                 /**
                  * Add the quantity to the existing batch
@@ -85,7 +87,7 @@ export function syncEntry(omcId: string, fuelConfig: { [key in FuelType]: FuelCo
 
                 const newEntry: Entry = existingEntry.docs[0].data() as Entry
                 newEntry.qty.total += convertedEntry.qty.total
-                return batch.update(batchesdir.doc(existingEntry.docs[0].id), newEntry)
+                return batch.update(directory.doc(existingEntry.docs[0].id), newEntry)
             }
         }
     })).then(() => {
@@ -96,8 +98,6 @@ export function syncEntry(omcId: string, fuelConfig: { [key in FuelType]: FuelCo
 
 
 function covertBillToEntry(convertedBill: Bill, fueltype: FuelType, LineitemIndex: number): Entry {
-    console.log("converting bill to Entry", fueltype, LineitemIndex);
-
     const entryQty = convertedBill.Line[LineitemIndex].ItemBasedExpenseLineDetail.Qty;
     const entryPrice = convertedBill.Line[LineitemIndex].ItemBasedExpenseLineDetail.UnitPrice;
 
@@ -115,7 +115,7 @@ function covertBillToEntry(convertedBill: Bill, fueltype: FuelType, LineitemInde
             name: null
         },
         Id: null,
-        price: entryPrice,
+        price: entryPrice | 0,
         qty: {
             directLoad: {
                 total: 0,
@@ -135,6 +135,6 @@ function covertBillToEntry(convertedBill: Bill, fueltype: FuelType, LineitemInde
         fuelType: fueltype,
         date: firestore.Timestamp.fromDate(new Date())
     };
-    console.log(JSON.stringify(newEntry))
+    console.log("converted bill to ASE", convertedBill.Line[LineitemIndex], fueltype, LineitemIndex, newEntry);
     return newEntry;
 }

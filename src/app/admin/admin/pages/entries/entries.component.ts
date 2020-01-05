@@ -50,7 +50,7 @@ export class EntriesComponent implements OnInit {
   /**
    * this keeps a local copy of all the subscriptions within this service
    */
-  subscriptions: Map<string, any> = new Map<string, any>();
+  subscriptions: Map<string, () => void> = new Map<string, () => void>();
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
 
   constructor(
@@ -126,6 +126,7 @@ export class EntriesComponent implements OnInit {
         });
       },
         err => {
+          console.error(err);
           this.creatingsync = false;
           this.notification.notify({
             alert_type: "error",

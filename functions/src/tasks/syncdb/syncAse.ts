@@ -58,12 +58,12 @@ export function syncAse(omcId: string, fuelConfig: { [key in FuelType]: FuelConf
 
     return Promise.all(ValidLineItems.map(async item => {
         const convertedASE = covertBillToASE(item.bill, item.fueltype, item.index);
-        const batchesdir = firestore()
+        const directory = firestore()
             .collection("omc")
             .doc(omcId)
             .collection("ase")
 
-        const fetchedbatch = await batchesdir.where("ase.id", "==", convertedASE.ase.name).get();
+        const fetchedbatch = await directory.where("ase.id", "==", convertedASE.ase.name).get();
         /**
          * make sure the Entry doenst alread exist before writing to db
          */
@@ -72,7 +72,7 @@ export function syncAse(omcId: string, fuelConfig: { [key in FuelType]: FuelConf
             /**
              * Update the prices as well
              */
-            return batch.set(batchesdir.doc(), convertedASE);
+            return batch.set(directory.doc(), convertedASE);
         } else {
             return new Promise(res => res)
         }
@@ -82,7 +82,6 @@ export function syncAse(omcId: string, fuelConfig: { [key in FuelType]: FuelConf
 
 
 function covertBillToASE(convertedBill: Bill, fueltype: FuelType, LineitemIndex: number): ASE {
-    console.log("converting bill to ASE", fueltype, LineitemIndex);
 
     const ASEQty = convertedBill.Line[LineitemIndex].ItemBasedExpenseLineDetail.Qty ? convertedBill.Line[LineitemIndex].ItemBasedExpenseLineDetail.Qty : 0;
 
@@ -120,6 +119,6 @@ function covertBillToASE(convertedBill: Bill, fueltype: FuelType, LineitemIndex:
         fuelType: fueltype,
         date: firestore.Timestamp.fromDate(new Date())
     };
-    console.log(JSON.stringify(newASE))
+    console.log("converted bill to ASE", fueltype, LineitemIndex, newASE);
     return newASE;
 }

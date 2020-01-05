@@ -121,6 +121,7 @@ export class AseComponent implements OnInit {
         });
       },
         err => {
+          console.error(err);
           this.creatingsync = false;
           this.notification.notify({
             alert_type: "error",
