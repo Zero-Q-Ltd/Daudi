@@ -12,6 +12,7 @@ import { emptyConfig, OMCConfig } from "./../../../../models/Daudi/omc/Config";
 import { Environment } from "./../../../../models/Daudi/omc/Environments";
 import { Order } from "./../../../../models/Daudi/order/Order";
 import { NotificationService } from "./../../../../shared/services/notification.service";
+import { OMCStock, EmptyOMCStock } from "../../../../models/Daudi/omc/Stock";
 
 @Component({
   selector: "app-calculations",
@@ -28,7 +29,7 @@ export class CalculationsComponent implements OnInit, OnChanges {
   fueltypesArray = FuelNamesArray;
   omcConfig: OMCConfig = { ...emptyConfig };
   activedepot: { depot: Depot, config: DepotConfig } = { depot: { ...emptydepot }, config: { ...emptyDepotConfig } };
-  
+  stock: OMCStock = { ...EmptyOMCStock };
   env: Environment = Environment.sandbox;
   calculationsForm: FormGroup<Calculations> = new FormGroup<Calculations>({
     pms: new FormGroup<FuelCalculation>({
@@ -64,6 +65,11 @@ export class CalculationsComponent implements OnInit, OnChanges {
     ).subscribe(val => {
       this.omcConfig = val;
     });
+    this.core.stock.pipe(
+      takeUntil(this.comopnentDestroyed)
+    ).subscribe(val => {
+      this.stock = val;
+    });
     this.core.activedepot.pipe(
       takeUntil(this.comopnentDestroyed),
       skipWhile(t => !t.depot.Id))
@@ -91,7 +97,15 @@ export class CalculationsComponent implements OnInit, OnChanges {
             this.calculationsForm.get([fueltype, "price"]).setErrors(null);
             this.initData.fuel[fueltype].qty = value[fueltype].qty;
             this.initData.fuel[fueltype].priceconfig.price = Number(value[fueltype].price);
-
+            /**
+             * The requested price is only set during new order creation
+             * Set the value to price, then replicate to requested price
+             * This is the single source of truth and is the field used for making all calculations, even during order creation
+             * It is overwritten during approval, but the requested price value remains the original one durin creation
+             */
+            if (this.newOrder) {
+              this.initData.fuel[fueltype].priceconfig.requestedPrice = Number(value[fueltype].price);
+            }
             const decimamlResolution = value[`${fueltype}qtyControl`] >= 10000 ? 4 : 3;
             const calculatedpirces = this.deriveprice(this.initData.fuel[fueltype].priceconfig.price, fueltype, decimamlResolution);
             this.initData.fuel[fueltype].priceconfig.taxablePrice = calculatedpirces.taxablePrice;

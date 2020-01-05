@@ -93,6 +93,7 @@ export class CoreService {
     this.adminservice.observableuserdata
       .pipe(distinctUntilChanged())
       .subscribe(admin => {
+        this.unsubscribeAll();
         this.subscriptions.set("configSubscription", this.configService.configDoc(admin.config.omcId)
           .onSnapshot(t => {
             const config = this.attachId.transformObject<OMCConfig>(emptyConfig, t);

@@ -24,7 +24,7 @@
                     </td>
                     <td *ngIf="!newOrder">
                         <span class="text-danger" *ngIf="!newOrder" matPrefix>
-                            {{initData.fuel[pricetype].priceconfig.price}}
+                            {{initData.fuel[pricetype].priceconfig.requestedPrice}}
                         </span>
 
                     </td>
@@ -41,7 +41,7 @@
 
                     <td class="vat-title">
                         <span class="label label-{{pricetype}}">
-                            {{omcConfig.taxExempt[env][pricetype].amount }}
+                            {{stock.taxExempt[env][pricetype].amount }}
                         </span>
                     </td>
 

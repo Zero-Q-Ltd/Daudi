@@ -16,8 +16,7 @@
           matTooltip="Delete">delete_sweep
         </span>
       </button>
-      <button (click)="resetTruck(order.truck)"
-        *ngIf="order.truck?.stage > 0 && order.truck?.stage < 4 && !order.truck.stagedata['4'].data" mat-icon-button
+      <button (click)="resetTruck(order.truck)" *ngIf="order.truck?.stage > 0 && order.truck?.stage < 4" mat-icon-button
         matSuffix type="button">
         <span class="material-icons color-danger" matTooltip="Reset">restore</span>
       </button>
@@ -47,13 +46,13 @@
     </thead>
     <tbody>
       <tr
-        [ngClass]="{ 'color-danger' : order.truck.stage == 1 && expired(order.truck?.stagedata['1'].data.expiry[0]?.timestamp) ,
-                       'color-success' : order.truck.stage == 1 && !expired(order.truck?.stagedata['1'].data.expiry[0]?.timestamp)} ">
+        [ngClass]="{ 'color-danger' : order.truck.stage == 1 && expired(order.truck?.stagedata[1].expiry[0]?.timestamp) ,
+                       'color-success' : order.truck.stage == 1 && !expired(order.truck?.stagedata['1'].expiry[0]?.timestamp)} ">
         <td class="order-stage">Processing</td>
         <td>
           <span *ngIf="order.truck.stage == 1 else completed">
             <span *ngIf="order.truck.isPrinted; else not_printed">
-              {{resolvetime(order.truck?.stagedata["1"].data.expiry[0]?.timestamp)}}
+              {{resolvetime(order.truck?.stagedata["1"].expiry[0]?.timestamp)}}
             </span>
             <ng-template #not_printed>
               Not Printed
@@ -65,7 +64,7 @@
         </td>
         <td>
           <span *ngIf="order.truck.stage > 1 else not_done">
-            {{calculatetotaltime(order.truck.stagedata["1"].data.expiry)}}
+            {{calculatetotaltime(order.truck.stagedata["1"].expiry)}}
           </span>
           <ng-template #not_done class="color-success">
             Developing
@@ -95,13 +94,13 @@
         <td class="order-stage">Queued</td>
         <td>
           <span *ngIf="order.truck.stage == 2">
-            {{resolvetime(order.truck?.stagedata["2"].data.expiry[0]?.timestamp)}}
+            {{resolvetime(order.truck?.stagedata["2"].expiry[0]?.timestamp)}}
           </span>
           <span *ngIf="order.truck.stage > 2" class="color-success">
             Completed
           </span>
         </td>
-        <td>{{calculatetotaltime(order.truck.stagedata["2"].data.expiry)}}</td>
+        <td>{{calculatetotaltime(order.truck.stagedata["2"].expiry)}}</td>
         <td>
           <span *ngIf="order.truck.stage > 2">
             {{timespent(order.truck.stagedata["2"].user.time, order.truck.stagedata["3"].user.time)}}
@@ -130,13 +129,13 @@
         <td class="order-stage">Loading</td>
         <td>
           <span *ngIf="order.truck.stage == 3">
-            {{resolvetime(order.truck?.stagedata["3"].data.expiry[0]?.timestamp)}}
+            {{resolvetime(order.truck?.stagedata["3"].expiry[0]?.timestamp)}}
           </span>
           <span *ngIf="order.truck.stage > 3" class="color-success">
             Completed
           </span>
         </td>
-        <td>{{calculatetotaltime(order.truck.stagedata["3"].data.expiry)}}</td>
+        <td>{{calculatetotaltime(order.truck.stagedata["3"].expiry)}}</td>
         <td>
           <span *ngIf="order.truck.stage > 3">
             {{timespent(order.truck.stagedata["3"].user.time, order.truck.stagedata["4"].user.time)}}
@@ -144,7 +143,7 @@
         </td>
         <td>
           <span *ngIf="order.truck.stage > 2">
-            {{order.truck.stagedata["3"].data.expiry?.length - 1}}
+            {{order.truck.stagedata["3"].expiry?.length - 1}}
           </span>
         </td>
         <td class="custom-slider">
