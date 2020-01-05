@@ -28,7 +28,7 @@ export class CalculationsComponent implements OnInit, OnChanges {
   fueltypesArray = FuelNamesArray;
   omcConfig: OMCConfig = { ...emptyConfig };
   activedepot: { depot: Depot, config: DepotConfig } = { depot: { ...emptydepot }, config: { ...emptyDepotConfig } };
-
+  
   env: Environment = Environment.sandbox;
   calculationsForm: FormGroup<Calculations> = new FormGroup<Calculations>({
     pms: new FormGroup<FuelCalculation>({

@@ -23,6 +23,7 @@ import { AdminService } from "./admin.service";
 import { ConfigService } from "./config.service";
 import { DepotService } from "./depot.service";
 import { OmcService } from "./omc.service";
+import { AseService } from "../ase.service";
 
 @Injectable({
   providedIn: "root"
@@ -88,6 +89,7 @@ export class CoreService {
     private orderService: OrdersService,
     private attachId: AttachId,
     private customerService: CustomerService,
+    private aseService: AseService,
     private entriesService: EntriesService,
     private adminservice: AdminService) {
     this.adminservice.observableuserdata

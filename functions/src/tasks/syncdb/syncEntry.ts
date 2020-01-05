@@ -51,71 +51,84 @@ export function syncEntry(qbo: QuickBooks, omcId: string, fuelConfig: { [key in 
         .then(billpayments => {
             const allbillpayment = (billpayments.QueryResponse.Bill as Array<Bill>) || [];
 
-            let fueltype: FuelType
-            /**
-             * @todo allow the same bill to have mutiple fuel types
-             */
+            const ValidLineItems: Array<{
+                index: number,
+                fueltype: FuelType
+            }> = []
             return Promise.all(allbillpayment.map(async bill => {
                 if (bill.Line) {
-                    const LineitemIndex = bill.Line.findIndex(t => {
+
+                    bill.Line.forEach((t, index) => {
                         if (t.ItemBasedExpenseLineDetail) {
                             {
                                 if (t.ItemBasedExpenseLineDetail.ItemRef.value === fuelConfig.pms.aseId) {
-                                    fueltype = FuelType.pms
-                                    return true
+                                    ValidLineItems.push({
+                                        fueltype: FuelType.pms,
+                                        index
+                                    })
                                 } else if (t.ItemBasedExpenseLineDetail.ItemRef.value === fuelConfig.ago.aseId) {
-                                    fueltype = FuelType.ago
-                                    return true
+                                    ValidLineItems.push({
+                                        fueltype: FuelType.ago,
+                                        index
+                                    })
                                 } else if (t.ItemBasedExpenseLineDetail.ItemRef.value === fuelConfig.ik.aseId) {
-                                    fueltype = FuelType.ik
-                                    return true
+                                    ValidLineItems.push({
+                                        fueltype: FuelType.ik,
+                                        index
+                                    })
                                 } else {
-                                    return false
+                                    console.log("Bill does not have a valid fueltype attached to it")
                                 }
                             }
                         } else {
-                            return false
+                            console.log("Bill does not have a Line item")
                         }
                     })
 
-                    if (!LineitemIndex || LineitemIndex < 0) {
+                    if (ValidLineItems.length < 1) {
                         console.error("ITEM CONFIG NOT FOUND")
                         return true
 
                     }
+                    const batch = firestore().batch()
 
-                    const convertedEntry = covertBillToEntry(bill, fueltype, LineitemIndex);
-                    const batchesdir = firestore()
-                        .collection("omc")
-                        .doc(omcId)
-                        .collection("entry")
-                    const fetchedEntry = await batchesdir
-                        .where("entry.refs", "array-contains", convertedEntry.entry.refs).get();                    /**
+                    return Promise.all(ValidLineItems.map(async item => {
+                        const convertedEntry = covertBillToEntry(bill, item.fueltype, item.index);
+                        const batchesdir = firestore()
+                            .collection("omc")
+                            .doc(omcId)
+                            .collection("entry")
+                        const fetchedEntry = await batchesdir
+                            .where("entry.refs", "array-contains", convertedEntry.entry.refs).get();                    /**
                      * make sure the Entry doenst already exist before writing to db
                      */
-                    if (fetchedEntry.empty) {
-                        console.log("creating new Entry");
-                        return await batchesdir.add(convertedEntry);
-                    } else {
-                        /**
-                         * Check if the same batch number previously existed for addition purposes
-                         */
-                        const existingEntry = await batchesdir.where("entry.refs", "array-contains", convertedEntry.entry.name).get();
-
-                        if (existingEntry.empty) {
+                        if (fetchedEntry.empty) {
                             console.log("creating new Entry");
-                            return await batchesdir.add(convertedEntry);
+                            return batch.set(batchesdir.doc(), convertedEntry)
                         } else {
                             /**
-                             * Add the quantity to the existing batch
+                             * Check if the same batch number previously existed for addition purposes
                              */
-                            console.log("Entry exists, merging values");
+                            const existingEntry = await batchesdir.where("entry.refs", "array-contains", convertedEntry.entry.name).get();
 
-                            const newEntry: Entry = existingEntry.docs[0].data() as Entry
-                            newEntry.qty.total += convertedEntry.qty.total
-                            return await batchesdir.doc(existingEntry.docs[0].id);
+                            if (existingEntry.empty) {
+                                console.log("creating new Entry");
+                                return batch.set(batchesdir.doc(), convertedEntry)
+                            } else {
+                                /**
+                                 * Add the quantity to the existing batch
+                                 */
+                                console.log("Entry exists, merging values");
+
+                                const newEntry: Entry = existingEntry.docs[0].data() as Entry
+                                newEntry.qty.total += convertedEntry.qty.total
+                                return batch.update(batchesdir.doc(existingEntry.docs[0].id), newEntry)
+                            }
                         }
-                    }
+                    })).then(() => {
+                        return batch.commit()
+                    })
+
                 } else {
                     return false
                 }

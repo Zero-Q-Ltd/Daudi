@@ -52,72 +52,80 @@ export function syncAse(qbo: QuickBooks, omcId: string, fuelConfig: { [key in Fu
         ])
         .then(billpayments => {
             const allbillpayment = (billpayments.QueryResponse.Bill as Array<Bill>) || [];
-
-            let fueltype: FuelType
-            /**
-             * @todo allow the same bill to have mutiple fuel types
-             */
-            return Promise.all(allbillpayment.map(async bill => {
+            const ValidLineItems: Array<{
+                bill: Bill,
+                index: number,
+                fueltype: FuelType
+            }> = []
+            allbillpayment.map(async bill => {
                 if (bill.Line) {
-                    const LineitemIndex = bill.Line.findIndex(t => {
+                    bill.Line.forEach((t, index) => {
                         if (t.ItemBasedExpenseLineDetail) {
                             {
                                 if (t.ItemBasedExpenseLineDetail.ItemRef.value === fuelConfig.pms.aseId) {
-                                    fueltype = FuelType.pms
-                                    return true
+                                    ValidLineItems.push({
+                                        fueltype: FuelType.pms,
+                                        index,
+                                        bill
+                                    })
                                 } else if (t.ItemBasedExpenseLineDetail.ItemRef.value === fuelConfig.ago.aseId) {
-                                    fueltype = FuelType.ago
-                                    return true
+                                    ValidLineItems.push({
+                                        fueltype: FuelType.pms,
+                                        index,
+                                        bill
+                                    })
                                 } else if (t.ItemBasedExpenseLineDetail.ItemRef.value === fuelConfig.ik.aseId) {
-                                    fueltype = FuelType.ik
-                                    return true
+                                    ValidLineItems.push({
+                                        fueltype: FuelType.pms,
+                                        index,
+                                        bill
+                                    })
                                 } else {
-                                    return false
+                                    console.log("Bill does not have a valid fueltype attached to it")
                                 }
                             }
                         } else {
-                            return false
+                            console.log("Bill does not have a Line item")
                         }
                     })
+                }
+            })
 
-                    if (!LineitemIndex || LineitemIndex < 0) {
-                        console.error("ITEM CONFIG NOT FOUND")
-                        return true
+            if (ValidLineItems.length < 1) {
+                console.error("ITEM CONFIG NOT FOUND")
+                return new Promise(res => res)
+            }
+            const batch = firestore().batch()
 
-                    }
+            return Promise.all(ValidLineItems.map(async item => {
+                const convertedASE = covertBillToASE(item.bill, item.fueltype, item.index);
+                const batchesdir = firestore()
+                    .collection("omc")
+                    .doc(omcId)
+                    .collection("ase")
 
-
-                    const convertedASE = covertBillToASE(bill, fueltype, LineitemIndex);
-
-                    const batchesdir = firestore()
-                        .collection("omc")
-                        .doc(omcId)
-                        .collection("ase")
-
-                    const fetchedbatch = await batchesdir.where("ase.id", "==", convertedASE.ase.name).get();
+                const fetchedbatch = await batchesdir.where("ase.id", "==", convertedASE.ase.name).get();
+                /**
+                 * make sure the Entry doenst alread exist before writing to db
+                 */
+                if (fetchedbatch.empty) {
+                    console.log("creating new ASE");
                     /**
-                     * make sure the Entry doenst alread exist before writing to db
+                     * Update the prices as well
                      */
-                    if (fetchedbatch.empty) {
-                        console.log("creating new ASE");
-                        /**
-                         * Update the prices as well
-                         */
-                        return await batchesdir.add(convertedASE);
-                    } else {
-                        return false
-                    }
+                    return batch.set(batchesdir.doc(), convertedASE);
                 } else {
-                    return false
+                    return new Promise(res => res)
                 }
             }))
-        });
+        })
+
 }
 
 
 
 function covertBillToASE(convertedBill: Bill, fueltype: FuelType, LineitemIndex: number): ASE {
-    // console.log("converting bill to ASE");
+    console.log("converting bill to ASE");
 
     const ASEQty = convertedBill.Line[LineitemIndex].ItemBasedExpenseLineDetail.Qty ? convertedBill.Line[LineitemIndex].ItemBasedExpenseLineDetail.Qty : 0;
 
