@@ -63,7 +63,7 @@ export function syncAse(omcId: string, fuelConfig: { [key in FuelType]: FuelConf
             .doc(omcId)
             .collection("ase")
 
-        const fetchedbatch = await directory.where("ase.id", "==", convertedASE.ase.name).get();
+        const fetchedbatch = await directory.where("ase.name", "==", convertedASE.ase.name).get();
         /**
          * make sure the Entry doenst alread exist before writing to db
          */
@@ -76,7 +76,9 @@ export function syncAse(omcId: string, fuelConfig: { [key in FuelType]: FuelConf
         } else {
             return new Promise(res => res)
         }
-    }))
+    })).then(() => {
+        return batch.commit()
+    })
 }
 
 
@@ -119,6 +121,6 @@ function covertBillToASE(convertedBill: Bill, fueltype: FuelType, LineitemIndex:
         fuelType: fueltype,
         date: firestore.Timestamp.fromDate(new Date())
     };
-    console.log("converted bill to ASE", fueltype, LineitemIndex, newASE);
+    console.log("converted bill to ASE", fueltype, JSON.stringify(newASE));
     return newASE;
 }

@@ -21,19 +21,19 @@ export function syncEntry(omcId: string, fuelConfig: { [key in FuelType]: FuelCo
             bill.Line.forEach((t, index) => {
                 if (t.ItemBasedExpenseLineDetail) {
                     {
-                        if (t.ItemBasedExpenseLineDetail.ItemRef.value === fuelConfig.pms.aseId) {
+                        if (t.ItemBasedExpenseLineDetail.ItemRef.value === fuelConfig.pms.entryId) {
                             ValidLineItems.push({
                                 fueltype: FuelType.pms,
                                 index,
                                 bill
                             })
-                        } else if (t.ItemBasedExpenseLineDetail.ItemRef.value === fuelConfig.ago.aseId) {
+                        } else if (t.ItemBasedExpenseLineDetail.ItemRef.value === fuelConfig.ago.entryId) {
                             ValidLineItems.push({
                                 fueltype: FuelType.pms,
                                 index,
                                 bill
                             })
-                        } else if (t.ItemBasedExpenseLineDetail.ItemRef.value === fuelConfig.ik.aseId) {
+                        } else if (t.ItemBasedExpenseLineDetail.ItemRef.value === fuelConfig.ik.entryId) {
                             ValidLineItems.push({
                                 fueltype: FuelType.pms,
                                 index,
@@ -65,8 +65,8 @@ export function syncEntry(omcId: string, fuelConfig: { [key in FuelType]: FuelCo
         /**
          * make sure the Entry doenst already exist before writing to db
          */
-        const fetchedEntry = await directory
-            .where("entry.refs", "array-contains", convertedEntry.entry.refs[0]).get();
+        const fetchedEntry = await directory.where("entry.name", "==", convertedEntry.entry.name).get()
+
         if (fetchedEntry.empty) {
             console.log("creating new Entry");
             return batch.set(directory.doc(), convertedEntry)
@@ -74,7 +74,7 @@ export function syncEntry(omcId: string, fuelConfig: { [key in FuelType]: FuelCo
             /**
              * Check if the same entry previously existed for addition purposes
              */
-            const existingEntry = await directory.where("entry.name", "array-contains", convertedEntry.entry.name).get();
+            const existingEntry = await directory.where("entry.refs", "array-contains", convertedEntry.entry.refs[0]).get();
 
             if (existingEntry.empty) {
                 console.log("creating new Entry")
@@ -99,7 +99,7 @@ export function syncEntry(omcId: string, fuelConfig: { [key in FuelType]: FuelCo
 
 function covertBillToEntry(convertedBill: Bill, fueltype: FuelType, LineitemIndex: number): Entry {
     const entryQty = convertedBill.Line[LineitemIndex].ItemBasedExpenseLineDetail.Qty;
-    const entryPrice = convertedBill.Line[LineitemIndex].ItemBasedExpenseLineDetail.UnitPrice;
+    const entryPrice = convertedBill.Line[LineitemIndex].ItemBasedExpenseLineDetail.UnitPrice | 0;
 
     const newEntry: Entry = {
         Amount: convertedBill.Line[LineitemIndex].Amount ? convertedBill.Line[LineitemIndex].Amount : 0,
@@ -115,7 +115,7 @@ function covertBillToEntry(convertedBill: Bill, fueltype: FuelType, LineitemInde
             name: null
         },
         Id: null,
-        price: entryPrice | 0,
+        price: entryPrice,
         qty: {
             directLoad: {
                 total: 0,
@@ -135,6 +135,6 @@ function covertBillToEntry(convertedBill: Bill, fueltype: FuelType, LineitemInde
         fuelType: fueltype,
         date: firestore.Timestamp.fromDate(new Date())
     };
-    console.log("converted bill to ASE", convertedBill.Line[LineitemIndex], fueltype, LineitemIndex, newEntry);
+    console.log("converted bill to Entry", fueltype, JSON.stringify(newEntry));
     return newEntry;
 }
