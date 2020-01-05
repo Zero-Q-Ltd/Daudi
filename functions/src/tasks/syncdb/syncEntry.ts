@@ -135,6 +135,6 @@ function covertBillToEntry(convertedBill: Bill, fueltype: FuelType, LineitemInde
         fuelType: fueltype,
         date: firestore.Timestamp.fromDate(new Date())
     };
-    console.log(newEntry)
+    console.log(JSON.stringify(newEntry))
     return newEntry;
 }

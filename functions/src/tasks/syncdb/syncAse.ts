@@ -82,7 +82,7 @@ export function syncAse(omcId: string, fuelConfig: { [key in FuelType]: FuelConf
 
 
 function covertBillToASE(convertedBill: Bill, fueltype: FuelType, LineitemIndex: number): ASE {
-    console.log("converting bill to ASE");
+    console.log("converting bill to ASE", fueltype, LineitemIndex);
 
     const ASEQty = convertedBill.Line[LineitemIndex].ItemBasedExpenseLineDetail.Qty ? convertedBill.Line[LineitemIndex].ItemBasedExpenseLineDetail.Qty : 0;
 
@@ -120,6 +120,6 @@ function covertBillToASE(convertedBill: Bill, fueltype: FuelType, LineitemIndex:
         fuelType: fueltype,
         date: firestore.Timestamp.fromDate(new Date())
     };
-    console.log(newASE)
+    console.log(JSON.stringify(newASE))
     return newASE;
 }

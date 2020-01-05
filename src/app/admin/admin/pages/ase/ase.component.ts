@@ -1,17 +1,13 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
-import { AngularFireFunctions } from "@angular/fire/functions";
 import { MatPaginator, MatTableDataSource } from "@angular/material";
 import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
-import { SyncRequest } from "../../../../models/Cloud/Sync";
 import { ASE, emptyASEs } from "../../../../models/Daudi/fuel/ASE";
 import { FuelNamesArray, FuelType } from "../../../../models/Daudi/fuel/FuelType";
-import { MyTimestamp } from "../../../../models/firestore/firestoreTypes";
 import { NotificationService } from "../../../../shared/services/notification.service";
 import { AseService } from "../../../services/ase.service";
-import { ConfigService } from "../../../services/core/config.service";
-import { DepotService } from "../../../services/core/depot.service";
 import { CoreService } from "../../../services/core/core.service";
+import { CoreAdminService } from "../../services/core.service";
 
 @Component({
   selector: "app-ase",
@@ -56,10 +52,9 @@ export class AseComponent implements OnInit {
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
 
   constructor(
-    private depotsservice: DepotService,
     private notification: NotificationService,
-    private functions: AngularFireFunctions,
     private core: CoreService,
+    private coreAdmin: CoreAdminService,
     private aseService: AseService) {
     this.core.activedepot.pipe(takeUntil(this.comopnentDestroyed)).subscribe(depotvata => {
       this.loading = {
@@ -116,19 +111,23 @@ export class AseComponent implements OnInit {
 
   syncdb() {
     this.creatingsync = true;
-    const syncobject: SyncRequest = {
-      time: MyTimestamp.now(),
-      synctype: ["BillPayment"]
-    };
-
-    this.functions.httpsCallable("requestsync")(syncobject).subscribe(res => {
-      this.creatingsync = false;
-      this.notification.notify({
-        alert_type: "success",
-        body: "ASE's updated",
-        title: "Success"
-      });
-    });
+    this.coreAdmin.syncdb()
+      .subscribe(res => {
+        this.creatingsync = false;
+        this.notification.notify({
+          alert_type: "success",
+          body: "Entries updated",
+          title: "Success"
+        });
+      },
+        err => {
+          this.creatingsync = false;
+          this.notification.notify({
+            alert_type: "error",
+            body: "Error Syncronising",
+            title: "Error"
+          });
+        });
   }
 
   getTotalAvailable(batch: ASE) {
