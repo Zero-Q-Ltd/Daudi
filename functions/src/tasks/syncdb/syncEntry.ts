@@ -50,31 +50,33 @@ export function syncEntry(qbo: QuickBooks, omcId: string, fuelConfig: { [key in 
     ])
         .then(billpayments => {
             const allbillpayment = (billpayments.QueryResponse.Bill as Array<Bill>) || [];
-
             const ValidLineItems: Array<{
+                bill: Bill,
                 index: number,
                 fueltype: FuelType
             }> = []
-            return Promise.all(allbillpayment.map(async bill => {
+            allbillpayment.map(async bill => {
                 if (bill.Line) {
-
                     bill.Line.forEach((t, index) => {
                         if (t.ItemBasedExpenseLineDetail) {
                             {
                                 if (t.ItemBasedExpenseLineDetail.ItemRef.value === fuelConfig.pms.aseId) {
                                     ValidLineItems.push({
                                         fueltype: FuelType.pms,
-                                        index
+                                        index,
+                                        bill
                                     })
                                 } else if (t.ItemBasedExpenseLineDetail.ItemRef.value === fuelConfig.ago.aseId) {
                                     ValidLineItems.push({
-                                        fueltype: FuelType.ago,
-                                        index
+                                        fueltype: FuelType.pms,
+                                        index,
+                                        bill
                                     })
                                 } else if (t.ItemBasedExpenseLineDetail.ItemRef.value === fuelConfig.ik.aseId) {
                                     ValidLineItems.push({
-                                        fueltype: FuelType.ik,
-                                        index
+                                        fueltype: FuelType.pms,
+                                        index,
+                                        bill
                                     })
                                 } else {
                                     console.log("Bill does not have a valid fueltype attached to it")
@@ -84,56 +86,51 @@ export function syncEntry(qbo: QuickBooks, omcId: string, fuelConfig: { [key in 
                             console.log("Bill does not have a Line item")
                         }
                     })
+                }
+            })
 
-                    if (ValidLineItems.length < 1) {
-                        console.error("ITEM CONFIG NOT FOUND")
-                        return true
-
-                    }
-                    const batch = firestore().batch()
-
-                    return Promise.all(ValidLineItems.map(async item => {
-                        const convertedEntry = covertBillToEntry(bill, item.fueltype, item.index);
-                        const batchesdir = firestore()
-                            .collection("omc")
-                            .doc(omcId)
-                            .collection("entry")
-                        const fetchedEntry = await batchesdir
-                            .where("entry.refs", "array-contains", convertedEntry.entry.refs).get();                    /**
+            if (ValidLineItems.length < 1) {
+                console.error("ITEM CONFIG NOT FOUND")
+                return new Promise(res => res)
+            }
+            const batch = firestore().batch()
+            return Promise.all(ValidLineItems.map(async item => {
+                const convertedEntry = covertBillToEntry(item.bill, item.fueltype, item.index);
+                const batchesdir = firestore()
+                    .collection("omc")
+                    .doc(omcId)
+                    .collection("entry")
+                const fetchedEntry = await batchesdir
+                    .where("entry.refs", "array-contains", convertedEntry.entry.refs).get();                    /**
                      * make sure the Entry doenst already exist before writing to db
                      */
-                        if (fetchedEntry.empty) {
-                            console.log("creating new Entry");
-                            return batch.set(batchesdir.doc(), convertedEntry)
-                        } else {
-                            /**
-                             * Check if the same batch number previously existed for addition purposes
-                             */
-                            const existingEntry = await batchesdir.where("entry.refs", "array-contains", convertedEntry.entry.name).get();
-
-                            if (existingEntry.empty) {
-                                console.log("creating new Entry");
-                                return batch.set(batchesdir.doc(), convertedEntry)
-                            } else {
-                                /**
-                                 * Add the quantity to the existing batch
-                                 */
-                                console.log("Entry exists, merging values");
-
-                                const newEntry: Entry = existingEntry.docs[0].data() as Entry
-                                newEntry.qty.total += convertedEntry.qty.total
-                                return batch.update(batchesdir.doc(existingEntry.docs[0].id), newEntry)
-                            }
-                        }
-                    })).then(() => {
-                        return batch.commit()
-                    })
-
+                if (fetchedEntry.empty) {
+                    console.log("creating new Entry");
+                    return batch.set(batchesdir.doc(), convertedEntry)
                 } else {
-                    return false
+                    /**
+                     * Check if the same batch number previously existed for addition purposes
+                     */
+                    const existingEntry = await batchesdir.where("entry.refs", "array-contains", convertedEntry.entry.name).get();
+
+                    if (existingEntry.empty) {
+                        console.log("creating new Entry");
+                        return batch.set(batchesdir.doc(), convertedEntry)
+                    } else {
+                        /**
+                         * Add the quantity to the existing batch
+                         */
+                        console.log("Entry exists, merging values");
+
+                        const newEntry: Entry = existingEntry.docs[0].data() as Entry
+                        newEntry.qty.total += convertedEntry.qty.total
+                        return batch.update(batchesdir.doc(existingEntry.docs[0].id), newEntry)
+                    }
                 }
-            }))
-        });
+            })).then(() => {
+                return batch.commit()
+            })
+        })
 }
 
 
