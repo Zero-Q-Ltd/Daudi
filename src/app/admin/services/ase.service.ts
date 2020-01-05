@@ -15,7 +15,6 @@ export class AseService {
 
   constructor(
     private db: AngularFirestore, ) {
-
   }
 
   ASECollection(omcId: string) {

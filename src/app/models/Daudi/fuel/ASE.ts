@@ -1,13 +1,12 @@
-import { MyTimestamp } from "../../firestore/firestoreTypes";
-import { FuelType } from "./FuelType";
-import { StockQty, EmptyStockQty } from "./StockQty";
-import { QbRef } from "./QbRef";
 import { deepCopy } from "../../../models/utils/deepCopy";
+import { MyTimestamp } from "../../firestore/firestoreTypes";
 import { BaseStockModel } from "./BaseStockModel";
-import { StockRef } from "./StockRef";
+import { QbRef } from "./QbRef";
+import { EmptyStockQty, StockQty } from "./StockQty";
+import { Environment } from "../omc/Environments";
 
 export interface ASE extends BaseStockModel {
-    ase: StockRef;
+    ase: QbRef;
 }
 
 export const emptyASEs: ASE = {
@@ -15,8 +14,8 @@ export const emptyASEs: ASE = {
     fuelType: null,
     Amount: null,
     ase: {
-        name: null,
-        refs: []
+        QbId: null,
+        qty: 0
     },
     price: 0,
     qty: deepCopy<StockQty>(EmptyStockQty),
@@ -25,5 +24,6 @@ export const emptyASEs: ASE = {
         Id: null
     },
     active: false,
+    environment: Environment.sandbox,
     date: new MyTimestamp(0, 0)
 };

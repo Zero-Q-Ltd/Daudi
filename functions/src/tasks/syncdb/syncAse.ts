@@ -1,12 +1,11 @@
-import { QuickBooks } from "../../libs/qbmain";
-import { Bill } from "../../models/Qbo/Bill";
-import * as moment from "moment";
 import { firestore } from "firebase-admin";
-import { Depot } from "../../models/Daudi/depot/Depot";
-import { Entry } from "../../models/Daudi/fuel/Entry";
+import { ASE } from "../../models/Daudi/fuel/ASE";
 import { FuelType, FuelNamesArray } from "../../models/Daudi/fuel/FuelType";
 import { FuelConfig } from "../../models/Daudi/omc/FuelConfig";
-import { ASE } from "../../models/Daudi/fuel/ASE";
+import { Bill } from "../../models/Qbo/Bill";
+import { readStock, stockCollection } from "../crud/daudi/Stock";
+import { OMCStock, EmptyOMCStock } from "../../models/Daudi/omc/Stock";
+import { Environment } from "../../models/Daudi/omc/Environments";
 
 /**
  * 
@@ -14,121 +13,99 @@ import { ASE } from "../../models/Daudi/fuel/ASE";
  * @param fuelConfig COnfig having valid ID's
  * @param since 
  */
-export function syncAse(qbo: QuickBooks, omcId: string, fuelConfig: { [key in FuelType]: FuelConfig }) {
-    return qbo
-        .findBills([
-            /**
-             * Get only the bills(Entries numbers) that have been fully paid
-             */
-            { field: "Balance", value: "1", operator: "<" },
-            /**
-           * fetch only bills that have been paid for Entry
-           * Fetch all the fuel types at once
-           */
-            // {
-            //     field: "Line.ItemBasedExpenseLineDetail.ItemRef.value",
-            //     value: fuelConfig.pms.entryId, operator: "LIKE"
-            // },
-            // {
-            //     field: "Line.ItemBasedExpenseLineDetail.ItemRef.value",
-            //     value: fuelConfig.ago.entryId, operator: "LIKE"
-            // },
-            // {
-            //     field: "Line.ItemBasedExpenseLineDetail.ItemRef.value",
-            //     value: fuelConfig.ik.entryId, operator: "LIKE"
-            // },
-            { desc: "MetaData.LastUpdatedTime" },
-            /**
-             * Use the update time to compare with sync request time
-             */
-            {
-                field: "TxnDate",
-                value: moment()
-                    .subtract(100, "day")
-                    .startOf("day")
-                    .format("YYYY-MM-DD"),
-                operator: ">="
-            }
-        ])
-        .then(billpayments => {
-            const allbillpayment = (billpayments.QueryResponse.Bill as Array<Bill>) || [];
-
-            let fueltype: FuelType
-            /**
-             * @todo allow the same bill to have mutiple fuel types
-             */
-            return Promise.all(allbillpayment.map(async bill => {
-                if (bill.Line) {
-                    const LineitemIndex = bill.Line.findIndex(t => {
-                        if (t.ItemBasedExpenseLineDetail) {
-                            {
-                                if (t.ItemBasedExpenseLineDetail.ItemRef.value === fuelConfig.pms.aseId) {
-                                    fueltype = FuelType.pms
-                                    return true
-                                } else if (t.ItemBasedExpenseLineDetail.ItemRef.value === fuelConfig.ago.aseId) {
-                                    fueltype = FuelType.ago
-                                    return true
-                                } else if (t.ItemBasedExpenseLineDetail.ItemRef.value === fuelConfig.ik.aseId) {
-                                    fueltype = FuelType.ik
-                                    return true
-                                } else {
-                                    return false
-                                }
-                            }
+export function syncAse(omcId: string, environment: Environment, fuelConfig: { [key in FuelType]: FuelConfig }, bills: Bill[]) {
+    const ValidLineItems: Array<{
+        bill: Bill,
+        index: number,
+        fueltype: FuelType
+    }> = []
+    bills.map(async bill => {
+        if (bill.Line) {
+            bill.Line.forEach((t, index) => {
+                if (t.ItemBasedExpenseLineDetail) {
+                    {
+                        if (t.ItemBasedExpenseLineDetail.ItemRef.value === fuelConfig.pms.aseId) {
+                            ValidLineItems.push({
+                                fueltype: FuelType.pms,
+                                index,
+                                bill
+                            })
+                        } else if (t.ItemBasedExpenseLineDetail.ItemRef.value === fuelConfig.ago.aseId) {
+                            ValidLineItems.push({
+                                fueltype: FuelType.pms,
+                                index,
+                                bill
+                            })
+                        } else if (t.ItemBasedExpenseLineDetail.ItemRef.value === fuelConfig.ik.aseId) {
+                            ValidLineItems.push({
+                                fueltype: FuelType.pms,
+                                index,
+                                bill
+                            })
                         } else {
-                            return false
+                            console.log("Bill does not have a valid fueltype attached to it")
                         }
-                    })
-
-                    if (!LineitemIndex || LineitemIndex < 0) {
-                        console.error("ITEM CONFIG NOT FOUND")
-                        return true
-
-                    }
-
-
-                    const convertedASE = covertBillToASE(bill, fueltype, LineitemIndex);
-
-                    const batchesdir = firestore()
-                        .collection("omc")
-                        .doc(omcId)
-                        .collection("ase")
-
-                    const fetchedbatch = await batchesdir.where("ase.id", "==", convertedASE.ase.name).get();
-                    /**
-                     * make sure the Entry doenst alread exist before writing to db
-                     */
-                    if (fetchedbatch.empty) {
-                        console.log("creating new ASE");
-                        /**
-                         * Update the prices as well
-                         */
-                        return await batchesdir.add(convertedASE);
-                    } else {
-                        return false
                     }
                 } else {
-                    return false
+                    console.log("Bill does not have a Line item")
                 }
-            }))
-        });
+            })
+        }
+    })
+
+    if (ValidLineItems.length < 1) {
+        console.error("ITEM CONFIG NOT FOUND")
+        return new Promise(res => res())
+    }
+    const batch = firestore().batch()
+    /**
+    * Record the total amount of fuel added in this transaction to update the stock doc
+    * By consilidating totals to one var, we allow the possibility of having the same fueltype in the same bill payment multiple times
+    */
+    const totalAdded: { [key in FuelType]: number } = { ago: 0, ik: 0, pms: 0 }
+    return Promise.all(ValidLineItems.map(async item => {
+        const convertedASE = covertBillToASE(item.bill, item.fueltype, item.index, environment);
+        const directory = firestore()
+            .collection("omc")
+            .doc(omcId)
+            .collection("ase")
+
+        const fetchedbatch = await directory.where("ase.QbId", "==", convertedASE.ase.QbId).get();
+        /**
+         * make sure the Entry doenst alread exist before writing to db
+         */
+        if (fetchedbatch.empty) {
+            console.log("creating new ASE");
+            totalAdded[item.fueltype] += convertedASE.qty.total
+            return batch.set(directory.doc(), convertedASE);
+        } else {
+            console.log("ASE exists")
+            return Promise.resolve()
+        }
+    })).then(async () => {
+        return await readStock(omcId).then(snapshot => {
+            const stockObject: OMCStock = { ...EmptyOMCStock, ...snapshot.data() }
+            FuelNamesArray.forEach(fueltype => {
+                stockObject.qty[fueltype].ase.totalActive += totalAdded[fueltype]
+            })
+            batch.set(stockCollection(omcId), stockObject);
+            return batch.commit()
+        })
+    })
 }
 
 
 
-function covertBillToASE(convertedBill: Bill, fueltype: FuelType, LineitemIndex: number): ASE {
-    // console.log("converting bill to ASE");
+function covertBillToASE(convertedBill: Bill, fueltype: FuelType, LineitemIndex: number, environment: Environment, ): ASE {
 
     const ASEQty = convertedBill.Line[LineitemIndex].ItemBasedExpenseLineDetail.Qty ? convertedBill.Line[LineitemIndex].ItemBasedExpenseLineDetail.Qty : 0;
 
     const newASE: ASE = {
+        environment,
         Amount: convertedBill.Line[LineitemIndex].Amount ? convertedBill.Line[LineitemIndex].Amount : 0,
         ase: {
-            name: convertedBill.DocNumber ? convertedBill.DocNumber : "Null",
-            refs: [{
-                QbId: convertedBill.Id,
-                qty: ASEQty
-            }]
+            QbId: convertedBill.Id,
+            qty: ASEQty
         },
         depot: {
             Id: null,
@@ -155,6 +132,6 @@ function covertBillToASE(convertedBill: Bill, fueltype: FuelType, LineitemIndex:
         fuelType: fueltype,
         date: firestore.Timestamp.fromDate(new Date())
     };
-    console.log(newASE)
+    console.log("converted bill to ASE", fueltype, JSON.stringify(newASE));
     return newASE;
 }

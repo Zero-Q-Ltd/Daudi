@@ -16,7 +16,7 @@ export interface OMCConfig {
          */
         [key in Environment]: QboEnvironment
     };
-
+    status: boolean;
 }
 
 /**
@@ -51,6 +51,7 @@ export const emptyqboAuth: QBOAuthCOnfig = {
 
 
 export const emptyConfig: OMCConfig = {
+    status: true,
     Qbo: {
         live: {
             auth: deepCopy<QBOAuthCOnfig>(emptyqboAuth),

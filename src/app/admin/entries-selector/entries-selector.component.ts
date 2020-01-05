@@ -150,7 +150,8 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
        * Entries are already filtered for private depots, so calculations are the same
        */
       const value = this.core.activedepot.value.depot.config.private ?
-        this.activedepot.config.stock[fueltype].ase.available : this.stock.qty[fueltype].ase.available;
+        (this.activedepot.config.stock[fueltype].ase.totalActive - this.activedepot.config.stock[fueltype].ase.used) :
+        (this.stock.qty[fueltype].ase.totalActive - this.stock.qty[fueltype].ase.used);
 
       /**
        * check if there is enough ASE for that fuel
@@ -182,14 +183,7 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
             /**
              * Loop through all the batches to get the next available batch number that will be able to completely fill the truck
              */
-            let batch1: EntryContent = {
-              id: null,
-              qtydrawn: 0,
-              name: null,
-              totalqty: 0,
-              resultstatus: true,
-              remainqty: 0
-            };
+            let batch1: EntryContent;
             /**
              * The value that should e deducted as a result of assigning the first batch number
              */
@@ -217,7 +211,7 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
                   /**
                    * Only assign a batch if not already containing a value, hence have affinity for the order of display as the second assigned batch
                    */
-                  if (!batch1.id) {
+                  if (!batch1) {
                     /**
                      * remove the error in case it was caused by a batch within the loop not being enough
                      * If all the batches are not enough it will remain true
@@ -237,7 +231,7 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
                   /**
                    * Olny set error if batch 1 doesnt exist
                    */
-                  if (!batch1.id) {
+                  if (!batch1) {
                     this.fuelerror[fueltype] = {
                       errorString: `Insufficient ${fueltype.toUpperCase()} ENTRY. Expected amount is ${this.order.fuel[fueltype].qty}`,
                       status: true
@@ -282,10 +276,13 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
           status: true
         };
       }
-
-      // console.log(this.drawnbatch)
-
     });
+  }
+  /**
+   * @todo
+   */
+  replicateAssignedBatches() {
+
   }
   /**
    * Returns the total available fuel within an entry
@@ -346,7 +343,7 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
       this.order.stagedata["4"].user = data.user;
 
       this.order.truck.stagedata["1"] = data;
-      this.order.stage = 1;
+      this.order.truck.stage = 1;
 
       const batchaction = this.db.firestore.batch();
       batchaction.update(this.ordersservice.ordersCollection(this.core.currentOmc.value.Id).doc(this.orderId), this.order);
@@ -355,10 +352,26 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
          * check if the truck contained that fueltype
          */
         if (this.order.fuel[fueltype].qty > 0) {
+
           /**
            * check if two batch numbers have been assigned to the truck for that fueltype
            */
-          if (this.order.fuel[fueltype].entries[0].qty > 0) {
+          if (this.drawnEntry[fueltype][1] && this.drawnEntry[fueltype][1].qtydrawn > 0) {
+            /**
+             * update the batches to the order as well
+             */
+            this.order.fuel[fueltype].entries[0] = {
+              Id: this.drawnEntry[fueltype][0].id,
+              Name: this.drawnEntry[fueltype][0].name,
+              observed: 0,
+              qty: this.drawnEntry[fueltype][0].qtydrawn
+            };
+            this.order.fuel[fueltype].entries[1] = {
+              Id: this.drawnEntry[fueltype][1].id,
+              Name: this.drawnEntry[fueltype][1].name,
+              observed: 0,
+              qty: this.drawnEntry[fueltype][1].qtydrawn
+            };
             /**
              * Update the batch number quantity and disable the batch
              * A max of 2 batch numbers may be assigned to the truck
@@ -375,49 +388,50 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
              */
             this.depotEntries[fueltype][0].active = false;
             batchaction.update(this.entriesService.entryCollection(this.core.currentOmc.value.Id)
-              .doc(this.order.fuel[fueltype].entries[0].Id), this.depotEntries[fueltype][0]);
-
-            /**
-             * update the secoond Entry quantities
-             */
-            this.depotEntries[fueltype][1].qty.directLoad = {
-              total: this.depotEntries[fueltype][1].qty.total - this.drawnEntry[fueltype][1].remainqty,
-              accumulated: {
-                usable: 0,
-                total: this.depotEntries[fueltype][1].qty.directLoad.accumulated.total
-              },
-            };
+              .doc(this.depotEntries[fueltype][0].Id), this.depotEntries[fueltype][0]);
             /**
              * Leave the second entry active if neccessary
              */
-            this.depotEntries[fueltype][1].active = this.depotEntries[fueltype][1].qty.total - this.drawnEntry[fueltype][1].remainqty > 0;
+            const active = this.drawnEntry[fueltype][1].remainqty > 0 ? true : false;
             batchaction.update(this.entriesService.entryCollection(this.core.currentOmc.value.Id)
-              .doc(this.order.fuel[fueltype].entries[1].Id), this.depotEntries[fueltype][0]);
+              .doc(this.drawnEntry[fueltype][1].id), { active });
           } else {
             /**
-             * Only one batch number assigned, hence leave it active
+             * update the batches to the order as well
              */
+            this.order.fuel[fueltype].entries[0] = {
+              Id: this.drawnEntry[fueltype][0].id,
+              Name: this.drawnEntry[fueltype][0].name,
+              observed: 0,
+              qty: this.drawnEntry[fueltype][0].qtydrawn
+            };
+
+            this.depotEntries[fueltype][0].active = this.drawnEntry[fueltype][0].remainqty > 0 ? true : false;
+
             this.depotEntries[fueltype][0].qty.directLoad = {
-              total: this.depotEntries[fueltype][0].qty.total + this.order.fuel[fueltype].entries[0].qty,
+              total: this.depotEntries[fueltype][0].qty.total + this.drawnEntry[fueltype][0].qtydrawn,
               accumulated: {
                 usable: 0,
                 total: this.depotEntries[fueltype][0].qty.directLoad.accumulated.total
               },
             };
-            batchaction.update(this.ordersservice.ordersCollection(this.core.currentOmc.value.Id).doc(this.orderId), this.order);
+            batchaction.update(this.entriesService.entryCollection(this.core.currentOmc.value.Id)
+              .doc(this.depotEntries[fueltype][0].Id), this.depotEntries[fueltype][0]);
             /**
              * Update Global ASE values
              * Check if it's a private depot
              */
             if (this.core.activedepot.value.depot.config.private) {
-              this.activedepot.config.stock[fueltype].ase.available = this.activedepot.config.stock[fueltype].ase.available - this.order.fuel[fueltype].qty;
-              batchaction.update(this.configService.configCollection(this.core.currentOmc.value.Id), this.activedepot.config);
+              this.activedepot.config.stock[fueltype].ase.used += this.order.fuel[fueltype].qty;
+              batchaction.update(this.configService.configDoc(this.core.currentOmc.value.Id), this.activedepot.config);
             } else {
-              this.stock.qty[fueltype].ase.available = this.stock.qty[fueltype].ase.available - this.order.fuel[fueltype].qty;
-              batchaction.update(this.configService.stockCollection(this.core.currentOmc.value.Id), this.stock);
+              this.stock.qty[fueltype].ase.used += this.order.fuel[fueltype].qty;
+              batchaction.update(this.configService.stockDoc(this.core.currentOmc.value.Id), this.stock);
             }
           }
         }
+        batchaction.update(this.ordersservice.ordersCollection(this.core.currentOmc.value.Id).doc(this.orderId), this.order);
+
       });
       batchaction.commit().then(value => {
         this.notification.notify({

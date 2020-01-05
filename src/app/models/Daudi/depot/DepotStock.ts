@@ -1,20 +1,20 @@
 export interface DepotStock {
     ase: {
         totalActive: number,
-        available: number
+        used: number
     };
     entry: {
         totalActive: number,
-        available: number
+        used: number
     };
 }
 export const EmptyDepotQty: DepotStock = {
     ase: {
-        available: 0,
+        used: 0,
         totalActive: 0
     },
     entry: {
-        available: 0,
+        used: 0,
         totalActive: 0
     }
 };

@@ -1,5 +1,9 @@
 export interface PriceConfig {
     /**
+     * @description the price used for Creating Estimate
+     */
+    requestedPrice: number;
+    /**
      * @description the total price of the fuel/l, inclusive of VAT
      */
     price: number;

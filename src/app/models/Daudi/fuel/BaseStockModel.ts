@@ -3,6 +3,7 @@ import { FuelType } from "./FuelType";
 import { MyTimestamp } from "../../firestore/firestoreTypes";
 import { StockQty, EmptyStockQty } from "./StockQty";
 import { deepCopy } from "../../../models/utils/deepCopy";
+import { Environment } from "../omc/Environments";
 
 
 export interface BaseStockModel {
@@ -14,6 +15,7 @@ export interface BaseStockModel {
     };
     qty: StockQty;
     fuelType: FuelType;
+    environment: Environment;
     price: number;
     Id: string;
     active: boolean; // 1 for active, 0 for inactive
@@ -29,5 +31,6 @@ export const EmptyBaseStockModel: BaseStockModel = {
         Id: null
     },
     active: false,
+    environment: Environment.sandbox,
     date: new MyTimestamp(0, 0)
 };

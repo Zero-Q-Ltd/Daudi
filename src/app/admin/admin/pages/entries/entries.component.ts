@@ -3,14 +3,12 @@ import { AngularFireFunctions } from "@angular/fire/functions";
 import { MatPaginator, MatTableDataSource } from "@angular/material";
 import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
-import { CompanySync } from "../../../../models/Cloud/CompanySync";
-import { SyncRequest } from "../../../../models/Cloud/Sync";
 import { emptyEntry, Entry } from "../../../../models/Daudi/fuel/Entry";
 import { FuelNamesArray, FuelType } from "../../../../models/Daudi/fuel/FuelType";
-import { MyTimestamp } from "../../../../models/firestore/firestoreTypes";
 import { NotificationService } from "../../../../shared/services/notification.service";
 import { CoreService } from "../../../services/core/core.service";
 import { EntriesService } from "../../../services/entries.service";
+import { CoreAdminService } from "../../services/core.service";
 
 
 @Component({
@@ -52,13 +50,14 @@ export class EntriesComponent implements OnInit {
   /**
    * this keeps a local copy of all the subscriptions within this service
    */
-  subscriptions: Map<string, any> = new Map<string, any>();
+  subscriptions: Map<string, () => void> = new Map<string, () => void>();
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
 
   constructor(
     private notification: NotificationService,
     private functions: AngularFireFunctions,
     private core: CoreService,
+    private coreAdmin: CoreAdminService,
     private entriesService: EntriesService) {
     this.core.activedepot.pipe(takeUntil(this.comopnentDestroyed)).subscribe(depotvata => {
       this.loading = {
@@ -117,27 +116,24 @@ export class EntriesComponent implements OnInit {
 
   syncdb() {
     this.creatingsync = true;
-
-    const req: SyncRequest = {
-      time: MyTimestamp.now(),
-      synctype: ["BillPayment"]
-    };
-
-    const syncobject: CompanySync = {
-      config: this.core.config.value,
-      environment: this.core.environment.value,
-      omc: this.core.currentOmc.value,
-      sync: req
-    };
-
-    this.functions.httpsCallable("requestsync")(syncobject).subscribe(res => {
-      this.creatingsync = false;
-      this.notification.notify({
-        alert_type: "success",
-        body: "Entries updated",
-        title: "Success"
-      });
-    });
+    this.coreAdmin.syncdb()
+      .subscribe(res => {
+        this.creatingsync = false;
+        this.notification.notify({
+          alert_type: "success",
+          body: "Entries updated",
+          title: "Success"
+        });
+      },
+        err => {
+          console.error(err);
+          this.creatingsync = false;
+          this.notification.notify({
+            alert_type: "error",
+            body: "Error Syncronising",
+            title: "Error"
+          });
+        });
   }
 
   getTotalAvailable(batch: Entry) {

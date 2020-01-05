@@ -6,20 +6,21 @@ import { deepCopy } from "../../utils/deepCopy";
 
 export interface OMCStock {
     qty: {
-        [key in FuelType]: {
+        [pkey in Environment]:
+        { [key in FuelType]: {
             allocation: number;
             /**
              * Total amount of ASE in KPC depots
              */
             ase: {
                 totalActive: number,
-                available: number
+                used: number
             },
             entry: {
                 totalActive: number,
-                available: number
+                used: number
             }
-        };
+        }; }
     };
     taxExempt: {
         [key in Environment]: {
@@ -30,37 +31,74 @@ export interface OMCStock {
 
 export const EmptyOMCStock: OMCStock = {
     qty: {
-        ago: {
-            allocation: 0,
-            ase: {
-                available: 0,
-                totalActive: 0
+        live: {
+            ago: {
+                allocation: 0,
+                ase: {
+                    used: 0,
+                    totalActive: 0
+                },
+                entry: {
+                    used: 0,
+                    totalActive: 0
+                }
             },
-            entry: {
-                available: 0,
-                totalActive: 0
+            ik: {
+                allocation: 0,
+                ase: {
+                    used: 0,
+                    totalActive: 0
+                },
+                entry: {
+                    used: 0,
+                    totalActive: 0
+                }
+            },
+            pms: {
+                allocation: 0,
+                ase: {
+                    used: 0,
+                    totalActive: 0
+                },
+                entry: {
+                    used: 0,
+                    totalActive: 0
+                }
             }
         },
-        ik: {
-            allocation: 0,
-            ase: {
-                available: 0,
-                totalActive: 0
+        sandbox: {
+            ago: {
+                allocation: 0,
+                ase: {
+                    used: 0,
+                    totalActive: 0
+                },
+                entry: {
+                    used: 0,
+                    totalActive: 0
+                }
             },
-            entry: {
-                available: 0,
-                totalActive: 0
-            }
-        },
-        pms: {
-            allocation: 0,
-            ase: {
-                available: 0,
-                totalActive: 0
+            ik: {
+                allocation: 0,
+                ase: {
+                    used: 0,
+                    totalActive: 0
+                },
+                entry: {
+                    used: 0,
+                    totalActive: 0
+                }
             },
-            entry: {
-                available: 0,
-                totalActive: 0
+            pms: {
+                allocation: 0,
+                ase: {
+                    used: 0,
+                    totalActive: 0
+                },
+                entry: {
+                    used: 0,
+                    totalActive: 0
+                }
             }
         }
     },
@@ -76,4 +114,4 @@ export const EmptyOMCStock: OMCStock = {
             pms: deepCopy<TaxExempt>(emptytaxExempt)
         }
     },
-}
+};

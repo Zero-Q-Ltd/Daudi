@@ -6,6 +6,8 @@ import { OMCConfig } from '../../models/Daudi/omc/Config';
 import { Environment } from '../../models/Daudi/omc/Environments';
 import { syncEntry } from "./syncEntry";
 import { syncAse } from "./syncAse";
+import { findBills } from "./findBills";
+import { Bill } from "../../models/Qbo/Bill";
 
 export function processSync(sync: SyncRequest, qbo: QuickBooks, omcId: string, config: OMCConfig, enviromnent: Environment) {
     return Promise.all(
@@ -25,10 +27,13 @@ export function processSync(sync: SyncRequest, qbo: QuickBooks, omcId: string, c
                 case "BillPayment":
                     console.log("Syncing Entries and ASEs");
                     // return true;
-                    return await Promise.all([
-                        syncEntry(qbo, omcId, config.Qbo[enviromnent].fuelconfig),
-                        syncAse(qbo, omcId, config.Qbo[enviromnent].fuelconfig)
-                    ]);
+                    return findBills(qbo).then(async (res) => {
+                        return await Promise.all([
+                            syncEntry(omcId, enviromnent, config.Qbo[enviromnent].fuelconfig, res.QueryResponse.Bill || []),
+                            syncAse(omcId, enviromnent, config.Qbo[enviromnent].fuelconfig, res.QueryResponse.Bill || [])
+                        ]);
+                    })
+
                 default:
                     console.log("Unrecognized object for syncdetected, breaking");
                     return true;
