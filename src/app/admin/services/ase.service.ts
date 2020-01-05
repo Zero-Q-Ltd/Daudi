@@ -15,9 +15,6 @@ export class AseService {
 
   constructor(
     private db: AngularFirestore, ) {
-    this.ASECollection("Tf84xilXZ2MP3jaGEsBs").onSnapshot(ase => {
-      console.log(ase.empty, ase.docs.map(t => t.data()));
-    });
   }
 
   ASECollection(omcId: string) {

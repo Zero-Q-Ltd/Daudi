@@ -1,8 +1,10 @@
 import { firestore } from "firebase-admin";
 import { ASE } from "../../models/Daudi/fuel/ASE";
-import { FuelType } from "../../models/Daudi/fuel/FuelType";
+import { FuelType, FuelNamesArray } from "../../models/Daudi/fuel/FuelType";
 import { FuelConfig } from "../../models/Daudi/omc/FuelConfig";
 import { Bill } from "../../models/Qbo/Bill";
+import { readStock, stockCollection } from "../crud/daudi/Stock";
+import { OMCStock, EmptyOMCStock } from "../../models/Daudi/omc/Stock";
 
 /**
  * 
@@ -55,7 +57,10 @@ export function syncAse(omcId: string, fuelConfig: { [key in FuelType]: FuelConf
         return new Promise(res => res())
     }
     const batch = firestore().batch()
-
+    /**
+     * Record the total amount of fuel added in this transaction to update the stock doc
+     */
+    const totalAdded: { [key in FuelType]: number } = { ago: 0, ik: 0, pms: 0 }
     return Promise.all(ValidLineItems.map(async item => {
         const convertedASE = covertBillToASE(item.bill, item.fueltype, item.index);
         const directory = firestore()
@@ -72,13 +77,21 @@ export function syncAse(omcId: string, fuelConfig: { [key in FuelType]: FuelConf
             /**
              * Update the prices as well
              */
+            totalAdded[item.fueltype] += convertedASE.ase.qty
             return batch.set(directory.doc(), convertedASE);
         } else {
             console.log("ASE exists")
             return Promise.resolve()
         }
-    })).then(() => {
-        return batch.commit()
+    })).then(async () => {
+        return await readStock(omcId).then(snapshot => {
+            const stockObject: OMCStock = { ...EmptyOMCStock, ...snapshot.data() }
+            FuelNamesArray.forEach(fueltype => {
+                stockObject.qty[fueltype].ase.totalActive += totalAdded[fueltype]
+            })
+            batch.set(stockCollection(omcId), stockObject);
+            return batch.commit()
+        })
     })
 }
 

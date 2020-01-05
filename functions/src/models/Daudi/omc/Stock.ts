@@ -13,11 +13,11 @@ export interface OMCStock {
              */
             ase: {
                 totalActive: number,
-                available: number
+                used: number
             },
             entry: {
                 totalActive: number,
-                available: number
+                used: number
             }
         };
     };
@@ -33,33 +33,33 @@ export const EmptyOMCStock: OMCStock = {
         ago: {
             allocation: 0,
             ase: {
-                available: 0,
+                used: 0,
                 totalActive: 0
             },
             entry: {
-                available: 0,
+                used: 0,
                 totalActive: 0
             }
         },
         ik: {
             allocation: 0,
             ase: {
-                available: 0,
+                used: 0,
                 totalActive: 0
             },
             entry: {
-                available: 0,
+                used: 0,
                 totalActive: 0
             }
         },
         pms: {
             allocation: 0,
             ase: {
-                available: 0,
+                used: 0,
                 totalActive: 0
             },
             entry: {
-                available: 0,
+                used: 0,
                 totalActive: 0
             }
         }
