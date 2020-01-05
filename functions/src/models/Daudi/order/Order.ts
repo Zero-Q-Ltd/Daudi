@@ -45,16 +45,7 @@ export interface Order {
   fuel: {
     [key in FuelType]: OrderFuelConfig
   };
-  discount?: {
-    approved: {
-      status: boolean,
-      user: AssociatedUser,
-      data: {},
-    },
-    request: {
-      [key in FuelType]: number;
-    }
-  };
+
   stagedata: {
     [key in OrderStages]: OrderStageData
   };
@@ -68,6 +59,7 @@ export interface OrderStageData {
 const initorderfuel: OrderFuelConfig = {
   qty: 0,
   priceconfig: {
+    requestedPrice: 0,
     price: 0,
     nonTax: 0,
     nonTaxprice: 0,

@@ -1,27 +1,36 @@
 <h2 mat-dialog-title>Truck for {{order.customer.name}}
   <div *ngIf="activedepot.depot.config.private">
     <span class="color-pms">
-      PMS:<span matTooltip="PMS Available ASE"> {{stock.qty.pms.ase.available}}</span>
+      PMS:<span matTooltip="PMS Available ASE">
+        {{stock.qty.pms.ase.totalActive - stock.qty.pms.ase.used}}
+      </span>
     </span>{{order.fuel.pms.qty}}
     <span class="color-ago">AGO:
-      <span matTooltip="AGO Available ASE"> {{stock.qty.ago.ase.available}}</span>
+      <span matTooltip="AGO Available ASE">
+        {{stock.qty.ago.ase.totalActive - stock.qty.ago.ase.used}}</span>
     </span> {{order.fuel.ago.qty}}
     <span class="color-ik">IK:
-      <span matTooltip="IK Available ASE"> {{stock.qty.ik.ase.available}}</span>
+      <span matTooltip="IK Available ASE">
+        {{stock.qty.ik.ase.totalActive - stock.qty.ik.ase.used}}</span>
     </span> {{order.fuel.ik.qty}}
   </div>
   <div *ngIf="!activedepot.depot.config.private">
     <span class="color-pms">
-      PMS:<span matTooltip="PMS Available ASE"> {{activedepot.config.stock.pms.ase.available}}</span>
+      PMS:<span matTooltip="PMS Available ASE">
+        {{activedepot.config.stock.pms.ase.totalActive - activedepot.config.stock.pms.ase.used }}
+      </span>
     </span>{{order.fuel.pms.qty}}
     <span class="color-ago">AGO:
-      <span matTooltip="AGO Available ASE"> {{activedepot.config.stock.ago.ase.available}}</span>
+      <span matTooltip="AGO Available ASE">
+        {{activedepot.config.stock.ago.ase.totalActive - activedepot.config.stock.ago.ase.used }}
+      </span>
     </span> {{order.fuel.ago.qty}}
     <span class="color-ik">IK:
-      <span matTooltip="IK Available ASE"> {{activedepot.config.stock.ik.ase.available}}</span>
+      <span matTooltip="IK Available ASE">
+        {{activedepot.config.stock.ik.ase.totalActive - activedepot.config.stock.ik.ase.used }}
+      </span>
     </span> {{order.fuel.ik.qty}}
   </div>
-
 </h2>
 <mat-dialog-content *ngIf="donecalculating">
   <table class="table table-stripped">
