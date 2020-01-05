@@ -5,6 +5,7 @@ import { FuelConfig } from "../../models/Daudi/omc/FuelConfig";
 import { Bill } from "../../models/Qbo/Bill";
 import { readStock, stockCollection } from "../crud/daudi/Stock";
 import { OMCStock, EmptyOMCStock } from "../../models/Daudi/omc/Stock";
+import { Environment } from '../../models/Daudi/omc/Environments';
 
 /**
  * 
@@ -12,7 +13,7 @@ import { OMCStock, EmptyOMCStock } from "../../models/Daudi/omc/Stock";
  * @param fuelConfig COnfig having valid ID's
  * @param since 
  */
-export function syncEntry(omcId: string, fuelConfig: { [key in FuelType]: FuelConfig }, bills: Bill[]) {
+export function syncEntry(omcId: string, environment: Environment, fuelConfig: { [key in FuelType]: FuelConfig }, bills: Bill[]) {
     const ValidLineItems: Array<{
         bill: Bill,
         index: number,
@@ -63,7 +64,7 @@ export function syncEntry(omcId: string, fuelConfig: { [key in FuelType]: FuelCo
      */
     const totalAdded: { [key in FuelType]: number } = { ago: 0, ik: 0, pms: 0 }
     return Promise.all(ValidLineItems.map(async item => {
-        const convertedEntry = covertBillToEntry(item.bill, item.fueltype, item.index);
+        const convertedEntry = covertBillToEntry(item.bill, item.fueltype, item.index, environment);
         const directory = firestore()
             .collection("omc")
             .doc(omcId)
@@ -117,11 +118,12 @@ export function syncEntry(omcId: string, fuelConfig: { [key in FuelType]: FuelCo
     })
 }
 
-function covertBillToEntry(convertedBill: Bill, fueltype: FuelType, LineitemIndex: number): Entry {
+function covertBillToEntry(convertedBill: Bill, fueltype: FuelType, LineitemIndex: number, environment: Environment, ): Entry {
     const entryQty = convertedBill.Line[LineitemIndex].ItemBasedExpenseLineDetail.Qty;
     const entryPrice = convertedBill.Line[LineitemIndex].ItemBasedExpenseLineDetail.UnitPrice | 0;
 
     const newEntry: Entry = {
+        environment,
         Amount: convertedBill.Line[LineitemIndex].Amount ? convertedBill.Line[LineitemIndex].Amount : 0,
         entry: {
             name: convertedBill.DocNumber ? convertedBill.DocNumber : "Null",

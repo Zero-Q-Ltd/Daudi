@@ -29,8 +29,8 @@ export function processSync(sync: SyncRequest, qbo: QuickBooks, omcId: string, c
                     // return true;
                     return findBills(qbo).then(async (res) => {
                         return await Promise.all([
-                            syncEntry(omcId, config.Qbo[enviromnent].fuelconfig, res.QueryResponse.Bill || []),
-                            syncAse(omcId, config.Qbo[enviromnent].fuelconfig, res.QueryResponse.Bill || [])
+                            syncEntry(omcId, enviromnent, config.Qbo[enviromnent].fuelconfig, res.QueryResponse.Bill || []),
+                            syncAse(omcId, enviromnent, config.Qbo[enviromnent].fuelconfig, res.QueryResponse.Bill || [])
                         ]);
                     })
 

@@ -5,6 +5,7 @@ import { FuelConfig } from "../../models/Daudi/omc/FuelConfig";
 import { Bill } from "../../models/Qbo/Bill";
 import { readStock, stockCollection } from "../crud/daudi/Stock";
 import { OMCStock, EmptyOMCStock } from "../../models/Daudi/omc/Stock";
+import { Environment } from "../../models/Daudi/omc/Environments";
 
 /**
  * 
@@ -12,7 +13,7 @@ import { OMCStock, EmptyOMCStock } from "../../models/Daudi/omc/Stock";
  * @param fuelConfig COnfig having valid ID's
  * @param since 
  */
-export function syncAse(omcId: string, fuelConfig: { [key in FuelType]: FuelConfig }, bills: Bill[]) {
+export function syncAse(omcId: string, environment: Environment, fuelConfig: { [key in FuelType]: FuelConfig }, bills: Bill[]) {
     const ValidLineItems: Array<{
         bill: Bill,
         index: number,
@@ -63,7 +64,7 @@ export function syncAse(omcId: string, fuelConfig: { [key in FuelType]: FuelConf
     */
     const totalAdded: { [key in FuelType]: number } = { ago: 0, ik: 0, pms: 0 }
     return Promise.all(ValidLineItems.map(async item => {
-        const convertedASE = covertBillToASE(item.bill, item.fueltype, item.index);
+        const convertedASE = covertBillToASE(item.bill, item.fueltype, item.index, environment);
         const directory = firestore()
             .collection("omc")
             .doc(omcId)
@@ -95,11 +96,12 @@ export function syncAse(omcId: string, fuelConfig: { [key in FuelType]: FuelConf
 
 
 
-function covertBillToASE(convertedBill: Bill, fueltype: FuelType, LineitemIndex: number): ASE {
+function covertBillToASE(convertedBill: Bill, fueltype: FuelType, LineitemIndex: number, environment: Environment, ): ASE {
 
     const ASEQty = convertedBill.Line[LineitemIndex].ItemBasedExpenseLineDetail.Qty ? convertedBill.Line[LineitemIndex].ItemBasedExpenseLineDetail.Qty : 0;
 
     const newASE: ASE = {
+        environment,
         Amount: convertedBill.Line[LineitemIndex].Amount ? convertedBill.Line[LineitemIndex].Amount : 0,
         ase: {
             QbId: convertedBill.Id,
