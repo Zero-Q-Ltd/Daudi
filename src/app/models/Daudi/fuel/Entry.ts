@@ -4,6 +4,7 @@ import { MyTimestamp } from "../../firestore/firestoreTypes";
 import { BaseStockModel } from "./BaseStockModel";
 import { StockQty, EmptyStockQty } from "./StockQty";
 import { EntryRef } from "./StockRef";
+import { Environment } from "../omc/Environments";
 
 
 export interface Entry extends BaseStockModel {
@@ -24,6 +25,7 @@ export const emptyEntry: Entry = {
     name: null,
     Id: null
   },
+  environment: Environment.sandbox,
   active: false,
   date: new MyTimestamp(0, 0)
 };

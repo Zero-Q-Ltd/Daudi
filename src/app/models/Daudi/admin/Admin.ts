@@ -6,10 +6,10 @@ export interface Admin {
   Active: boolean;
   Id: string;
   config: {
+    environment: Environment;
     qbo: {
       companyid: string,
       QbId: string,
-      environment: Environment;
     }
     omcId: string,
     level: string,
@@ -69,10 +69,10 @@ export const emptyadmin: Admin = {
   config: {
     omcId: null,
     level: null,
+    environment: null,
     qbo: {
       companyid: null,
       QbId: null,
-      environment: null
     },
     approvedby: deepCopy<AssociatedUser>(inituser),
     app: {

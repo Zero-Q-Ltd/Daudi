@@ -77,20 +77,20 @@
         </td>
         <td>
           <span *ngIf="order.truck.stage > 0">
-            {{order.truck.stagedata["1"].data.expiry?.length - 1}}
+            {{order.truck.stagedata["1"].expiry?.length - 1}}
           </span>
         </td>
         <td class="custom-slider">
           <ng5-slider
-            *ngIf="order.truck.stage > 1 && calculateaccuracy(order.truck.stagedata['1'].data.expiry, order.truck.stagedata['1'].user.time, order.truck.stagedata['2'].user.time, 1 )"
+            *ngIf="order.truck.stage > 1 && calculateaccuracy(order.truck.stagedata['1'].expiry, order.truck.stagedata['1'].user.time, order.truck.stagedata['2'].user.time, 1 )"
             [manualRefresh]="manualRefresh" [options]="slider" [value]="accuracycolors[1].percentage"></ng5-slider>
         </td>
         <td>{{order.truck.stagedata["1"].user?.name}}</td>
         <td></td>
       </tr>
       <tr
-        [ngClass]="{ 'color-danger' : order.truck.stage == 2 && expired(order.truck?.stagedata['2'].data.expiry[0]?.timestamp) ,
-                       'color-success' : order.truck.stage == 2 && !expired(order.truck?.stagedata['2'].data.expiry[0]?.timestamp)} ">
+        [ngClass]="{ 'color-danger' : order.truck.stage == 2 && expired(order.truck?.stagedata['2'].expiry[0]?.timestamp) ,
+                       'color-success' : order.truck.stage == 2 && !expired(order.truck?.stagedata['2'].expiry[0]?.timestamp)} ">
         <td class="order-stage">Queued</td>
         <td>
           <span *ngIf="order.truck.stage == 2">
@@ -108,12 +108,12 @@
         </td>
         <td>
           <span *ngIf="order.truck.stage > 1">
-            {{order.truck.stagedata["2"].data.expiry?.length - 1}}
+            {{order.truck.stagedata["2"].expiry?.length - 1}}
           </span>
         </td>
         <td class="custom-slider">
           <ng5-slider
-            *ngIf="order.truck.stage > 2 && calculateaccuracy(order.truck.stagedata['2'].data.expiry, order.truck.stagedata['2'].user.time, order.truck.stagedata['3'].user.time, 2 )"
+            *ngIf="order.truck.stage > 2 && calculateaccuracy(order.truck.stagedata['2'].expiry, order.truck.stagedata['2'].user.time, order.truck.stagedata['3'].user.time, 2 )"
             [manualRefresh]="manualRefresh" [options]="slider" [value]="accuracycolors[2].percentage"></ng5-slider>
         </td>
         <td>{{order.truck.stagedata["2"].user?.name}}</td>
@@ -124,8 +124,8 @@
         </td>
       </tr>
       <tr
-        [ngClass]="{ 'color-danger' : order.truck.stage == 3 && expired(order.truck?.stagedata['3'].data.expiry[0]?.timestamp) ,
-                       'color-success' : order.truck.stage == 3 && !expired(order.truck?.stagedata['3'].data.expiry[0]?.timestamp)} ">
+        [ngClass]="{ 'color-danger' : order.truck.stage == 3 && expired(order.truck?.stagedata['3'].expiry[0]?.timestamp) ,
+                       'color-success' : order.truck.stage == 3 && !expired(order.truck?.stagedata['3'].expiry[0]?.timestamp)} ">
         <td class="order-stage">Loading</td>
         <td>
           <span *ngIf="order.truck.stage == 3">
@@ -148,7 +148,7 @@
         </td>
         <td class="custom-slider">
           <ng5-slider
-            *ngIf="order.truck.stage > 3 && calculateaccuracy(order.truck.stagedata['3'].data.expiry, order.truck.stagedata['3'].user.time, order.truck.stagedata['4'].user.time, 3 )"
+            *ngIf="order.truck.stage > 3 && calculateaccuracy(order.truck.stagedata['3'].expiry, order.truck.stagedata['3'].user.time, order.truck.stagedata['4'].user.time, 3 )"
             [manualRefresh]="manualRefresh" [options]="slider" [value]="accuracycolors[3].percentage"></ng5-slider>
         </td>
         <td>{{order.truck.stagedata["3"].user?.name}}</td>

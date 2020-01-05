@@ -274,6 +274,7 @@ export class CoreService {
       const subscriprion = this.orderService.ordersCollection(this.omcId)
         .where("stage", "==", stage)
         .where("config.depot.id", "==", depotId)
+        .where("config.environment", "==", this.environment.value)
         .orderBy("stagedata.1.user.time", "asc")
         .onSnapshot(Data => {
           /**
@@ -295,6 +296,7 @@ export class CoreService {
     const stage5subscriprion = this.orderService.ordersCollection(this.omcId)
       .where("stage", "==", 5)
       .where("config.depot.id", "==", depotId)
+      .where("config.environment", "==", this.environment.value)
       .where("stagedata.1.user.time", "<=", startofweek)
       .orderBy("stagedata.1.user.time", "asc")
       .onSnapshot(Data => {
@@ -319,6 +321,7 @@ export class CoreService {
     this.fueltypesArray.forEach(fuelType => {
       this.subscriptions.set("entries", this.entriesService.entryCollection(this.omcId)
         .where("active", "==", true)
+        .where("environment", "==", this.environment.value)
         .where("fuelType", "==", fuelType)
         .onSnapshot(data => {
           this.loaders.entries.next(false);
