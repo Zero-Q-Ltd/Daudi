@@ -4,6 +4,8 @@ import { SyncRequest } from "../../../models/Cloud/Sync";
 import { MyTimestamp } from "../../../models/firestore/firestoreTypes";
 import { CompanySync } from "../../../models/Cloud/CompanySync";
 import { CoreService } from "../../services/core/core.service";
+import { QbTypes } from "../../../models/QbTypes";
+import { take } from "rxjs/operators";
 
 @Injectable({
   providedIn: "root"
@@ -17,10 +19,10 @@ export class CoreAdminService {
   ) {
 
   }
-  syncdb() {
+  syncdb(synctypes: QbTypes[]) {
     const req: SyncRequest = {
       time: MyTimestamp.now(),
-      synctype: ["BillPayment"]
+      synctype: synctypes
     };
 
     const syncobject: CompanySync = {
@@ -28,7 +30,10 @@ export class CoreAdminService {
       sync: req
     };
 
-    return this.functions.httpsCallable("requestsync")(syncobject);
+    return this.functions.httpsCallable("requestsync")(syncobject)
+      .pipe(take(1))
+      .toPromise();
+
   }
   unsubscribeAll() {
     this.subscriptions.forEach(value => {

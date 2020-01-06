@@ -1,8 +1,8 @@
-import {Injectable} from "@angular/core";
-import {AngularFirestore} from "@angular/fire/firestore";
-import {AngularFireFunctions} from "@angular/fire/functions";
-import {Observable} from "rxjs";
-import {DaudiCustomer} from "../../models/Daudi/customer/Customer";
+import { Injectable } from "@angular/core";
+import { AngularFirestore } from "@angular/fire/firestore";
+import { AngularFireFunctions } from "@angular/fire/functions";
+import { Observable } from "rxjs";
+import { DaudiCustomer } from "../../models/Daudi/customer/Customer";
 
 @Injectable({
   providedIn: "root"
@@ -45,7 +45,7 @@ export class CustomerService {
   customerCollection(omcId: string) {
     return this.db.firestore.collection("omc")
       .doc(omcId)
-      .collection(`customer`);
+      .collection(`customers`);
   }
 
   createcompany(company: DaudiCustomer): Observable<any> {

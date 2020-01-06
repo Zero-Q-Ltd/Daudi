@@ -56,8 +56,7 @@ export class OrdersService {
   approveOrder(orderCteate: OrderCreate): Promise<any> {
 
     console.log(orderCteate);
-
-    return this.functions.httpsCallable("createInvoice")(orderCteate).toPromise().then(value => {
+    return this.functions.httpsCallable("createInvoice")([orderCteate]).toPromise().then(value => {
       /**
        * delete the orderid after the operation is complete
        */
@@ -99,7 +98,7 @@ export class OrdersService {
   ) {
     return this.db.firestore.collection("omc")
       .doc(omcId)
-      .collection("order");
+      .collection("orders");
   }
 
 

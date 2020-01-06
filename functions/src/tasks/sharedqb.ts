@@ -3,6 +3,7 @@ import { QbApiConfig, QuickBooks } from "../libs/qbmain"; // quickbooks sdk
 import { firestore } from "firebase-admin";
 import { QboCofig } from "../models/Cloud/QboEnvironment";
 import { AuthConfig } from "../models/Cloud/QboAuthConfig";
+import { configCollection, updateConfig } from "./crud/daudi/QboConfig";
 
 export function createQbo(omcId: string, config: QboCofig, useSandbox: boolean): Promise<QuickBooks> {
   const apiconfig: QbApiConfig = {
@@ -47,12 +48,7 @@ export function createQbo(omcId: string, config: QboCofig, useSandbox: boolean):
       //Replace the object values we're using with the new ones
 
       config.auth.authConfig = dbobject;
-      return firestore()
-        .collection("omc")
-        .doc(omcId)
-        .collection("config")
-        .doc("main")
-        .update(config)
+      return updateConfig(omcId, config)
         .then(() => {
           console.log("successfully updated token");
           // console.log(qbo);

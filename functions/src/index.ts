@@ -15,7 +15,7 @@ import { sendsms } from './tasks/sms/sms';
 import { ordersms } from './tasks/sms/smscompose';
 import { processSync } from './tasks/syncdb/processSync';
 import { validorderupdate } from './validators/orderupdate';
-import { readQboConfig } from "./tasks/crud/daudi/readQboConfig";
+import { readQboConfig } from "./tasks/crud/daudi/QboConfig";
 import { toArray, toObject } from "./models/utils/SnapshotUtils";
 import { EmptyQboConfig, QboCofig } from "./models/Cloud/QboEnvironment";
 
@@ -142,7 +142,8 @@ exports.smscreated = functions.firestore
     return sendsms(data.data() as SMS, context.params.smsID);
   });
 
-exports.requestsync = functions.https.onCall(((data: CompanySync, _) => {
+exports.requestsync = functions.https.onCall((data: CompanySync, _) => {
+  console.log(data)
   return readQboConfig(data.omcId).then(snapshot => {
     const config = toObject(EmptyQboConfig, snapshot)
     return createQbo(data.omcId, config, true)
@@ -150,7 +151,7 @@ exports.requestsync = functions.https.onCall(((data: CompanySync, _) => {
         return processSync(data.sync, qbo, data.omcId, config);
       });
   })
-}))
+})
 
 exports.onUserStatusChanged = functions.database
   .ref("/admins/{uid}")

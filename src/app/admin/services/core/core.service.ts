@@ -119,12 +119,18 @@ export class CoreService {
       this.fetchActiveEntries();
     });
   }
-  duplicate(omcId: string, name: string, id: string, doc) {
-    return this.db.firestore.collection("omc")
-      .doc(omcId)
-      .collection(name)
-      .doc(id)
-      .set(doc);
+  duplicate(name: string, id: string, doc, omcId?: string) {
+    if (omcId) {
+      return this.db.firestore.collection("omc")
+        .doc(omcId)
+        .collection(name)
+        .doc(id)
+        .set(doc);
+    } else {
+      return this.db.firestore.collection(name)
+        .doc(id)
+        .set(doc);
+    }
   }
   getStocks() {
     this.loaders.stock.next(true);
@@ -148,12 +154,16 @@ export class CoreService {
          * Only subscribe to depot when the user data changes
          */
         this.depots.next(toArray(emptydepot, data));
+        // this.depots.value.map(depot => {
+        //   this.duplicate("depots", depot.Id, depot);
+        // });
         this.loaders.depots.next(false);
         const tempdepot: Depot = this.depots.value[0];
         /**
          * Trigger a depot change if this is the first load
          */
         if (this.depots.value.find(depot => depot.Id === this.activedepot.value.depot.Id)) {
+
           this.changeactivedepot(this.depots.value.find(depot => depot.Id === this.activedepot.value.depot.Id));
         } else {
           this.changeactivedepot(tempdepot);
@@ -169,17 +179,10 @@ export class CoreService {
     this.subscriptions.set("omcs", this.omc.omcCollection()
       .orderBy("name", "asc")
       .onSnapshot(data => {
-        // console.log("OMC data fetched");
         this.omcs.next(toArray(emptyomc, data));
         this.omcs.value.forEach(co => {
           if (co.Id === this.omcId) {
-            /**
-             * make the pipeline subscription Only once
-             */
-            if (this.omcId !== this.omcId) {
-              console.log("Current OMC found");
-              this.currentOmc.next(co);
-            }
+            console.log("Current OMC found");
             this.currentOmc.next(co);
           }
         });

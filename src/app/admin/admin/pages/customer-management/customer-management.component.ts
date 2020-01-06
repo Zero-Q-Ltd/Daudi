@@ -15,6 +15,7 @@ import { AdminService } from "../../../services/core/admin.service";
 import { CoreService } from "../../../services/core/core.service";
 import { CustomerService } from "../../../services/customers.service";
 import { CompanyMembersComponent } from "../company-members/company-members.component";
+import { CoreAdminService } from "../../services/core.service";
 
 
 @Component({
@@ -45,6 +46,7 @@ export class CustomerManagementComponent implements OnInit, OnDestroy {
     private customerservice: CustomerService,
     private functions: AngularFireFunctions,
     private core: CoreService,
+    private coreAdmin: CoreAdminService,
     @Optional() public dialogRef: MatDialogRef<CustomerManagementComponent>,
     @Optional() @Inject(MAT_DIALOG_DATA) public purpose: "SMS" | "Attach") {
     this.core.activedepot
@@ -152,19 +154,7 @@ export class CustomerManagementComponent implements OnInit, OnDestroy {
 
   syncdb() {
     this.creatingsync = true;
-
-    const req: SyncRequest = {
-      time: MyTimestamp.now(),
-      synctype: ["Customer"]
-    };
-    const syncObject: CompanySync = {
-      omcId: this.core.currentOmc.value.Id,
-      sync: req
-    };
-    const sync = this.functions.httpsCallable("requestsync")(syncObject)
-      .pipe(takeUntil(this.comopnentDestroyed))
-      .toPromise();
-    sync.then(res => {
+    this.coreAdmin.syncdb(["Customer"]).then(res => {
       this.creatingsync = false;
       this.notification.notify({
         alert_type: "success",

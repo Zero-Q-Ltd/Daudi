@@ -25,6 +25,8 @@ export class AdminService {
 
   constructor(private db: AngularFirestore, private afAuth: AngularFireAuth, router: Router) {
     afAuth.authState.subscribe(state => {
+      // this.createUser();
+
       if (state) {
         this.getuser(afAuth.auth.currentUser);
       } else {
@@ -38,7 +40,6 @@ export class AdminService {
 
     this.observableuserdata.subscribe(userdata => {
       console.log(userdata);
-      // this.createUser();
       this.userdata = userdata;
     });
   }
@@ -47,7 +48,7 @@ export class AdminService {
    * make the user go offline before logging out
    */
   logoutsequence() {
-    this.db.firestore.collection("admin").doc(this.userdata.Id).update({
+    this.adminDoc(this.userdata.Id).update({
       status: {
         online: false,
         time: moment().toDate()
@@ -56,9 +57,15 @@ export class AdminService {
       this.afAuth.auth.signOut();
     });
   }
+  adminDoc(adminId: string) {
+    return this.adminsCollection().doc(adminId);
+  }
+  adminsCollection() {
+    return this.db.firestore.collection("admins");
+  }
 
   getalladmins() {
-    return this.db.firestore.collection("admin")
+    return this.adminsCollection()
       .where("Active", "==", true);
   }
 
@@ -74,11 +81,11 @@ export class AdminService {
   }
 
   updateadmin(admin: Admin) {
-    return this.db.firestore.collection("admin").doc(admin.Id).update(admin);
+    return this.adminDoc(admin.Id).update(admin);
   }
 
   getuser(user, unsub?: boolean) {
-    const unsubscribe = this.db.firestore.collection("admin").doc(user.uid)
+    const unsubscribe = this.adminDoc(user.uid)
       .onSnapshot(userdata => {
         if (userdata.exists) {
 
@@ -105,7 +112,7 @@ export class AdminService {
   }
 
   createUser() {
-    this.db.firestore.collection("admin").doc("hyNsgvX1x5emqZS3W6xqcyGifjh1").set(emptyadmin);
+    this.db.firestore.collection("admins").doc("hyNsgvX1x5emqZS3W6xqcyGifjh1").set(emptyadmin);
   }
 
   unsubscribeAll() {

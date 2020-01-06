@@ -18,6 +18,7 @@ import { CoreService } from "../services/core/core.service";
 import { EntriesService } from "../services/entries.service";
 import { OrdersService } from "../services/orders.service";
 import { GenericTruckStage } from "../../models/Daudi/order/GenericStage";
+import { StocksService } from "../services/core/stocks.service";
 
 interface EntryContent {
   id: string;
@@ -86,6 +87,7 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
     private core: CoreService,
     private entriesService: EntriesService,
     private configService: AdminConfigService,
+    private stockService: StocksService,
     private ordersservice: OrdersService) {
     this.fueltypesArray.forEach((fueltype: FuelType) => {
       this.core.depotEntries[fueltype]
@@ -421,7 +423,7 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
               batchaction.update(this.configService.configDoc(this.core.currentOmc.value.Id), this.activedepot.config);
             } else {
               this.stock.qty[fueltype].ase.used += this.order.fuel[fueltype].qty;
-              batchaction.update(this.configService.stockDoc(this.core.currentOmc.value.Id), this.stock);
+              batchaction.update(this.stockService.stockDoc(this.core.currentOmc.value.Id), this.stock);
             }
           }
         }
