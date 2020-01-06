@@ -1,9 +1,9 @@
-import {Injectable} from "@angular/core";
-import {AngularFireFunctions} from "@angular/fire/functions";
-import {SyncRequest} from "../../../models/Cloud/Sync";
-import {MyTimestamp} from "../../../models/firestore/firestoreTypes";
-import {CompanySync} from "../../../models/Cloud/CompanySync";
-import {CoreService} from "../../services/core/core.service";
+import { Injectable } from "@angular/core";
+import { AngularFireFunctions } from "@angular/fire/functions";
+import { SyncRequest } from "../../../models/Cloud/Sync";
+import { MyTimestamp } from "../../../models/firestore/firestoreTypes";
+import { CompanySync } from "../../../models/Cloud/CompanySync";
+import { CoreService } from "../../services/core/core.service";
 
 @Injectable({
   providedIn: "root"
@@ -24,8 +24,7 @@ export class CoreAdminService {
     };
 
     const syncobject: CompanySync = {
-      config: this.core.config.value,
-      omc: this.core.currentOmc.value,
+      omcId: this.core.currentOmc.value.Id,
       sync: req
     };
 

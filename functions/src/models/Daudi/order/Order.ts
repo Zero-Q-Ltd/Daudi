@@ -4,9 +4,9 @@ import { FuelType } from "../fuel/FuelType";
 import { OrderFuelConfig } from "./FuelConfig";
 import { OrderStages } from "./OrderStages";
 import { emptytruck, Truck } from "./truck/Truck";
+import { TruckStages } from "./truck/TruckStages";
 import { AssociatedUser } from "../admin/AssociatedUser";
 import { GenericStage, GenericTruckStage, EmptyGenericStage, EmptyGenericTruckStage } from "./GenericStage";
-import { TruckStages } from "./truck/TruckStages";
 
 export interface Order {
   Id: string; // used to temporarily store the key, used later for looping

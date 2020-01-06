@@ -333,7 +333,7 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
             expiry: MyTimestamp.fromDate(moment().add(45, "minutes").toDate()),
           }],
       };
-      this.order.stage = 4.1;
+      this.order.truck.stage = 4;
       this.order.loaded = true;
 
       this.order.orderStageData["4"].user = data.user;

@@ -25,7 +25,6 @@ import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { PipeModuleModule } from "./pipe-module/pipe-module.module";
 
 import { NotificationComponent } from "./shared/components/notification/notification.component";
-import { AttachId } from "./shared/pipes/attach-id.pipe";
 // import { AgmCoreModule } from '@agm/core';
 // Custom Error handler and Logging Service
 // import { ErrorHandler } from '@angular/core';
@@ -74,7 +73,7 @@ const firebaseConfig = {
     PageNotFoundComponent
 
   ],
-  providers: [AngularFireAuth, AngularFireModule, AngularFireDatabase, AuthGuard, AttachId],
+  providers: [AngularFireAuth, AngularFireModule, AngularFireDatabase, AuthGuard],
   bootstrap: [AppComponent],
   exports: [PipeModuleModule, MyMaterialModule
   ],

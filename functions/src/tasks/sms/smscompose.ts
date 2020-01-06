@@ -148,7 +148,7 @@ function resolveOrderText(order: Order): string {
 
 function resolveTrucksText(order: Order): string {
   let text = ` ID ${order.customer.QbId} Truck#${order.QbConfig.InvoiceId}`;
-  switch (order.stage) {
+  switch (order.truck.stage) {
     case 0:
       text +=
         " Your fuel is now [RESERVED] at " +
@@ -175,7 +175,7 @@ function resolveTrucksText(order: Order): string {
         /**
          * @todo fix union type linitng problem
          */
-        // order.truck.stagedata[4].seals.range +
+        order.seals.range +
         " Always check your seals";
       break;
     default:

@@ -13,7 +13,6 @@ import { emptyomc, OMC } from "../../../models/Daudi/omc/OMC";
 import { EmptyOMCStock, OMCStock } from "../../../models/Daudi/omc/Stock";
 import { emptyorder, Order } from "../../../models/Daudi/order/Order";
 import { OrderStageIds, OrderStages } from "../../../models/Daudi/order/OrderStages";
-import { AttachId } from "../../../shared/pipes/attach-id.pipe";
 import { CustomerService } from "../customers.service";
 import { EntriesService } from "../entries.service";
 import { OrdersService } from "../orders.service";
@@ -21,7 +20,7 @@ import { AdminService } from "./admin.service";
 import { ConfigService } from "./config.service";
 import { DepotService } from "./depot.service";
 import { OmcService } from "./omc.service";
-import { remap } from "../../../models/utils/remap";
+import { toObject, toArray } from "../../../models/utils/SnapshotUtils";
 
 @Injectable({
   providedIn: "root"
@@ -85,7 +84,6 @@ export class CoreService {
     private depotService: DepotService,
     private omc: OmcService,
     private orderService: OrdersService,
-    private attachId: AttachId,
     private customerService: CustomerService,
     private entriesService: EntriesService,
     private adminservice: AdminService) {
@@ -95,9 +93,7 @@ export class CoreService {
         this.unsubscribeAll();
         this.subscriptions.set("configSubscription", this.configService.configDoc(admin.config.omcId)
           .onSnapshot(t => {
-            let u;
-            console.log(remap(emptyConfig, u));
-            const config = this.attachId.transformObject<OMCConfig>(emptyConfig, t);
+            const config = toObject(emptyConfig, t);
             // this.duplicate(admin.config.omcId, "values", "config", { Qbo: t.data().Qbo.sandbox });
             // this.duplicate(admin.config.omcId, "values", "config", { adminTypes: t.data().adminTypes });
             if (!config.status) {
@@ -135,7 +131,7 @@ export class CoreService {
     this.loaders.stock.next(true);
     this.subscriptions.set("stock", this.configService.stockDoc(this.omcId)
       .onSnapshot(t => {
-        this.stock.next(this.attachId.transformObject<OMCStock>(EmptyOMCStock, t));
+        this.stock.next(toObject(EmptyOMCStock, t));
         this.loaders.stock.next(false);
       }));
   }
@@ -152,7 +148,7 @@ export class CoreService {
         /**
          * Only subscribe to depot when the user data changes
          */
-        this.depots.next(this.attachId.transformArray<Depot>(emptydepot, data));
+        this.depots.next(toArray(emptydepot, data));
         this.loaders.depots.next(false);
         const tempdepot: Depot = this.depots.value[0];
         /**
@@ -175,7 +171,7 @@ export class CoreService {
       .orderBy("name", "asc")
       .onSnapshot(data => {
         // console.log("OMC data fetched");
-        this.omcs.next(this.attachId.transformArray<OMC>(emptyomc, data));
+        this.omcs.next(toArray(emptyomc, data));
         this.omcs.value.forEach(co => {
           if (co.Id === this.omcId) {
             /**
@@ -205,7 +201,7 @@ export class CoreService {
     this.subscriptions.set("allcustomers", this.customerService.customerCollection(this.omcId)
       .onSnapshot(data => {
         this.loaders.customers.next(false);
-        this.customers.next(this.attachId.transformArray<DaudiCustomer>(emptyDaudiCustomer, data));
+        this.customers.next(toArray(emptyDaudiCustomer, data));
       }));
   }
 
@@ -223,7 +219,7 @@ export class CoreService {
         .depotConfigDoc(this.omcId, depot.Id)
         .onSnapshot(t => {
           if (t.exists) {
-            const config: DepotConfig = this.attachId.transformObject<DepotConfig>(emptyDepotConfig, t);
+            const config: DepotConfig = toObject(emptyDepotConfig, t);
             console.log("changing to:", depot.Name, config.depotId, config.Id);
             this.activedepot.next({ depot, config });
             this.loaders.depotConfig.next(false);
@@ -264,7 +260,6 @@ export class CoreService {
     this.orders[6].next([]);
     // const orderSubscription
     OrderStageIds.forEach(stage => {
-      console.log(stage);
       /**
        * cancel any previous queries
        */
@@ -283,7 +278,7 @@ export class CoreService {
            */
           this.orders[stage].next([]);
 
-          this.orders[stage].next(this.attachId.transformArray<Order>(emptyorder, Data));
+          this.orders[stage].next(toArray(emptyorder, Data));
           this.loaders.orders.next(false);
         });
 
@@ -305,7 +300,7 @@ export class CoreService {
          */
         this.orders[5].next([]);
 
-        this.orders[5].next(this.attachId.transformArray<Order>(emptyorder, Data));
+        this.orders[5].next(toArray(emptyorder, Data));
         this.loaders.orders.next(false);
       });
 
@@ -324,7 +319,7 @@ export class CoreService {
         .where("fuelType", "==", fuelType)
         .onSnapshot(data => {
           this.loaders.entries.next(false);
-          this.depotEntries[fuelType].next(this.attachId.transformArray<Entry>(emptyEntry, data));
+          this.depotEntries[fuelType].next(toArray(emptyEntry, data));
         }));
     });
   }

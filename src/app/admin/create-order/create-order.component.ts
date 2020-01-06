@@ -83,6 +83,10 @@ export class CreateOrderComponent implements OnDestroy {
 
       if (this.router.url === "/admin/create-order") {
         console.log("New Order");
+        /**
+         * Initialise the order with an Id
+         */
+        this.temporder.Id = this.core.createId();
         this.newOrder = true;
       } else {
         console.log("Order approval");
@@ -275,9 +279,9 @@ export class CreateOrderComponent implements OnDestroy {
 
   createorder(redirect) {
     if (this.temporder.Id) {
-      // this.orderservice.approveOrder(this.temporder);
+      this.orderservice.approveOrder({ omcId: this.core.currentOmc.value.Id, order: this.temporder });
     } else {
-      // this.orderservice.createOrder(this.temporder);
+      this.orderservice.createOrder({ omcId: this.core.currentOmc.value.Id, order: this.temporder });
     }
     if (redirect) {
       /**

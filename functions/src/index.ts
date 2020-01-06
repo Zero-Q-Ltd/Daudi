@@ -1,22 +1,22 @@
 import * as admin from "firebase-admin";
 import * as functions from 'firebase-functions';
-import {QuickBooks} from './libs/qbmain';
-import {CompanySync} from "./models/Cloud/CompanySync";
-import {OrderCreate} from './models/Cloud/OrderCreate';
-import {DaudiCustomer} from './models/Daudi/customer/Customer';
-import {OMCConfig} from './models/Daudi/omc/Config';
-import {SMS} from './models/Daudi/sms/sms';
-import {MyTimestamp} from './models/firestore/firestoreTypes';
-import {creteOrder, updateOrder} from './tasks/crud/daudi/Order';
-import {readConfig} from './tasks/crud/daudi/readConfig';
-import {updateCustomer} from './tasks/crud/qbo/customer/update';
-import {createEstimate} from './tasks/crud/qbo/Estimate/create';
-import {createInvoice} from './tasks/crud/qbo/invoice/create';
-import {createQbo} from './tasks/sharedqb';
-import {sendsms} from './tasks/sms/sms';
-import {ordersms} from './tasks/sms/smscompose';
-import {processSync} from './tasks/syncdb/processSync';
-import {validorderupdate} from './validators/orderupdate';
+import { QuickBooks } from './libs/qbmain';
+import { CompanySync } from "./models/Cloud/CompanySync";
+import { OrderCreate } from './models/Cloud/OrderCreate';
+import { DaudiCustomer } from './models/Daudi/customer/Customer';
+import { OMCConfig } from './models/Daudi/omc/Config';
+import { SMS } from './models/Daudi/sms/sms';
+import { MyTimestamp } from './models/firestore/firestoreTypes';
+import { creteOrder, updateOrder } from './tasks/crud/daudi/Order';
+import { updateCustomer } from './tasks/crud/qbo/customer/update';
+import { createEstimate } from './tasks/crud/qbo/Estimate/create';
+import { createInvoice } from './tasks/crud/qbo/invoice/create';
+import { createQbo } from './tasks/sharedqb';
+import { sendsms } from './tasks/sms/sms';
+import { ordersms } from './tasks/sms/smscompose';
+import { processSync } from './tasks/syncdb/processSync';
+import { validorderupdate } from './validators/orderupdate';
+import { readQboConfig } from "./tasks/crud/daudi/readQboConfig";
 
 admin.initializeApp(functions.config().firebase);
 admin.firestore().settings({ timestampsInSnapshots: true });
@@ -35,7 +35,9 @@ function markAsRunning(eventID: string) {
  * create an estimate from the client directly
  */
 exports.createEstimate = functions.https.onCall((data: OrderCreate, context) => {
-
+  return readQboConfig(data.omcId).then(data => {
+    TransformSnapshot.
+  })
   return createQbo(data.omc.Id, data.config, true).then(async result => {
     console.log(result)
     const est = new createEstimate(data.order, result, data.config)

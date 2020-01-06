@@ -15,6 +15,7 @@ export interface TruckEntry {
 }
 
 export interface Truck {
+  stage: number;
   compartmentCount: number;
   driverdetail: {
     name: string,
@@ -28,6 +29,7 @@ export interface Truck {
 }
 
 export const emptytruck: Truck = {
+  stage: null,
   compartmentCount: null,
   driverdetail: {
     id: null,
