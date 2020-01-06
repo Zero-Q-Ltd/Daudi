@@ -64,7 +64,7 @@ export function syncAse(omcId: string, environment: Environment, fuelConfig: { [
     */
     const totalAdded: { [key in FuelType]: number } = { ago: 0, ik: 0, pms: 0 }
     return Promise.all(ValidLineItems.map(async item => {
-        const convertedASE = covertBillToASE(item.bill, item.fueltype, item.index, environment);
+        const convertedASE = covertBillToASE(item.bill, item.fueltype, item.index);
         const directory = firestore()
             .collection("omc")
             .doc(omcId)
@@ -96,12 +96,11 @@ export function syncAse(omcId: string, environment: Environment, fuelConfig: { [
 
 
 
-function covertBillToASE(convertedBill: Bill, fueltype: FuelType, LineitemIndex: number, environment: Environment, ): ASE {
+function covertBillToASE(convertedBill: Bill, fueltype: FuelType, LineitemIndex: number): ASE {
 
     const ASEQty = convertedBill.Line[LineitemIndex].ItemBasedExpenseLineDetail.Qty ? convertedBill.Line[LineitemIndex].ItemBasedExpenseLineDetail.Qty : 0;
 
     const newASE: ASE = {
-        environment,
         Amount: convertedBill.Line[LineitemIndex].Amount ? convertedBill.Line[LineitemIndex].Amount : 0,
         ase: {
             QbId: convertedBill.Id,

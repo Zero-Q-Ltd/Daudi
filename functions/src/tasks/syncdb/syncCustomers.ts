@@ -32,7 +32,7 @@ export function syncCustomers(qbo: QuickBooks, omcId: string, env: Environment) 
                             firestore()
                                 .collection("omc")
                                 .doc(omcId)
-                                .collection("customer")
+                                .collection(`${env}customers`)
                                 .doc(co.Id),
                             co
                         );
@@ -44,7 +44,7 @@ export function syncCustomers(qbo: QuickBooks, omcId: string, env: Environment) 
                             firestore()
                                 .collection("omc")
                                 .doc(omcId)
-                                .collection("customer")
+                                .collection(`${env}customers`)
                                 .doc(co.Id),
                             co
                         );
@@ -63,7 +63,6 @@ function convertToDaudicustomer(
 ): DaudiCustomer {
     let daudicompany: DaudiCustomer;
     daudicompany = {
-        environment: env,
         balance: customer.Balance || 0,
         contact: [{
             email: customer.PrimaryEmailAddr

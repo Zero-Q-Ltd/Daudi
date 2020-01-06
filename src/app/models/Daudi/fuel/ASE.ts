@@ -3,7 +3,6 @@ import { MyTimestamp } from "../../firestore/firestoreTypes";
 import { BaseStockModel } from "./BaseStockModel";
 import { QbRef } from "./QbRef";
 import { EmptyStockQty, StockQty } from "./StockQty";
-import { Environment } from "../omc/Environments";
 
 export interface ASE extends BaseStockModel {
     ase: QbRef;

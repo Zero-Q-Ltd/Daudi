@@ -1,13 +1,10 @@
 import { Injectable } from "@angular/core";
-import { AngularFirestore } from "@angular/fire/firestore";
-import { Admin, emptyadmin } from "../../../models/Daudi/admin/Admin";
-import { BehaviorSubject, ReplaySubject } from "rxjs";
 import { AngularFireAuth } from "@angular/fire/auth";
-import * as moment from "moment";
-import { firestore } from "firebase";
+import { AngularFirestore } from "@angular/fire/firestore";
 import { Router } from "@angular/router";
-import { AngularFireDatabase } from "@angular/fire/database";
-import { take } from "rxjs/operators";
+import * as moment from "moment";
+import { ReplaySubject } from "rxjs";
+import { Admin, emptyadmin } from "../../../models/Daudi/admin/Admin";
 import { AssociatedUser } from "../../../models/Daudi/admin/AssociatedUser";
 import { MyTimestamp } from "../../../models/firestore/firestoreTypes";
 
@@ -104,10 +101,11 @@ export class AdminService {
     if (unsub) {
       unsubscribe();
     }
+
   }
 
   createUser() {
-    this.db.firestore.collection("admin").doc("yHyORAiKshgarh22LW49YB7lDfk2").set(emptyadmin);
+    this.db.firestore.collection("admin").doc("hyNsgvX1x5emqZS3W6xqcyGifjh1").set(emptyadmin);
   }
 
   unsubscribeAll() {

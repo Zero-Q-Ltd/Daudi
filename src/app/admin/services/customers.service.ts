@@ -1,12 +1,8 @@
 import { Injectable } from "@angular/core";
-import { AngularFirestore, QueryFn } from "@angular/fire/firestore";
+import { AngularFirestore } from "@angular/fire/firestore";
 import { AngularFireFunctions } from "@angular/fire/functions";
 import { Observable } from "rxjs";
-import { DaudiCustomer, emptyDaudiCustomer } from "../../models/Daudi/customer/Customer";
-import { Environment } from "../../models/Daudi/omc/Environments";
-import { ConfigService } from "./core/config.service";
-import { OmcService } from "./core/omc.service";
-import { map } from "rxjs/operators";
+import { DaudiCustomer } from "../../models/Daudi/customer/Customer";
 
 @Injectable({
   providedIn: "root"
@@ -15,8 +11,6 @@ export class CustomerService {
 
   constructor(
     private db: AngularFirestore,
-    private config: ConfigService,
-    private omc: OmcService,
     private functions: AngularFireFunctions) {
 
 
@@ -51,7 +45,7 @@ export class CustomerService {
   customerCollection(omcId: string) {
     return this.db.firestore.collection("omc")
       .doc(omcId)
-      .collection("customer");
+      .collection(`customers`);
   }
 
   createcompany(company: DaudiCustomer): Observable<any> {

@@ -172,10 +172,6 @@
       <span></span>
     </div>
     <div class="top-nav-right">
-      <mat-slide-toggle *ngIf="allowsandbox" class="example-margin" color="primary"
-        [checked]="environment === 'sandbox'" (change)=changeEnvironment($event)>
-        Sandbox
-      </mat-slide-toggle>
       <!--{{firestore.connectionStatus.value === true ? 'Online ' : 'Offline'}}-->
       <ul class="list-unstyled float-right">
         <li>

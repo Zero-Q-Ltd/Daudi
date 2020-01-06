@@ -6,6 +6,7 @@ import { deepCopy } from "../../utils/deepCopy";
 
 export interface OMCStock {
     qty: {
+
         [key in FuelType]: {
             allocation: number;
             /**
@@ -19,12 +20,10 @@ export interface OMCStock {
                 totalActive: number,
                 used: number
             }
-        };
+        }
     };
     taxExempt: {
-        [key in Environment]: {
-            [subKey in FuelType]: TaxExempt
-        }
+        [subKey in FuelType]: TaxExempt
     };
 }
 
@@ -65,15 +64,8 @@ export const EmptyOMCStock: OMCStock = {
         }
     },
     taxExempt: {
-        live: {
-            ago: deepCopy<TaxExempt>(emptytaxExempt),
-            ik: deepCopy<TaxExempt>(emptytaxExempt),
-            pms: deepCopy<TaxExempt>(emptytaxExempt)
-        },
-        sandbox: {
-            ago: deepCopy<TaxExempt>(emptytaxExempt),
-            ik: deepCopy<TaxExempt>(emptytaxExempt),
-            pms: deepCopy<TaxExempt>(emptytaxExempt)
-        }
+        ago: deepCopy<TaxExempt>(emptytaxExempt),
+        ik: deepCopy<TaxExempt>(emptytaxExempt),
+        pms: deepCopy<TaxExempt>(emptytaxExempt)
     },
-}
+};

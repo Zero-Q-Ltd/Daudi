@@ -1,7 +1,5 @@
-import { Contact } from "./Contact";
-import { AssociatedUser } from "../admin/AssociatedUser";
 import { MyGeoPoint } from "../../firestore/firestoreTypes";
-import { Environment } from "../omc/Environments";
+import { AssociatedUser } from "../admin/AssociatedUser";
 import { CustomerDetail } from "./CustomerDetail";
 
 export interface DaudiCustomer extends CustomerDetail {

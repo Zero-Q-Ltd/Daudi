@@ -1,9 +1,6 @@
 import { Injectable } from "@angular/core";
-import { AngularFirestore, QueryFn } from "@angular/fire/firestore";
-import { Observable } from "rxjs";
-import { map } from "rxjs/operators";
-import { Depot, emptydepot } from "../../../models/Daudi/depot/Depot";
-import { CoreService } from "./core.service";
+import { AngularFirestore } from "@angular/fire/firestore";
+import { Depot } from "../../../models/Daudi/depot/Depot";
 
 @Injectable({
   providedIn: "root"
@@ -31,6 +28,9 @@ export class DepotService {
   depotConfigCollection(omcId: string) {
     return this.db.firestore.collection("omc")
       .doc(omcId)
-      .collection("depotConfig");
+      .collection(`depotConfig`);
+  }
+  depotConfigDoc(omcId: string, depotId: string) {
+    return this.depotConfigCollection(omcId).doc(depotId);
   }
 }

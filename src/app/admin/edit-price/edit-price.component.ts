@@ -10,7 +10,6 @@ import { DepotConfig, emptyDepotConfig } from "../../models/Daudi/depot/DepotCon
 import { Price } from "../../models/Daudi/depot/Price";
 import { FuelNamesArray, FuelType } from "../../models/Daudi/fuel/FuelType";
 import { OMCConfig, emptyConfig } from "../../models/Daudi/omc/Config";
-import { Environment } from "../../models/Daudi/omc/Environments";
 import { OMC } from "../../models/Daudi/omc/OMC";
 import { AvgPrice } from "../../models/Daudi/price/AvgPrice";
 import { NotificationService } from "../../shared/services/notification.service";
@@ -58,7 +57,6 @@ export class EditPriceComponent implements OnInit, OnDestroy {
   selectedOMC: OMC;
 
   currentOmcConfig: OMCConfig = { ...emptyConfig };
-  env: Environment = Environment.sandbox;
 
   avgprices: {
     [key in FuelType]: {
@@ -109,11 +107,7 @@ export class EditPriceComponent implements OnInit, OnDestroy {
       .subscribe(config => {
         this.currentOmcConfig = config;
       });
-    this.core.environment
-      .pipe(takeUntil(this.comopnentDestroyed))
-      .subscribe(environment => {
-        this.env = environment;
-      });
+
     this.core.activedepot
       .pipe(takeUntil(this.comopnentDestroyed))
       .subscribe(depot => {

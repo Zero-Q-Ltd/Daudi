@@ -10,7 +10,6 @@ import { Depot, emptydepot } from "../../models/Daudi/depot/Depot";
 import { DepotConfig, emptyDepotConfig } from "../../models/Daudi/depot/DepotConfig";
 import { FuelNamesArray } from "../../models/Daudi/fuel/FuelType";
 import { OMCConfig, emptyConfig } from "../../models/Daudi/omc/Config";
-import { Environment } from "../../models/Daudi/omc/Environments";
 import { emptyorder, Order } from "../../models/Daudi/order/Order";
 import { NotificationService } from "../../shared/services/notification.service";
 import { MapsComponent } from "../maps/maps.component";
@@ -41,8 +40,6 @@ export class CreateOrderComponent implements OnDestroy {
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
   activedepot: { depot: Depot, config: DepotConfig } = { depot: { ...emptydepot }, config: { ...emptyDepotConfig } };
   omcConfig: OMCConfig = { ...emptyConfig };
-  env: Environment = Environment.sandbox;
-
   kraModified = false;
   validContactForm = false;
   validCalculationForm = false;
@@ -77,15 +74,12 @@ export class CreateOrderComponent implements OnDestroy {
       this.core.config.pipe(
         takeUntil(this.comopnentDestroyed),
         skipWhile(t => !t)),
-      this.core.environment
-        .pipe(takeUntil(this.comopnentDestroyed)),
       this.core.currentOmc.pipe(
         takeUntil(this.comopnentDestroyed),
         skipWhile(t => !t.Id))
     ]).subscribe(res => {
       this.activedepot = res[1];
       this.omcConfig = res[2];
-      this.env = res[3];
 
       if (this.router.url === "/admin/create-order") {
         console.log("New Order");
@@ -215,7 +209,6 @@ export class CreateOrderComponent implements OnDestroy {
         id: this.core.activedepot.value.depot.Id,
         name: this.core.activedepot.value.depot.Name
       },
-      environment: this.core.environment.value
     };
     if (!this.temporder.customer.QbId) {
       // check if KRA pin is unique
@@ -235,7 +228,6 @@ export class CreateOrderComponent implements OnDestroy {
           QbId: this.temporder.customer.QbId,
           balance: 0,
           contact: this.temporder.customer.contact,
-          environment: this.env,
           krapin: this.temporder.customer.krapin,
           kraverified: null,
           location: new firestore.GeoPoint(0, 38),

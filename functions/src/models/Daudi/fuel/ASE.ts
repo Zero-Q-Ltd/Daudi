@@ -24,6 +24,5 @@ export const emptyASEs: ASE = {
         Id: null
     },
     active: false,
-    environment: Environment.sandbox,
     date: new MyTimestamp(0, 0)
 };

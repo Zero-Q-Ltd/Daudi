@@ -3,7 +3,6 @@ import { deepCopy } from "../../utils/deepCopy";
 import { AdminType } from "../admin/AdminType";
 import { Meta } from "../universal/Meta";
 import { Metadata } from "../universal/Metadata";
-import { Environment } from "./Environments";
 import { emptyFuelConfig, FuelConfig } from "./FuelConfig";
 import { QBOAuthCOnfig } from "./QboAuthConfig";
 import { QboEnvironment } from "./QboEnvironment";
@@ -33,7 +32,6 @@ export const emptyqboAuth: QBOAuthCOnfig = {
     clientId: "",
     clientSecret: "",
     webhooksVerifier: "",
-    environment: Environment.sandbox,
     authConfig: {
         previousDCT: MyTimestamp.fromDate(new Date()),
         accessToken: "",

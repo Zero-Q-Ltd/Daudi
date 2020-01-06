@@ -30,7 +30,6 @@ export interface Order {
       name: string,
       id: string
     }
-    environment: Environment,
   };
   error?: {
     status: boolean,
@@ -106,7 +105,6 @@ export const emptyorder: Order = {
     email: null
   },
   config: {
-    environment: null,
     depot: {
       id: null,
       name: null

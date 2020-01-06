@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
-import { AngularFirestore, QueryFn } from "@angular/fire/firestore";
+import { AngularFirestore } from "@angular/fire/firestore";
 import { AngularFireFunctions } from "@angular/fire/functions";
-import { BehaviorSubject, of } from "rxjs";
+import { BehaviorSubject } from "rxjs";
 import { OrderCreate } from "../../models/Cloud/OrderCreate";
 import { Order } from "../../models/Daudi/order/Order";
 
@@ -108,7 +108,9 @@ export class OrdersService {
       .doc(orderid);
   }
 
-  ordersCollection(omcId: string) {
+  ordersCollection(omcId: string,
+    //  environmnet: Environment
+  ) {
     return this.db.firestore.collection("omc")
       .doc(omcId)
       .collection("order");

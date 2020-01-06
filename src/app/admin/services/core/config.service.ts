@@ -2,14 +2,13 @@ import { Injectable } from "@angular/core";
 import { AngularFirestore } from "@angular/fire/firestore";
 import { Admin } from "../../../models/Daudi/admin/Admin";
 import { emptyConfig, OMCConfig } from "../../../models/Daudi/omc/Config";
-import { AdminService } from "./admin.service";
 
 @Injectable({
   providedIn: "root"
 })
 export class ConfigService {
 
-  constructor(private db: AngularFirestore, private adminservice: AdminService) {
+  constructor(private db: AngularFirestore) {
 
   }
 
@@ -21,7 +20,7 @@ export class ConfigService {
     return this.db.firestore.collection("omc")
       .doc(omcId)
       .collection("values")
-      .doc("config");
+      .doc(`config`);
   }
   stockDoc(omcId: string) {
     return this.db.firestore.collection("omc")

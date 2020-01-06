@@ -9,7 +9,6 @@ import { DepotConfig, emptyDepotConfig } from "./../../../../models/Daudi/depot/
 import { Calculations, FuelCalculation } from "./../../../../models/Daudi/forms/Calculations";
 import { FuelNamesArray, FuelType } from "./../../../../models/Daudi/fuel/FuelType";
 import { emptyConfig, OMCConfig } from "./../../../../models/Daudi/omc/Config";
-import { Environment } from "./../../../../models/Daudi/omc/Environments";
 import { Order } from "./../../../../models/Daudi/order/Order";
 import { NotificationService } from "./../../../../shared/services/notification.service";
 import { OMCStock, EmptyOMCStock } from "../../../../models/Daudi/omc/Stock";
@@ -30,7 +29,6 @@ export class CalculationsComponent implements OnInit, OnChanges {
   omcConfig: OMCConfig = { ...emptyConfig };
   activedepot: { depot: Depot, config: DepotConfig } = { depot: { ...emptydepot }, config: { ...emptyDepotConfig } };
   stock: OMCStock = { ...EmptyOMCStock };
-  env: Environment = Environment.sandbox;
   calculationsForm: FormGroup<Calculations> = new FormGroup<Calculations>({
     pms: new FormGroup<FuelCalculation>({
       price: new FormControl<number>(0, [Validators.required]),
@@ -54,11 +52,6 @@ export class CalculationsComponent implements OnInit, OnChanges {
     private notificationService: NotificationService,
 
   ) {
-    this.core.environment.pipe(
-      takeUntil(this.comopnentDestroyed)
-    ).subscribe(val => {
-      this.env = val;
-    });
 
     this.core.config.pipe(
       takeUntil(this.comopnentDestroyed)

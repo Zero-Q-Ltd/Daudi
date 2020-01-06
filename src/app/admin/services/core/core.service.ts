@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { AngularFirestore } from "@angular/fire/firestore";
 import * as moment from "moment";
-import { BehaviorSubject, combineLatest } from "rxjs";
+import { BehaviorSubject } from "rxjs";
 import { distinctUntilChanged, skipWhile } from "rxjs/operators";
 import { DaudiCustomer, emptyDaudiCustomer } from "../../../models/Daudi/customer/Customer";
 import { Depot, emptydepot } from "../../../models/Daudi/depot/Depot";
@@ -9,7 +9,6 @@ import { DepotConfig, emptyDepotConfig } from "../../../models/Daudi/depot/Depot
 import { emptyEntry, Entry } from "../../../models/Daudi/fuel/Entry";
 import { FuelNamesArray } from "../../../models/Daudi/fuel/FuelType";
 import { emptyConfig, OMCConfig } from "../../../models/Daudi/omc/Config";
-import { Environment } from "../../../models/Daudi/omc/Environments";
 import { emptyomc, OMC } from "../../../models/Daudi/omc/OMC";
 import { EmptyOMCStock, OMCStock } from "../../../models/Daudi/omc/Stock";
 import { emptyorder, Order } from "../../../models/Daudi/order/Order";
@@ -31,7 +30,6 @@ import { OmcService } from "./omc.service";
  */
 export class CoreService {
   config: BehaviorSubject<OMCConfig> = new BehaviorSubject<OMCConfig>({ ...emptyConfig });
-  environment: BehaviorSubject<Environment> = new BehaviorSubject<Environment>(Environment.sandbox);
   depots: BehaviorSubject<Array<Depot>> = new BehaviorSubject([]);
   customers: BehaviorSubject<Array<DaudiCustomer>> = new BehaviorSubject<Array<DaudiCustomer>>([]);
   omcs: BehaviorSubject<Array<OMC>> = new BehaviorSubject<Array<OMC>>([]);
@@ -97,6 +95,9 @@ export class CoreService {
         this.subscriptions.set("configSubscription", this.configService.configDoc(admin.config.omcId)
           .onSnapshot(t => {
             const config = this.attachId.transformObject<OMCConfig>(emptyConfig, t);
+            // this.duplicate(admin.config.omcId, "values", this.environment.value, "config", { Qbo: t.data().Qbo.sandbox });
+            // this.duplicate(admin.config.omcId, "values", Environment.live, "config", { Qbo: t.data().Qbo.live });
+            // this.duplicate(admin.config.omcId, "values", this.environment.value, "config", { adminTypes: t.data().adminTypes });
             if (!config.status) {
               console.log("OMC Account not active");
               return;
@@ -109,7 +110,7 @@ export class CoreService {
             this.getOmcs();
             this.getDepots();
             this.getallcustomers();
-            this.getStocks();
+            // this.getStocks();
           }));
       });
 
@@ -120,6 +121,13 @@ export class CoreService {
       this.getOrdersPipeline(t.depot.Id);
       this.fetchActiveEntries();
     });
+  }
+  duplicate(omcId: string, name: string, id: string, doc) {
+    return this.db.firestore.collection("omc")
+      .doc(omcId)
+      .collection(name)
+      .doc(id)
+      .set(doc);
   }
   getStocks() {
     this.loaders.stock.next(true);
@@ -193,7 +201,6 @@ export class CoreService {
   getallcustomers() {
     this.loaders.customers.next(true);
     this.subscriptions.set("allcustomers", this.customerService.customerCollection(this.omcId)
-      .where("environment", "==", this.environment.value)
       .onSnapshot(data => {
         this.loaders.customers.next(false);
         this.customers.next(this.attachId.transformArray<DaudiCustomer>(emptyDaudiCustomer, data));
@@ -211,18 +218,10 @@ export class CoreService {
     this.loaders.depotConfig.next(true);
     if (JSON.stringify(depot) !== JSON.stringify(this.activedepot.value)) {
       this.subscriptions.set("currentDepotConfig", this.depotService
-        .depotConfigCollection(this.omcId)
-        .where("environment", "==", this.environment.value)
-        .where("depotId", "==", depot.Id)
-        .onSnapshot(configData => {
-          if (!configData.empty) {
-            /**
-             * Only one config SHOULD exist per environment, hence safe to take first value
-             */
-            if (configData.docs.length > 1) {
-              console.error("Multiple Configs found for the same Depot");
-            }
-            const config: DepotConfig = { ...emptyDepotConfig, ...configData.docs[0].data(), ...{ depotId: configData.docs[0].id } };
+        .depotConfigDoc(this.omcId, depot.Id)
+        .onSnapshot(t => {
+          if (t.exists) {
+            const config: DepotConfig = this.attachId.transformObject<DepotConfig>(emptyDepotConfig, t);
             console.log("changing to:", depot.Name, config.depotId, config.Id);
             this.activedepot.next({ depot, config });
             this.loaders.depotConfig.next(false);
@@ -273,8 +272,7 @@ export class CoreService {
 
       const subscriprion = this.orderService.ordersCollection(this.omcId)
         .where("stage", "==", stage)
-        .where("config.depot.id", "==", depotId)
-        .where("config.environment", "==", this.environment.value)
+        // .where("config.depot.id", "==", depotId)
         .orderBy("stagedata.1.user.time", "asc")
         .onSnapshot(Data => {
           /**
@@ -295,8 +293,7 @@ export class CoreService {
      */
     const stage5subscriprion = this.orderService.ordersCollection(this.omcId)
       .where("stage", "==", 5)
-      .where("config.depot.id", "==", depotId)
-      .where("config.environment", "==", this.environment.value)
+      // .where("config.depot.id", "==", depotId)
       .where("stagedata.1.user.time", "<=", startofweek)
       .orderBy("stagedata.1.user.time", "asc")
       .onSnapshot(Data => {
@@ -321,7 +318,6 @@ export class CoreService {
     this.fueltypesArray.forEach(fuelType => {
       this.subscriptions.set("entries", this.entriesService.entryCollection(this.omcId)
         .where("active", "==", true)
-        .where("environment", "==", this.environment.value)
         .where("fuelType", "==", fuelType)
         .onSnapshot(data => {
           this.loaders.entries.next(false);

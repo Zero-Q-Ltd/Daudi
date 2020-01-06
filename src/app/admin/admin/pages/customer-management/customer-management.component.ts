@@ -159,7 +159,6 @@ export class CustomerManagementComponent implements OnInit, OnDestroy {
     };
     const syncObject: CompanySync = {
       config: this.core.config.value,
-      environment: this.core.environment.value,
       omc: this.core.currentOmc.value,
       sync: req
     };
