@@ -1,9 +1,9 @@
-import { Injectable } from "@angular/core";
-import { Subject } from "rxjs";
-import { Alert } from "../../models/Daudi/notification/Alert";
-import { MatSnackBar } from "@angular/material";
-import { Howl } from "howler";
-import { NotificationComponent } from "../components/notification/notification.component";
+import {Injectable} from "@angular/core";
+import {Subject} from "rxjs";
+import {Alert} from "../../models/Daudi/notification/Alert";
+import {MatSnackBar} from "@angular/material";
+import {Howl} from "howler";
+import {NotificationComponent} from "../components/notification/notification.component";
 
 @Injectable({
   providedIn: "root"

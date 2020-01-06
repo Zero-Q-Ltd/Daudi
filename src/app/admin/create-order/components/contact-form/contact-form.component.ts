@@ -1,14 +1,14 @@
-import { Component, OnInit, Input, Output, EventEmitter, OnChanges } from "@angular/core";
-import { OrderContactForm } from "./../../../../models/Daudi/forms/CreateOrder";
-import { Order } from "./../../../../models/Daudi/order/Order";
-import { CustomerDetail } from "../../../../models/Daudi/customer/CustomerDetail";
-import { FormArray, FormControl, Controls, FormGroup, FormBuilder } from "ngx-strongly-typed-forms";
-import { Validators, AbstractControl } from "@angular/forms";
-import { Observable, ReplaySubject, Subject } from "rxjs";
-import { DaudiCustomer } from "./../../../../models/Daudi/customer/Customer";
-import { takeUntil, startWith } from "rxjs/operators";
-import { CustomerService } from "./../../../services/customers.service";
-import { CoreService } from "./../../../services/core/core.service";
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output} from "@angular/core";
+import {OrderContactForm} from "./../../../../models/Daudi/forms/CreateOrder";
+import {Order} from "./../../../../models/Daudi/order/Order";
+import {CustomerDetail} from "../../../../models/Daudi/customer/CustomerDetail";
+import {FormBuilder, FormControl, FormGroup} from "ngx-strongly-typed-forms";
+import {Validators} from "@angular/forms";
+import {ReplaySubject, Subject} from "rxjs";
+import {DaudiCustomer} from "./../../../../models/Daudi/customer/Customer";
+import {takeUntil} from "rxjs/operators";
+import {CustomerService} from "./../../../services/customers.service";
+import {CoreService} from "./../../../services/core/core.service";
 
 @Component({
   selector: "app-contact-form",

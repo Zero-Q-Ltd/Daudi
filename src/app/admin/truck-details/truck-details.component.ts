@@ -1,19 +1,18 @@
-import { Component, EventEmitter, OnDestroy, OnInit } from "@angular/core";
-import { emptytruck, Truck } from "../../models/Daudi/order/truck/Truck";
-import { Order } from "../../models/Daudi/order/Order";
+import {Component, EventEmitter, OnDestroy, OnInit} from "@angular/core";
+import {Truck} from "../../models/Daudi/order/truck/Truck";
+import {Order} from "../../models/Daudi/order/Order";
 import * as moment from "moment";
-import { ConfirmDialogComponent } from "../confirm-dialog/confirm-dialog.component";
-import { Options } from "ng5-slider";
-import { NotificationService } from "../../shared/services/notification.service";
-import { EntriesSelectorComponent } from "../entries-selector/entries-selector.component";
-import { OrdersService } from "../services/orders.service";
-import { AdminService } from "../services/core/admin.service";
-import { ComponentCommunicationService } from "../services/component-communication.service";
-import { MatDialog } from "@angular/material";
-import { AngularFirestore } from "@angular/fire/firestore";
-import { takeUntil } from "rxjs/operators";
-import { ReplaySubject } from "rxjs";
-
+import {ConfirmDialogComponent} from "../confirm-dialog/confirm-dialog.component";
+import {Options} from "ng5-slider";
+import {NotificationService} from "../../shared/services/notification.service";
+import {EntriesSelectorComponent} from "../entries-selector/entries-selector.component";
+import {OrdersService} from "../services/orders.service";
+import {AdminService} from "../services/core/admin.service";
+import {ComponentCommunicationService} from "../services/component-communication.service";
+import {MatDialog} from "@angular/material";
+import {AngularFirestore} from "@angular/fire/firestore";
+import {takeUntil} from "rxjs/operators";
+import {ReplaySubject} from "rxjs";
 
 
 @Component({

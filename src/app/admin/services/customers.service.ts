@@ -1,8 +1,8 @@
-import { Injectable } from "@angular/core";
-import { AngularFirestore } from "@angular/fire/firestore";
-import { AngularFireFunctions } from "@angular/fire/functions";
-import { Observable } from "rxjs";
-import { DaudiCustomer } from "../../models/Daudi/customer/Customer";
+import {Injectable} from "@angular/core";
+import {AngularFirestore} from "@angular/fire/firestore";
+import {AngularFireFunctions} from "@angular/fire/functions";
+import {Observable} from "rxjs";
+import {DaudiCustomer} from "../../models/Daudi/customer/Customer";
 
 @Injectable({
   providedIn: "root"

@@ -1,8 +1,9 @@
-import { MyTimestamp } from "../../../firestore/firestoreTypes";
-import { GenericStageDetail } from "../GenericStageDetail";
-import { Expiry } from "./Truck";
-import { deepCopy } from "../../../utils/deepCopy";
-import { AssociatedUser, inituser } from "../../admin/AssociatedUser";
+import {MyTimestamp} from "../../../firestore/firestoreTypes";
+import {GenericStageDetail} from "../GenericStageDetail";
+import {Expiry} from "./Truck";
+import {deepCopy} from "../../../utils/deepCopy";
+import {AssociatedUser, inituser} from "../../admin/AssociatedUser";
+
 export interface TruckStageWithPrinting extends GenericTruckStage {
     print: {
         status: boolean;

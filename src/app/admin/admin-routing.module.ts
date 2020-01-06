@@ -1,22 +1,17 @@
-import { NgModule } from "@angular/core";
-import { RouterModule, Routes } from "@angular/router";
-import { AdminComponent } from "./admin/admin.component";
-import { CreateOrderComponent } from "./create-order/create-order.component";
-import { AccountDetailsComponent } from "./account-details/account-details.component";
-import { EditPriceComponent } from "./edit-price/edit-price.component";
-import { OrderDetailsComponent } from "./order-details/order-details.component";
-import { OrdersTableComponent } from "./orders-table/orders-table.component";
-import { CompartmentsComponent } from "./compartments/compartments.component";
-import { TrucksTableComponent } from "./trucks-table/trucks-table.component";
-import { TruckDetailsComponent } from "./truck-details/truck-details.component";
-import { PageNotFoundComponent } from "./page-not-found/page-not-found.component";
-import { DashboardComponent } from "./dashboard/dashboard.component";
-import { ArchiveComponent } from "./archive/archive.component";
-import { LoginComponent } from "./login/login.component";
-import { LayoutComponent } from "./layout/layout.component";
-import { UsersGuard } from "./guards/users.guard";
-import { PricechangerGuard } from "./guards/pricechanger.guard";
-import { RouteData, RouteDataClass } from "../models/Daudi/navigation/RouteData";
+import {NgModule} from "@angular/core";
+import {RouterModule, Routes} from "@angular/router";
+import {AdminComponent} from "./admin/admin.component";
+import {CreateOrderComponent} from "./create-order/create-order.component";
+import {EditPriceComponent} from "./edit-price/edit-price.component";
+import {OrdersTableComponent} from "./orders-table/orders-table.component";
+import {TrucksTableComponent} from "./trucks-table/trucks-table.component";
+import {PageNotFoundComponent} from "./page-not-found/page-not-found.component";
+import {DashboardComponent} from "./dashboard/dashboard.component";
+import {ArchiveComponent} from "./archive/archive.component";
+import {LoginComponent} from "./login/login.component";
+import {LayoutComponent} from "./layout/layout.component";
+import {UsersGuard} from "./guards/users.guard";
+import {RouteDataClass} from "../models/Daudi/navigation/RouteData";
 
 // /**
 //  * This has been created separately so as to take advantage of linting features

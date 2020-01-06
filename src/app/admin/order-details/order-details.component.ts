@@ -1,11 +1,10 @@
 // import { BatchSelectorComponent } from './../batch-selector/batch-selector.component';
-import { Component, Input, OnDestroy, OnInit } from "@angular/core";
-import { MatDialog } from "@angular/material"; // added dialog data receive
-import { NotificationService } from "../../shared/services/notification.service";
-import { AngularFirestore } from "@angular/fire/firestore";
-import { Truck } from "../../models/Daudi/order/truck/Truck";
-import { Order } from "../../models/Daudi/order/Order";
-import { ReplaySubject } from "rxjs";
+import {Component, Input, OnDestroy, OnInit} from "@angular/core";
+import {MatDialog} from "@angular/material"; // added dialog data receive
+import {NotificationService} from "../../shared/services/notification.service";
+import {AngularFirestore} from "@angular/fire/firestore";
+import {Truck} from "../../models/Daudi/order/truck/Truck";
+import {ReplaySubject} from "rxjs";
 
 @Component({
   selector: "order-details",

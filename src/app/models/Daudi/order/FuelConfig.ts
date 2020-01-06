@@ -1,5 +1,6 @@
-import { TruckEntry } from "./truck/Truck";
-import { PriceConfig } from "./PriceConfig";
+import {TruckEntry} from "./truck/Truck";
+import {PriceConfig} from "./PriceConfig";
+
 export interface OrderFuelConfig {
     qty: number;
     priceconfig: PriceConfig;

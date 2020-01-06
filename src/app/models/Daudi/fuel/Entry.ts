@@ -1,9 +1,8 @@
-
-import { deepCopy } from "../../../models/utils/deepCopy";
-import { MyTimestamp } from "../../firestore/firestoreTypes";
-import { BaseStockModel } from "./BaseStockModel";
-import { EmptyStockQty, StockQty } from "./StockQty";
-import { EntryRef } from "./StockRef";
+import {deepCopy} from "../../../models/utils/deepCopy";
+import {MyTimestamp} from "../../firestore/firestoreTypes";
+import {BaseStockModel} from "./BaseStockModel";
+import {EmptyStockQty, StockQty} from "./StockQty";
+import {EntryRef} from "./StockRef";
 
 
 export interface Entry extends BaseStockModel {

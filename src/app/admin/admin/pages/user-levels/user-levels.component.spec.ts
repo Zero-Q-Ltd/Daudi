@@ -1,6 +1,6 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { UserLevelsComponent } from './user-levels.component';
+import {UserLevelsComponent} from './user-levels.component';
 
 describe('UserLevelsComponent', () => {
   let component: UserLevelsComponent;

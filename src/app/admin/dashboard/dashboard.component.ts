@@ -1,5 +1,5 @@
-import { Component, OnInit } from "@angular/core";
-import { ReplaySubject } from "rxjs";
+import {Component, OnInit} from "@angular/core";
+import {ReplaySubject} from "rxjs";
 
 @Component({
   selector: "app-dashboard",

@@ -1,10 +1,9 @@
-import { Injectable } from "@angular/core";
-import { AngularFirestore } from "@angular/fire/firestore";
-import { DepotService } from "./core/depot.service";
-import { BehaviorSubject } from "rxjs";
-import { distinctUntilKeyChanged } from "rxjs/operators";
-import { ConfigService } from "./core/config.service";
-import { EquityBulk } from "../../models/ipn/EquityBulk";
+import {Injectable} from "@angular/core";
+import {AngularFirestore} from "@angular/fire/firestore";
+import {DepotService} from "./core/depot.service";
+import {BehaviorSubject} from "rxjs";
+import {ConfigService} from "./core/config.service";
+import {EquityBulk} from "../../models/ipn/EquityBulk";
 
 @Injectable({
   providedIn: "root"

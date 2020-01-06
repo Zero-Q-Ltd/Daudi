@@ -1,6 +1,6 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { PriceComparisonComponent } from './price-comparison.component';
+import {PriceComparisonComponent} from './price-comparison.component';
 
 describe('PriceComparisonComponent', () => {
   let component: PriceComparisonComponent;

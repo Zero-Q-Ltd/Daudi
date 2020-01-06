@@ -1,14 +1,14 @@
-import { Component, OnInit, ViewChild } from "@angular/core";
-import { AngularFireFunctions } from "@angular/fire/functions";
-import { MatPaginator, MatTableDataSource } from "@angular/material";
-import { ReplaySubject } from "rxjs";
-import { takeUntil } from "rxjs/operators";
-import { emptyEntry, Entry } from "../../../../models/Daudi/fuel/Entry";
-import { FuelNamesArray, FuelType } from "../../../../models/Daudi/fuel/FuelType";
-import { NotificationService } from "../../../../shared/services/notification.service";
-import { CoreService } from "../../../services/core/core.service";
-import { EntriesService } from "../../../services/entries.service";
-import { CoreAdminService } from "../../services/core.service";
+import {Component, OnInit, ViewChild} from "@angular/core";
+import {AngularFireFunctions} from "@angular/fire/functions";
+import {MatPaginator, MatTableDataSource} from "@angular/material";
+import {ReplaySubject} from "rxjs";
+import {takeUntil} from "rxjs/operators";
+import {emptyEntry, Entry} from "../../../../models/Daudi/fuel/Entry";
+import {FuelNamesArray, FuelType} from "../../../../models/Daudi/fuel/FuelType";
+import {NotificationService} from "../../../../shared/services/notification.service";
+import {CoreService} from "../../../services/core/core.service";
+import {EntriesService} from "../../../services/entries.service";
+import {CoreAdminService} from "../../services/core.service";
 
 
 @Component({

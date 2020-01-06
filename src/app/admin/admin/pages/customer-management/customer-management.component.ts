@@ -1,20 +1,20 @@
-import { SelectionModel } from "@angular/cdk/collections";
-import { Component, Inject, OnDestroy, OnInit, Optional, ViewChild } from "@angular/core";
-import { AngularFireFunctions } from "@angular/fire/functions";
-import { MatDialog, MatDialogRef, MatPaginator, MatSnackBar, MatSort, MatTableDataSource, MAT_DIALOG_DATA } from "@angular/material";
-import { ReplaySubject } from "rxjs";
-import { takeUntil } from "rxjs/operators";
-import { CompanySync } from "../../../../models/Cloud/CompanySync";
-import { SyncRequest } from "../../../../models/Cloud/Sync";
-import { DaudiCustomer } from "../../../../models/Daudi/customer/Customer";
-import { SMS } from "../../../../models/Daudi/sms/sms";
-import { MyTimestamp } from "../../../../models/firestore/firestoreTypes";
-import { NotificationService } from "../../../../shared/services/notification.service";
-import { SendMsgComponent } from "../../../send-msg/send-msg.component";
-import { AdminService } from "../../../services/core/admin.service";
-import { CoreService } from "../../../services/core/core.service";
-import { CustomerService } from "../../../services/customers.service";
-import { CompanyMembersComponent } from "../company-members/company-members.component";
+import {SelectionModel} from "@angular/cdk/collections";
+import {Component, Inject, OnDestroy, OnInit, Optional, ViewChild} from "@angular/core";
+import {AngularFireFunctions} from "@angular/fire/functions";
+import {MAT_DIALOG_DATA, MatDialog, MatDialogRef, MatPaginator, MatSnackBar, MatSort, MatTableDataSource} from "@angular/material";
+import {ReplaySubject} from "rxjs";
+import {takeUntil} from "rxjs/operators";
+import {CompanySync} from "../../../../models/Cloud/CompanySync";
+import {SyncRequest} from "../../../../models/Cloud/Sync";
+import {DaudiCustomer} from "../../../../models/Daudi/customer/Customer";
+import {SMS} from "../../../../models/Daudi/sms/sms";
+import {MyTimestamp} from "../../../../models/firestore/firestoreTypes";
+import {NotificationService} from "../../../../shared/services/notification.service";
+import {SendMsgComponent} from "../../../send-msg/send-msg.component";
+import {AdminService} from "../../../services/core/admin.service";
+import {CoreService} from "../../../services/core/core.service";
+import {CustomerService} from "../../../services/customers.service";
+import {CompanyMembersComponent} from "../company-members/company-members.component";
 
 
 @Component({

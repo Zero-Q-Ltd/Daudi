@@ -1,6 +1,6 @@
-import { NgModule } from "@angular/core";
-import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { TextMaskModule } from "angular2-text-mask"; // for input mask
+import {NgModule} from "@angular/core";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {TextMaskModule} from "angular2-text-mask"; // for input mask
 import {
   MatAutocompleteModule,
   MatButtonModule,

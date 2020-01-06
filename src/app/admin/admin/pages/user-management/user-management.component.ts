@@ -1,20 +1,18 @@
-import { animate, sequence, state, style, transition, trigger } from "@angular/animations";
-import { Component, HostListener, OnDestroy, OnInit, ViewChild } from "@angular/core";
-import { AngularFireFunctions } from "@angular/fire/functions";
-import { MatDialog, MatPaginator, MatSnackBar, MatSort, MatTableDataSource } from "@angular/material";
+import {animate, sequence, state, style, transition, trigger} from "@angular/animations";
+import {Component, HostListener, OnDestroy, OnInit, ViewChild} from "@angular/core";
+import {AngularFireFunctions} from "@angular/fire/functions";
+import {MatPaginator, MatSort, MatTableDataSource} from "@angular/material";
 import * as moment from "moment";
-import { ReplaySubject } from "rxjs";
-import { takeUntil } from "rxjs/operators";
-import { SyncRequest } from "../../../../models/Cloud/Sync";
-import { Admin, emptyadmin } from "../../../../models/Daudi/admin/Admin";
-import { Depot } from "../../../../models/Daudi/depot/Depot";
-import { emptyomc, OMC } from "../../../../models/Daudi/omc/OMC";
-import { MyTimestamp } from "../../../../models/firestore/firestoreTypes";
-import { NotificationService } from "../../../../shared/services/notification.service";
-import { AdminService } from "../../../services/core/admin.service";
-import { ConfigService } from "../../../services/core/config.service";
-import { CoreService } from "../../../services/core/core.service";
-import { DepotService } from "../../../services/core/depot.service";
+import {ReplaySubject} from "rxjs";
+import {takeUntil} from "rxjs/operators";
+import {SyncRequest} from "../../../../models/Cloud/Sync";
+import {Admin, emptyadmin} from "../../../../models/Daudi/admin/Admin";
+import {Depot} from "../../../../models/Daudi/depot/Depot";
+import {emptyomc, OMC} from "../../../../models/Daudi/omc/OMC";
+import {MyTimestamp} from "../../../../models/firestore/firestoreTypes";
+import {NotificationService} from "../../../../shared/services/notification.service";
+import {AdminService} from "../../../services/core/admin.service";
+import {CoreService} from "../../../services/core/core.service";
 
 
 @Component({

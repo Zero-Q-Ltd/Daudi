@@ -1,7 +1,7 @@
-import { Injectable } from "@angular/core";
-import { AngularFirestore } from "@angular/fire/firestore";
-import { Admin } from "../../../models/Daudi/admin/Admin";
-import { emptyConfig, OMCConfig } from "../../../models/Daudi/omc/Config";
+import {Injectable} from "@angular/core";
+import {AngularFirestore} from "@angular/fire/firestore";
+import {Admin} from "../../../models/Daudi/admin/Admin";
+import {emptyConfig, OMCConfig} from "../../../models/Daudi/omc/Config";
 
 @Injectable({
   providedIn: "root"

@@ -1,9 +1,9 @@
-import { Injectable } from "@angular/core";
-import { AngularFirestore } from "@angular/fire/firestore";
-import { AngularFireFunctions } from "@angular/fire/functions";
-import { BehaviorSubject } from "rxjs";
-import { OrderCreate } from "../../models/Cloud/OrderCreate";
-import { Order } from "../../models/Daudi/order/Order";
+import {Injectable} from "@angular/core";
+import {AngularFirestore} from "@angular/fire/firestore";
+import {AngularFireFunctions} from "@angular/fire/functions";
+import {BehaviorSubject} from "rxjs";
+import {OrderCreate} from "../../models/Cloud/OrderCreate";
+import {Order} from "../../models/Daudi/order/Order";
 
 
 @Injectable({

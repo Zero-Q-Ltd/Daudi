@@ -1,5 +1,5 @@
-import { EChartOption } from "echarts";
-import { CHARTCONFIG } from "./charts.config";
+import {EChartOption} from "echarts";
+import {CHARTCONFIG} from "./charts.config";
 
 const upColor = "#ec0000";
 const upBorderColor = "#8A0000";

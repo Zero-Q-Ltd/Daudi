@@ -1,6 +1,6 @@
-import { Component, Inject, OnDestroy, OnInit, Optional } from "@angular/core";
-import { MAT_DIALOG_DATA } from "@angular/material";
-import { ReplaySubject } from "rxjs"; //added dialog data receive
+import {Component, Inject, OnDestroy, OnInit, Optional} from "@angular/core";
+import {MAT_DIALOG_DATA} from "@angular/material";
+import {ReplaySubject} from "rxjs"; //added dialog data receive
 
 @Component({
   selector: "app-confirm-dialog",

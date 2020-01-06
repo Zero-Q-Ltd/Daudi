@@ -1,9 +1,9 @@
-import { Injectable } from "@angular/core";
-import { AngularFirestore } from "@angular/fire/firestore";
-import { Depot } from "../../models/Daudi/depot/Depot";
-import { DepotService } from "./core/depot.service";
-import { ConfigService } from "./core/config.service";
-import { OmcService } from "./core/omc.service";
+import {Injectable} from "@angular/core";
+import {AngularFirestore} from "@angular/fire/firestore";
+import {Depot} from "../../models/Daudi/depot/Depot";
+import {DepotService} from "./core/depot.service";
+import {ConfigService} from "./core/config.service";
+import {OmcService} from "./core/omc.service";
 
 @Injectable({
   providedIn: "root"

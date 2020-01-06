@@ -1,4 +1,4 @@
-import { MyTimestamp } from "../../firestore/firestoreTypes";
+import {MyTimestamp} from "../../firestore/firestoreTypes";
 
 
 export interface AssociatedUser {

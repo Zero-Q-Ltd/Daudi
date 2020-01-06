@@ -1,32 +1,31 @@
-import { ApplicationRef, NgModule } from "@angular/core";
-import { BrowserModule } from "@angular/platform-browser";
-import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { MyMaterialModule } from "./material.module"; // MaterialModule
+import {ApplicationRef, NgModule} from "@angular/core";
+import {BrowserModule} from "@angular/platform-browser";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {MyMaterialModule} from "./material.module"; // MaterialModule
 // angular fire imports
-import { AngularFirestoreModule } from "@angular/fire/firestore";
-import { AngularFireAuth, AngularFireAuthModule } from "@angular/fire/auth";
-import { AngularFireDatabase } from "@angular/fire/database";
-import { AngularFireFunctionsModule } from "@angular/fire/functions";
-import { AngularFireMessagingModule } from "@angular/fire/messaging";
-import { AngularFireModule } from "@angular/fire";
+import {AngularFirestoreModule} from "@angular/fire/firestore";
+import {AngularFireAuth, AngularFireAuthModule} from "@angular/fire/auth";
+import {AngularFireDatabase} from "@angular/fire/database";
+import {AngularFireFunctionsModule} from "@angular/fire/functions";
+import {AngularFireMessagingModule} from "@angular/fire/messaging";
+import {AngularFireModule} from "@angular/fire";
 
-import { AuthGuard } from "./guards/auth.guard"; // auth guards
-import { AppRoutingModule } from "./app-routing.module";
-import { AppComponent } from "./app.component";
+import {AuthGuard} from "./guards/auth.guard"; // auth guards
+import {AppRoutingModule} from "./app-routing.module";
+import {AppComponent} from "./app.component";
 
-import { PageNotFoundComponent } from "./page-not-found/page-not-found.component";
+import {PageNotFoundComponent} from "./page-not-found/page-not-found.component";
 // hmr
-import { createNewHosts, removeNgStyles } from "@angularclass/hmr";
-import { FlexLayoutModule } from "@angular/flex-layout";
+import {createNewHosts, removeNgStyles} from "@angularclass/hmr";
+import {FlexLayoutModule} from "@angular/flex-layout";
 // table
-import { TextMaskModule } from "angular2-text-mask"; // for input mask
-import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
-import { PipeModuleModule } from "./pipe-module/pipe-module.module";
+import {TextMaskModule} from "angular2-text-mask"; // for input mask
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+import {PipeModuleModule} from "./pipe-module/pipe-module.module";
 
-import { NotificationComponent } from "./shared/components/notification/notification.component";
-import { SharedModule } from "./shared/shared.module";
-import { AttachId } from "./shared/pipes/attach-id.pipe";
+import {NotificationComponent} from "./shared/components/notification/notification.component";
+import {AttachId} from "./shared/pipes/attach-id.pipe";
 // import { AgmCoreModule } from '@agm/core';
 // Custom Error handler and Logging Service
 // import { ErrorHandler } from '@angular/core';

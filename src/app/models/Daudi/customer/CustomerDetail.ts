@@ -1,4 +1,5 @@
-import { Contact } from "./Contact";
+import {Contact} from "./Contact";
+
 export interface CustomerDetail {
     name: string;
     Id: string;

@@ -1,13 +1,12 @@
-import { Component, OnInit, ViewChild } from "@angular/core";
-import { MatTableDataSource, MatSort } from "@angular/material";
-import { takeUntil } from "rxjs/operators";
-import { Depot, emptydepot } from "../../models/Daudi/depot/Depot";
-import { DepotService } from "../services/core/depot.service";
-import { ReplaySubject, BehaviorSubject } from "rxjs";
-import { FuelNamesArray, FuelType } from "../../models/Daudi/fuel/FuelType";
-import { DepotConfig, emptyDepotConfig } from "../../models/Daudi/depot/DepotConfig";
-import { CoreService } from "../services/core/core.service";
-import { Price } from "../../models/Daudi/depot/Price";
+import {Component, OnInit, ViewChild} from "@angular/core";
+import {MatSort, MatTableDataSource} from "@angular/material";
+import {takeUntil} from "rxjs/operators";
+import {Depot, emptydepot} from "../../models/Daudi/depot/Depot";
+import {BehaviorSubject, ReplaySubject} from "rxjs";
+import {FuelNamesArray, FuelType} from "../../models/Daudi/fuel/FuelType";
+import {DepotConfig, emptyDepotConfig} from "../../models/Daudi/depot/DepotConfig";
+import {CoreService} from "../services/core/core.service";
+import {Price} from "../../models/Daudi/depot/Price";
 
 @Component({
   selector: "app-price-comparison",

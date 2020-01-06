@@ -1,15 +1,15 @@
-import { Component, OnDestroy, OnInit } from "@angular/core";
-import { AngularFireFunctions } from "@angular/fire/functions";
-import { MatDialog } from "@angular/material";
-import { ReplaySubject } from "rxjs";
-import { takeUntil } from "rxjs/operators";
-import { SyncRequest } from "../../../../models/Cloud/Sync";
-import { Depot, emptydepot } from "../../../../models/Daudi/depot/Depot";
-import { emptyomc, OMC } from "../../../../models/Daudi/omc/OMC";
-import { MyTimestamp } from "../../../../models/firestore/firestoreTypes";
-import { NotificationService } from "../../../../shared/services/notification.service";
-import { MapsComponent } from "../../../maps/maps.component";
-import { CoreService } from "../../../services/core/core.service";
+import {Component, OnDestroy, OnInit} from "@angular/core";
+import {AngularFireFunctions} from "@angular/fire/functions";
+import {MatDialog} from "@angular/material";
+import {ReplaySubject} from "rxjs";
+import {takeUntil} from "rxjs/operators";
+import {SyncRequest} from "../../../../models/Cloud/Sync";
+import {Depot, emptydepot} from "../../../../models/Daudi/depot/Depot";
+import {emptyomc, OMC} from "../../../../models/Daudi/omc/OMC";
+import {MyTimestamp} from "../../../../models/firestore/firestoreTypes";
+import {NotificationService} from "../../../../shared/services/notification.service";
+import {MapsComponent} from "../../../maps/maps.component";
+import {CoreService} from "../../../services/core/core.service";
 
 
 @Component({

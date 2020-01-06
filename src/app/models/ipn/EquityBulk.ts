@@ -1,4 +1,5 @@
-import { AssociatedUser } from "../Daudi/admin/AssociatedUser";
+import {AssociatedUser} from "../Daudi/admin/AssociatedUser";
+
 export interface EquityBulk {
     billNumber: string;
     billAmount: number;

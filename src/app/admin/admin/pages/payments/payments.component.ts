@@ -1,14 +1,13 @@
-import { Component, OnDestroy, OnInit, ViewChild } from "@angular/core";
-import { AngularFireFunctions } from "@angular/fire/functions";
-import { AdminService } from "../../../services/core/admin.service";
-import { NotificationService } from "../../../../shared/services/notification.service";
-import { MatDialog, MatPaginator, MatSort, MatTableDataSource } from "@angular/material";
-import { PaymentsService } from "../../../services/payments.service";
-import { CustomerManagementComponent } from "../customer-management/customer-management.component";
-import { DaudiCustomer } from "../../../../models/Daudi/customer/Customer";
-import { takeUntil } from "rxjs/operators";
-import { ReplaySubject } from "rxjs";
-import { EquityBulk } from "../../../../models/ipn/EquityBulk";
+import {Component, OnDestroy, OnInit, ViewChild} from "@angular/core";
+import {AngularFireFunctions} from "@angular/fire/functions";
+import {AdminService} from "../../../services/core/admin.service";
+import {MatDialog, MatPaginator, MatSort, MatTableDataSource} from "@angular/material";
+import {PaymentsService} from "../../../services/payments.service";
+import {CustomerManagementComponent} from "../customer-management/customer-management.component";
+import {DaudiCustomer} from "../../../../models/Daudi/customer/Customer";
+import {takeUntil} from "rxjs/operators";
+import {ReplaySubject} from "rxjs";
+import {EquityBulk} from "../../../../models/ipn/EquityBulk";
 
 @Component({
   selector: "app-payments",

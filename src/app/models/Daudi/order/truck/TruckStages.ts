@@ -1,6 +1,6 @@
-import { GenericStageDetail } from "../GenericStageDetail";
-import { GenericTruckStage, TruckStageWithPrinting } from "./StageWithPrinting";
-import { Expiry } from "./Truck";
+import {GenericStageDetail} from "../GenericStageDetail";
+import {GenericTruckStage, TruckStageWithPrinting} from "./StageWithPrinting";
+import {Expiry} from "./Truck";
 
 export enum TruckStages {
     "Created",

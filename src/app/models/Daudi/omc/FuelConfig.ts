@@ -1,4 +1,3 @@
-import { Metadata, emptymetadata } from "../universal/Metadata";
 export interface FuelConfig {
     groupId: string;
     aseId: string;

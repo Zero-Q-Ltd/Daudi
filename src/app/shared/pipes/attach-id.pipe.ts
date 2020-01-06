@@ -1,7 +1,3 @@
-import { Pipe, PipeTransform } from "@angular/core";
-import { QuerySnapshot } from "@angular/fire/firestore";
-
-
 export class AttachId {
 
   public transformArray<T>(emptyValue: T, data: any): T[] {

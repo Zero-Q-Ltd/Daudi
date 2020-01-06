@@ -1,8 +1,9 @@
-import { deepCopy } from "../../utils/deepCopy";
-import { AssociatedUser, inituser } from "../admin/AssociatedUser";
-import { FuelType } from "../fuel/FuelType";
-import { DepotPrice } from "./DepotPrice";
-import { DepotStock, EmptyDepotQty } from "./DepotStock";
+import {deepCopy} from "../../utils/deepCopy";
+import {AssociatedUser, inituser} from "../admin/AssociatedUser";
+import {FuelType} from "../fuel/FuelType";
+import {DepotPrice} from "./DepotPrice";
+import {DepotStock, EmptyDepotQty} from "./DepotStock";
+
 export interface DepotConfig {
     /**
      * The same depot can have 2 different configs due to live and sandbox environments

@@ -1,15 +1,15 @@
-import { Component, Inject, OnDestroy, OnInit } from "@angular/core";
-import { FormControl, Validators } from "@angular/forms";
-import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material"; // added dialog data
-import { ReplaySubject } from "rxjs";
-import { FuelNamesArray } from "../../models/Daudi/fuel/FuelType";
-import { EmptyGenericDetail } from "../../models/Daudi/order/GenericStageDetail";
-import { Order } from "../../models/Daudi/order/Order";
-import { NotificationService } from "../../shared/services/notification.service";
-import { OrderDetailsComponent } from "../order-details/order-details.component";
-import { AdminService } from "../services/core/admin.service";
-import { DepotService } from "../services/core/depot.service";
-import { OrdersService } from "../services/orders.service";
+import {Component, Inject, OnDestroy, OnInit} from "@angular/core";
+import {FormControl, Validators} from "@angular/forms";
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material"; // added dialog data
+import {ReplaySubject} from "rxjs";
+import {FuelNamesArray} from "../../models/Daudi/fuel/FuelType";
+import {EmptyGenericDetail} from "../../models/Daudi/order/GenericStageDetail";
+import {Order} from "../../models/Daudi/order/Order";
+import {NotificationService} from "../../shared/services/notification.service";
+import {OrderDetailsComponent} from "../order-details/order-details.component";
+import {AdminService} from "../services/core/admin.service";
+import {DepotService} from "../services/core/depot.service";
+import {OrdersService} from "../services/orders.service";
 
 @Component({
   selector: "compartments",

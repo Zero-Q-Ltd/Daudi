@@ -1,27 +1,26 @@
-import { Component, Input, OnDestroy, OnInit } from "@angular/core";
+import {Component, Input, OnDestroy, OnInit} from "@angular/core";
 import * as moment from "moment";
-import { CalendarRangesComponent } from "../calendar-ranges/calendar-ranges.component";
-import { EChartOption } from "echarts";
-import { FuelBoundstats } from "../charts/charts.config";
-import { emptystat, Stat } from "../../../models/Daudi/stats/Stats";
-import { FormControl } from "@angular/forms";
-import { Router } from "@angular/router";
-import { MatSnackBar } from "@angular/material";
-import { DepotService } from "../../services/core/depot.service";
-import { EntriesService } from "../../services/entries.service";
-import { StatsService } from "../../services/stats.service";
-import { PricesService } from "../../services/prices.service";
-import { Entry } from "../../../models/Daudi/fuel/Entry";
-import { Price } from "../../../models/Daudi/depot/Price";
-import { calculateMA } from "../charts/generalCalc";
-import { fuelgauge } from "../charts/qty";
-import { saleStats } from "../charts/sales";
-import { singleFuelpricestat } from "../charts/prices";
+import {CalendarRangesComponent} from "../calendar-ranges/calendar-ranges.component";
+import {EChartOption} from "echarts";
+import {FuelBoundstats} from "../charts/charts.config";
+import {emptystat, Stat} from "../../../models/Daudi/stats/Stats";
+import {FormControl} from "@angular/forms";
+import {Router} from "@angular/router";
+import {MatSnackBar} from "@angular/material";
+import {DepotService} from "../../services/core/depot.service";
+import {EntriesService} from "../../services/entries.service";
+import {StatsService} from "../../services/stats.service";
+import {PricesService} from "../../services/prices.service";
+import {Entry} from "../../../models/Daudi/fuel/Entry";
+import {Price} from "../../../models/Daudi/depot/Price";
+import {fuelgauge} from "../charts/qty";
+import {saleStats} from "../charts/sales";
+import {singleFuelpricestat} from "../charts/prices";
 import "echarts/theme/macarons.js";
-import { ReplaySubject } from "rxjs";
-import { takeUntil, skipWhile } from "rxjs/operators";
-import { FuelType, FuelNamesArray } from "../../../models/Daudi/fuel/FuelType";
-import { CoreService } from "../../services/core/core.service";
+import {ReplaySubject} from "rxjs";
+import {skipWhile, takeUntil} from "rxjs/operators";
+import {FuelNamesArray, FuelType} from "../../../models/Daudi/fuel/FuelType";
+import {CoreService} from "../../services/core/core.service";
 
 @Component({
   selector: "app-stats",

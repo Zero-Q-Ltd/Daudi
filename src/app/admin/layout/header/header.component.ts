@@ -1,17 +1,16 @@
-import { Component, OnDestroy, OnInit } from "@angular/core";
-import { MatSlideToggleChange } from "@angular/material";
-import { ReplaySubject } from "rxjs";
-import { skipWhile, takeUntil } from "rxjs/operators";
-import { Admin, emptyadmin } from "../../../models/Daudi/admin/Admin";
-import { Depot, emptydepot } from "../../../models/Daudi/depot/Depot";
-import { DepotConfig, emptyDepotConfig } from "../../../models/Daudi/depot/DepotConfig";
-import { FuelNamesArray } from "../../../models/Daudi/fuel/FuelType";
-import { OrderStageIds } from "../../../models/Daudi/order/OrderStages";
-import { TruckStageNames } from "../../../models/Daudi/order/truck/TruckStages";
-import { APPCONFIG } from "../../config";
-import { AdminService } from "../../services/core/admin.service";
-import { CoreService } from "../../services/core/core.service";
-import { StatusService } from "../../services/core/status.service";
+import {Component, OnDestroy, OnInit} from "@angular/core";
+import {ReplaySubject} from "rxjs";
+import {skipWhile, takeUntil} from "rxjs/operators";
+import {Admin, emptyadmin} from "../../../models/Daudi/admin/Admin";
+import {Depot, emptydepot} from "../../../models/Daudi/depot/Depot";
+import {DepotConfig, emptyDepotConfig} from "../../../models/Daudi/depot/DepotConfig";
+import {FuelNamesArray} from "../../../models/Daudi/fuel/FuelType";
+import {OrderStageIds} from "../../../models/Daudi/order/OrderStages";
+import {TruckStageNames} from "../../../models/Daudi/order/truck/TruckStages";
+import {APPCONFIG} from "../../config";
+import {AdminService} from "../../services/core/admin.service";
+import {CoreService} from "../../services/core/core.service";
+import {StatusService} from "../../services/core/status.service";
 
 @Component({
   selector: "my-app-header",

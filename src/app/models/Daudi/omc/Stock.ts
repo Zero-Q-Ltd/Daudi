@@ -1,6 +1,6 @@
-import { deepCopy } from "../../utils/deepCopy";
-import { FuelType } from "../fuel/FuelType";
-import { emptytaxExempt, TaxExempt } from "./TaxExempt";
+import {deepCopy} from "../../utils/deepCopy";
+import {FuelType} from "../fuel/FuelType";
+import {emptytaxExempt, TaxExempt} from "./TaxExempt";
 
 
 export interface OMCStock {

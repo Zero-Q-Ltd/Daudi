@@ -1,7 +1,7 @@
-import { Injectable } from "@angular/core";
-import { AngularFirestore } from "@angular/fire/firestore";
-import { OmcService } from "./core/omc.service";
-import { SMS } from "../../models/Daudi/sms/sms";
+import {Injectable} from "@angular/core";
+import {AngularFirestore} from "@angular/fire/firestore";
+import {OmcService} from "./core/omc.service";
+import {SMS} from "../../models/Daudi/sms/sms";
 
 @Injectable({
   providedIn: "root"

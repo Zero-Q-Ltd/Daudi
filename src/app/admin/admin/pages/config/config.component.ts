@@ -1,16 +1,16 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
-import { CommunicationService } from "../../communication.service";
-import { MatDialog } from "@angular/material";
-import { ConfigService } from "../../../services/core/config.service";
-import { ReplaySubject } from "rxjs";
-import { takeUntil } from "rxjs/operators";
-import { OMC, emptyomc } from "../../../../models/Daudi/omc/OMC";
+import {Component, OnDestroy, OnInit} from "@angular/core";
+import {CommunicationService} from "../../communication.service";
+import {MatDialog} from "@angular/material";
+import {ConfigService} from "../../../services/core/config.service";
+import {ReplaySubject} from "rxjs";
+import {takeUntil} from "rxjs/operators";
+import {emptyomc, OMC} from "../../../../models/Daudi/omc/OMC";
 
-import { NotificationService } from "../../../../shared/services/notification.service";
-import * as firebase from "firebase";
-import { ConfirmDialogComponent } from "../../../confirm-dialog/confirm-dialog.component";
-import { deepCopy } from "../../../../models/utils/deepCopy";
-import { CoreService } from "../../../services/core/core.service";
+import {NotificationService} from "../../../../shared/services/notification.service";
+import {ConfirmDialogComponent} from "../../../confirm-dialog/confirm-dialog.component";
+import {deepCopy} from "../../../../models/utils/deepCopy";
+import {CoreService} from "../../../services/core/core.service";
+
 @Component({
   selector: "app-company",
   templateUrl: "./config.component.html",

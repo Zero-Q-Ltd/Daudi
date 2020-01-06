@@ -1,12 +1,12 @@
-import { Injectable } from "@angular/core";
-import { AngularFireMessaging } from "@angular/fire/messaging";
-import { BehaviorSubject } from "rxjs";
-import { AngularFirestore } from "@angular/fire/firestore";
-import { Admin } from "../../models/Daudi/admin/Admin";
-import { NotificationService } from "../../shared/services/notification.service";
-import { FCM } from "../../models/Daudi/notification/FCM";
-import { distinctUntilChanged } from "rxjs/operators";
-import { AdminService } from "./core/admin.service";
+import {Injectable} from "@angular/core";
+import {AngularFireMessaging} from "@angular/fire/messaging";
+import {BehaviorSubject} from "rxjs";
+import {AngularFirestore} from "@angular/fire/firestore";
+import {Admin} from "../../models/Daudi/admin/Admin";
+import {NotificationService} from "../../shared/services/notification.service";
+import {FCM} from "../../models/Daudi/notification/FCM";
+import {distinctUntilChanged} from "rxjs/operators";
+import {AdminService} from "./core/admin.service";
 
 @Injectable({
   providedIn: "root"
