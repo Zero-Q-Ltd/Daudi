@@ -1,6 +1,6 @@
-import {Injectable} from "@angular/core";
-import {AngularFirestore} from "@angular/fire/firestore";
-import {FuelType} from "../../models/Daudi/fuel/FuelType";
+import { Injectable } from "@angular/core";
+import { AngularFirestore } from "@angular/fire/firestore";
+import { FuelType } from "../../models/Daudi/fuel/FuelType";
 
 @Injectable({
   providedIn: "root"
@@ -14,7 +14,7 @@ export class AseService {
   ASECollection(omcId: string) {
     return this.db.firestore.collection("omc")
       .doc(omcId)
-      .collection("ase");
+      .collection("ases");
   }
 
 

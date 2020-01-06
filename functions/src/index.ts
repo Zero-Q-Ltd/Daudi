@@ -82,7 +82,7 @@ exports.createInvoice = functions.https.onCall((data: OrderCreate, context) => {
 
 
 exports.customerUpdated = functions.firestore
-  .document("/omc/{omcId}/customer/{customerId}")
+  .document("/omc/{omcId}/customers/{customerId}")
   .onUpdate((snap, context) => {
     console.log(snap);
     const eventID = context.eventId;

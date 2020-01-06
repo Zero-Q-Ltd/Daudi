@@ -1,7 +1,8 @@
-import {QuickBooks} from "../../libs/qbmain";
-import {firestore} from "firebase-admin";
-import {DaudiCustomer, emptyDaudiCustomer} from '../../models/Daudi/customer/Customer';
-import {Customer} from "../../models/Qbo/Customer";
+import { QuickBooks } from "../../libs/qbmain";
+import { firestore } from "firebase-admin";
+import { DaudiCustomer, emptyDaudiCustomer } from '../../models/Daudi/customer/Customer';
+import { Customer } from "../../models/Qbo/Customer";
+import { getallcustomers } from "../crud/daudi/getallcustomers";
 
 /**
  * Fetches all the customer information qbom qbo and overwrites the customers info on Dausi
@@ -31,7 +32,7 @@ export function syncCustomers(qbo: QuickBooks, omcId: string) {
                             firestore()
                                 .collection("omc")
                                 .doc(omcId)
-                                .collection(`customer`)
+                                .collection(`customers`)
                                 .doc(co.Id),
                             co
                         );
@@ -43,7 +44,7 @@ export function syncCustomers(qbo: QuickBooks, omcId: string) {
                             firestore()
                                 .collection("omc")
                                 .doc(omcId)
-                                .collection(`customer`)
+                                .collection(`customers`)
                                 .doc(co.Id),
                             co
                         );
@@ -93,10 +94,4 @@ function convertToDaudicustomer(
     return daudicompany;
 }
 
-function getallcustomers(omcId: string) {
-    return firestore()
-        .collection("omc")
-        .doc(omcId)
-        .collection("customer")
-        .get();
-}
+

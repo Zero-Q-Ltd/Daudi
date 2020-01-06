@@ -21,6 +21,7 @@ import { AdminConfigService } from "./admin-config.service";
 import { DepotService } from "./depot.service";
 import { OmcService } from "./omc.service";
 import { toObject, toArray } from "../../../models/utils/SnapshotUtils";
+import { StocksService } from "./stocks.service";
 
 @Injectable({
   providedIn: "root"
@@ -86,6 +87,7 @@ export class CoreService {
     private orderService: OrdersService,
     private customerService: CustomerService,
     private entriesService: EntriesService,
+    private stockService: StocksService,
     private adminservice: AdminService) {
     this.adminservice.observableuserdata
       .pipe(distinctUntilChanged())
@@ -94,12 +96,9 @@ export class CoreService {
         this.subscriptions.set("configSubscription", this.adminConfigService.configDoc(admin.config.omcId)
           .onSnapshot(t => {
             const config = toObject(emptyConfig, t);
-            this.duplicate(admin.config.omcId, "configs", "admin", { adminTypes: config.adminTypes });
+            // this.duplicate(admin.config.omcId, "configs", "admin", { adminTypes: config.adminTypes });
             // this.duplicate(admin.config.omcId, "values", "config", { adminTypes: t.data().adminTypes });
-            if (!config.status) {
-              console.log("OMC Account not active");
-              return;
-            }
+
             this.omcId = admin.config.omcId;
             this.adminConfig.next(config);
             /**
@@ -129,7 +128,7 @@ export class CoreService {
   }
   getStocks() {
     this.loaders.stock.next(true);
-    this.subscriptions.set("stock", this.adminConfigService.stockDoc(this.omcId)
+    this.subscriptions.set("stock", this.stockService.stockDoc(this.omcId)
       .onSnapshot(t => {
         this.stock.next(toObject(EmptyOMCStock, t));
         this.loaders.stock.next(false);

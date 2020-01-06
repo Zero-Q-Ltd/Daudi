@@ -1,10 +1,10 @@
-import {firestore} from "firebase-admin";
-import {Entry} from "../../models/Daudi/fuel/Entry";
-import {FuelNamesArray, FuelType} from "../../models/Daudi/fuel/FuelType";
-import {FuelConfig} from "../../models/Daudi/omc/FuelConfig";
-import {Bill} from "../../models/Qbo/Bill";
-import {readStock, stockCollection} from "../crud/daudi/Stock";
-import {EmptyOMCStock, OMCStock} from "../../models/Daudi/omc/Stock";
+import { firestore } from "firebase-admin";
+import { Entry } from "../../models/Daudi/fuel/Entry";
+import { FuelNamesArray, FuelType } from "../../models/Daudi/fuel/FuelType";
+import { FuelConfig } from "../../models/Daudi/omc/FuelConfig";
+import { Bill } from "../../models/Qbo/Bill";
+import { readStock, stockCollection } from "../crud/daudi/Stock";
+import { EmptyOMCStock, OMCStock } from "../../models/Daudi/omc/Stock";
 
 /**
  * 
@@ -67,7 +67,7 @@ export function syncEntry(omcId: string, fuelConfig: { [key in FuelType]: FuelCo
         const directory = firestore()
             .collection("omc")
             .doc(omcId)
-            .collection("entry")
+            .collection("entries")
 
         /**
          * make sure the Entry doenst already exist before writing to db

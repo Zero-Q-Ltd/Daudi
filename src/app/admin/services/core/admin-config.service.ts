@@ -18,14 +18,8 @@ export class AdminConfigService {
   configDoc(omcId: string) {
     return this.db.firestore.collection("omc")
       .doc(omcId)
-      .collection("values")
-      .doc(`config`);
-  }
-  stockDoc(omcId: string) {
-    return this.db.firestore.collection("omc")
-      .doc(omcId)
-      .collection("values")
-      .doc("stock");
+      .collection("configs")
+      .doc(`admin`);
   }
 
 

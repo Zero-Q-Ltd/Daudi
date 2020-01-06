@@ -1,10 +1,10 @@
-import {firestore} from "firebase-admin";
-import {ASE} from "../../models/Daudi/fuel/ASE";
-import {FuelNamesArray, FuelType} from "../../models/Daudi/fuel/FuelType";
-import {FuelConfig} from "../../models/Daudi/omc/FuelConfig";
-import {EmptyOMCStock, OMCStock} from "../../models/Daudi/omc/Stock";
-import {Bill} from "../../models/Qbo/Bill";
-import {readStock, stockCollection} from "../crud/daudi/Stock";
+import { firestore } from "firebase-admin";
+import { ASE } from "../../models/Daudi/fuel/ASE";
+import { FuelNamesArray, FuelType } from "../../models/Daudi/fuel/FuelType";
+import { FuelConfig } from "../../models/Daudi/omc/FuelConfig";
+import { EmptyOMCStock, OMCStock } from "../../models/Daudi/omc/Stock";
+import { Bill } from "../../models/Qbo/Bill";
+import { readStock, stockCollection } from "../crud/daudi/Stock";
 
 /**
  * 
@@ -67,7 +67,7 @@ export function syncAse(omcId: string, fuelConfig: { [key in FuelType]: FuelConf
         const directory = firestore()
             .collection("omc")
             .doc(omcId)
-            .collection("ase")
+            .collection("ases")
 
         const fetchedbatch = await directory.where("ase.QbId", "==", convertedASE.ase.QbId).get();
         /**
