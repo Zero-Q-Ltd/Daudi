@@ -3,8 +3,7 @@ import * as functions from 'firebase-functions';
 import { QuickBooks } from './libs/qbmain';
 import { CompanySync } from "./models/Cloud/CompanySync";
 import { OrderCreate } from './models/Cloud/OrderCreate';
-import { DaudiCustomer } from './models/Daudi/customer/Customer';
-import { OMCConfig, emptyConfig } from './models/Daudi/omc/Config';
+import { DaudiCustomer, emptyDaudiCustomer } from './models/Daudi/customer/Customer';
 import { SMS } from './models/Daudi/sms/sms';
 import { MyTimestamp } from './models/firestore/firestoreTypes';
 import { creteOrder, updateOrder } from './tasks/crud/daudi/Order';
@@ -18,6 +17,7 @@ import { processSync } from './tasks/syncdb/processSync';
 import { validorderupdate } from './validators/orderupdate';
 import { readQboConfig } from "./tasks/crud/daudi/readQboConfig";
 import { toArray, toObject } from "./models/utils/SnapshotUtils";
+import { EmptyQboConfig, QboCofig } from "./models/Cloud/QboEnvironment";
 
 admin.initializeApp(functions.config().firebase);
 admin.firestore().settings({ timestampsInSnapshots: true });
@@ -37,10 +37,10 @@ function markAsRunning(eventID: string) {
  */
 exports.createEstimate = functions.https.onCall((data: OrderCreate, context) => {
   return readQboConfig(data.omcId).then(snapshot => {
-    const config = toObject(emptyConfig, snapshot)
+    const config = toObject(EmptyQboConfig, snapshot)
     return createQbo(data.omcId, config, true).then(async result => {
       console.log(result)
-      const est = new createEstimate(data.order, result, config)
+      const est = new createEstimate(data.order, config)
       return result.createEstimate(est.formulateEstimate()).then((createResult) => {
         /**
          * Only send sn SMS when estimate creation is complete
@@ -61,10 +61,10 @@ exports.createEstimate = functions.https.onCall((data: OrderCreate, context) => 
  */
 exports.createInvoice = functions.https.onCall((data: OrderCreate, context) => {
   return readQboConfig(data.omcId).then(snapshot => {
-    const config = toObject(emptyConfig, snapshot)
+    const config = toObject(EmptyQboConfig, snapshot)
     return createQbo(data.omcId, config, true).then(async result => {
       console.log(result)
-      const inv = new createInvoice(data.order, result, config)
+      const inv = new createInvoice(data.order, config)
       return result.createInvoice(inv.formulateInvoice()).then((createResult) => {
         /**
          * Only send sn SMS when invoice creation is complete
@@ -104,9 +104,9 @@ exports.customerUpdated = functions.firestore
         return true;
       }
       return readQboConfig(context.params.omcId)
-        .then(val => {
-          const config: OMCConfig = val.data() as OMCConfig
-          const customer: DaudiCustomer = snap.after.data() as DaudiCustomer
+        .then(snapshot => {
+          const config = toObject(EmptyQboConfig, snapshot)
+          const customer = toObject(emptyDaudiCustomer, snap.after)
           return createQbo(context.params.omcId, config, true).then(qbo => {
             return updateCustomer(customer, qbo);
           })
@@ -144,7 +144,7 @@ exports.smscreated = functions.firestore
 
 exports.requestsync = functions.https.onCall(((data: CompanySync, _) => {
   return readQboConfig(data.omcId).then(snapshot => {
-    const config = toObject(emptyConfig, snapshot)
+    const config = toObject(EmptyQboConfig, snapshot)
     return createQbo(data.omcId, config, true)
       .then((qbo: QuickBooks) => {
         return processSync(data.sync, qbo, data.omcId, config);

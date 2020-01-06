@@ -2,18 +2,18 @@
 import * as moment from "moment";
 import { QuickBooks } from "../../../../libs/qbmain";
 import { FuelNamesArray } from '../../../../models/Daudi/fuel/FuelType';
-import { OMCConfig } from "../../../../models/Daudi/omc/Config";
 import { Order } from "../../../../models/Daudi/order/Order";
 import { EmailStatus } from "../../../../models/Qbo/enums/EmailStatus";
 import { LineDetailType } from "../../../../models/Qbo/enums/LineDetailType";
 import { PrintStatus } from "../../../../models/Qbo/enums/PrintStatus";
 import { Invoice } from '../../../../models/Qbo/Invoice';
 import { Line } from "../../../../models/Qbo/subTypes/Line";
+import { QboCofig } from "../../../../models/Cloud/QboEnvironment";
 
 
 export class createInvoice {
 
-    constructor(private orderdata: Order, private qbo: QuickBooks, private config: OMCConfig) {
+    constructor(private orderdata: Order, private config: QboCofig) {
         /**
          * format the timestamp again as it loses it when it doesnt directly go to the database
          */
@@ -29,12 +29,12 @@ export class createInvoice {
                     Amount: this.orderdata.fuel[fuel].priceconfig.nonTaxtotal,
                     DetailType: LineDetailType.GroupLineDetail,
                     Description: `VAT-Exempt : ${this.orderdata.fuel[fuel].priceconfig.nonTax} \t Taxable Amount: ${this.orderdata.fuel[fuel].priceconfig.taxableAmnt} \t VAT Total : ${this.orderdata.fuel[fuel].priceconfig.taxAmnt} \t`,
-                    Id: this.config.Qbo.fuelconfig[fuel].groupId,
+                    Id: this.config.fuelconfig[fuel].groupId,
                     GroupLineDetail: {
                         Quantity: this.orderdata.fuel[fuel].qty,
                         GroupItemRef: {
                             name: fuel,
-                            value: this.config.Qbo.fuelconfig[fuel].groupId
+                            value: this.config.fuelconfig[fuel].groupId
                         },
                         Line: [
                             /**
@@ -45,15 +45,15 @@ export class createInvoice {
                                 Amount: this.orderdata.fuel[fuel].priceconfig.nonTaxtotal,
                                 Description: "",
                                 DetailType: LineDetailType.SalesItemLineDetail,
-                                Id: this.config.Qbo.fuelconfig[fuel].aseId,
+                                Id: this.config.fuelconfig[fuel].aseId,
                                 SalesItemLineDetail: {
                                     ItemRef: {
                                         name: fuel,
-                                        value: this.config.Qbo.fuelconfig[fuel].aseId
+                                        value: this.config.fuelconfig[fuel].aseId
                                     },
                                     Qty: this.orderdata.fuel[fuel].qty,
                                     TaxCodeRef: {
-                                        value: this.config.Qbo.taxConfig.taxCode.Id
+                                        value: this.config.taxConfig.taxCode.Id
                                     },
                                     UnitPrice: this.orderdata.fuel[fuel].priceconfig.nonTaxprice
                                 }
@@ -62,15 +62,15 @@ export class createInvoice {
                                 Amount: 0,
                                 Description: "",
                                 DetailType: LineDetailType.SalesItemLineDetail,
-                                Id: this.config.Qbo.fuelconfig[fuel].entryId,
+                                Id: this.config.fuelconfig[fuel].entryId,
                                 SalesItemLineDetail: {
                                     ItemRef: {
                                         name: fuel,
-                                        value: this.config.Qbo.fuelconfig[fuel].entryId
+                                        value: this.config.fuelconfig[fuel].entryId
                                     },
                                     Qty: this.orderdata.fuel[fuel].qty,
                                     TaxCodeRef: {
-                                        value: this.config.Qbo.taxConfig.taxCode.Id
+                                        value: this.config.taxConfig.taxCode.Id
                                     },
                                     UnitPrice: 0
                                 }
@@ -102,7 +102,7 @@ export class createInvoice {
             TxnTaxDetail: {
                 TotalTax: this.orderdata.fuel.pms.priceconfig.taxAmnt + this.orderdata.fuel.ago.priceconfig.taxAmnt + this.orderdata.fuel.ik.priceconfig.taxAmnt,
                 TxnTaxCodeRef: {
-                    value: this.config.Qbo.taxConfig.taxCode.Id
+                    value: this.config.taxConfig.taxCode.Id
                 },
                 TaxLine: [{
                     Amount: (this.orderdata.fuel.pms.priceconfig.taxAmnt + this.orderdata.fuel.ago.priceconfig.taxAmnt + this.orderdata.fuel.ik.priceconfig.taxAmnt),
@@ -112,7 +112,7 @@ export class createInvoice {
                         PercentBased: false,
                         TaxPercent: 8,
                         TaxRateRef: {
-                            value: this.config.Qbo.taxConfig.taxRate.Id
+                            value: this.config.taxConfig.taxRate.Id
                         }
                     }
                 }]

@@ -5,7 +5,7 @@ import { Meta } from "../universal/Meta";
 import { Metadata } from "../universal/Metadata";
 import { emptyFuelConfig, FuelConfig } from "./FuelConfig";
 import { QBOAuthCOnfig } from "../../Cloud/QboAuthConfig";
-import { QboEnvironment } from "../../Cloud/QboEnvironment";
+import { QboCofig } from "../../Cloud/QboEnvironment";
 
 export interface AdminConfig {
     adminTypes: Array<AdminType>;

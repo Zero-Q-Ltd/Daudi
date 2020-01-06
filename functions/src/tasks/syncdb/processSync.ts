@@ -1,13 +1,13 @@
-import {QuickBooks} from "../../libs/qbmain";
-import {SyncRequest} from "../../models/Cloud/Sync";
-import {OMCConfig} from '../../models/Daudi/omc/Config';
-import {QbTypes} from "../../models/QbTypes";
-import {findBills} from "./findBills";
-import {syncAse} from "./syncAse";
-import {syncCustomers} from "./syncCustomers";
-import {syncEntry} from "./syncEntry";
+import { QuickBooks } from "../../libs/qbmain";
+import { SyncRequest } from "../../models/Cloud/Sync";
+import { QbTypes } from "../../models/QbTypes";
+import { findBills } from "./findBills";
+import { syncAse } from "./syncAse";
+import { syncCustomers } from "./syncCustomers";
+import { syncEntry } from "./syncEntry";
+import { QboCofig } from "../../models/Cloud/QboEnvironment";
 
-export function processSync(sync: SyncRequest, qbo: QuickBooks, omcId: string, config: OMCConfig) {
+export function processSync(sync: SyncRequest, qbo: QuickBooks, omcId: string, config: QboCofig) {
     return Promise.all(
         sync.synctype.map(async (syncdetail: QbTypes) => {
             switch (syncdetail) {
@@ -27,8 +27,8 @@ export function processSync(sync: SyncRequest, qbo: QuickBooks, omcId: string, c
                     // return true;
                     return findBills(qbo).then(async (res) => {
                         return await Promise.all([
-                            syncEntry(omcId, config.Qbo.fuelconfig, res.QueryResponse.Bill || []),
-                            syncAse(omcId, config.Qbo.fuelconfig, res.QueryResponse.Bill || [])
+                            syncEntry(omcId, config.fuelconfig, res.QueryResponse.Bill || []),
+                            syncAse(omcId, config.fuelconfig, res.QueryResponse.Bill || [])
                         ]);
                     })
 
