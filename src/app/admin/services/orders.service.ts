@@ -25,8 +25,7 @@ export class OrdersService {
   }
 
   createOrder(orderCteate: OrderCreate): Promise<any> {
-    // order.Id = this.db.createId();
-
+    orderCteate.order.Id = this.db.createId();
     this.queuedorders.value.push(orderCteate.order.Id);
     console.log(orderCteate);
 
@@ -56,7 +55,8 @@ export class OrdersService {
   approveOrder(orderCteate: OrderCreate): Promise<any> {
 
     console.log(orderCteate);
-    return this.functions.httpsCallable("createInvoice")([orderCteate]).toPromise().then(value => {
+
+    return this.functions.httpsCallable("createInvoice")(orderCteate).toPromise().then(value => {
       /**
        * delete the orderid after the operation is complete
        */
@@ -93,9 +93,7 @@ export class OrdersService {
       .doc(orderid);
   }
 
-  ordersCollection(omcId: string,
-    //  environmnet: Environment
-  ) {
+  ordersCollection(omcId: string) {
     return this.db.firestore.collection("omc")
       .doc(omcId)
       .collection("orders");

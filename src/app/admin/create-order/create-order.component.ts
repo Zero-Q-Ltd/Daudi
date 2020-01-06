@@ -86,7 +86,6 @@ export class CreateOrderComponent implements OnDestroy {
         /**
          * Initialise the order with an Id
          */
-        this.temporder.Id = this.core.createId();
         this.newOrder = true;
       } else {
         console.log("Order approval");
@@ -278,10 +277,10 @@ export class CreateOrderComponent implements OnDestroy {
   }
 
   createorder(redirect) {
-    if (this.temporder.Id) {
-      this.orderservice.approveOrder({ omcId: this.core.currentOmc.value.Id, order: this.temporder });
-    } else {
+    if (this.newOrder) {
       this.orderservice.createOrder({ omcId: this.core.currentOmc.value.Id, order: this.temporder });
+    } else {
+      this.orderservice.approveOrder({ omcId: this.core.currentOmc.value.Id, order: this.temporder });
     }
     if (redirect) {
       /**

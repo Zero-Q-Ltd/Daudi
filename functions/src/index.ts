@@ -36,22 +36,24 @@ function markAsRunning(eventID: string) {
  * create an estimate from the client directly
  */
 exports.createEstimate = functions.https.onCall((data: OrderCreate, context) => {
+  console.log(data)
   return readQboConfig(data.omcId).then(snapshot => {
     const config = toObject(EmptyQboConfig, snapshot)
-    return createQbo(data.omcId, config, true).then(async result => {
-      console.log(result)
-      const est = new createEstimate(data.order, config)
-      return result.createEstimate(est.formulateEstimate()).then((createResult) => {
-        /**
-         * Only send sn SMS when estimate creation is complete
-         * Make the two processes run parallel so that none is blocking
-         */
-        /**
-         * @todo update the Estimate ID
-         */
-        return Promise.all([ordersms(data.order, data.omcId), validorderupdate(data.order, result), creteOrder(data.order, data.omcId)])
-      });
-    })
+    return createQbo(data.omcId, config, true)
+      .then((qbo: QuickBooks) => {
+        console.log(qbo)
+        const est = new createEstimate(data.order, config)
+        return qbo.createEstimate(est.formulateEstimate()).then((createResult) => {
+          /**
+           * Only send sn SMS when estimate creation is complete
+           * Make the two processes run parallel so that none is blocking
+           */
+          /**
+           * @todo update the Estimate ID
+           */
+          return Promise.all([ordersms(data.order, data.omcId), validorderupdate(data.order, qbo), creteOrder(data.order, data.omcId)])
+        });
+      })
   })
 
 });
@@ -60,23 +62,25 @@ exports.createEstimate = functions.https.onCall((data: OrderCreate, context) => 
  * create an order from the client directly
  */
 exports.createInvoice = functions.https.onCall((data: OrderCreate, context) => {
+  console.log(data)
   return readQboConfig(data.omcId).then(snapshot => {
     const config = toObject(EmptyQboConfig, snapshot)
-    return createQbo(data.omcId, config, true).then(async result => {
-      console.log(result)
-      const inv = new createInvoice(data.order, config)
-      return result.createInvoice(inv.formulateInvoice()).then((createResult) => {
-        /**
-         * Only send sn SMS when invoice creation is complete
-         * Make the two processes run parallel so that none is blocking
-         */
-        /**
-         * @todo update the invoice id
-         */
-        data.order.stage = 2
-        return Promise.all([ordersms(data.order, data.omcId), validorderupdate(data.order, result), updateOrder(data.order, data.omcId)]);
-      });
-    })
+    return createQbo(data.omcId, config, true)
+      .then((qbo: QuickBooks) => {
+        console.log(qbo)
+        const inv = new createInvoice(data.order, config)
+        return qbo.createInvoice(inv.formulateInvoice()).then((createResult) => {
+          /**
+           * Only send sn SMS when invoice creation is complete
+           * Make the two processes run parallel so that none is blocking
+           */
+          /**
+           * @todo update the invoice id
+           */
+          data.order.stage = 2
+          return Promise.all([ordersms(data.order, data.omcId), validorderupdate(data.order, qbo), updateOrder(data.order, data.omcId)]);
+        });
+      })
   })
 });
 

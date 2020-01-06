@@ -107,9 +107,8 @@ export class CalculationsComponent implements OnInit, OnChanges {
             /**
              * modify the nox tax price to be an exact figurea after rounding off
              */
-            this.initData.fuel[fueltype].priceconfig.nonTaxprice = (totalwithouttax / this.initData.fuel[fueltype].qty);
+            this.initData.fuel[fueltype].priceconfig.nonTaxprice = (totalwithouttax / this.initData.fuel[fueltype].qty) || 0;
             this.initData.fuel[fueltype].priceconfig.nonTaxtotal = totalwithouttax;
-            // this.initData.fuel[fueltype].priceconfig.total = taxcalculations.taxamount + totalwithouttax;
             this.initData.fuel[fueltype].priceconfig.total = this.initData.fuel[fueltype].priceconfig.price * this.initData.fuel[fueltype].qty;
 
             this.initData.fuel[fueltype].priceconfig.taxAmnt = this.initData.fuel[fueltype].priceconfig.total - totalwithouttax;
@@ -151,7 +150,7 @@ export class CalculationsComponent implements OnInit, OnChanges {
        */
       this.initData.fuel[fueltype].priceconfig.retailprice = this.activedepot.config.price[fueltype].price;
       this.initData.fuel[fueltype].priceconfig.minsp = this.activedepot.config.price[fueltype].minPrice;
-      // this.initData.fuel[fueltype].priceconfig.nonTax = this.omcConfig.taxExempt[this.env][fueltype].amount;
+      this.initData.fuel[fueltype].priceconfig.nonTax = this.stock.taxExempt[fueltype].amount;
 
       this.calculationsForm.get([fueltype, "price"]).setValidators(Validators.min(this.activedepot.config.price[fueltype].minPrice));
 
@@ -169,7 +168,7 @@ export class CalculationsComponent implements OnInit, OnChanges {
        */
     });
     this.calculationsForm.updateValueAndValidity();
-
+    console.log(this.initData);
   }
 
   ngOnInit() {

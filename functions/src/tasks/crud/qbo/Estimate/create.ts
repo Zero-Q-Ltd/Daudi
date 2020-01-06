@@ -123,7 +123,9 @@ export class createEstimate {
                 name: this.orderdata.config.depot.name,
                 value: this.orderdata.QbConfig.departmentId
             },
-
+            ClassRef: {
+                value: "5000000000000007280"
+            },
             Line: this.syncfueltypes()
         };
 

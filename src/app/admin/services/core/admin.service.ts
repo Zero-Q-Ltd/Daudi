@@ -75,7 +75,7 @@ export class AdminService {
   createuserobject(): AssociatedUser {
     return {
       name: this.userdata.profile.name,
-      adminId: this.userdata.profile.uid,
+      adminId: this.userdata.Id,
       date: MyTimestamp.now()
     };
   }
