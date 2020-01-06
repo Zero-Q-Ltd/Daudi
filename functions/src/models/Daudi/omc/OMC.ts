@@ -1,7 +1,8 @@
-import { Metadata, emptymetadata } from "../universal/Metadata";
-import { ContactPerson } from "./ContactPerson";
-import { deepCopy } from "../../utils/deepCopy";
-import { MyGeoPoint } from "../../firestore/firestoreTypes";
+import {emptymetadata, Metadata} from "../universal/Metadata";
+import {ContactPerson} from "./ContactPerson";
+import {deepCopy} from "../../utils/deepCopy";
+import {MyGeoPoint} from "../../firestore/firestoreTypes";
+
 export interface OMC {
     license: string;
     location: MyGeoPoint;

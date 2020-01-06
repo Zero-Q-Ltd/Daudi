@@ -1,6 +1,6 @@
-import { firestore } from "firebase-admin";
-import { Order } from "../../models/Daudi/order/Order";
-import { SMS } from "../../models/Daudi/sms/sms";
+import {firestore} from "firebase-admin";
+import {Order} from "../../models/Daudi/order/Order";
+import {SMS} from "../../models/Daudi/sms/sms";
 
 export function ordersms(order: Order, omcId: string) {
   /**

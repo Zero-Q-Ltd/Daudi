@@ -1,11 +1,11 @@
-import { MyTimestamp } from "../../firestore/firestoreTypes";
-import { deepCopy } from "../../utils/deepCopy";
-import { AdminType } from "../admin/AdminType";
-import { Meta } from "../universal/Meta";
-import { Metadata } from "../universal/Metadata";
-import { emptyFuelConfig, FuelConfig } from "./FuelConfig";
-import { QBOAuthCOnfig } from "./QboAuthConfig";
-import { QboEnvironment } from "./QboEnvironment";
+import {MyTimestamp} from "../../firestore/firestoreTypes";
+import {deepCopy} from "../../utils/deepCopy";
+import {AdminType} from "../admin/AdminType";
+import {Meta} from "../universal/Meta";
+import {Metadata} from "../universal/Metadata";
+import {emptyFuelConfig, FuelConfig} from "./FuelConfig";
+import {QBOAuthCOnfig} from "./QboAuthConfig";
+import {QboEnvironment} from "./QboEnvironment";
 
 export interface OMCConfig {
     adminTypes: Array<AdminType>;

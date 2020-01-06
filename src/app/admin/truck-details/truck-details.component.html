@@ -16,8 +16,8 @@
           matTooltip="Delete">delete_sweep
         </span>
       </button>
-      <button (click)="resetTruck(order.truck)" *ngIf="order.truck?.stage > 0 && order.truck?.stage < 4" mat-icon-button
-        matSuffix type="button">
+      <button (click)="resetTruck()" *ngIf="order.truck?.stage > 0 && order.truck?.stage < 4" mat-icon-button matSuffix
+        type="button">
         <span class="material-icons color-danger" matTooltip="Reset">restore</span>
       </button>
       <mat-slide-toggle (toggleChange)="freezetruck(order.truck)" [(ngModel)]="order.truck.frozen"

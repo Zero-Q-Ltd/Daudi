@@ -1,9 +1,9 @@
-import { firestore } from "firebase-admin";
-import { QuickBooks } from "../../../../libs/qbmain";
-import { Depot } from "../../../../models/Daudi/depot/Depot";
-import { OMCConfig } from "../../../../models/Daudi/omc/Config";
-import { OMC } from "../../../../models/Daudi/omc/OMC";
-import { Class } from "../../../../models/Qbo/Class";
+import {firestore} from "firebase-admin";
+import {QuickBooks} from "../../../../libs/qbmain";
+import {Depot} from "../../../../models/Daudi/depot/Depot";
+import {OMCConfig} from "../../../../models/Daudi/omc/Config";
+import {OMC} from "../../../../models/Daudi/omc/OMC";
+import {Class} from "../../../../models/Qbo/Class";
 
 /**
  * Every depot is essentially a class, to allow tracking of sales per depot

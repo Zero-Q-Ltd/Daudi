@@ -1,8 +1,7 @@
-
-import { deepCopy } from "../../../models/utils/deepCopy";
-import { MyTimestamp } from "../../firestore/firestoreTypes";
-import { FuelType } from "./FuelType";
-import { EmptyStockQty, StockQty } from "./StockQty";
+import {deepCopy} from "../../../models/utils/deepCopy";
+import {MyTimestamp} from "../../firestore/firestoreTypes";
+import {FuelType} from "./FuelType";
+import {EmptyStockQty, StockQty} from "./StockQty";
 
 
 export interface BaseStockModel {

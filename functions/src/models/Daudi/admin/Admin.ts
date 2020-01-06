@@ -1,5 +1,5 @@
-import { deepCopy } from "../../utils/deepCopy";
-import { AssociatedUser, inituser } from "./AssociatedUser";
+import {deepCopy} from "../../utils/deepCopy";
+import {AssociatedUser, inituser} from "./AssociatedUser";
 
 export interface Admin {
   Active: boolean;

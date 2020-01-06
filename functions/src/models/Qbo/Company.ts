@@ -1,4 +1,4 @@
-import { firestore } from "firebase-admin";
+import {firestore} from "firebase-admin";
 
 export interface Companyconfig {
   companyid: number;

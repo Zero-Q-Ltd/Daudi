@@ -1,4 +1,4 @@
-import { firestore } from "firebase-admin";
+import {firestore} from "firebase-admin";
 
 /***
  * This file is there because standardising frontend with cloud functions has proved very problematic

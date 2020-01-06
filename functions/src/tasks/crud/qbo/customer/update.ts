@@ -1,7 +1,6 @@
-import { createQbo } from "../../../sharedqb";
-import { Customer } from "../../../../models/Qbo/Customer";
-import { DaudiCustomer } from '../../../../models/Daudi/customer/Customer';
-import { QuickBooks } from '../../../../libs/qbmain';
+import {Customer} from "../../../../models/Qbo/Customer";
+import {DaudiCustomer} from '../../../../models/Daudi/customer/Customer';
+import {QuickBooks} from '../../../../libs/qbmain';
 
 export function updateCustomer(customerdata: DaudiCustomer, qbo: QuickBooks) {
 

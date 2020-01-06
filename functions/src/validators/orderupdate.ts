@@ -1,8 +1,7 @@
-
-import { QuickBooks } from "../libs/qbmain";
-import { Invoice } from "../models/Qbo/Invoice";
-import { Order } from "../models/Daudi/order/Order";
-import { editStats } from "../tasks/crud/daudi/editStats";
+import {QuickBooks} from "../libs/qbmain";
+import {Invoice} from "../models/Qbo/Invoice";
+import {Order} from "../models/Daudi/order/Order";
+import {editStats} from "../tasks/crud/daudi/editStats";
 
 export function validorderupdate(order: Order, qbo: QuickBooks) {
     switch (order.stage) {

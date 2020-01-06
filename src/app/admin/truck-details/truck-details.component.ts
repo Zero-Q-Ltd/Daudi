@@ -252,7 +252,7 @@ export class TruckDetailsComponent implements OnInit, OnDestroy {
    *
    * @param truck
    */
-  resetTruck(truck: Truck) {
+  resetTruck() {
     const dialogRef = this.dialog.open(ConfirmDialogComponent,
       {
         role: "dialog",
@@ -260,17 +260,17 @@ export class TruckDetailsComponent implements OnInit, OnDestroy {
       });
     dialogRef.afterClosed().pipe(takeUntil(this.comopnentDestroyed)).subscribe(result => {
       if (result) {
-        truck.stagedata[1].user = this.adminservice.createuserobject();
-        truck.stagedata[1].expiry = [
+        this.order.truck.stagedata[1].user = this.adminservice.createuserobject();
+        this.order.truck.stagedata[1].expiry = [
           // {
           //   duration: "00:45:00",
           //   timeCreated: MyTimestamp.now(),
           //   expiry: MyTimestamp.fromDate(moment().add(45, "minutes").toDate())
           // }
         ];
-        truck.stagedata[2].expiry = [];
-        truck.stagedata[3].expiry = [];
-        truck.stage = 1;
+        this.order.truck.stagedata[2].expiry = [];
+        this.order.truck.stagedata[3].expiry = [];
+        this.order.stage = 1;
         // this.truckservice.updatetruck(truck.Id).update(truck).then(value => {
         //   this.notification.notify({
         //     body: "Truck reset",

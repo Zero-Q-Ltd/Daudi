@@ -337,13 +337,12 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
           timestamp: MyTimestamp.now()
         }
       };
-      this.order.stage = 4;
+      this.order.stage = 4.1;
       this.order.loaded = true;
 
       this.order.stagedata["4"].user = data.user;
 
       this.order.truck.stagedata["1"] = data;
-      this.order.truck.stage = 1;
 
       const batchaction = this.db.firestore.batch();
       batchaction.update(this.ordersservice.ordersCollection(this.core.currentOmc.value.Id).doc(this.orderId), this.order);

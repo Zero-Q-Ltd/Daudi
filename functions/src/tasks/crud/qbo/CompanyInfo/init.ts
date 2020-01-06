@@ -1,7 +1,8 @@
-import { QuickBooks } from "../../../../libs/qbmain";
-import { OMCConfig } from "../../../../models/Daudi/omc/Config";
-import { OMC } from "../../../../models/Daudi/omc/OMC";
-import { CompanyInfo } from "../../../../models/Qbo/CompanyInfo";
+import {QuickBooks} from "../../../../libs/qbmain";
+import {OMCConfig} from "../../../../models/Daudi/omc/Config";
+import {OMC} from "../../../../models/Daudi/omc/OMC";
+import {CompanyInfo} from "../../../../models/Qbo/CompanyInfo";
+
 export function initCompanyInfo(omc: OMC, config: OMCConfig, qbo: QuickBooks) {
     /**
      * Convert Daudi OMC to QBO company Info

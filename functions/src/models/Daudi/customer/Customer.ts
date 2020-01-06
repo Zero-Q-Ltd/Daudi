@@ -1,6 +1,6 @@
-import { MyGeoPoint } from "../../firestore/firestoreTypes";
-import { AssociatedUser } from "../admin/AssociatedUser";
-import { CustomerDetail } from "./CustomerDetail";
+import {MyGeoPoint} from "../../firestore/firestoreTypes";
+import {AssociatedUser} from "../admin/AssociatedUser";
+import {CustomerDetail} from "./CustomerDetail";
 
 export interface DaudiCustomer extends CustomerDetail {
   Active: boolean;

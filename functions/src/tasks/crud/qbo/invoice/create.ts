@@ -1,14 +1,14 @@
 // import { createQbo } from "../../../sharedqb";
 import * as moment from "moment";
-import { QuickBooks } from "../../../../libs/qbmain";
-import { FuelNamesArray } from '../../../../models/Daudi/fuel/FuelType';
-import { OMCConfig } from "../../../../models/Daudi/omc/Config";
-import { Order } from "../../../../models/Daudi/order/Order";
-import { EmailStatus } from "../../../../models/Qbo/enums/EmailStatus";
-import { LineDetailType } from "../../../../models/Qbo/enums/LineDetailType";
-import { PrintStatus } from "../../../../models/Qbo/enums/PrintStatus";
-import { Invoice } from '../../../../models/Qbo/Invoice';
-import { Line } from "../../../../models/Qbo/subTypes/Line";
+import {QuickBooks} from "../../../../libs/qbmain";
+import {FuelNamesArray} from '../../../../models/Daudi/fuel/FuelType';
+import {OMCConfig} from "../../../../models/Daudi/omc/Config";
+import {Order} from "../../../../models/Daudi/order/Order";
+import {EmailStatus} from "../../../../models/Qbo/enums/EmailStatus";
+import {LineDetailType} from "../../../../models/Qbo/enums/LineDetailType";
+import {PrintStatus} from "../../../../models/Qbo/enums/PrintStatus";
+import {Invoice} from '../../../../models/Qbo/Invoice';
+import {Line} from "../../../../models/Qbo/subTypes/Line";
 
 
 export class createInvoice {

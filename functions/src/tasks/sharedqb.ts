@@ -1,8 +1,8 @@
 import * as moment from "moment";
-import { QuickBooks, QbApiConfig } from "../libs/qbmain"; // quickbooks sdk
-import { firestore } from "firebase-admin";
-import { OMCConfig } from "../models/Daudi/omc/Config";
-import { AuthConfig } from "../models/Daudi/omc/QboAuthConfig";
+import {QbApiConfig, QuickBooks} from "../libs/qbmain"; // quickbooks sdk
+import {firestore} from "firebase-admin";
+import {OMCConfig} from "../models/Daudi/omc/Config";
+import {AuthConfig} from "../models/Daudi/omc/QboAuthConfig";
 
 export function createQbo(omcId: string, config: OMCConfig, useSandbox: boolean): Promise<QuickBooks> {
   const apiconfig: QbApiConfig = {

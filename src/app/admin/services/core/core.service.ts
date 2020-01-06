@@ -21,6 +21,7 @@ import { AdminService } from "./admin.service";
 import { ConfigService } from "./config.service";
 import { DepotService } from "./depot.service";
 import { OmcService } from "./omc.service";
+import { remap } from "../../../models/utils/remap";
 
 @Injectable({
   providedIn: "root"
@@ -94,6 +95,8 @@ export class CoreService {
         this.unsubscribeAll();
         this.subscriptions.set("configSubscription", this.configService.configDoc(admin.config.omcId)
           .onSnapshot(t => {
+            let u;
+            console.log(remap(emptyConfig, u));
             const config = this.attachId.transformObject<OMCConfig>(emptyConfig, t);
             // this.duplicate(admin.config.omcId, "values", "config", { Qbo: t.data().Qbo.sandbox });
             // this.duplicate(admin.config.omcId, "values", "config", { adminTypes: t.data().adminTypes });
@@ -261,10 +264,11 @@ export class CoreService {
     this.orders[6].next([]);
     // const orderSubscription
     OrderStageIds.forEach(stage => {
-
+      console.log(stage);
       /**
        * cancel any previous queries
        */
+
       if (this.subscriptions.get(`orders${stage}`)) {
         this.subscriptions.get(`orders${stage}`)();
       }

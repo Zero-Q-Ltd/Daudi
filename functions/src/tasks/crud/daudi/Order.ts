@@ -1,5 +1,5 @@
 import * as admin from "firebase-admin";
-import { Order } from "../../../models/Daudi/order/Order";
+import {Order} from "../../../models/Daudi/order/Order";
 
 
 export function creteOrder(order: Order, omcId: string) {

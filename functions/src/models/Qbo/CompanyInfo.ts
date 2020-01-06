@@ -1,5 +1,5 @@
-import { QboMetaData } from "./subTypes/QboMetaData";
-import { WebAddr } from './subTypes/WebAddr';
+import {QboMetaData} from "./subTypes/QboMetaData";
+import {WebAddr} from './subTypes/WebAddr';
 
 export interface Address {
     City: string;

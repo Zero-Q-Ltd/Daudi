@@ -1,5 +1,5 @@
-import { QboMetaData } from "./subTypes/QboMetaData";
-import { ReferenceType } from "./subTypes/ClassRef";
+import {QboMetaData} from "./subTypes/QboMetaData";
+import {ReferenceType} from "./subTypes/ClassRef";
 
 export interface Class {
     /**

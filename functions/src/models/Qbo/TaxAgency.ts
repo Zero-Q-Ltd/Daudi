@@ -1,4 +1,4 @@
-import { QboMetaData } from "./subTypes/QboMetaData";
+import {QboMetaData} from "./subTypes/QboMetaData";
 
 export interface TaxAgency {
     SyncToken?: string;

@@ -1,15 +1,15 @@
-import { BillAddr } from "./subTypes/BillAddr";
-import { ShipAddr } from "./subTypes/ShipAddr";
-import { Line } from "./subTypes/Line";
-import { QboMetaData } from "./subTypes/QboMetaData";
-import { CustomField } from "./subTypes/CustomField";
-import { TxnTaxDetail } from "./subTypes/TxnTaxDetail";
-import { PrintStatus } from "./enums/PrintStatus";
-import { TxnStatus } from "./enums/TxnStatus";
-import { CustomerMemo } from "./subTypes/CustomerMemo";
-import { CustomerRef } from "./subTypes/CustomerRef";
-import { BillEmail } from "./subTypes/BillEmail";
-import { ReferenceType } from './subTypes/ClassRef';
+import {BillAddr} from "./subTypes/BillAddr";
+import {ShipAddr} from "./subTypes/ShipAddr";
+import {Line} from "./subTypes/Line";
+import {QboMetaData} from "./subTypes/QboMetaData";
+import {CustomField} from "./subTypes/CustomField";
+import {TxnTaxDetail} from "./subTypes/TxnTaxDetail";
+import {PrintStatus} from "./enums/PrintStatus";
+import {TxnStatus} from "./enums/TxnStatus";
+import {CustomerMemo} from "./subTypes/CustomerMemo";
+import {CustomerRef} from "./subTypes/CustomerRef";
+import {BillEmail} from "./subTypes/BillEmail";
+import {ReferenceType} from './subTypes/ClassRef';
 
 export interface Estimate {
 

@@ -1,11 +1,11 @@
-import { QuickBooks } from "../../libs/qbmain";
-import { SyncRequest } from "../../models/Cloud/Sync";
-import { OMCConfig } from '../../models/Daudi/omc/Config';
-import { QbTypes } from "../../models/QbTypes";
-import { findBills } from "./findBills";
-import { syncAse } from "./syncAse";
-import { syncCustomers } from "./syncCustomers";
-import { syncEntry } from "./syncEntry";
+import {QuickBooks} from "../../libs/qbmain";
+import {SyncRequest} from "../../models/Cloud/Sync";
+import {OMCConfig} from '../../models/Daudi/omc/Config';
+import {QbTypes} from "../../models/QbTypes";
+import {findBills} from "./findBills";
+import {syncAse} from "./syncAse";
+import {syncCustomers} from "./syncCustomers";
+import {syncEntry} from "./syncEntry";
 
 export function processSync(sync: SyncRequest, qbo: QuickBooks, omcId: string, config: OMCConfig) {
     return Promise.all(

@@ -1,5 +1,5 @@
-import { LinkedTxn } from "./subTypes/LinkedTxn";
-import { ReferenceType } from "./subTypes/ClassRef";
+import {LinkedTxn} from "./subTypes/LinkedTxn";
+import {ReferenceType} from "./subTypes/ClassRef";
 
 export interface Payment {
   CustomerRef: ReferenceType;

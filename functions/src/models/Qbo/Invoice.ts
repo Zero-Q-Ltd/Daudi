@@ -1,11 +1,11 @@
-import { LinkedTxn } from "./subTypes/LinkedTxn";
-import { CustomField } from "./subTypes/CustomField";
-import { BillEmail } from "./subTypes/BillEmail";
-import { TxnTaxDetail } from "./subTypes/TxnTaxDetail";
-import { Line } from "./subTypes/Line";
-import { PrintStatus } from "./enums/PrintStatus";
-import { EmailStatus } from "./enums/EmailStatus";
-import { ReferenceType } from './subTypes/ClassRef';
+import {LinkedTxn} from "./subTypes/LinkedTxn";
+import {CustomField} from "./subTypes/CustomField";
+import {BillEmail} from "./subTypes/BillEmail";
+import {TxnTaxDetail} from "./subTypes/TxnTaxDetail";
+import {Line} from "./subTypes/Line";
+import {PrintStatus} from "./enums/PrintStatus";
+import {EmailStatus} from "./enums/EmailStatus";
+import {ReferenceType} from './subTypes/ClassRef';
 
 export interface Invoice {
   Line?: Array<Line>;

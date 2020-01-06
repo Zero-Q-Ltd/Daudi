@@ -1,10 +1,10 @@
-import { firestore } from "firebase-admin";
-import { QuickBooks } from "../../../../libs/qbmain";
-import { OMCConfig } from "../../../../models/Daudi/omc/Config";
-import { OMC } from "../../../../models/Daudi/omc/OMC";
-import { TaxAgency } from "../../../../models/Qbo/TaxAgency";
-import { TaxService } from "../../../../models/Qbo/TaxService";
-import { initTaxAgency } from "./TaxAgency/init";
+import {firestore} from "firebase-admin";
+import {QuickBooks} from "../../../../libs/qbmain";
+import {OMCConfig} from "../../../../models/Daudi/omc/Config";
+import {OMC} from "../../../../models/Daudi/omc/OMC";
+import {TaxAgency} from "../../../../models/Qbo/TaxAgency";
+import {TaxService} from "../../../../models/Qbo/TaxService";
+import {initTaxAgency} from "./TaxAgency/init";
 
 /**
  * This is the generl initialization process for every tax configuration there is

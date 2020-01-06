@@ -1,8 +1,8 @@
-import { MyTimestamp } from "../../../firestore/firestoreTypes";
-import { AssociatedUser, inituser } from "../../admin/AssociatedUser";
-import { deepCopy } from "../../../utils/deepCopy";
-import { EmptyStage0, EmptyStage1, EmptyStage2, EmptyStage3, EmptyStage4, Stage0Model, Stage1Model, Stage2Model, Stage3Model, Stage4Model, TruckStages } from "./TruckStages";
-import { Compartment } from "./Compartment";
+import {MyTimestamp} from "../../../firestore/firestoreTypes";
+import {AssociatedUser, inituser} from "../../admin/AssociatedUser";
+import {deepCopy} from "../../../utils/deepCopy";
+import {EmptyStage0, EmptyStage1, EmptyStage2, EmptyStage3, EmptyStage4, Stage0Model, Stage1Model, Stage2Model, Stage3Model, Stage4Model, TruckStages} from "./TruckStages";
+import {Compartment} from "./Compartment";
 
 
 export interface Expiry {

@@ -1,4 +1,4 @@
-import { QuickBooks } from "../../libs/qbmain";
+import {QuickBooks} from "../../libs/qbmain";
 import * as moment from "moment";
 
 export function findBills(qbo: QuickBooks) {

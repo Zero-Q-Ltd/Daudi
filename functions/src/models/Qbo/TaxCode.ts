@@ -1,4 +1,4 @@
-import { ReferenceType } from "./subTypes/ClassRef";
+import {ReferenceType} from "./subTypes/ClassRef";
 
 export interface TaxCode {
   Name: string;

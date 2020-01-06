@@ -1,5 +1,5 @@
-import { MyTimestamp } from "../../firestore/firestoreTypes";
-import { Contact } from "../customer/Contact";
+import {MyTimestamp} from "../../firestore/firestoreTypes";
+import {Contact} from "../customer/Contact";
 
 
 export interface SMS {

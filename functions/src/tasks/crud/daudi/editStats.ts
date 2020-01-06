@@ -1,8 +1,8 @@
-import { firestore } from "firebase-admin";
+import {firestore} from "firebase-admin";
 import * as moment from "moment";
-import { OrderAction } from "../../../models/Cloud/OrderAction";
-import { Order } from "../../../models/Daudi/order/Order";
-import { Stat } from "../../../models/Daudi/stats/Stats";
+import {OrderAction} from "../../../models/Cloud/OrderAction";
+import {Order} from "../../../models/Daudi/order/Order";
+import {Stat} from "../../../models/Daudi/stats/Stats";
 
 /**
  *

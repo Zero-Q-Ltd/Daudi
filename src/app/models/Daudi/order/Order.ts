@@ -5,6 +5,7 @@ import { FuelType } from "../fuel/FuelType";
 import { OrderFuelConfig } from "./FuelConfig";
 import { OrderStages } from "./OrderStages";
 import { emptytruck, Truck } from "./truck/Truck";
+import { GenericStageDetail, EmptyGenericDetail } from "./GenericStageDetail";
 export interface Order {
   Id: string; // used to temporarily store the key, used later for looping
   customer: CustomerDetail;
@@ -43,16 +44,11 @@ export interface Order {
   fuel: {
     [key in FuelType]: OrderFuelConfig
   };
-
   stagedata: {
-    [key in OrderStages]: OrderStageData
+    [key in OrderStages]: GenericStageDetail
   };
 }
 
-export interface OrderStageData {
-  user: AssociatedUser;
-  data: any;
-}
 
 const initorderfuel: OrderFuelConfig = {
   qty: 0,
@@ -73,15 +69,6 @@ const initorderfuel: OrderFuelConfig = {
   entries: []
 };
 
-
-const initstages: OrderStageData = {
-  data: null,
-  user: {
-    name: null,
-    time: null,
-    uid: null
-  }
-};
 
 export const emptyorder: Order = {
   Id: null,
@@ -113,15 +100,13 @@ export const emptyorder: Order = {
   stage: null,
   loaded: null,
   stagedata: {
-    1: deepCopy<OrderStageData>(initstages),
-    2: deepCopy<OrderStageData>(initstages),
-    3: deepCopy<OrderStageData>(initstages),
-    4: deepCopy<OrderStageData>(initstages),
-    5: deepCopy<OrderStageData>(initstages),
-    6: deepCopy<OrderStageData>(initstages)
+    1: deepCopy<GenericStageDetail>(EmptyGenericDetail),
+    2: deepCopy<GenericStageDetail>(EmptyGenericDetail),
+    3: deepCopy<GenericStageDetail>(EmptyGenericDetail),
+    4: deepCopy<GenericStageDetail>(EmptyGenericDetail),
+    5: deepCopy<GenericStageDetail>(EmptyGenericDetail),
+    6: deepCopy<GenericStageDetail>(EmptyGenericDetail),
   },
-
-
   fuel: {
     pms: deepCopy<OrderFuelConfig>(initorderfuel),
     ago: deepCopy<OrderFuelConfig>(initorderfuel),

@@ -1,10 +1,10 @@
-import { firestore } from "firebase-admin";
-import { QuickBooks } from "../../../../libs/qbmain";
-import { FuelType } from '../../../../models/Daudi/fuel/FuelType';
-import { OMCConfig } from "../../../../models/Daudi/omc/Config";
-import { OMC } from "../../../../models/Daudi/omc/OMC";
-import { ItemType } from "../../../../models/Qbo/enums/ItemType";
-import { Item } from "../../../../models/Qbo/Item";
+import {firestore} from "firebase-admin";
+import {QuickBooks} from "../../../../libs/qbmain";
+import {FuelType} from '../../../../models/Daudi/fuel/FuelType';
+import {OMCConfig} from "../../../../models/Daudi/omc/Config";
+import {OMC} from "../../../../models/Daudi/omc/OMC";
+import {ItemType} from "../../../../models/Qbo/enums/ItemType";
+import {Item} from "../../../../models/Qbo/Item";
 
 /**
  * There are 3 fuel types, where every fuel is an ITEM, as far as qbo is concerned

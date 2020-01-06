@@ -1,4 +1,4 @@
-import { QbTypes } from "../QbTypes";
+import {QbTypes} from "../QbTypes";
 
 export type eventnotifications = {
   name: QbTypes;

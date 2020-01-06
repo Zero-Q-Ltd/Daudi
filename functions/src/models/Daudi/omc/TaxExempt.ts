@@ -1,5 +1,5 @@
-import { Metadata, emptymetadata } from "../universal/Metadata";
-import { deepCopy } from "../../utils/deepCopy";
+import {emptymetadata, Metadata} from "../universal/Metadata";
+import {deepCopy} from "../../utils/deepCopy";
 
 export interface TaxExempt {
     amount: number;

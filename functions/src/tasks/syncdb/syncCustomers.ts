@@ -1,7 +1,7 @@
-import { QuickBooks } from "../../libs/qbmain";
-import { firestore } from "firebase-admin";
-import { DaudiCustomer, emptyDaudiCustomer } from '../../models/Daudi/customer/Customer';
-import { Customer } from "../../models/Qbo/Customer";
+import {QuickBooks} from "../../libs/qbmain";
+import {firestore} from "firebase-admin";
+import {DaudiCustomer, emptyDaudiCustomer} from '../../models/Daudi/customer/Customer';
+import {Customer} from "../../models/Qbo/Customer";
 
 /**
  * Fetches all the customer information qbom qbo and overwrites the customers info on Dausi

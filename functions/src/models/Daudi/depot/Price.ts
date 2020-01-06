@@ -1,6 +1,6 @@
-import { FuelType } from "../fuel/FuelType";
-import { AssociatedUser, inituser } from "../admin/AssociatedUser";
-import { deepCopy } from "../../utils/deepCopy";
+import {FuelType} from "../fuel/FuelType";
+import {AssociatedUser, inituser} from "../admin/AssociatedUser";
+import {deepCopy} from "../../utils/deepCopy";
 
 
 export interface Price {

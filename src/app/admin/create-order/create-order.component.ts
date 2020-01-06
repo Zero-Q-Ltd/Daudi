@@ -202,7 +202,6 @@ export class CreateOrderComponent implements OnDestroy {
     this.temporder.customer.krapin = this.temporder.customer.krapin.toLocaleUpperCase();
     this.temporder.stagedata["1"] = {
       user: this.adminservice.createuserobject(),
-      data: null
     };
     this.temporder.config = {
       depot: {

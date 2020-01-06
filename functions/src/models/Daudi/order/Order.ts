@@ -1,10 +1,11 @@
-import { deepCopy } from "../../utils/deepCopy";
-import { AssociatedUser } from "../admin/AssociatedUser";
-import { CustomerDetail } from "../customer/CustomerDetail";
-import { FuelType } from "../fuel/FuelType";
-import { OrderFuelConfig } from "./FuelConfig";
-import { OrderStages } from "./OrderStages";
-import { emptytruck, Truck } from "./truck/Truck";
+import {deepCopy} from "../../utils/deepCopy";
+import {AssociatedUser} from "../admin/AssociatedUser";
+import {CustomerDetail} from "../customer/CustomerDetail";
+import {FuelType} from "../fuel/FuelType";
+import {OrderFuelConfig} from "./FuelConfig";
+import {OrderStages} from "./OrderStages";
+import {emptytruck, Truck} from "./truck/Truck";
+
 export interface Order {
   Id: string; // used to temporarily store the key, used later for looping
   customer: CustomerDetail;
