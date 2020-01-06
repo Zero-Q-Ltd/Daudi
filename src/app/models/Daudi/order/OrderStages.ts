@@ -3,7 +3,7 @@ export enum OrderStages {
     "Invoiced",
     "Paid",
     "Loading Orders",
-    "Complete" = 5,
+    "Complete",
     "Deleted",
 }
 export const OrderStageIds = Object.keys(OrderStages).filter(key => isNaN(Number(OrderStages[key]))).map(t => Number(t));

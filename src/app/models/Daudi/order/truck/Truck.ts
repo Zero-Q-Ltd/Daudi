@@ -1,6 +1,5 @@
-import {MyTimestamp} from "../../../firestore/firestoreTypes";
-import {Compartment} from "./Compartment";
-import {TruckStages} from "./TruckStages";
+import { MyTimestamp } from "../../../firestore/firestoreTypes";
+import { Compartment } from "./Compartment";
 
 
 export interface Expiry {
@@ -16,7 +15,6 @@ export interface TruckEntry {
 }
 
 export interface Truck {
-  frozen: boolean;
   compartmentCount: number;
   driverdetail: {
     name: string,
@@ -26,17 +24,11 @@ export interface Truck {
   truckdetail: {
     numberplate: string;
   };
-  stagedata: {
-    [stage in TruckStages]: OrderStage<stage>
-  };
   compartments: Array<Compartment>;
 }
-type OrderStage<stage> = (key: number) => {
-  return: Truck;
-};
+
 export const emptytruck: Truck = {
   compartmentCount: null,
-  frozen: false,
   driverdetail: {
     id: null,
     name: null,
@@ -45,6 +37,5 @@ export const emptytruck: Truck = {
   truckdetail: {
     numberplate: null
   },
-  stagedata: null,
   compartments: []
 };

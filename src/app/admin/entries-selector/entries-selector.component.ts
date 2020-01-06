@@ -1,23 +1,23 @@
-import {Component, Inject, OnDestroy, OnInit} from "@angular/core";
-import {AngularFirestore} from "@angular/fire/firestore";
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
+import { Component, Inject, OnDestroy, OnInit } from "@angular/core";
+import { AngularFirestore } from "@angular/fire/firestore";
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material";
 import * as moment from "moment";
-import {ReplaySubject} from "rxjs";
-import {takeUntil} from "rxjs/operators";
-import {Depot, emptydepot} from "../../models/Daudi/depot/Depot";
-import {DepotConfig, emptyDepotConfig} from "../../models/Daudi/depot/DepotConfig";
-import {Entry} from "../../models/Daudi/fuel/Entry";
-import {FuelNamesArray, FuelType} from "../../models/Daudi/fuel/FuelType";
-import {EmptyOMCStock, OMCStock} from "../../models/Daudi/omc/Stock";
-import {emptyorder, Order} from "../../models/Daudi/order/Order";
-import {Stage1Model} from "../../models/Daudi/order/truck/TruckStages";
-import {MyTimestamp} from "../../models/firestore/firestoreTypes";
-import {NotificationService} from "../../shared/services/notification.service";
-import {AdminService} from "../services/core/admin.service";
-import {ConfigService} from "../services/core/config.service";
-import {CoreService} from "../services/core/core.service";
-import {EntriesService} from "../services/entries.service";
-import {OrdersService} from "../services/orders.service";
+import { ReplaySubject } from "rxjs";
+import { takeUntil } from "rxjs/operators";
+import { Depot, emptydepot } from "../../models/Daudi/depot/Depot";
+import { DepotConfig, emptyDepotConfig } from "../../models/Daudi/depot/DepotConfig";
+import { Entry } from "../../models/Daudi/fuel/Entry";
+import { FuelNamesArray, FuelType } from "../../models/Daudi/fuel/FuelType";
+import { EmptyOMCStock, OMCStock } from "../../models/Daudi/omc/Stock";
+import { emptyorder, Order } from "../../models/Daudi/order/Order";
+import { Stage1Model } from "../../models/Daudi/order/truck/TruckStages";
+import { MyTimestamp } from "../../models/firestore/firestoreTypes";
+import { NotificationService } from "../../shared/services/notification.service";
+import { AdminService } from "../services/core/admin.service";
+import { ConfigService } from "../services/core/config.service";
+import { CoreService } from "../services/core/core.service";
+import { EntriesService } from "../services/entries.service";
+import { OrdersService } from "../services/orders.service";
 
 interface EntryContent {
   id: string;
@@ -340,7 +340,7 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
       this.order.stage = 4.1;
       this.order.loaded = true;
 
-      this.order.stagedata["4"].user = data.user;
+      this.order.orderStageData["4"].user = data.user;
 
       this.order.truck.stagedata["1"] = data;
 

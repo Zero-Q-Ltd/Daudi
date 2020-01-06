@@ -1,23 +1,23 @@
-import {Component, OnDestroy} from "@angular/core";
-import {MatDialog} from "@angular/material";
-import {ActivatedRoute, Router} from "@angular/router";
-import {firestore} from "firebase";
+import { Component, OnDestroy } from "@angular/core";
+import { MatDialog } from "@angular/material";
+import { ActivatedRoute, Router } from "@angular/router";
+import { firestore } from "firebase";
 // import our interface
-import {combineLatest, ReplaySubject} from "rxjs";
-import {skipWhile, takeUntil} from "rxjs/operators";
-import {DaudiCustomer} from "../../models/Daudi/customer/Customer";
-import {Depot, emptydepot} from "../../models/Daudi/depot/Depot";
-import {DepotConfig, emptyDepotConfig} from "../../models/Daudi/depot/DepotConfig";
-import {FuelNamesArray} from "../../models/Daudi/fuel/FuelType";
-import {emptyConfig, OMCConfig} from "../../models/Daudi/omc/Config";
-import {emptyorder, Order} from "../../models/Daudi/order/Order";
-import {NotificationService} from "../../shared/services/notification.service";
-import {MapsComponent} from "../maps/maps.component";
-import {AdminService} from "../services/core/admin.service";
-import {CoreService} from "../services/core/core.service";
-import {CustomerService} from "../services/customers.service";
-import {OrdersService} from "../services/orders.service";
-import {ConfirmDepotComponent} from "./components/confirm-depot/confirm-depot.component";
+import { combineLatest, ReplaySubject } from "rxjs";
+import { skipWhile, takeUntil } from "rxjs/operators";
+import { DaudiCustomer } from "../../models/Daudi/customer/Customer";
+import { Depot, emptydepot } from "../../models/Daudi/depot/Depot";
+import { DepotConfig, emptyDepotConfig } from "../../models/Daudi/depot/DepotConfig";
+import { FuelNamesArray } from "../../models/Daudi/fuel/FuelType";
+import { emptyConfig, OMCConfig } from "../../models/Daudi/omc/Config";
+import { emptyorder, Order } from "../../models/Daudi/order/Order";
+import { NotificationService } from "../../shared/services/notification.service";
+import { MapsComponent } from "../maps/maps.component";
+import { AdminService } from "../services/core/admin.service";
+import { CoreService } from "../services/core/core.service";
+import { CustomerService } from "../services/customers.service";
+import { OrdersService } from "../services/orders.service";
+import { ConfirmDepotComponent } from "./components/confirm-depot/confirm-depot.component";
 
 @Component({
   selector: "create-order",
@@ -200,7 +200,7 @@ export class CreateOrderComponent implements OnDestroy {
     this.temporder.QbConfig.departmentId = this.activedepot.config.QbId;
     console.log(this.temporder);
     this.temporder.customer.krapin = this.temporder.customer.krapin.toLocaleUpperCase();
-    this.temporder.stagedata["1"] = {
+    this.temporder.orderStageData["1"] = {
       user: this.adminservice.createuserobject(),
     };
     this.temporder.config = {

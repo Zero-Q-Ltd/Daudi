@@ -1,5 +1,5 @@
-import {deepCopy} from "../../utils/deepCopy";
-import {AssociatedUser, inituser} from "./AssociatedUser";
+import { deepCopy } from "../../utils/deepCopy";
+import { AssociatedUser, EmptyAssociatedUser } from "./AssociatedUser";
 
 export interface Admin {
   Active: boolean;
@@ -71,7 +71,7 @@ export const emptyadmin: Admin = {
       companyid: null,
       QbId: null,
     },
-    approvedby: deepCopy<AssociatedUser>(inituser),
+    approvedby: deepCopy<AssociatedUser>(EmptyAssociatedUser),
     app: {
       depotid: null
     },

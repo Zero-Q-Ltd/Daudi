@@ -1,24 +1,24 @@
-import {Component, OnDestroy, OnInit, ViewChild} from "@angular/core";
-import {MatDialog, MatPaginator, MatSort, MatTableDataSource} from "@angular/material";
-import {CompartmentsComponent} from "../compartments/compartments.component";
-import {SendMsgComponent} from "../send-msg/send-msg.component";
-import {ActivatedRoute, Router} from "@angular/router";
-import {NotificationService} from "../../shared/services/notification.service";
-import {AngularFirestore} from "@angular/fire/firestore";
-import {animate, sequence, state, style, transition, trigger} from "@angular/animations";
-import {Truck} from "../../models/Daudi/order/truck/Truck";
-import {Order} from "../../models/Daudi/order/Order";
-import {SMS} from "../../models/Daudi/sms/sms";
-import {ReasonComponent} from "../reason/reason.component";
-import {ExcelService} from "../services/excel-service.service";
-import {ColumnsCustomizerComponent} from "../columns-customizer/columns-customizer.component";
-import {AdminService} from "../services/core/admin.service";
-import {OrdersService} from "../services/orders.service";
-import {ComponentCommunicationService} from "../services/component-communication.service";
-import {switchMap, takeUntil} from "rxjs/operators";
-import {ReplaySubject} from "rxjs";
-import {MyTimestamp} from "../../models/firestore/firestoreTypes";
-import {CoreService} from "../services/core/core.service";
+import { Component, OnDestroy, OnInit, ViewChild } from "@angular/core";
+import { MatDialog, MatPaginator, MatSort, MatTableDataSource } from "@angular/material";
+import { CompartmentsComponent } from "../compartments/compartments.component";
+import { SendMsgComponent } from "../send-msg/send-msg.component";
+import { ActivatedRoute, Router } from "@angular/router";
+import { NotificationService } from "../../shared/services/notification.service";
+import { AngularFirestore } from "@angular/fire/firestore";
+import { animate, sequence, state, style, transition, trigger } from "@angular/animations";
+import { Truck } from "../../models/Daudi/order/truck/Truck";
+import { Order } from "../../models/Daudi/order/Order";
+import { SMS } from "../../models/Daudi/sms/sms";
+import { ReasonComponent } from "../reason/reason.component";
+import { ExcelService } from "../services/excel-service.service";
+import { ColumnsCustomizerComponent } from "../columns-customizer/columns-customizer.component";
+import { AdminService } from "../services/core/admin.service";
+import { OrdersService } from "../services/orders.service";
+import { ComponentCommunicationService } from "../services/component-communication.service";
+import { switchMap, takeUntil } from "rxjs/operators";
+import { ReplaySubject } from "rxjs";
+import { MyTimestamp } from "../../models/firestore/firestoreTypes";
+import { CoreService } from "../services/core/core.service";
 
 
 const EXCEL_TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
@@ -204,8 +204,8 @@ export class OrdersTableComponent implements OnInit, OnDestroy {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         order.stage = 6;
-        order.stagedata["6"] = {} as any;
-        order.stagedata["6"].user = this.adminservice.createuserobject();
+        order.orderStageData["6"] = {} as any;
+        order.orderStageData["6"].user = this.adminservice.createuserobject();
         // order.stagedata["6"].data = { reason: result };
 
         this.orderservice.updateorder(order.Id, this.core.currentOmc.value.Id, order).then(result => {
@@ -232,7 +232,7 @@ export class OrdersTableComponent implements OnInit, OnDestroy {
    */
   restoreOrder(order: Order) {
     order.stage = 1;
-    order.stagedata["6"].user = {
+    order.orderStageData["6"].user = {
       time: null,
       uid: null,
       name: null
