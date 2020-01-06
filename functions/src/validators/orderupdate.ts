@@ -1,7 +1,7 @@
-import {QuickBooks} from "../libs/qbmain";
-import {Invoice} from "../models/Qbo/Invoice";
-import {Order} from "../models/Daudi/order/Order";
-import {editStats} from "../tasks/crud/daudi/editStats";
+import { QuickBooks } from "../libs/qbmain";
+import { Invoice } from "../models/Qbo/Invoice";
+import { Order } from "../models/Daudi/order/Order";
+import { editStats } from "../tasks/crud/daudi/editStats";
 
 export function validorderupdate(order: Order, qbo: QuickBooks) {
     switch (order.stage) {
@@ -16,9 +16,12 @@ export function validorderupdate(order: Order, qbo: QuickBooks) {
                 return qbo.getInvoice(order.QbConfig.QbId).then(result => {
                     const resultinvoice = result.Invoice as Invoice;
                     resultinvoice.void = true;
-                    resultinvoice.CustomerMemo = {
-                        value: order.stagedata["6"].data.reason
-                    };
+                    /**
+                     * @todo Implement deletion reason and User detail
+                     */
+                    // resultinvoice.CustomerMemo = {
+                    //     value: order.stagedata["6"].data.reason
+                    // };
                     return qbo.updateInvoice(resultinvoice);
                 });
             } else return true

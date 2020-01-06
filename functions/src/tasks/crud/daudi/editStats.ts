@@ -1,8 +1,8 @@
-import {firestore} from "firebase-admin";
+import { firestore } from "firebase-admin";
 import * as moment from "moment";
-import {OrderAction} from "../../../models/Cloud/OrderAction";
-import {Order} from "../../../models/Daudi/order/Order";
-import {Stat} from "../../../models/Daudi/stats/Stats";
+import { OrderAction } from "../../../models/Cloud/OrderAction";
+import { Order } from "../../../models/Daudi/order/Order";
+import { Stat } from "../../../models/Daudi/stats/Stats";
 
 /**
  *
@@ -18,7 +18,7 @@ export function editStats(order: Order, action: OrderAction) {
             .doc(order.config.depot.id)
             .collection("stats")
             .doc(
-                moment(order.stagedata["3"].user.time)
+                moment(order.orderStageData["3"].user.date)
                     .utcOffset("+0300")
                     .startOf("year")
                     .format("YYYY")
@@ -31,7 +31,7 @@ export function editStats(order: Order, action: OrderAction) {
             .doc(order.config.depot.id)
             .collection("stats")
             .doc(
-                moment(order.stagedata["3"].user.time)
+                moment(order.orderStageData["3"].user.date)
                     .utcOffset("+0300")
                     .startOf("week")
                     .format("YYYY-MM-WW") + "W"
@@ -41,7 +41,7 @@ export function editStats(order: Order, action: OrderAction) {
             .doc(order.config.depot.id)
             .collection("stats")
             .doc(
-                moment(order.stagedata["3"].user.time)
+                moment(order.orderStageData["3"].user.date)
                     .utcOffset("+0300")
                     .startOf("month")
                     .format("YYYY-MM")
@@ -51,7 +51,7 @@ export function editStats(order: Order, action: OrderAction) {
             .doc(order.config.depot.id)
             .collection("stats")
             .doc(
-                moment(order.stagedata["3"].user.time)
+                moment(order.orderStageData["3"].user.date)
                     .utcOffset("+0300")
                     .startOf("day")
                     .format("YYYY-MM-DD")
@@ -143,5 +143,5 @@ export function editStats(order: Order, action: OrderAction) {
             }
         });
     });
-    // batch.update(firestore().doc('depots').collection(order.config.depot.id).doc('stats').collection(order.stagedata['3'].user.time), )
+    // batch.update(firestore().doc('depots').collection(order.config.depot.id).doc('stats').collection(order.orderStageData['3'].user.date), )
 }

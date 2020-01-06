@@ -1,29 +1,23 @@
 import * as moment from "moment";
-import {QuickBooks} from "../../../../libs/qbmain";
-import {FuelNamesArray} from '../../../../models/Daudi/fuel/FuelType';
-import {OMCConfig} from "../../../../models/Daudi/omc/Config";
-import {Order} from "../../../../models/Daudi/order/Order";
-import {EmailStatus} from "../../../../models/Qbo/enums/EmailStatus";
-import {LineDetailType} from "../../../../models/Qbo/enums/LineDetailType";
-import {PrintStatus} from "../../../../models/Qbo/enums/PrintStatus";
-import {TxnStatus} from "../../../../models/Qbo/enums/TxnStatus";
-import {Estimate} from "../../../../models/Qbo/Estimate";
-import {Line} from "../../../../models/Qbo/subTypes/Line";
+import { QuickBooks } from "../../../../libs/qbmain";
+import { FuelNamesArray } from '../../../../models/Daudi/fuel/FuelType';
+import { OMCConfig } from "../../../../models/Daudi/omc/Config";
+import { Order } from "../../../../models/Daudi/order/Order";
+import { EmailStatus } from "../../../../models/Qbo/enums/EmailStatus";
+import { LineDetailType } from "../../../../models/Qbo/enums/LineDetailType";
+import { PrintStatus } from "../../../../models/Qbo/enums/PrintStatus";
+import { TxnStatus } from "../../../../models/Qbo/enums/TxnStatus";
+import { Estimate } from "../../../../models/Qbo/Estimate";
+import { Line } from "../../../../models/Qbo/subTypes/Line";
 
 
 export class createEstimate {
-
-    orderdata: Order;
-    qbo: QuickBooks;
-    config: OMCConfig;
-    constructor(_orderdata: Order, _qbo: QuickBooks, _config: OMCConfig) {
+    constructor(private orderdata: Order, private qbo: QuickBooks, private config: OMCConfig) {
         /**
-    * format the timestamp again as it loses it when it doesnt directly go to the database
-    */
-        _orderdata.stagedata["1"].user.time = moment().toDate() as any;
-        this.orderdata = _orderdata;
-        this.qbo = _qbo;
-        this.config = _config;
+         * format the timestamp again as it loses it when it doesnt directly go to the database
+         */
+        orderdata.orderStageData["1"].user.date = moment().toDate() as any;
+
     }
 
     syncfueltypes(): Array<any> {

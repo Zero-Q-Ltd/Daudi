@@ -4,7 +4,7 @@ import { FuelType } from "../fuel/FuelType";
 import { OrderFuelConfig } from "./FuelConfig";
 import { OrderStages } from "./OrderStages";
 import { emptytruck, Truck } from "./truck/Truck";
-import { TruckStages } from "functions/src/models/Daudi/order/truck/TruckStages";
+import { TruckStages } from "./truck/TruckStages";
 import { AssociatedUser } from "../admin/AssociatedUser";
 import { GenericStage, GenericTruckStage, EmptyGenericStage, EmptyGenericTruckStage } from "./GenericStage";
 
