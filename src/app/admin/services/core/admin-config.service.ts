@@ -1,17 +1,16 @@
-import {Injectable} from "@angular/core";
-import {AngularFirestore} from "@angular/fire/firestore";
-import {Admin} from "../../../models/Daudi/admin/Admin";
-import {emptyConfig, OMCConfig} from "../../../models/Daudi/omc/Config";
+import { Injectable } from "@angular/core";
+import { AngularFirestore } from "@angular/fire/firestore";
+import { Admin } from "../../../models/Daudi/admin/Admin";
+import { emptyConfig, AdminConfig } from "../../../models/Daudi/omc/Config";
 
 @Injectable({
   providedIn: "root"
 })
-export class ConfigService {
+export class AdminConfigService {
 
   constructor(private db: AngularFirestore) {
 
   }
-
   /**
    * @param omcId
    */
@@ -31,11 +30,11 @@ export class ConfigService {
 
 
   initConfig(admin: Admin) {
-    const newConfig: OMCConfig = { ...emptyConfig };
+    const newConfig: AdminConfig = { ...emptyConfig };
     this.saveConfig(admin.config.omcId, newConfig);
   }
 
-  saveConfig(omcId: string, data: OMCConfig) {
+  saveConfig(omcId: string, data: AdminConfig) {
     return this.configDoc(omcId)
       .set(data);
   }

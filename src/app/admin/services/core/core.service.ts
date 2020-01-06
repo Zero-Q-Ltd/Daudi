@@ -8,7 +8,7 @@ import { Depot, emptydepot } from "../../../models/Daudi/depot/Depot";
 import { DepotConfig, emptyDepotConfig } from "../../../models/Daudi/depot/DepotConfig";
 import { emptyEntry, Entry } from "../../../models/Daudi/fuel/Entry";
 import { FuelNamesArray } from "../../../models/Daudi/fuel/FuelType";
-import { emptyConfig, OMCConfig } from "../../../models/Daudi/omc/Config";
+import { emptyConfig, AdminConfig } from "../../../models/Daudi/omc/Config";
 import { emptyomc, OMC } from "../../../models/Daudi/omc/OMC";
 import { EmptyOMCStock, OMCStock } from "../../../models/Daudi/omc/Stock";
 import { emptyorder, Order } from "../../../models/Daudi/order/Order";
@@ -17,7 +17,7 @@ import { CustomerService } from "../customers.service";
 import { EntriesService } from "../entries.service";
 import { OrdersService } from "../orders.service";
 import { AdminService } from "./admin.service";
-import { ConfigService } from "./config.service";
+import { AdminConfigService } from "./admin-config.service";
 import { DepotService } from "./depot.service";
 import { OmcService } from "./omc.service";
 import { toObject, toArray } from "../../../models/utils/SnapshotUtils";
@@ -29,7 +29,7 @@ import { toObject, toArray } from "../../../models/utils/SnapshotUtils";
  * This singleton keeps all the variables needed by the app to run and automatically keeps and manages the subscriptions
  */
 export class CoreService {
-  config: BehaviorSubject<OMCConfig> = new BehaviorSubject<OMCConfig>({ ...emptyConfig });
+  adminConfig: BehaviorSubject<AdminConfig> = new BehaviorSubject<AdminConfig>({ ...emptyConfig });
   depots: BehaviorSubject<Array<Depot>> = new BehaviorSubject([]);
   customers: BehaviorSubject<Array<DaudiCustomer>> = new BehaviorSubject<Array<DaudiCustomer>>([]);
   omcs: BehaviorSubject<Array<OMC>> = new BehaviorSubject<Array<OMC>>([]);
@@ -80,7 +80,7 @@ export class CoreService {
   omcId: string;
   constructor(
     private db: AngularFirestore,
-    private configService: ConfigService,
+    private adminConfigService: AdminConfigService,
     private depotService: DepotService,
     private omc: OmcService,
     private orderService: OrdersService,
@@ -91,17 +91,17 @@ export class CoreService {
       .pipe(distinctUntilChanged())
       .subscribe(admin => {
         this.unsubscribeAll();
-        this.subscriptions.set("configSubscription", this.configService.configDoc(admin.config.omcId)
+        this.subscriptions.set("configSubscription", this.adminConfigService.configDoc(admin.config.omcId)
           .onSnapshot(t => {
             const config = toObject(emptyConfig, t);
-            // this.duplicate(admin.config.omcId, "values", "config", { Qbo: t.data().Qbo.sandbox });
+            this.duplicate(admin.config.omcId, "configs", "admin", { adminTypes: config.adminTypes });
             // this.duplicate(admin.config.omcId, "values", "config", { adminTypes: t.data().adminTypes });
             if (!config.status) {
               console.log("OMC Account not active");
               return;
             }
             this.omcId = admin.config.omcId;
-            this.config.next(config);
+            this.adminConfig.next(config);
             /**
              * Fetch OMC's and depots after the main config has been loaded
              */
@@ -125,11 +125,11 @@ export class CoreService {
       .doc(omcId)
       .collection(name)
       .doc(id)
-      .update(doc);
+      .set(doc);
   }
   getStocks() {
     this.loaders.stock.next(true);
-    this.subscriptions.set("stock", this.configService.stockDoc(this.omcId)
+    this.subscriptions.set("stock", this.adminConfigService.stockDoc(this.omcId)
       .onSnapshot(t => {
         this.stock.next(toObject(EmptyOMCStock, t));
         this.loaders.stock.next(false);

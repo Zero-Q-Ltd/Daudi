@@ -13,7 +13,7 @@ import { emptyorder, Order } from "../../models/Daudi/order/Order";
 import { MyTimestamp } from "../../models/firestore/firestoreTypes";
 import { NotificationService } from "../../shared/services/notification.service";
 import { AdminService } from "../services/core/admin.service";
-import { ConfigService } from "../services/core/config.service";
+import { AdminConfigService } from "../services/core/admin-config.service";
 import { CoreService } from "../services/core/core.service";
 import { EntriesService } from "../services/entries.service";
 import { OrdersService } from "../services/orders.service";
@@ -85,7 +85,7 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
     private adminservice: AdminService,
     private core: CoreService,
     private entriesService: EntriesService,
-    private configService: ConfigService,
+    private configService: AdminConfigService,
     private ordersservice: OrdersService) {
     this.fueltypesArray.forEach((fueltype: FuelType) => {
       this.core.depotEntries[fueltype]

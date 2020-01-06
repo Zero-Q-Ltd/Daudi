@@ -1,9 +1,9 @@
-import {Injectable} from "@angular/core";
-import {AngularFirestore} from "@angular/fire/firestore";
-import {DepotService} from "./core/depot.service";
-import {BehaviorSubject} from "rxjs";
-import {ConfigService} from "./core/config.service";
-import {EquityBulk} from "../../models/ipn/EquityBulk";
+import { Injectable } from "@angular/core";
+import { AngularFirestore } from "@angular/fire/firestore";
+import { DepotService } from "./core/depot.service";
+import { BehaviorSubject } from "rxjs";
+import { AdminConfigService } from "./core/admin-config.service";
+import { EquityBulk } from "../../models/ipn/EquityBulk";
 
 @Injectable({
   providedIn: "root"
@@ -21,7 +21,7 @@ export class PaymentsService {
 
   constructor(
     private db: AngularFirestore,
-    private config: ConfigService,
+    private config: AdminConfigService,
     private depotservice: DepotService) {
 
   }

@@ -1,16 +1,14 @@
-import {MyTimestamp} from "../../firestore/firestoreTypes";
-import {deepCopy} from "../../utils/deepCopy";
-import {AdminType} from "../admin/AdminType";
-import {Meta} from "../universal/Meta";
-import {Metadata} from "../universal/Metadata";
-import {emptyFuelConfig, FuelConfig} from "./FuelConfig";
-import {QBOAuthCOnfig} from "./QboAuthConfig";
-import {QboEnvironment} from "./QboEnvironment";
+import { MyTimestamp } from "../../firestore/firestoreTypes";
+import { deepCopy } from "../../utils/deepCopy";
+import { AdminType } from "../admin/AdminType";
+import { Meta } from "../universal/Meta";
+import { Metadata } from "../universal/Metadata";
+import { emptyFuelConfig, FuelConfig } from "./FuelConfig";
+import { QBOAuthCOnfig } from "../../Cloud/QboAuthConfig";
+import { QboEnvironment } from "../../Cloud/QboEnvironment";
 
-export interface OMCConfig {
+export interface AdminConfig {
     adminTypes: Array<AdminType>;
-    Qbo: QboEnvironment;
-    status: boolean;
 }
 
 /**
@@ -43,27 +41,7 @@ export const emptyqboAuth: QBOAuthCOnfig = {
 };
 
 
-export const emptyConfig: OMCConfig = {
-    status: true,
-    Qbo: {
-        auth: deepCopy<QBOAuthCOnfig>(emptyqboAuth),
-        fuelconfig: {
-            pms: deepCopy<FuelConfig>(emptyFuelConfig),
-            ago: deepCopy<FuelConfig>(emptyFuelConfig),
-            ik: deepCopy<FuelConfig>(emptyFuelConfig)
-        },
-        taxConfig: {
-            taxAgency: {
-                Id: "0"
-            },
-            taxCode: {
-                Id: "0"
-            },
-            taxRate: {
-                Id: "0"
-            },
-        }
-    },
+export const emptyConfig: AdminConfig = {
     /**
      * Hardcoded this so that the system always has System Admin values
      * Always... Tutatambulikaje???

@@ -9,7 +9,7 @@ import { DaudiCustomer } from "../../models/Daudi/customer/Customer";
 import { Depot, emptydepot } from "../../models/Daudi/depot/Depot";
 import { DepotConfig, emptyDepotConfig } from "../../models/Daudi/depot/DepotConfig";
 import { FuelNamesArray } from "../../models/Daudi/fuel/FuelType";
-import { emptyConfig, OMCConfig } from "../../models/Daudi/omc/Config";
+import { emptyConfig, AdminConfig } from "../../models/Daudi/omc/Config";
 import { emptyorder, Order } from "../../models/Daudi/order/Order";
 import { NotificationService } from "../../shared/services/notification.service";
 import { MapsComponent } from "../maps/maps.component";
@@ -39,7 +39,7 @@ export class CreateOrderComponent implements OnDestroy {
   subscriptions: Map<string, any> = new Map<string, any>();
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
   activedepot: { depot: Depot, config: DepotConfig } = { depot: { ...emptydepot }, config: { ...emptyDepotConfig } };
-  omcConfig: OMCConfig = { ...emptyConfig };
+  omcConfig: AdminConfig = { ...emptyConfig };
   kraModified = false;
   validContactForm = false;
   validCalculationForm = false;
@@ -71,7 +71,7 @@ export class CreateOrderComponent implements OnDestroy {
       this.core.activedepot.pipe(
         takeUntil(this.comopnentDestroyed),
         skipWhile(t => !t.depot.Id)),
-      this.core.config.pipe(
+      this.core.adminConfig.pipe(
         takeUntil(this.comopnentDestroyed),
         skipWhile(t => !t)),
       this.core.currentOmc.pipe(

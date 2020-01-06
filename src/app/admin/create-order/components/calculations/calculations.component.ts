@@ -1,17 +1,17 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output} from "@angular/core";
-import {Validators} from "@angular/forms";
-import {FormControl, FormGroup} from "ngx-strongly-typed-forms";
-import {ReplaySubject} from "rxjs";
-import {skipWhile, takeUntil} from "rxjs/operators";
-import {CoreService} from "../../../services/core/core.service";
-import {Depot, emptydepot} from "./../../../../models/Daudi/depot/Depot";
-import {DepotConfig, emptyDepotConfig} from "./../../../../models/Daudi/depot/DepotConfig";
-import {Calculations, FuelCalculation} from "./../../../../models/Daudi/forms/Calculations";
-import {FuelNamesArray, FuelType} from "./../../../../models/Daudi/fuel/FuelType";
-import {emptyConfig, OMCConfig} from "./../../../../models/Daudi/omc/Config";
-import {Order} from "./../../../../models/Daudi/order/Order";
-import {NotificationService} from "./../../../../shared/services/notification.service";
-import {EmptyOMCStock, OMCStock} from "../../../../models/Daudi/omc/Stock";
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from "@angular/core";
+import { Validators } from "@angular/forms";
+import { FormControl, FormGroup } from "ngx-strongly-typed-forms";
+import { ReplaySubject } from "rxjs";
+import { skipWhile, takeUntil } from "rxjs/operators";
+import { CoreService } from "../../../services/core/core.service";
+import { Depot, emptydepot } from "./../../../../models/Daudi/depot/Depot";
+import { DepotConfig, emptyDepotConfig } from "./../../../../models/Daudi/depot/DepotConfig";
+import { Calculations, FuelCalculation } from "./../../../../models/Daudi/forms/Calculations";
+import { FuelNamesArray, FuelType } from "./../../../../models/Daudi/fuel/FuelType";
+import { emptyConfig, AdminConfig } from "./../../../../models/Daudi/omc/Config";
+import { Order } from "./../../../../models/Daudi/order/Order";
+import { NotificationService } from "./../../../../shared/services/notification.service";
+import { EmptyOMCStock, OMCStock } from "../../../../models/Daudi/omc/Stock";
 
 @Component({
   selector: "app-calculations",
@@ -26,7 +26,7 @@ export class CalculationsComponent implements OnInit, OnChanges {
   @Output() formValid = new EventEmitter<boolean>();
 
   fueltypesArray = FuelNamesArray;
-  omcConfig: OMCConfig = { ...emptyConfig };
+  omcConfig: AdminConfig = { ...emptyConfig };
   activedepot: { depot: Depot, config: DepotConfig } = { depot: { ...emptydepot }, config: { ...emptyDepotConfig } };
   stock: OMCStock = { ...EmptyOMCStock };
   calculationsForm: FormGroup<Calculations> = new FormGroup<Calculations>({
@@ -53,7 +53,7 @@ export class CalculationsComponent implements OnInit, OnChanges {
 
   ) {
 
-    this.core.config.pipe(
+    this.core.adminConfig.pipe(
       takeUntil(this.comopnentDestroyed)
     ).subscribe(val => {
       this.omcConfig = val;

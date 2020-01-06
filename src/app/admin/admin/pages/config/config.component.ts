@@ -1,15 +1,15 @@
-import {Component, OnDestroy, OnInit} from "@angular/core";
-import {CommunicationService} from "../../communication.service";
-import {MatDialog} from "@angular/material";
-import {ConfigService} from "../../../services/core/config.service";
-import {ReplaySubject} from "rxjs";
-import {takeUntil} from "rxjs/operators";
-import {emptyomc, OMC} from "../../../../models/Daudi/omc/OMC";
+import { Component, OnDestroy, OnInit } from "@angular/core";
+import { CommunicationService } from "../../communication.service";
+import { MatDialog } from "@angular/material";
+import { AdminConfigService } from "../../../services/core/admin-config.service";
+import { ReplaySubject } from "rxjs";
+import { takeUntil } from "rxjs/operators";
+import { emptyomc, OMC } from "../../../../models/Daudi/omc/OMC";
 
-import {NotificationService} from "../../../../shared/services/notification.service";
-import {ConfirmDialogComponent} from "../../../confirm-dialog/confirm-dialog.component";
-import {deepCopy} from "../../../../models/utils/deepCopy";
-import {CoreService} from "../../../services/core/core.service";
+import { NotificationService } from "../../../../shared/services/notification.service";
+import { ConfirmDialogComponent } from "../../../confirm-dialog/confirm-dialog.component";
+import { deepCopy } from "../../../../models/utils/deepCopy";
+import { CoreService } from "../../../services/core/core.service";
 
 @Component({
   selector: "app-company",
@@ -34,7 +34,7 @@ export class ConfigComponent implements OnInit, OnDestroy {
   constructor(
     private notificationservice: NotificationService,
     communicatioservice: CommunicationService,
-    private companyservice: ConfigService,
+    private companyservice: AdminConfigService,
     private core: CoreService,
     private _matDialog: MatDialog) {
 
@@ -56,7 +56,7 @@ export class ConfigComponent implements OnInit, OnDestroy {
     this.comopnentDestroyed.complete();
   }
   initvalues(): void {
-    this.core.config.pipe(takeUntil(this.comopnentDestroyed)).subscribe(co => {
+    this.core.adminConfig.pipe(takeUntil(this.comopnentDestroyed)).subscribe(co => {
       console.log(co);
       // this.originalCompany = co;
       // this.tempcompany = Object.assign({}, co);
