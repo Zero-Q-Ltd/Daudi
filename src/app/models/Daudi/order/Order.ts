@@ -97,7 +97,6 @@ const initorderfuel: OrderFuelConfig = {
 export const emptyorder: Order = {
   Id: null,
   frozen: false,
-  frozen: false,
   customer: {
     contact: [],
     name: null,

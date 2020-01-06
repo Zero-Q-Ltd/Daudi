@@ -1,10 +1,12 @@
-import {deepCopy} from "../../utils/deepCopy";
-import {AssociatedUser} from "../admin/AssociatedUser";
-import {CustomerDetail} from "../customer/CustomerDetail";
-import {FuelType} from "../fuel/FuelType";
-import {OrderFuelConfig} from "./FuelConfig";
-import {OrderStages} from "./OrderStages";
-import {emptytruck, Truck} from "./truck/Truck";
+import { deepCopy } from "../../utils/deepCopy";
+import { CustomerDetail } from "../customer/CustomerDetail";
+import { FuelType } from "../fuel/FuelType";
+import { OrderFuelConfig } from "./FuelConfig";
+import { OrderStages } from "./OrderStages";
+import { emptytruck, Truck } from "./truck/Truck";
+import { TruckStages } from "functions/src/models/Daudi/order/truck/TruckStages";
+import { AssociatedUser } from "../admin/AssociatedUser";
+import { GenericStage, GenericTruckStage, EmptyGenericStage, EmptyGenericTruckStage } from "./GenericStage";
 
 export interface Order {
   Id: string; // used to temporarily store the key, used later for looping
@@ -35,25 +37,41 @@ export interface Order {
     status: boolean,
     errorCode: string,
     origin: string,
-    MyTimestamp: Date,
+    timestamp: Date,
     errorDetail: string
   };
-
   truck: Truck;
+  frozen: boolean;
   loaded: boolean;
   fuel: {
     [key in FuelType]: OrderFuelConfig
   };
-
-  stagedata: {
-    [key in OrderStages]: OrderStageData
+  /**
+   * @todo Connect payment detail to every order
+   */
+  paymentDetail?: null;
+  orderStageData: {
+    [key in OrderStages]: GenericStage;
+  };
+  truckStageData: {
+    [stage in TruckStages]: GenericTruckStage;
+  };
+  seals: {
+    range: string[];
+    broken: string[];
+  };
+  printStatus: {
+    LoadingOrder: {
+      status: boolean;
+      user: AssociatedUser;
+    };
+    gatepass: {
+      status: boolean;
+      user: AssociatedUser;
+    };
   };
 }
 
-export interface OrderStageData {
-  user: AssociatedUser;
-  data: any;
-}
 
 const initorderfuel: OrderFuelConfig = {
   qty: 0,
@@ -71,21 +89,14 @@ const initorderfuel: OrderFuelConfig = {
     taxablePrice: 0,
     taxableAmnt: 0,
   },
-  entries: []
+  entries: [],
+  entryIds: []
 };
 
-
-const initstages: OrderStageData = {
-  data: null,
-  user: {
-    name: null,
-    time: null,
-    uid: null
-  }
-};
 
 export const emptyorder: Order = {
   Id: null,
+  frozen: false,
   customer: {
     contact: [],
     name: null,
@@ -99,7 +110,7 @@ export const emptyorder: Order = {
     QbId: null,
     departmentId: null
   },
-  truck: deepCopy<Truck>(emptytruck),
+  truck: deepCopy(emptytruck),
   notifications: {
     sms: null,
     email: null
@@ -110,22 +121,41 @@ export const emptyorder: Order = {
       name: null
     }
   },
+  printStatus: {
+    LoadingOrder: {
+      status: null,
+      user: null
+    },
+    gatepass: {
+      status: null,
+      user: null
+    },
+  },
+  seals: {
+    broken: [],
+    range: []
+  },
+  truckStageData: {
+    0: deepCopy(EmptyGenericTruckStage),
+    1: deepCopy(EmptyGenericTruckStage),
+    2: deepCopy(EmptyGenericTruckStage),
+    3: deepCopy(EmptyGenericTruckStage),
+    4: deepCopy(EmptyGenericTruckStage),
+  },
   origin: null,
   stage: null,
   loaded: null,
-  stagedata: {
-    1: deepCopy<OrderStageData>(initstages),
-    2: deepCopy<OrderStageData>(initstages),
-    3: deepCopy<OrderStageData>(initstages),
-    4: deepCopy<OrderStageData>(initstages),
-    5: deepCopy<OrderStageData>(initstages),
-    6: deepCopy<OrderStageData>(initstages)
+  orderStageData: {
+    1: deepCopy(EmptyGenericStage),
+    2: deepCopy(EmptyGenericStage),
+    3: deepCopy(EmptyGenericStage),
+    4: deepCopy(EmptyGenericStage),
+    5: deepCopy(EmptyGenericStage),
+    6: deepCopy(EmptyGenericStage),
   },
-
-
   fuel: {
-    pms: deepCopy<OrderFuelConfig>(initorderfuel),
-    ago: deepCopy<OrderFuelConfig>(initorderfuel),
-    ik: deepCopy<OrderFuelConfig>(initorderfuel)
+    pms: deepCopy(initorderfuel),
+    ago: deepCopy(initorderfuel),
+    ik: deepCopy(initorderfuel)
   }
 };
