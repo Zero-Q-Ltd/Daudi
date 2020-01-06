@@ -1,12 +1,12 @@
-import {Injectable} from "@angular/core";
-import {AngularFireAuth} from "@angular/fire/auth";
-import {AngularFirestore} from "@angular/fire/firestore";
-import {Router} from "@angular/router";
+import { Injectable } from "@angular/core";
+import { AngularFireAuth } from "@angular/fire/auth";
+import { AngularFirestore } from "@angular/fire/firestore";
+import { Router } from "@angular/router";
 import * as moment from "moment";
-import {ReplaySubject} from "rxjs";
-import {Admin, emptyadmin} from "../../../models/Daudi/admin/Admin";
-import {AssociatedUser} from "../../../models/Daudi/admin/AssociatedUser";
-import {MyTimestamp} from "../../../models/firestore/firestoreTypes";
+import { ReplaySubject } from "rxjs";
+import { Admin, emptyadmin } from "../../../models/Daudi/admin/Admin";
+import { AssociatedUser } from "../../../models/Daudi/admin/AssociatedUser";
+import { MyTimestamp } from "../../../models/firestore/firestoreTypes";
 
 
 @Injectable({
@@ -68,8 +68,8 @@ export class AdminService {
   createuserobject(): AssociatedUser {
     return {
       name: this.userdata.profile.name,
-      uid: this.userdata.profile.uid,
-      time: MyTimestamp.now()
+      adminId: this.userdata.profile.uid,
+      date: MyTimestamp.now()
     };
   }
 

@@ -19,6 +19,7 @@ import { switchMap, takeUntil } from "rxjs/operators";
 import { ReplaySubject } from "rxjs";
 import { MyTimestamp } from "../../models/firestore/firestoreTypes";
 import { CoreService } from "../services/core/core.service";
+import { EmptyGenericStage } from "../../models/Daudi/order/GenericStage";
 
 
 const EXCEL_TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
@@ -232,11 +233,7 @@ export class OrdersTableComponent implements OnInit, OnDestroy {
    */
   restoreOrder(order: Order) {
     order.stage = 1;
-    order.orderStageData["6"].user = {
-      time: null,
-      uid: null,
-      name: null
-    };
+    order.orderStageData["6"] = { ...EmptyGenericStage };
     this.orderservice.updateorder(order.Id, this.core.currentOmc.value.Id, order).then(result => {
       this.notification.notify({
         body: `Order # ${order.QbConfig} Restored`,

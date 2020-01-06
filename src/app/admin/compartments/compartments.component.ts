@@ -1,15 +1,15 @@
-import {Component, Inject, OnDestroy, OnInit} from "@angular/core";
-import {FormControl, Validators} from "@angular/forms";
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material"; // added dialog data
-import {ReplaySubject} from "rxjs";
-import {FuelNamesArray} from "../../models/Daudi/fuel/FuelType";
-import {EmptyGenericDetail} from "../../models/Daudi/order/GenericStageDetail";
-import {Order} from "../../models/Daudi/order/Order";
-import {NotificationService} from "../../shared/services/notification.service";
-import {OrderDetailsComponent} from "../order-details/order-details.component";
-import {AdminService} from "../services/core/admin.service";
-import {DepotService} from "../services/core/depot.service";
-import {OrdersService} from "../services/orders.service";
+import { Component, Inject, OnDestroy, OnInit } from "@angular/core";
+import { FormControl, Validators } from "@angular/forms";
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material"; // added dialog data
+import { ReplaySubject } from "rxjs";
+import { FuelNamesArray } from "../../models/Daudi/fuel/FuelType";
+import { Order } from "../../models/Daudi/order/Order";
+import { NotificationService } from "../../shared/services/notification.service";
+import { OrderDetailsComponent } from "../order-details/order-details.component";
+import { AdminService } from "../services/core/admin.service";
+import { DepotService } from "../services/core/depot.service";
+import { OrdersService } from "../services/orders.service";
+import { EmptyGenericTruckStage } from "../../models/Daudi/order/GenericStage";
 
 @Component({
   selector: "compartments",
@@ -108,8 +108,8 @@ export class CompartmentsComponent implements OnInit, OnDestroy {
     if (errorcheck) {
       return false;
     } else {
-      this.order.truck.stagedata[0] = { ...EmptyGenericDetail };
-      this.order.truck.stagedata[0].user = this.adminservice.createuserobject();
+      this.order.truckStageData[0] = { ...EmptyGenericTruckStage };
+      this.order.truckStageData[0].user = this.adminservice.createuserobject();
       this.order.truck.truckdetail.numberplate = this.order.truck.truckdetail.numberplate ? this.order.truck.truckdetail.numberplate.toUpperCase() : null;
       this.order.truck.driverdetail.name = this.order.truck.driverdetail.name ? this.order.truck.driverdetail.name.toUpperCase() : null;
 

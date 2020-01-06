@@ -10,7 +10,6 @@ import { Entry } from "../../models/Daudi/fuel/Entry";
 import { FuelNamesArray, FuelType } from "../../models/Daudi/fuel/FuelType";
 import { EmptyOMCStock, OMCStock } from "../../models/Daudi/omc/Stock";
 import { emptyorder, Order } from "../../models/Daudi/order/Order";
-import { Stage1Model } from "../../models/Daudi/order/truck/TruckStages";
 import { MyTimestamp } from "../../models/firestore/firestoreTypes";
 import { NotificationService } from "../../shared/services/notification.service";
 import { AdminService } from "../services/core/admin.service";
@@ -18,6 +17,7 @@ import { ConfigService } from "../services/core/config.service";
 import { CoreService } from "../services/core/core.service";
 import { EntriesService } from "../services/entries.service";
 import { OrdersService } from "../services/orders.service";
+import { GenericTruckStage } from "../../models/Daudi/order/GenericStage";
 
 interface EntryContent {
   id: string;
@@ -325,24 +325,20 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
     });
 
     if (!HasError) {
-      const data: Stage1Model = {
+      const data: GenericTruckStage = {
         user: this.adminservice.createuserobject(),
         expiry: [
           {
             timeCreated: MyTimestamp.now(),
             expiry: MyTimestamp.fromDate(moment().add(45, "minutes").toDate()),
           }],
-        print: {
-          status: false,
-          timestamp: MyTimestamp.now()
-        }
       };
       this.order.stage = 4.1;
       this.order.loaded = true;
 
       this.order.orderStageData["4"].user = data.user;
 
-      this.order.truck.stagedata["1"] = data;
+      this.order.truckStageData["1"] = data;
 
       const batchaction = this.db.firestore.batch();
       batchaction.update(this.ordersservice.ordersCollection(this.core.currentOmc.value.Id).doc(this.orderId), this.order);
