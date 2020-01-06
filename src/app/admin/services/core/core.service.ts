@@ -95,9 +95,8 @@ export class CoreService {
         this.subscriptions.set("configSubscription", this.configService.configDoc(admin.config.omcId)
           .onSnapshot(t => {
             const config = this.attachId.transformObject<OMCConfig>(emptyConfig, t);
-            // this.duplicate(admin.config.omcId, "values", this.environment.value, "config", { Qbo: t.data().Qbo.sandbox });
-            // this.duplicate(admin.config.omcId, "values", Environment.live, "config", { Qbo: t.data().Qbo.live });
-            // this.duplicate(admin.config.omcId, "values", this.environment.value, "config", { adminTypes: t.data().adminTypes });
+            // this.duplicate(admin.config.omcId, "values", "config", { Qbo: t.data().Qbo.sandbox });
+            // this.duplicate(admin.config.omcId, "values", "config", { adminTypes: t.data().adminTypes });
             if (!config.status) {
               console.log("OMC Account not active");
               return;
@@ -110,7 +109,7 @@ export class CoreService {
             this.getOmcs();
             this.getDepots();
             this.getallcustomers();
-            // this.getStocks();
+            this.getStocks();
           }));
       });
 
@@ -127,11 +126,11 @@ export class CoreService {
       .doc(omcId)
       .collection(name)
       .doc(id)
-      .set(doc);
+      .update(doc);
   }
   getStocks() {
     this.loaders.stock.next(true);
-    this.subscriptions.set("stocks", this.configService.stockDoc(this.omcId)
+    this.subscriptions.set("stock", this.configService.stockDoc(this.omcId)
       .onSnapshot(t => {
         this.stock.next(this.attachId.transformObject<OMCStock>(EmptyOMCStock, t));
         this.loaders.stock.next(false);
@@ -272,7 +271,7 @@ export class CoreService {
 
       const subscriprion = this.orderService.ordersCollection(this.omcId)
         .where("stage", "==", stage)
-        // .where("config.depot.id", "==", depotId)
+        .where("config.depot.id", "==", depotId)
         .orderBy("stagedata.1.user.time", "asc")
         .onSnapshot(Data => {
           /**
@@ -293,7 +292,7 @@ export class CoreService {
      */
     const stage5subscriprion = this.orderService.ordersCollection(this.omcId)
       .where("stage", "==", 5)
-      // .where("config.depot.id", "==", depotId)
+      .where("config.depot.id", "==", depotId)
       .where("stagedata.1.user.time", "<=", startofweek)
       .orderBy("stagedata.1.user.time", "asc")
       .onSnapshot(Data => {

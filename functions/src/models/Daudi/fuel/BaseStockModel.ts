@@ -1,9 +1,8 @@
 
-import { FuelType } from "./FuelType";
-import { MyTimestamp } from "../../firestore/firestoreTypes";
-import { StockQty, EmptyStockQty } from "./StockQty";
 import { deepCopy } from "../../../models/utils/deepCopy";
-import { Environment } from "../omc/Environments";
+import { MyTimestamp } from "../../firestore/firestoreTypes";
+import { FuelType } from "./FuelType";
+import { EmptyStockQty, StockQty } from "./StockQty";
 
 
 export interface BaseStockModel {

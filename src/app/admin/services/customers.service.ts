@@ -45,7 +45,7 @@ export class CustomerService {
   customerCollection(omcId: string) {
     return this.db.firestore.collection("omc")
       .doc(omcId)
-      .collection(`customers`);
+      .collection(`customer`);
   }
 
   createcompany(company: DaudiCustomer): Observable<any> {

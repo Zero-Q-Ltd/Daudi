@@ -1,11 +1,10 @@
 import { firestore } from "firebase-admin";
 import { ASE } from "../../models/Daudi/fuel/ASE";
-import { FuelType, FuelNamesArray } from "../../models/Daudi/fuel/FuelType";
+import { FuelNamesArray, FuelType } from "../../models/Daudi/fuel/FuelType";
 import { FuelConfig } from "../../models/Daudi/omc/FuelConfig";
+import { EmptyOMCStock, OMCStock } from "../../models/Daudi/omc/Stock";
 import { Bill } from "../../models/Qbo/Bill";
 import { readStock, stockCollection } from "../crud/daudi/Stock";
-import { OMCStock, EmptyOMCStock } from "../../models/Daudi/omc/Stock";
-import { Environment } from "../../models/Daudi/omc/Environments";
 
 /**
  * 
@@ -13,7 +12,7 @@ import { Environment } from "../../models/Daudi/omc/Environments";
  * @param fuelConfig COnfig having valid ID's
  * @param since 
  */
-export function syncAse(omcId: string, environment: Environment, fuelConfig: { [key in FuelType]: FuelConfig }, bills: Bill[]) {
+export function syncAse(omcId: string, fuelConfig: { [key in FuelType]: FuelConfig }, bills: Bill[]) {
     const ValidLineItems: Array<{
         bill: Bill,
         index: number,

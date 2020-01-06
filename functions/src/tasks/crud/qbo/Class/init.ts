@@ -1,11 +1,9 @@
-import { OMC } from "../../../../models/Daudi/omc/OMC";
-import { OMCConfig } from "../../../../models/Daudi/omc/Config";
-import { createQbo } from "../../../sharedqb";
 import { firestore } from "firebase-admin";
-import { Environment } from "../../../../models/Daudi/omc/Environments";
-import { Depot } from "../../../../models/Daudi/depot/Depot";
-import { Class } from "../../../../models/Qbo/Class";
 import { QuickBooks } from "../../../../libs/qbmain";
+import { Depot } from "../../../../models/Daudi/depot/Depot";
+import { OMCConfig } from "../../../../models/Daudi/omc/Config";
+import { OMC } from "../../../../models/Daudi/omc/OMC";
+import { Class } from "../../../../models/Qbo/Class";
 
 /**
  * Every depot is essentially a class, to allow tracking of sales per depot
@@ -13,7 +11,7 @@ import { QuickBooks } from "../../../../libs/qbmain";
  * @param config 
  * @param environment 
  */
-export function initDepots(omc: OMC, config: OMCConfig, environment: Environment, depots: Array<Depot>, qbo: QuickBooks) {
+export function initDepots(omc: OMC, config: OMCConfig, depots: Array<Depot>, qbo: QuickBooks) {
     /**
      * Simultaneously create the 3 fuel types on initialisation
      */

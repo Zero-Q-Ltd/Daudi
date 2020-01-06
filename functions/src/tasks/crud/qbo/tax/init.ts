@@ -1,11 +1,10 @@
-import { OMC } from "../../../../models/Daudi/omc/OMC";
-import { OMCConfig } from "../../../../models/Daudi/omc/Config";
 import { firestore } from "firebase-admin";
-import { Environment } from "../../../../models/Daudi/omc/Environments";
 import { QuickBooks } from "../../../../libs/qbmain";
+import { OMCConfig } from "../../../../models/Daudi/omc/Config";
+import { OMC } from "../../../../models/Daudi/omc/OMC";
+import { TaxAgency } from "../../../../models/Qbo/TaxAgency";
 import { TaxService } from "../../../../models/Qbo/TaxService";
 import { initTaxAgency } from "./TaxAgency/init";
-import { TaxAgency } from "../../../../models/Qbo/TaxAgency";
 
 /**
  * This is the generl initialization process for every tax configuration there is
@@ -14,7 +13,7 @@ import { TaxAgency } from "../../../../models/Qbo/TaxAgency";
  * @param config 
  * @param environment 
  */
-export function initTaxService(omc: OMC, config: OMCConfig, environment: Environment, qbo: QuickBooks) {
+export function initTaxService(omc: OMC, config: OMCConfig, qbo: QuickBooks) {
 
     return initTaxAgency(qbo).then(response => {
         const res = response.TaxAgency as TaxAgency
@@ -46,9 +45,9 @@ export function initTaxService(omc: OMC, config: OMCConfig, environment: Environ
                         return rate.TaxRateName === taxRateName
                     })
 
-                    newconfig.Qbo[environment].taxConfig.taxAgency.Id = res.Id
-                    newconfig.Qbo[environment].taxConfig.taxCode.Id = taxres.TaxCodeId
-                    newconfig.Qbo[environment].taxConfig.taxRate.Id = createdTaxRate.TaxAgencyId
+                    newconfig.Qbo.taxConfig.taxAgency.Id = res.Id
+                    newconfig.Qbo.taxConfig.taxCode.Id = taxres.TaxCodeId
+                    newconfig.Qbo.taxConfig.taxRate.Id = createdTaxRate.TaxAgencyId
                     return t.update(ref, newconfig)
                 })
             })

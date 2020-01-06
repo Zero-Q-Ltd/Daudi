@@ -1,12 +1,10 @@
 import { firestore } from "firebase-admin";
-import { Environment } from '../Daudi/omc/Environments';
 
 export interface Companyconfig {
   companyid: number;
   clientid: string;
   clientSecret: string;
   webhooksverifier: string;
-  environment: Environment;
   authconfig: {
     previousDCT: firestore.Timestamp;
     accessToken: string;
@@ -23,7 +21,6 @@ export const qbemptycompany: Companyconfig = {
   clientid: "",
   clientSecret: "",
   webhooksverifier: "",
-  environment: Environment.sandbox,
   authconfig: {
     previousDCT: firestore.Timestamp.fromDate(new Date()),
     accessToken: "",

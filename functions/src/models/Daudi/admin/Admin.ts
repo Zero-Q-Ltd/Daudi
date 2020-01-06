@@ -1,12 +1,10 @@
-import { inituser, AssociatedUser } from "./AssociatedUser";
 import { deepCopy } from "../../utils/deepCopy";
-import { Environment } from "../omc/Environments";
+import { AssociatedUser, inituser } from "./AssociatedUser";
 
 export interface Admin {
   Active: boolean;
   Id: string;
   config: {
-    environment: Environment;
     qbo: {
       companyid: string,
       QbId: string,
@@ -69,7 +67,6 @@ export const emptyadmin: Admin = {
   config: {
     omcId: null,
     level: null,
-    environment: null,
     qbo: {
       companyid: null,
       QbId: null,

@@ -5,7 +5,6 @@ import { CompanySync } from "./models/Cloud/CompanySync";
 import { OrderCreate } from './models/Cloud/OrderCreate';
 import { DaudiCustomer } from './models/Daudi/customer/Customer';
 import { OMCConfig } from './models/Daudi/omc/Config';
-import { Environment } from './models/Daudi/omc/Environments';
 import { SMS } from './models/Daudi/sms/sms';
 import { MyTimestamp } from './models/firestore/firestoreTypes';
 import { creteOrder, updateOrder } from './tasks/crud/daudi/Order';
@@ -37,9 +36,9 @@ function markAsRunning(eventID: string) {
  */
 exports.createEstimate = functions.https.onCall((data: OrderCreate, context) => {
 
-  return createQbo(data.omc.Id, data.config, data.environment).then(async result => {
+  return createQbo(data.omc.Id, data.config, true).then(async result => {
     console.log(result)
-    const est = new createEstimate(data.order, result, data.config, data.environment)
+    const est = new createEstimate(data.order, result, data.config)
     return result.createEstimate(est.formulateEstimate()).then((createResult) => {
       /**
        * Only send sn SMS when estimate creation is complete
@@ -59,9 +58,9 @@ exports.createEstimate = functions.https.onCall((data: OrderCreate, context) => 
  */
 exports.createInvoice = functions.https.onCall((data: OrderCreate, context) => {
 
-  return createQbo(data.omc.Id, data.config, data.environment).then(async result => {
+  return createQbo(data.omc.Id, data.config, true).then(async result => {
     console.log(result)
-    const inv = new createInvoice(data.order, result, data.config, data.environment)
+    const inv = new createInvoice(data.order, result, data.config)
     return result.createInvoice(inv.formulateInvoice()).then((createResult) => {
       /**
        * Only send sn SMS when invoice creation is complete
@@ -104,8 +103,7 @@ exports.customerUpdated = functions.firestore
         .then(val => {
           const config: OMCConfig = val.data() as OMCConfig
           const customer: DaudiCustomer = snap.after.data() as DaudiCustomer
-          const env: Environment = customer.environment
-          return createQbo(context.params.omc.Id, config, env).then(qbo => {
+          return createQbo(context.params.omc.Id, config, true).then(qbo => {
             return updateCustomer(customer, qbo);
           })
         })
@@ -141,9 +139,9 @@ exports.smscreated = functions.firestore
   });
 
 exports.requestsync = functions.https.onCall(((data: CompanySync, _) => {
-  return createQbo(data.omc.Id, data.config, data.environment)
+  return createQbo(data.omc.Id, data.config, true)
     .then((qbo: QuickBooks) => {
-      return processSync(data.sync, qbo, data.omc.Id, data.config, data.environment);
+      return processSync(data.sync, qbo, data.omc.Id, data.config);
     });
 }))
 
