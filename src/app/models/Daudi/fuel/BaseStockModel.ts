@@ -15,7 +15,6 @@ export interface BaseStockModel {
     };
     qty: StockQty;
     fuelType: FuelType;
-    environment: Environment;
     price: number;
     Id: string;
     active: boolean; // 1 for active, 0 for inactive
@@ -31,6 +30,5 @@ export const EmptyBaseStockModel: BaseStockModel = {
         Id: null
     },
     active: false,
-    environment: Environment.sandbox,
     date: new MyTimestamp(0, 0)
 };

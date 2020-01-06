@@ -10,12 +10,7 @@ import { QboEnvironment } from "./QboEnvironment";
 
 export interface OMCConfig {
     adminTypes: Array<AdminType>;
-    Qbo: {
-        /**
-         * Every company has a sandbox and a live config
-         */
-        [key in Environment]: QboEnvironment
-    };
+    Qbo: QboEnvironment;
     status: boolean;
 }
 
@@ -53,44 +48,23 @@ export const emptyqboAuth: QBOAuthCOnfig = {
 export const emptyConfig: OMCConfig = {
     status: true,
     Qbo: {
-        live: {
-            auth: deepCopy<QBOAuthCOnfig>(emptyqboAuth),
-            fuelconfig: {
-                pms: deepCopy<FuelConfig>(emptyFuelConfig),
-                ago: deepCopy<FuelConfig>(emptyFuelConfig),
-                ik: deepCopy<FuelConfig>(emptyFuelConfig)
-            },
-            taxConfig: {
-                taxAgency: {
-                    Id: "0"
-                },
-                taxCode: {
-                    Id: "0"
-                },
-                taxRate: {
-                    Id: "0"
-                },
-            }
+        auth: deepCopy<QBOAuthCOnfig>(emptyqboAuth),
+        fuelconfig: {
+            pms: deepCopy<FuelConfig>(emptyFuelConfig),
+            ago: deepCopy<FuelConfig>(emptyFuelConfig),
+            ik: deepCopy<FuelConfig>(emptyFuelConfig)
         },
-        sandbox: {
-            auth: deepCopy<QBOAuthCOnfig>(emptyqboAuth),
-            fuelconfig: {
-                pms: deepCopy<FuelConfig>(emptyFuelConfig),
-                ago: deepCopy<FuelConfig>(emptyFuelConfig),
-                ik: deepCopy<FuelConfig>(emptyFuelConfig)
+        taxConfig: {
+            taxAgency: {
+                Id: "0"
             },
-            taxConfig: {
-                taxAgency: {
-                    Id: "0"
-                },
-                taxCode: {
-                    Id: "0"
-                },
-                taxRate: {
-                    Id: "0"
-                },
-            }
-        },
+            taxCode: {
+                Id: "0"
+            },
+            taxRate: {
+                Id: "0"
+            },
+        }
     },
     /**
      * Hardcoded this so that the system always has System Admin values

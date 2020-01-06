@@ -6,7 +6,6 @@ import { CustomerDetail } from "./CustomerDetail";
 
 export interface DaudiCustomer extends CustomerDetail {
   Active: boolean;
-  environment: Environment;
   location: MyGeoPoint;
   kraverified: {
     status: boolean
@@ -23,7 +22,6 @@ export const emptyDaudiCustomer: DaudiCustomer = {
   Id: null,
   name: null,
   QbId: null,
-  environment: null,
   /**
    * make default location Somewhere in nbi
    */
