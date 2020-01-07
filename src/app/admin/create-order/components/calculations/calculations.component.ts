@@ -88,7 +88,10 @@ export class CalculationsComponent implements OnInit, OnChanges {
              */
             this.calculationsForm.get([fueltype, "qty"]).setErrors(null);
             this.calculationsForm.get([fueltype, "price"]).setErrors(null);
-            this.initData.fuel[fueltype].qty = value[fueltype].qty;
+            /**
+             * Make sure to convert input value otherwise it will default to string
+             */
+            this.initData.fuel[fueltype].qty = Number(value[fueltype].qty);
             this.initData.fuel[fueltype].priceconfig.price = Number(value[fueltype].price);
             /**
              * The requested price is only set during new order creation
@@ -97,6 +100,9 @@ export class CalculationsComponent implements OnInit, OnChanges {
              * It is overwritten during approval, but the requested price value remains the original one durin creation
              */
             if (this.newOrder) {
+              /**
+               * Make sure to convert input value otherwise it will default to string
+               */
               this.initData.fuel[fueltype].priceconfig.requestedPrice = Number(value[fueltype].price);
             }
             const decimamlResolution = value[`${fueltype}qtyControl`] >= 10000 ? 4 : 3;

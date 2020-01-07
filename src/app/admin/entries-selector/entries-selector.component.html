@@ -53,7 +53,7 @@
         <td>{{entry.qty.total}}</td>
         <td>{{entry.qty.directLoad.total}}</td>
         <td>{{entry.qty.transferred.total}}</td>
-        <td>{{entry.qty.total - entry.qty.directLoad.total - entry.qty.transferred.total}}</td>
+        <td>{{entry.qty.total - entry.qty.directLoad.used}}</td>
         <td>
           {{drawnEntry[fueltype][i]?.name === entry.entry.name ?
           drawnEntry[fueltype][i].qtydrawn : 0 }}

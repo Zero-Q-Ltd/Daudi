@@ -154,7 +154,6 @@ export class TruckDetailsComponent implements OnInit, OnDestroy {
       });
     dialogRef.afterClosed().pipe(takeUntil(this.comopnentDestroyed)).subscribe(result => {
       if (result) {
-        this.order.frozen = true;
         this.orderservice.updateorder(this.order.Id, this.core.currentOmc.value.Id, this.order).then(value => {
           this.notification.notify({
             body: "Saved",
