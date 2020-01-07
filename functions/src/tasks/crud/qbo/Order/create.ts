@@ -6,12 +6,12 @@ import { EmailStatus } from "../../../../models/Qbo/enums/EmailStatus";
 import { LineDetailType } from "../../../../models/Qbo/enums/LineDetailType";
 import { PrintStatus } from "../../../../models/Qbo/enums/PrintStatus";
 import { TxnStatus } from "../../../../models/Qbo/enums/TxnStatus";
-import { Estimate } from "../../../../models/Qbo/Estimate";
 import { Line } from "../../../../models/Qbo/subTypes/Line";
 import { QboCofig } from "../../../../models/Cloud/QboEnvironment";
+import { QboOrder } from "../../../../models/Qbo/QboOrder";
 
 
-export class createEstimate {
+export class createQboOrder {
     constructor(private orderdata: Order, private config: QboCofig) {
         /**
          * format the timestamp again as it loses it when it doesnt directly go to the database
@@ -83,8 +83,8 @@ export class createEstimate {
         return values;
     }
 
-    formulateEstimate(): Estimate {
-        const newEstimate: Estimate = {
+    formulate(): QboOrder {
+        const newEstimate: QboOrder = {
             CustomField: [{
                 DefinitionId: "1",
                 Name: "Customer ID",
@@ -119,12 +119,10 @@ export class createEstimate {
             domain: "QBO",
             TxnStatus: TxnStatus.Pending,
             PrintStatus: PrintStatus.NeedToPrint,
-            DepartmentRef: {
+
+            ClassRef: {
                 name: this.orderdata.config.depot.name,
                 value: this.orderdata.QbConfig.departmentId
-            },
-            ClassRef: {
-                value: "5000000000000007280"
             },
             Line: this.syncfueltypes()
         };

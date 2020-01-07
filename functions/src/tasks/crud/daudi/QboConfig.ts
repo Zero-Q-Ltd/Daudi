@@ -1,6 +1,9 @@
 import { firestore } from 'firebase-admin';
 import { DocumentSnapshot } from 'firebase-functions/lib/providers/firestore';
-import { QboCofig } from '../../../models/Cloud/QboEnvironment';
+import { QboCofig, EmptyQboConfig } from '../../../models/Cloud/QboEnvironment';
+import { createQbo } from '../../sharedqb';
+import { toObject } from '../../../models/utils/SnapshotUtils';
+import { QuickBooks } from '../../../libs/qbmain';
 
 /**
  * This fetches the omc config given the id
@@ -21,4 +24,15 @@ export function configCollection(omcId: string) {
 export function updateConfig(omcId: string, config: QboCofig) {
     return configCollection(omcId)
         .update(config)
+}
+export function ReadAndInstantiate(omcId) {
+    return new Promise<{ config: QboCofig, qbo: QuickBooks }>((resolve, reject) => {
+        return readQboConfig(omcId).then(async snapshot => {
+            const config = toObject(EmptyQboConfig, snapshot)
+            const qbo = await createQbo(omcId, config, config.sandbox)
+            resolve({ config, qbo })
+        }).catch(e => {
+            reject(e)
+        })
+    })
 }

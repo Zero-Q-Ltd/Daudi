@@ -8,16 +8,16 @@ import { SMS } from './models/Daudi/sms/sms';
 import { MyTimestamp } from './models/firestore/firestoreTypes';
 import { creteOrder, updateOrder } from './tasks/crud/daudi/Order';
 import { updateCustomer } from './tasks/crud/qbo/customer/update';
-import { createEstimate } from './tasks/crud/qbo/Estimate/create';
-import { createInvoice } from './tasks/crud/qbo/invoice/create';
+import { createQboOrder } from './tasks/crud/qbo/Order/create';
 import { createQbo } from './tasks/sharedqb';
 import { sendsms } from './tasks/sms/sms';
 import { ordersms } from './tasks/sms/smscompose';
 import { processSync } from './tasks/syncdb/processSync';
 import { validorderupdate } from './validators/orderupdate';
-import { readQboConfig } from "./tasks/crud/daudi/QboConfig";
+import { readQboConfig, ReadAndInstantiate } from "./tasks/crud/daudi/QboConfig";
 import { toArray, toObject } from "./models/utils/SnapshotUtils";
 import { EmptyQboConfig, QboCofig } from "./models/Cloud/QboEnvironment";
+import { QboOrder } from "./models/Qbo/QboOrder";
 
 admin.initializeApp(functions.config().firebase);
 admin.firestore().settings({ timestampsInSnapshots: true });
@@ -37,52 +37,40 @@ function markAsRunning(eventID: string) {
  */
 exports.createEstimate = functions.https.onCall((data: OrderCreate, context) => {
   console.log(data)
-  return readQboConfig(data.omcId).then(snapshot => {
-    const config = toObject(EmptyQboConfig, snapshot)
-    return createQbo(data.omcId, config, true)
-      .then((qbo: QuickBooks) => {
-        console.log(qbo)
-        const est = new createEstimate(data.order, config)
-        return qbo.createEstimate(est.formulateEstimate()).then((createResult) => {
-          /**
-           * Only send sn SMS when estimate creation is complete
-           * Make the two processes run parallel so that none is blocking
-           */
-          /**
-           * @todo update the Estimate ID
-           */
-          return Promise.all([ordersms(data.order, data.omcId), validorderupdate(data.order, qbo), creteOrder(data.order, data.omcId)])
-        });
-      })
+  return ReadAndInstantiate(data.omcId).then((result) => {
+    console.log(result.qbo)
+    const est = new createQboOrder(data.order, result.config)
+    return result.qbo.createEstimate(est.formulate()).then((createResult) => {
+      /**
+       * Only send sn SMS when estimate creation is complete
+       * Make the two processes run parallel so that none is blocking
+       */
+      const EstimateResult = createResult.Estimate as QboOrder
+      data.order.QbConfig.EstimateId = EstimateResult.Id
+      return Promise.all([ordersms(data.order, data.omcId), validorderupdate(data.order, result.qbo), creteOrder(data.order, data.omcId)])
+    });
   })
-
-});
-
+})
 /**
  * create an order from the client directly
  */
 exports.createInvoice = functions.https.onCall((data: OrderCreate, context) => {
   console.log(data)
-  return readQboConfig(data.omcId).then(snapshot => {
-    const config = toObject(EmptyQboConfig, snapshot)
-    return createQbo(data.omcId, config, true)
-      .then((qbo: QuickBooks) => {
-        console.log(qbo)
-        const inv = new createInvoice(data.order, config)
-        return qbo.createInvoice(inv.formulateInvoice()).then((createResult) => {
-          /**
-           * Only send sn SMS when invoice creation is complete
-           * Make the two processes run parallel so that none is blocking
-           */
-          /**
-           * @todo update the invoice id
-           */
-          data.order.stage = 2
-          return Promise.all([ordersms(data.order, data.omcId), validorderupdate(data.order, qbo), updateOrder(data.order, data.omcId)]);
-        });
-      })
+  return ReadAndInstantiate(data.omcId).then((result) => {
+    console.log(result.qbo)
+    const inv = new createQboOrder(data.order, result.config)
+    return result.qbo.createInvoice(inv.formulate()).then((createResult) => {
+      /**
+       * Only send sn SMS when invoice creation is complete
+       * Make the two processes run parallel so that none is blocking
+       */
+      const InvoiceResult = createResult.Invoice as QboOrder
+      data.order.QbConfig.InvoiceId = InvoiceResult.Id
+      data.order.stage = 2
+      return Promise.all([ordersms(data.order, data.omcId), validorderupdate(data.order, result.qbo), updateOrder(data.order, data.omcId)]);
+    })
   })
-});
+})
 
 
 exports.customerUpdated = functions.firestore

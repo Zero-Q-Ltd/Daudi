@@ -13,6 +13,7 @@ import { MatDialog } from "@angular/material";
 import { AngularFirestore } from "@angular/fire/firestore";
 import { takeUntil } from "rxjs/operators";
 import { ReplaySubject } from "rxjs";
+import { CoreService } from "../services/core/core.service";
 
 
 @Component({
@@ -100,8 +101,8 @@ export class TruckDetailsComponent implements OnInit, OnDestroy {
     public db: AngularFirestore,
     private notification: NotificationService,
     private orderservice: OrdersService,
-    private adminservice: AdminService,
     private dialog: MatDialog,
+    private core: CoreService,
     private componentcommunication: ComponentCommunicationService) {
     this.componentcommunication.clickedorder.pipe(takeUntil(this.comopnentDestroyed)).subscribe(order => {
       if (!order) {
@@ -149,18 +150,18 @@ export class TruckDetailsComponent implements OnInit, OnDestroy {
     const dialogRef = this.dialog.open(ConfirmDialogComponent,
       {
         role: "dialog",
-        data: this.order.frozen ? "Are you sure to Unfreeze?" : "Freeze this Order? This will disable modifications from the app"
+        data: this.order.frozen ? "Are you sure you want to restore to normal?" : "Freeze this Order? This will disable any modifications"
       });
     dialogRef.afterClosed().pipe(takeUntil(this.comopnentDestroyed)).subscribe(result => {
       if (result) {
-        // this.truckservice.updatetruck(truck.Id).update(truck).then(value => {
-        //   this.notification.notify({
-        //     body: "Saved",
-        //     alert_type: "success",
-        //     title: "Success",
-        //     duration: 2000
-        //   });
-        // });
+        this.orderservice.updateorder(this.order.Id, this.core.currentOmc.value.Id, this.order).then(value => {
+          this.notification.notify({
+            body: "Saved",
+            alert_type: "success",
+            title: "Success",
+            duration: 2000
+          });
+        });
       }
     });
   }
@@ -224,23 +225,14 @@ export class TruckDetailsComponent implements OnInit, OnDestroy {
       if (result) {
         this.componentcommunication.truckDeleted.next(true);
         this.order.loaded = false;
-        const batchaction = this.db.firestore.batch();
-        // batchaction.update(this.orderservice.updateorder(this.clickedtruck.Id), this.order);
-        // batchaction.delete(this.truckservice.updatetruck(this.clickedtruck.Id));
-        // batchaction.commit().then(result => {
-        //   /**
-        //    * unsubscribe after truck is deleted
-        //    */
-        //   this.subscriptions.get(`truck`)();
-        //   this.componentcommunication.clickedorder.next(null);
-
-        //   this.notification.notify({
-        //     body: "Truck deleted",
-        //     title: "Deleted",
-        //     alert_type: "warning",
-        //     duration: 2000
-        //   });
-        // });
+        this.orderservice.updateorder(this.order.Id, this.core.currentOmc.value.Id, this.order).then(() => {
+          this.notification.notify({
+            body: "Truck deleted",
+            title: "Deleted",
+            alert_type: "warning",
+            duration: 2000
+          });
+        });
       }
 
     });
@@ -252,6 +244,15 @@ export class TruckDetailsComponent implements OnInit, OnDestroy {
    * @param truck
    */
   resetTruck() {
+    if (this.order.truck.hasBeenReset) {
+      this.notification.notify({
+        body: "This truck has already been reset once ",
+        title: "Operation forbidden",
+        alert_type: "error",
+        duration: 2000
+      });
+      return;
+    }
     const dialogRef = this.dialog.open(ConfirmDialogComponent,
       {
         role: "dialog",
@@ -269,15 +270,16 @@ export class TruckDetailsComponent implements OnInit, OnDestroy {
             user: null
           },
         };
-        this.order.stage = 4.1;
-        // this.truckservice.updatetruck(truck.Id).update(truck).then(value => {
-        //   this.notification.notify({
-        //     body: "Truck reset",
-        //     alert_type: "success",
-        //     title: "Success",
-        //     duration: 2000
-        //   });
-        // });
+        this.order.truck.stage = 1;
+        this.order.truck.hasBeenReset = true;
+        this.orderservice.updateorder(this.order.Id, this.core.currentOmc.value.Id, this.order).then(() => {
+          this.notification.notify({
+            body: "Truck reset",
+            alert_type: "success",
+            title: "Success",
+            duration: 2000
+          });
+        });
       }
     });
   }

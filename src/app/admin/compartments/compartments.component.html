@@ -28,7 +28,7 @@
       <div *ngFor="let fueltype of fueltypesArray" fxFlex>
         <span [matTooltipPosition]="position2" class="btn btn-{{fueltype}} btn-block"
           matTooltip="{{fueltype | uppercase}}">
-          <!-- {{order.fuel[fueltype].qty - truck.fuel[fueltype].qty || 0}} -->
+          {{order.fuel[fueltype].qty - temporaryQuantities[fueltype]}}
         </span>
       </div>
 
@@ -41,7 +41,7 @@
           <!--Consider using reactive forms instead-->
           <input [(ngModel)]="order.truck.compartments[i].qty"
             (ngModelChange)="setfueltype(i, order.truck.compartments[i].qty> 0 ? fueltype : null)"
-            [disabled]="order.fuel[fueltype].qty ? (compartment.fueltype  && compartment.fueltype !== fueltype ): !order.fuel[fueltype].qty"
+            [disabled]="order.fuel[fueltype].qty > 0 ? (compartment.fueltype  && compartment.fueltype !== fueltype ): true"
             matInput min="0" name="{{fueltype}}+{{i}}" placeholder="C{{i+1}}" required type="number">
           <mat-hint *ngIf="compartment.fueltype && compartment.fueltype !== fueltype" align="start" class="text-danger">
             <i>Loaded Fuel: {{compartment.fueltype}}</i>

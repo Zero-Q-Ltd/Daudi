@@ -1,5 +1,5 @@
 import { QuickBooks } from "../libs/qbmain";
-import { Invoice } from "../models/Qbo/Invoice";
+import { QboOrder } from "../models/Qbo/QboOrder";
 import { Order } from "../models/Daudi/order/Order";
 import { editStats } from "../tasks/crud/daudi/editStats";
 
@@ -14,7 +14,7 @@ export function validorderupdate(order: Order, qbo: QuickBooks) {
             if (order.QbConfig.QbId) {
                 console.log("deleting order...");
                 return qbo.getInvoice(order.QbConfig.QbId).then(result => {
-                    const resultinvoice = result.Invoice as Invoice;
+                    const resultinvoice = result.Invoice as QboOrder;
                     resultinvoice.void = true;
                     /**
                      * @todo Implement deletion reason and User detail

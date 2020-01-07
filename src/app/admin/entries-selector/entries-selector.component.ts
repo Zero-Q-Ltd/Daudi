@@ -335,7 +335,8 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
             expiry: MyTimestamp.fromDate(moment().add(45, "minutes").toDate()),
           }],
       };
-      this.order.truck.stage = 4;
+      this.order.stage = 4;
+      this.order.truck.stage = 1;
       this.order.loaded = true;
 
       this.order.orderStageData["4"].user = data.user;
@@ -381,6 +382,10 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
               },
             };
             /**
+             * Add the qty drawn to the used amount value of the ASE
+             */
+            this.depotEntries[fueltype][0].qty.used += this.drawnEntry[fueltype][1].qtydrawn;
+            /**
              * Deactivate this entry since we're sure a second once has been assigned
              */
             this.depotEntries[fueltype][0].active = false;
@@ -390,8 +395,32 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
              * Leave the second entry active if neccessary
              */
             const active = this.drawnEntry[fueltype][1].remainqty > 0 ? true : false;
+
+            /**
+             * filter to find the second entry that has been assigned
+             */
+            let secondDrawnId = 0;
+            this.depotEntries[fueltype].forEach((t, index) => {
+              if (t.Id === this.drawnEntry[fueltype][1].id) {
+                secondDrawnId = index;
+              }
+            });
+            this.depotEntries[fueltype][secondDrawnId].active = active;
+            this.depotEntries[fueltype][secondDrawnId].qty.directLoad = {
+              total: this.depotEntries[fueltype][secondDrawnId].qty.directLoad.total + this.drawnEntry[fueltype][1].qtydrawn,
+              accumulated: {
+                usable: 0,
+                total: this.depotEntries[fueltype][secondDrawnId].qty.directLoad.accumulated.total
+              },
+            };
+            /**
+             * Add the qty drawn to the used amount value of the ASE
+             */
+            this.depotEntries[fueltype][secondDrawnId].qty.used += this.drawnEntry[fueltype][1].qtydrawn;
+
             batchaction.update(this.entriesService.entryCollection(this.core.currentOmc.value.Id)
-              .doc(this.drawnEntry[fueltype][1].id), { active });
+              .doc(this.drawnEntry[fueltype][secondDrawnId].id), this.depotEntries[fueltype][secondDrawnId]);
+
           } else {
             /**
              * update the batches to the order as well
@@ -402,6 +431,10 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
               observed: 0,
               qty: this.drawnEntry[fueltype][0].qtydrawn
             };
+            /**
+             * Add the qty drawn to the used amount value of the ASE
+             */
+            this.depotEntries[fueltype][0].qty.used += this.drawnEntry[fueltype][1].qtydrawn;
 
             this.depotEntries[fueltype][0].active = this.drawnEntry[fueltype][0].remainqty > 0 ? true : false;
 
