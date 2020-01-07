@@ -265,7 +265,7 @@ export class CoreService {
       /**
        * cancel any previous queries
        */
-
+      console.log(stage);
       if (this.subscriptions.get(`orders${stage}`)) {
         this.subscriptions.get(`orders${stage}`)();
       }
@@ -273,13 +273,13 @@ export class CoreService {
       const subscriprion = this.orderService.ordersCollection(this.omcId)
         .where("stage", "==", stage)
         .where("config.depot.id", "==", depotId)
-        .orderBy("stagedata.1.user.time", "asc")
+        .orderBy("orderStageData.1.user.date", "asc")
         .onSnapshot(Data => {
           /**
            * reset the array at the postion when data changes
            */
           this.orders[stage].next([]);
-
+          console.log(Data.docs);
           this.orders[stage].next(toArray(emptyorder, Data));
           this.loaders.orders.next(false);
         });
@@ -294,8 +294,8 @@ export class CoreService {
     const stage5subscriprion = this.orderService.ordersCollection(this.omcId)
       .where("stage", "==", 5)
       .where("config.depot.id", "==", depotId)
-      .where("stagedata.1.user.time", "<=", startofweek)
-      .orderBy("stagedata.1.user.time", "asc")
+      .where("orderStageData.1.user.date", "<=", startofweek)
+      .orderBy("orderStageData.1.user.date", "asc")
       .onSnapshot(Data => {
         /**
          * reset the array at the postion when data changes
