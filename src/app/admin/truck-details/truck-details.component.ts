@@ -245,6 +245,15 @@ export class TruckDetailsComponent implements OnInit, OnDestroy {
    * @param truck
    */
   resetTruck() {
+    if (this.order.truck.hasBeenReset) {
+      this.notification.notify({
+        body: "This truck has already been reset once ",
+        title: "Operation forbidden",
+        alert_type: "error",
+        duration: 2000
+      });
+      return;
+    }
     const dialogRef = this.dialog.open(ConfirmDialogComponent,
       {
         role: "dialog",
@@ -262,15 +271,16 @@ export class TruckDetailsComponent implements OnInit, OnDestroy {
             user: null
           },
         };
-        this.order.stage = 4.1;
-        // this.truckservice.updatetruck(truck.Id).update(truck).then(value => {
-        //   this.notification.notify({
-        //     body: "Truck reset",
-        //     alert_type: "success",
-        //     title: "Success",
-        //     duration: 2000
-        //   });
-        // });
+        this.order.truck.stage = 1;
+        this.order.truck.hasBeenReset = true;
+        this.orderservice.updateorder(this.order.Id, this.core.currentOmc.value.Id, this.order).then(() => {
+          this.notification.notify({
+            body: "Truck reset",
+            alert_type: "success",
+            title: "Success",
+            duration: 2000
+          });
+        });
       }
     });
   }
