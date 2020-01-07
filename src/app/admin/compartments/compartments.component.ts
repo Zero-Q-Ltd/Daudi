@@ -140,7 +140,7 @@ export class CompartmentsComponent implements OnInit, OnDestroy {
       this.order.truck.truckdetail.numberplate = this.order.truck.truckdetail.numberplate ? this.order.truck.truckdetail.numberplate.toUpperCase() : null;
       this.order.truck.driverdetail.name = this.order.truck.driverdetail.name ? this.order.truck.driverdetail.name.toUpperCase() : null;
 
-      this.order.stage = 4;
+      this.order.truck.stage = 0;
       this.order.loaded = true;
       return this.dialogRef.close({ order: this.order, truck: this.order.truck });
     }
