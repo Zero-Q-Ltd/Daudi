@@ -18,6 +18,7 @@ import { validorderupdate } from './validators/orderupdate';
 import { readQboConfig } from "./tasks/crud/daudi/QboConfig";
 import { toArray, toObject } from "./models/utils/SnapshotUtils";
 import { EmptyQboConfig, QboCofig } from "./models/Cloud/QboEnvironment";
+import { Estimate } from "./models/Qbo/Estimate";
 
 admin.initializeApp(functions.config().firebase);
 admin.firestore().settings({ timestampsInSnapshots: true });
@@ -51,6 +52,8 @@ exports.createEstimate = functions.https.onCall((data: OrderCreate, context) => 
           /**
            * @todo update the Estimate ID
            */
+          const EstimateResult = createResult.Estimate as Estimate
+          data.order.QbConfig.EstimateId = EstimateResult.Id
           return Promise.all([ordersms(data.order, data.omcId), validorderupdate(data.order, qbo), creteOrder(data.order, data.omcId)])
         });
       })

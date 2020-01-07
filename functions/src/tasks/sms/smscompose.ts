@@ -117,26 +117,27 @@ export function truckchangesdsms(order: Order, omcId: string) {
 }
 
 function resolveOrderText(order: Order): string {
-  let text = ` ID ${order.customer.QbId} Order# ${order.QbConfig.InvoiceId}`;
+  let text = ` ID ${order.customer.QbId}`;
   switch (order.stage) {
     case 1:
-      text += " [RECEIVED] Thank you for making it Emkay today.";
+      text += ` Estimate# ${order.QbConfig.EstimateId} [RECEIVED] Thank you for making it Emkay today.`;
       break;
     case 2:
       text +=
-        " [INVOICED] awaiting payment of KES" +
+        `Order# ${order.QbConfig.InvoiceId} [INVOICED] awaiting payment of KES` +
         (order.fuel.pms.priceconfig.total +
           order.fuel.ago.priceconfig.total +
           order.fuel.ik.priceconfig.total);
       break;
     case 3:
-      text += " [PAYMENT RECEIVED]. Thank you for making it Emkay today.";
+      text += `Order# ${order.QbConfig.InvoiceId} [PAYMENT RECEIVED]. Thank you for making it Emkay today.`;
       break;
     case 4:
-      // Excempt this stage from SMS coz a separate one will be sent fot the truck
-      return "";
-    // text += ' [LOADED]';
-
+      /**
+       * Send only the first and last seal numbers in the array
+       */
+      text += `Truck# ${order.QbConfig.InvoiceId} [PASSED]. Seal Numbers: ${order.seals.range[0]}-${order.seals.range[-1]}. Remember to always check your seals`;
+      break;
     default:
       console.error(
         `Hii error ni ngori... Orderid ${order.Id}\n Order... ${order} `
@@ -169,18 +170,9 @@ function resolveTrucksText(order: Order): string {
     case 3:
       text += " [LOADING] Est-Time " + order.truckStageData["3"].expiry[0].expiry;
       break;
-    case 4:
-      text +=
-        " [PASSED] Seal Numbers: " +
-        /**
-         * @todo fix union type linitng problem
-         */
-        order.seals.range +
-        " Always check your seals";
-      break;
     default:
       console.error(
-        "The specified stage does not exist!!!!! You need to panic"
+        `Hii error ni ngori... Orderid ${order.Id}\n Order... ${order} `
       );
       return "";
   }

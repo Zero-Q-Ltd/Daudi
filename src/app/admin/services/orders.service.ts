@@ -27,8 +27,7 @@ export class OrdersService {
   createOrder(orderCteate: OrderCreate): Promise<any> {
     orderCteate.order.Id = this.db.createId();
     this.queuedorders.value.push(orderCteate.order.Id);
-    console.log(orderCteate);
-
+    // console.log(orderCteate);
     return this.functions.httpsCallable("createEstimate")(orderCteate).toPromise().then(value => {
       /**
        * delete the orderid after the operation is complete
@@ -53,9 +52,7 @@ export class OrdersService {
 
   }
   approveOrder(orderCteate: OrderCreate): Promise<any> {
-
-    console.log(orderCteate);
-
+    // console.log(orderCteate);
     return this.functions.httpsCallable("createInvoice")(orderCteate).toPromise().then(value => {
       /**
        * delete the orderid after the operation is complete

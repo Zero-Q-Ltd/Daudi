@@ -10,7 +10,6 @@ export interface Admin {
       QbId: string,
     }
     omcId: string,
-    level: string,
     app: {
       depotid: string,
     },
@@ -35,6 +34,8 @@ export interface Admin {
      * This keeps a reference to the id of the user type
      */
     type: number,
+    level: number,
+
   };
   status: {
     online: boolean,
@@ -71,7 +72,7 @@ export const emptyadmin: Admin = {
       companyid: null,
       QbId: null,
     },
-    approvedby: deepCopy<AssociatedUser>(EmptyAssociatedUser),
+    approvedby: deepCopy(EmptyAssociatedUser),
     app: {
       depotid: null
     },
