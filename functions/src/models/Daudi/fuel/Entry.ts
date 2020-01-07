@@ -1,10 +1,8 @@
-
-import { deepCopy } from "../../../models/utils/deepCopy";
-import { MyTimestamp } from "../../firestore/firestoreTypes";
-import { BaseStockModel } from "./BaseStockModel";
-import { StockQty, EmptyStockQty } from "./StockQty";
-import { EntryRef } from "./StockRef";
-import { Environment } from "../omc/Environments";
+import {deepCopy} from "../../../models/utils/deepCopy";
+import {MyTimestamp} from "../../firestore/firestoreTypes";
+import {BaseStockModel} from "./BaseStockModel";
+import {EmptyStockQty, StockQty} from "./StockQty";
+import {EntryRef} from "./StockRef";
 
 
 export interface Entry extends BaseStockModel {
@@ -25,7 +23,6 @@ export const emptyEntry: Entry = {
     name: null,
     Id: null
   },
-  environment: Environment.sandbox,
   active: false,
   date: new MyTimestamp(0, 0)
 };

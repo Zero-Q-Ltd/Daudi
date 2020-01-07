@@ -1,7 +1,8 @@
-import { FuelType } from "../fuel/FuelType";
-import { FuelConfig } from "./FuelConfig";
+import { FuelType } from "../Daudi/fuel/FuelType";
+import { FuelConfig } from "../Daudi/omc/FuelConfig";
 import { QBOAuthCOnfig } from "./QboAuthConfig";
-import { TaxConfig } from "./TaxConfig";
+import { TaxConfig } from "../Daudi/omc/TaxConfig";
+
 export interface QboEnvironment {
     auth: QBOAuthCOnfig;
     fuelconfig: {

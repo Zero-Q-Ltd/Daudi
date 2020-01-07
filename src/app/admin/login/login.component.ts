@@ -1,11 +1,11 @@
-import { Component, OnInit } from "@angular/core";
-import { Router } from "@angular/router";
-import { AngularFireAuth } from "@angular/fire/auth";
+import {Component, OnInit} from "@angular/core";
+import {Router} from "@angular/router";
+import {AngularFireAuth} from "@angular/fire/auth";
 import * as firebase from "firebase";
-import { NotificationService } from "../../shared/services/notification.service";
-import { AdminService } from "../services/core/admin.service";
-import { ReplaySubject } from "rxjs";
-import { takeUntil } from "rxjs/operators";
+import {NotificationService} from "../../shared/services/notification.service";
+import {AdminService} from "../services/core/admin.service";
+import {ReplaySubject} from "rxjs";
+import {takeUntil} from "rxjs/operators";
 
 @Component({
   selector: "app-login",

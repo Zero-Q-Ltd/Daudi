@@ -1,11 +1,10 @@
 import { firestore } from "firebase-admin";
 import { ASE } from "../../models/Daudi/fuel/ASE";
-import { FuelType, FuelNamesArray } from "../../models/Daudi/fuel/FuelType";
+import { FuelNamesArray, FuelType } from "../../models/Daudi/fuel/FuelType";
 import { FuelConfig } from "../../models/Daudi/omc/FuelConfig";
+import { EmptyOMCStock, OMCStock } from "../../models/Daudi/omc/Stock";
 import { Bill } from "../../models/Qbo/Bill";
 import { readStock, stockCollection } from "../crud/daudi/Stock";
-import { OMCStock, EmptyOMCStock } from "../../models/Daudi/omc/Stock";
-import { Environment } from "../../models/Daudi/omc/Environments";
 
 /**
  * 
@@ -13,7 +12,7 @@ import { Environment } from "../../models/Daudi/omc/Environments";
  * @param fuelConfig COnfig having valid ID's
  * @param since 
  */
-export function syncAse(omcId: string, environment: Environment, fuelConfig: { [key in FuelType]: FuelConfig }, bills: Bill[]) {
+export function syncAse(omcId: string, fuelConfig: { [key in FuelType]: FuelConfig }, bills: Bill[]) {
     const ValidLineItems: Array<{
         bill: Bill,
         index: number,
@@ -64,11 +63,11 @@ export function syncAse(omcId: string, environment: Environment, fuelConfig: { [
     */
     const totalAdded: { [key in FuelType]: number } = { ago: 0, ik: 0, pms: 0 }
     return Promise.all(ValidLineItems.map(async item => {
-        const convertedASE = covertBillToASE(item.bill, item.fueltype, item.index, environment);
+        const convertedASE = covertBillToASE(item.bill, item.fueltype, item.index);
         const directory = firestore()
             .collection("omc")
             .doc(omcId)
-            .collection("ase")
+            .collection("ases")
 
         const fetchedbatch = await directory.where("ase.QbId", "==", convertedASE.ase.QbId).get();
         /**
@@ -96,12 +95,11 @@ export function syncAse(omcId: string, environment: Environment, fuelConfig: { [
 
 
 
-function covertBillToASE(convertedBill: Bill, fueltype: FuelType, LineitemIndex: number, environment: Environment, ): ASE {
+function covertBillToASE(convertedBill: Bill, fueltype: FuelType, LineitemIndex: number): ASE {
 
     const ASEQty = convertedBill.Line[LineitemIndex].ItemBasedExpenseLineDetail.Qty ? convertedBill.Line[LineitemIndex].ItemBasedExpenseLineDetail.Qty : 0;
 
     const newASE: ASE = {
-        environment,
         Amount: convertedBill.Line[LineitemIndex].Amount ? convertedBill.Line[LineitemIndex].Amount : 0,
         ase: {
             QbId: convertedBill.Id,

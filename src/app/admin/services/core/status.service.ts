@@ -1,8 +1,8 @@
-import { Injectable } from "@angular/core";
-import { AngularFireDatabase } from "@angular/fire/database";
-import { BehaviorSubject } from "rxjs";
-import { AdminService } from "./admin.service";
-import { take } from "rxjs/operators";
+import {Injectable} from "@angular/core";
+import {AngularFireDatabase} from "@angular/fire/database";
+import {BehaviorSubject} from "rxjs";
+import {AdminService} from "./admin.service";
+import {take} from "rxjs/operators";
 
 @Injectable({
   providedIn: "root"

@@ -2,13 +2,13 @@ import { QuickBooks } from "../../libs/qbmain";
 import { firestore } from "firebase-admin";
 import { DaudiCustomer, emptyDaudiCustomer } from '../../models/Daudi/customer/Customer';
 import { Customer } from "../../models/Qbo/Customer";
-import { Environment } from '../../models/Daudi/omc/Environments';
+import { getallcustomers } from "../crud/daudi/getallcustomers";
 
 /**
  * Fetches all the customer information qbom qbo and overwrites the customers info on Dausi
  * @param qbo
  */
-export function syncCustomers(qbo: QuickBooks, omcId: string, env: Environment) {
+export function syncCustomers(qbo: QuickBooks, omcId: string) {
     /**
      * Limit to 1000 customers for every sync operation
      */
@@ -21,18 +21,18 @@ export function syncCustomers(qbo: QuickBooks, omcId: string, env: Environment) 
                 /**
                  * Overwrite sandbox customers that conflict id with live, but ignore sandbox customers that conflict with live
                  */
-                if (customersarray.find(comp => comp.QbId === customer.Id && env === Environment.sandbox)) {
+                if (customersarray.find(comp => comp.QbId === customer.Id)) {
                     console.log('ignoring conflicting company');
                     return;
                 } else {
-                    let co = convertToDaudicustomer(customer, env, qbo.companyid);
+                    let co = convertToDaudicustomer(customer, qbo.companyid);
                     if (customersarray.find(company => company.QbId === customer.Id)) {
                         console.log('updating customer');
                         batchwrite.update(
                             firestore()
                                 .collection("omc")
                                 .doc(omcId)
-                                .collection("customer")
+                                .collection(`customers`)
                                 .doc(co.Id),
                             co
                         );
@@ -44,7 +44,7 @@ export function syncCustomers(qbo: QuickBooks, omcId: string, env: Environment) 
                             firestore()
                                 .collection("omc")
                                 .doc(omcId)
-                                .collection("customer")
+                                .collection(`customers`)
                                 .doc(co.Id),
                             co
                         );
@@ -58,12 +58,10 @@ export function syncCustomers(qbo: QuickBooks, omcId: string, env: Environment) 
 
 function convertToDaudicustomer(
     customer: Customer,
-    env: Environment,
     companyid: string
 ): DaudiCustomer {
     let daudicompany: DaudiCustomer;
     daudicompany = {
-        environment: env,
         balance: customer.Balance || 0,
         contact: [{
             email: customer.PrimaryEmailAddr
@@ -96,10 +94,4 @@ function convertToDaudicustomer(
     return daudicompany;
 }
 
-function getallcustomers(omcId: string) {
-    return firestore()
-        .collection("omc")
-        .doc(omcId)
-        .collection("customer")
-        .get();
-}
+

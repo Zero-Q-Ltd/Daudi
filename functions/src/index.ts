@@ -3,13 +3,10 @@ import * as functions from 'firebase-functions';
 import { QuickBooks } from './libs/qbmain';
 import { CompanySync } from "./models/Cloud/CompanySync";
 import { OrderCreate } from './models/Cloud/OrderCreate';
-import { DaudiCustomer } from './models/Daudi/customer/Customer';
-import { OMCConfig } from './models/Daudi/omc/Config';
-import { Environment } from './models/Daudi/omc/Environments';
+import { DaudiCustomer, emptyDaudiCustomer } from './models/Daudi/customer/Customer';
 import { SMS } from './models/Daudi/sms/sms';
 import { MyTimestamp } from './models/firestore/firestoreTypes';
 import { creteOrder, updateOrder } from './tasks/crud/daudi/Order';
-import { readConfig } from './tasks/crud/daudi/readConfig';
 import { updateCustomer } from './tasks/crud/qbo/customer/update';
 import { createEstimate } from './tasks/crud/qbo/Estimate/create';
 import { createInvoice } from './tasks/crud/qbo/invoice/create';
@@ -18,6 +15,9 @@ import { sendsms } from './tasks/sms/sms';
 import { ordersms } from './tasks/sms/smscompose';
 import { processSync } from './tasks/syncdb/processSync';
 import { validorderupdate } from './validators/orderupdate';
+import { readQboConfig } from "./tasks/crud/daudi/QboConfig";
+import { toArray, toObject } from "./models/utils/SnapshotUtils";
+import { EmptyQboConfig, QboCofig } from "./models/Cloud/QboEnvironment";
 
 admin.initializeApp(functions.config().firebase);
 admin.firestore().settings({ timestampsInSnapshots: true });
@@ -36,20 +36,24 @@ function markAsRunning(eventID: string) {
  * create an estimate from the client directly
  */
 exports.createEstimate = functions.https.onCall((data: OrderCreate, context) => {
-
-  return createQbo(data.omc.Id, data.config, data.environment).then(async result => {
-    console.log(result)
-    const est = new createEstimate(data.order, result, data.config, data.environment)
-    return result.createEstimate(est.formulateEstimate()).then((createResult) => {
-      /**
-       * Only send sn SMS when estimate creation is complete
-       * Make the two processes run parallel so that none is blocking
-       */
-      /**
-       * @todo update the Estimate ID
-       */
-      return Promise.all([ordersms(data.order, data.omc.Id), validorderupdate(data.order, result), creteOrder(data.order, data.omc.Id)])
-    });
+  console.log(data)
+  return readQboConfig(data.omcId).then(snapshot => {
+    const config = toObject(EmptyQboConfig, snapshot)
+    return createQbo(data.omcId, config, true)
+      .then((qbo: QuickBooks) => {
+        console.log(qbo)
+        const est = new createEstimate(data.order, config)
+        return qbo.createEstimate(est.formulateEstimate()).then((createResult) => {
+          /**
+           * Only send sn SMS when estimate creation is complete
+           * Make the two processes run parallel so that none is blocking
+           */
+          /**
+           * @todo update the Estimate ID
+           */
+          return Promise.all([ordersms(data.order, data.omcId), validorderupdate(data.order, qbo), creteOrder(data.order, data.omcId)])
+        });
+      })
   })
 
 });
@@ -58,28 +62,31 @@ exports.createEstimate = functions.https.onCall((data: OrderCreate, context) => 
  * create an order from the client directly
  */
 exports.createInvoice = functions.https.onCall((data: OrderCreate, context) => {
-
-  return createQbo(data.omc.Id, data.config, data.environment).then(async result => {
-    console.log(result)
-    const inv = new createInvoice(data.order, result, data.config, data.environment)
-    return result.createInvoice(inv.formulateInvoice()).then((createResult) => {
-      /**
-       * Only send sn SMS when invoice creation is complete
-       * Make the two processes run parallel so that none is blocking
-       */
-      /**
-       * @todo update the invoice id
-       */
-      data.order.stage = 2
-      return Promise.all([ordersms(data.order, data.omc.Id), validorderupdate(data.order, result), updateOrder(data.order, data.omc.Id)]);
-    });
+  console.log(data)
+  return readQboConfig(data.omcId).then(snapshot => {
+    const config = toObject(EmptyQboConfig, snapshot)
+    return createQbo(data.omcId, config, true)
+      .then((qbo: QuickBooks) => {
+        console.log(qbo)
+        const inv = new createInvoice(data.order, config)
+        return qbo.createInvoice(inv.formulateInvoice()).then((createResult) => {
+          /**
+           * Only send sn SMS when invoice creation is complete
+           * Make the two processes run parallel so that none is blocking
+           */
+          /**
+           * @todo update the invoice id
+           */
+          data.order.stage = 2
+          return Promise.all([ordersms(data.order, data.omcId), validorderupdate(data.order, qbo), updateOrder(data.order, data.omcId)]);
+        });
+      })
   })
-
 });
 
 
 exports.customerUpdated = functions.firestore
-  .document("/omc/{omcId}/customer/{customerId}")
+  .document("/omc/{omcId}/customers/{customerId}")
   .onUpdate((snap, context) => {
     console.log(snap);
     const eventID = context.eventId;
@@ -100,12 +107,11 @@ exports.customerUpdated = functions.firestore
         // this customer has just been created
         return true;
       }
-      return readConfig(context.params.omcId)
-        .then(val => {
-          const config: OMCConfig = val.data() as OMCConfig
-          const customer: DaudiCustomer = snap.after.data() as DaudiCustomer
-          const env: Environment = customer.environment
-          return createQbo(context.params.omc.Id, config, env).then(qbo => {
+      return readQboConfig(context.params.omcId)
+        .then(snapshot => {
+          const config = toObject(EmptyQboConfig, snapshot)
+          const customer = toObject(emptyDaudiCustomer, snap.after)
+          return createQbo(context.params.omcId, config, true).then(qbo => {
             return updateCustomer(customer, qbo);
           })
         })
@@ -140,12 +146,16 @@ exports.smscreated = functions.firestore
     return sendsms(data.data() as SMS, context.params.smsID);
   });
 
-exports.requestsync = functions.https.onCall(((data: CompanySync, _) => {
-  return createQbo(data.omc.Id, data.config, data.environment)
-    .then((qbo: QuickBooks) => {
-      return processSync(data.sync, qbo, data.omc.Id, data.config, data.environment);
-    });
-}))
+exports.requestsync = functions.https.onCall((data: CompanySync, _) => {
+  console.log(data)
+  return readQboConfig(data.omcId).then(snapshot => {
+    const config = toObject(EmptyQboConfig, snapshot)
+    return createQbo(data.omcId, config, true)
+      .then((qbo: QuickBooks) => {
+        return processSync(data.sync, qbo, data.omcId, config);
+      });
+  })
+})
 
 exports.onUserStatusChanged = functions.database
   .ref("/admins/{uid}")

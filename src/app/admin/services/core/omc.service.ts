@@ -1,7 +1,5 @@
-import { Injectable } from "@angular/core";
-import { AngularFirestore, QueryFn } from "@angular/fire/firestore";
-import { map } from "rxjs/operators";
-import { emptyomc, OMC } from "../../../models/Daudi/omc/OMC";
+import {Injectable} from "@angular/core";
+import {AngularFirestore} from "@angular/fire/firestore";
 
 @Injectable({
   providedIn: "root"

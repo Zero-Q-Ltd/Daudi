@@ -1,17 +1,16 @@
 import { MyTimestamp } from "../../firestore/firestoreTypes";
+import { Meta } from "../universal/Meta";
 
 
-export interface AssociatedUser {
-    uid: string;
+export interface AssociatedUser extends Meta {
     name: string;
-    time: MyTimestamp;
 }
 
 
-export const inituser: AssociatedUser = {
+export const EmptyAssociatedUser: AssociatedUser = {
     name: "",
-    time: MyTimestamp.fromDate(new Date()),
-    uid: ""
+    adminId: "",
+    date: MyTimestamp.now()
 };
 
 

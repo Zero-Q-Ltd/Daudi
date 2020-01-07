@@ -1,10 +1,9 @@
 import { Injectable } from "@angular/core";
 import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from "@angular/router";
-import { Observable, forkJoin, combineLatest } from "rxjs";
+import { combineLatest, Observable } from "rxjs";
 import { Admin } from "../../models/Daudi/admin/Admin";
 import { NotificationService } from "../../shared/services/notification.service";
 import { AdminService } from "../services/core/admin.service";
-import { DepotService } from "../services/core/depot.service"; // get our service
 import { RouteData } from "../../models/Daudi/navigation/RouteData";
 import { map } from "rxjs/operators";
 import { CoreService } from "../services/core/core.service";
@@ -22,7 +21,7 @@ export class UsersGuard implements CanActivate {
   canActivate(next: ActivatedRouteSnapshot, activated: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
     return combineLatest([
       this.adminservice.observableuserdata,
-      this.core.config
+      this.core.adminConfig
     ])
       .pipe(map(s => {
         console.log(next, activated);

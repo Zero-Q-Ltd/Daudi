@@ -9,8 +9,7 @@ import { DaudiCustomer } from "../../models/Daudi/customer/Customer";
 import { Depot, emptydepot } from "../../models/Daudi/depot/Depot";
 import { DepotConfig, emptyDepotConfig } from "../../models/Daudi/depot/DepotConfig";
 import { FuelNamesArray } from "../../models/Daudi/fuel/FuelType";
-import { OMCConfig, emptyConfig } from "../../models/Daudi/omc/Config";
-import { Environment } from "../../models/Daudi/omc/Environments";
+import { emptyConfig, AdminConfig } from "../../models/Daudi/omc/Config";
 import { emptyorder, Order } from "../../models/Daudi/order/Order";
 import { NotificationService } from "../../shared/services/notification.service";
 import { MapsComponent } from "../maps/maps.component";
@@ -40,9 +39,7 @@ export class CreateOrderComponent implements OnDestroy {
   subscriptions: Map<string, any> = new Map<string, any>();
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
   activedepot: { depot: Depot, config: DepotConfig } = { depot: { ...emptydepot }, config: { ...emptyDepotConfig } };
-  omcConfig: OMCConfig = { ...emptyConfig };
-  env: Environment = Environment.sandbox;
-
+  omcConfig: AdminConfig = { ...emptyConfig };
   kraModified = false;
   validContactForm = false;
   validCalculationForm = false;
@@ -74,21 +71,21 @@ export class CreateOrderComponent implements OnDestroy {
       this.core.activedepot.pipe(
         takeUntil(this.comopnentDestroyed),
         skipWhile(t => !t.depot.Id)),
-      this.core.config.pipe(
+      this.core.adminConfig.pipe(
         takeUntil(this.comopnentDestroyed),
         skipWhile(t => !t)),
-      this.core.environment
-        .pipe(takeUntil(this.comopnentDestroyed)),
       this.core.currentOmc.pipe(
         takeUntil(this.comopnentDestroyed),
         skipWhile(t => !t.Id))
     ]).subscribe(res => {
       this.activedepot = res[1];
       this.omcConfig = res[2];
-      this.env = res[3];
 
       if (this.router.url === "/admin/create-order") {
         console.log("New Order");
+        /**
+         * Initialise the order with an Id
+         */
         this.newOrder = true;
       } else {
         console.log("Order approval");
@@ -206,16 +203,14 @@ export class CreateOrderComponent implements OnDestroy {
     this.temporder.QbConfig.departmentId = this.activedepot.config.QbId;
     console.log(this.temporder);
     this.temporder.customer.krapin = this.temporder.customer.krapin.toLocaleUpperCase();
-    this.temporder.stagedata["1"] = {
+    this.temporder.orderStageData["1"] = {
       user: this.adminservice.createuserobject(),
-      data: null
     };
     this.temporder.config = {
       depot: {
         id: this.core.activedepot.value.depot.Id,
         name: this.core.activedepot.value.depot.Name
       },
-      environment: this.core.environment.value
     };
     if (!this.temporder.customer.QbId) {
       // check if KRA pin is unique
@@ -235,7 +230,6 @@ export class CreateOrderComponent implements OnDestroy {
           QbId: this.temporder.customer.QbId,
           balance: 0,
           contact: this.temporder.customer.contact,
-          environment: this.env,
           krapin: this.temporder.customer.krapin,
           kraverified: null,
           location: new firestore.GeoPoint(0, 38),
@@ -283,10 +277,10 @@ export class CreateOrderComponent implements OnDestroy {
   }
 
   createorder(redirect) {
-    if (this.temporder.Id) {
-      // this.orderservice.approveOrder(this.temporder);
+    if (this.newOrder) {
+      this.orderservice.createOrder({ omcId: this.core.currentOmc.value.Id, order: this.temporder });
     } else {
-      // this.orderservice.createOrder(this.temporder);
+      this.orderservice.approveOrder({ omcId: this.core.currentOmc.value.Id, order: this.temporder });
     }
     if (redirect) {
       /**

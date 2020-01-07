@@ -160,14 +160,14 @@ function resolveTrucksText(order: Order): string {
         " [ORDER SUBMITTED] at " +
         order.config.depot.name +
         " Est-Time " +
-        order.truck.stagedata[1].expiry[0].expiry +
+        order.truckStageData[1].expiry[0].expiry +
         " Thank you for making it Emkay today.";
       break;
     case 2:
-      text += " [QUEUED] Est-Time " + order.truck.stagedata["2"].expiry[0].expiry;
+      text += " [QUEUED] Est-Time " + order.truckStageData["2"].expiry[0].expiry;
       break;
     case 3:
-      text += " [LOADING] Est-Time " + order.truck.stagedata["3"].expiry[0].expiry;
+      text += " [LOADING] Est-Time " + order.truckStageData["3"].expiry[0].expiry;
       break;
     case 4:
       text +=
@@ -175,7 +175,7 @@ function resolveTrucksText(order: Order): string {
         /**
          * @todo fix union type linitng problem
          */
-        // order.truck.stagedata[4].seals.range +
+        order.seals.range +
         " Always check your seals";
       break;
     default:

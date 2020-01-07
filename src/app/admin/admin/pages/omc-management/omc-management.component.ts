@@ -1,5 +1,5 @@
-import { Component, OnInit } from "@angular/core";
-import { OmcService } from "../../../services/core/omc.service";
+import {Component, OnInit} from "@angular/core";
+import {OmcService} from "../../../services/core/omc.service";
 
 @Component({
   selector: "app-omc-management",

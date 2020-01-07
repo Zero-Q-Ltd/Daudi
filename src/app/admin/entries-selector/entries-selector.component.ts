@@ -1,6 +1,6 @@
 import { Component, Inject, OnDestroy, OnInit } from "@angular/core";
 import { AngularFirestore } from "@angular/fire/firestore";
-import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material";
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material";
 import * as moment from "moment";
 import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
@@ -10,14 +10,15 @@ import { Entry } from "../../models/Daudi/fuel/Entry";
 import { FuelNamesArray, FuelType } from "../../models/Daudi/fuel/FuelType";
 import { EmptyOMCStock, OMCStock } from "../../models/Daudi/omc/Stock";
 import { emptyorder, Order } from "../../models/Daudi/order/Order";
-import { Stage1Model } from "../../models/Daudi/order/truck/TruckStages";
 import { MyTimestamp } from "../../models/firestore/firestoreTypes";
 import { NotificationService } from "../../shared/services/notification.service";
 import { AdminService } from "../services/core/admin.service";
-import { ConfigService } from "../services/core/config.service";
+import { AdminConfigService } from "../services/core/admin-config.service";
 import { CoreService } from "../services/core/core.service";
 import { EntriesService } from "../services/entries.service";
 import { OrdersService } from "../services/orders.service";
+import { GenericTruckStage } from "../../models/Daudi/order/GenericStage";
+import { StocksService } from "../services/core/stocks.service";
 
 interface EntryContent {
   id: string;
@@ -85,7 +86,8 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
     private adminservice: AdminService,
     private core: CoreService,
     private entriesService: EntriesService,
-    private configService: ConfigService,
+    private configService: AdminConfigService,
+    private stockService: StocksService,
     private ordersservice: OrdersService) {
     this.fueltypesArray.forEach((fueltype: FuelType) => {
       this.core.depotEntries[fueltype]
@@ -325,25 +327,20 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
     });
 
     if (!HasError) {
-      const data: Stage1Model = {
+      const data: GenericTruckStage = {
         user: this.adminservice.createuserobject(),
         expiry: [
           {
             timeCreated: MyTimestamp.now(),
             expiry: MyTimestamp.fromDate(moment().add(45, "minutes").toDate()),
           }],
-        print: {
-          status: false,
-          timestamp: MyTimestamp.now()
-        }
       };
-      this.order.stage = 4;
+      this.order.truck.stage = 4;
       this.order.loaded = true;
 
-      this.order.stagedata["4"].user = data.user;
+      this.order.orderStageData["4"].user = data.user;
 
-      this.order.truck.stagedata["1"] = data;
-      this.order.truck.stage = 1;
+      this.order.truckStageData["1"] = data;
 
       const batchaction = this.db.firestore.batch();
       batchaction.update(this.ordersservice.ordersCollection(this.core.currentOmc.value.Id).doc(this.orderId), this.order);
@@ -426,7 +423,7 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
               batchaction.update(this.configService.configDoc(this.core.currentOmc.value.Id), this.activedepot.config);
             } else {
               this.stock.qty[fueltype].ase.used += this.order.fuel[fueltype].qty;
-              batchaction.update(this.configService.stockDoc(this.core.currentOmc.value.Id), this.stock);
+              batchaction.update(this.stockService.stockDoc(this.core.currentOmc.value.Id), this.stock);
             }
           }
         }

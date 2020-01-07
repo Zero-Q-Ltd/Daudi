@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
-import { AngularFirestore, QueryFn } from "@angular/fire/firestore";
+import { AngularFirestore } from "@angular/fire/firestore";
 import { AngularFireFunctions } from "@angular/fire/functions";
-import { BehaviorSubject, of } from "rxjs";
+import { BehaviorSubject } from "rxjs";
 import { OrderCreate } from "../../models/Cloud/OrderCreate";
 import { Order } from "../../models/Daudi/order/Order";
 
@@ -25,16 +25,7 @@ export class OrdersService {
   }
 
   createOrder(orderCteate: OrderCreate): Promise<any> {
-    // order.Id = this.db.createId();
-    /**
-     * add a counter for the number of pending orders in the queue
-     */
-    // const orderdata: OrderCreate = {
-    //   config: this.core.omcconfig.value,
-    //   environment: this.core.environment.value,
-    //   omcId: this.core.currentOmc.value.Id,
-    //   order
-    // };
+    orderCteate.order.Id = this.db.createId();
     this.queuedorders.value.push(orderCteate.order.Id);
     console.log(orderCteate);
 
@@ -62,13 +53,7 @@ export class OrdersService {
 
   }
   approveOrder(orderCteate: OrderCreate): Promise<any> {
-    // const orderdata: OrderCreate = {
-    //   config: this.core.omcconfig.value,
-    //   environment: this.core.environment.value,
-    //   omcId: this.core.currentOmc.value.Id,
-    //   order
-    // };
-    // this.queuedorders.value.push(order.Id);
+
     console.log(orderCteate);
 
     return this.functions.httpsCallable("createInvoice")(orderCteate).toPromise().then(value => {
@@ -111,7 +96,7 @@ export class OrdersService {
   ordersCollection(omcId: string) {
     return this.db.firestore.collection("omc")
       .doc(omcId)
-      .collection("order");
+      .collection("orders");
   }
 
 

@@ -1,7 +1,7 @@
-import { Injectable } from "@angular/core";
-import { AngularFirestore } from "@angular/fire/firestore";
+import {Injectable} from "@angular/core";
+import {AngularFirestore} from "@angular/fire/firestore";
 import * as moment from "moment";
-import { FuelType } from "../../models/Daudi/fuel/FuelType";
+import {FuelType} from "../../models/Daudi/fuel/FuelType";
 
 @Injectable({
   providedIn: "root"

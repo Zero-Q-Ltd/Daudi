@@ -1,6 +1,6 @@
-import { TestBed } from "@angular/core/testing";
+import {TestBed} from "@angular/core/testing";
 
-import { CoreAdminService } from "./core.service";
+import {CoreAdminService} from "./core.service";
 
 describe("CoreService", () => {
   beforeEach(() => TestBed.configureTestingModule({}));

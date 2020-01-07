@@ -1,6 +1,6 @@
-import { Injectable } from "@angular/core";
-import { BehaviorSubject } from "rxjs";
-import { emptyorder, Order } from "../../models/Daudi/order/Order";
+import {Injectable} from "@angular/core";
+import {BehaviorSubject} from "rxjs";
+import {emptyorder, Order} from "../../models/Daudi/order/Order";
 
 @Injectable({
   providedIn: "root"

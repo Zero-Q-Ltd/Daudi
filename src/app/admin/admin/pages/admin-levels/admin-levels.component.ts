@@ -1,15 +1,14 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
-import { CommunicationService } from "../../communication.service";
+import { Component, OnDestroy, OnInit } from "@angular/core";
 import { MatDialog } from "@angular/material";
-import { ConfigService } from "../../../services/core/config.service";
+import { AdminConfigService } from "../../../services/core/admin-config.service";
 import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
-import { OMC, emptyomc } from "../../../../models/Daudi/omc/OMC";
-import { FormArray, FormControl, FormGroup, FormBuilder } from "ngx-strongly-typed-forms";
+import { emptyomc, OMC } from "../../../../models/Daudi/omc/OMC";
+import { FormArray, FormBuilder, FormGroup } from "ngx-strongly-typed-forms";
 
 import { NotificationService } from "../../../../shared/services/notification.service";
 import * as firebase from "firebase";
-import { NewAdminType, AdminType } from "../../../../models/Daudi/admin/AdminType";
+import { AdminType, NewAdminType } from "../../../../models/Daudi/admin/AdminType";
 import { Validators } from "@angular/forms";
 import { AdminLevel } from "../../../../models/Daudi/admin/AdminLevel";
 import { Meta } from "../../../../models/Daudi/universal/Meta";
@@ -31,7 +30,7 @@ export class AdminLevelsComponent implements OnInit, OnDestroy {
   tempcompany: OMC = deepCopy<OMC>(emptyomc);
 
   constructor(
-    private companyservice: ConfigService,
+    private companyservice: AdminConfigService,
     private formBuilder: FormBuilder,
     private _matDialog: MatDialog,
     private core: CoreService,
@@ -51,7 +50,7 @@ export class AdminLevelsComponent implements OnInit, OnDestroy {
     this.comopnentDestroyed.complete();
   }
   initvalues(): void {
-    this.core.config.pipe(takeUntil(this.comopnentDestroyed)).subscribe(co => {
+    this.core.adminConfig.pipe(takeUntil(this.comopnentDestroyed)).subscribe(co => {
       // this.originalCompany = co;
       // this.tempcompany = Object.assign({}, co);
       this.initforms();

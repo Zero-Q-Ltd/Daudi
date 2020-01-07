@@ -1,7 +1,7 @@
 import * as requester from "request";
 import * as _ from "underscore";
 import * as admin from "firebase-admin";
-import { SMS } from "../../models/Daudi/sms/sms";
+import {SMS} from "../../models/Daudi/sms/sms";
 
 const https = require("https");
 

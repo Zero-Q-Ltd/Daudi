@@ -1,6 +1,6 @@
-import { TestBed } from "@angular/core/testing";
+import {TestBed} from "@angular/core/testing";
 
-import { EntriesService } from "./entries.service";
+import {EntriesService} from "./entries.service";
 
 describe("BatchesService", () => {
   beforeEach(() => TestBed.configureTestingModule({}));

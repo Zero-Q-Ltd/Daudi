@@ -116,8 +116,8 @@ export class EntriesComponent implements OnInit {
 
   syncdb() {
     this.creatingsync = true;
-    this.coreAdmin.syncdb()
-      .subscribe(res => {
+    this.coreAdmin.syncdb(["BillPayment"])
+      .then(res => {
         this.creatingsync = false;
         this.notification.notify({
           alert_type: "success",

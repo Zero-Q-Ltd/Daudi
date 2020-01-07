@@ -2,15 +2,14 @@ import { Component, OnDestroy, OnInit } from "@angular/core";
 import { AngularFirestore } from "@angular/fire/firestore";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { MatDialog, MatTableDataSource } from "@angular/material";
-import { ReplaySubject, BehaviorSubject } from "rxjs";
+import { BehaviorSubject, ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { Admin, emptyadmin } from "../../models/Daudi/admin/Admin";
 import { Depot, emptydepot } from "../../models/Daudi/depot/Depot";
 import { DepotConfig, emptyDepotConfig } from "../../models/Daudi/depot/DepotConfig";
 import { Price } from "../../models/Daudi/depot/Price";
 import { FuelNamesArray, FuelType } from "../../models/Daudi/fuel/FuelType";
-import { OMCConfig, emptyConfig } from "../../models/Daudi/omc/Config";
-import { Environment } from "../../models/Daudi/omc/Environments";
+import { emptyConfig, AdminConfig } from "../../models/Daudi/omc/Config";
 import { OMC } from "../../models/Daudi/omc/OMC";
 import { AvgPrice } from "../../models/Daudi/price/AvgPrice";
 import { NotificationService } from "../../shared/services/notification.service";
@@ -57,8 +56,7 @@ export class EditPriceComponent implements OnInit, OnDestroy {
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
   selectedOMC: OMC;
 
-  currentOmcConfig: OMCConfig = { ...emptyConfig };
-  env: Environment = Environment.sandbox;
+  currentOmcConfig: AdminConfig = { ...emptyConfig };
 
   avgprices: {
     [key in FuelType]: {
@@ -104,16 +102,12 @@ export class EditPriceComponent implements OnInit, OnDestroy {
         this.omcs = value;
       });
 
-    this.core.config
+    this.core.adminConfig
       .pipe(takeUntil(this.comopnentDestroyed))
       .subscribe(config => {
         this.currentOmcConfig = config;
       });
-    this.core.environment
-      .pipe(takeUntil(this.comopnentDestroyed))
-      .subscribe(environment => {
-        this.env = environment;
-      });
+
     this.core.activedepot
       .pipe(takeUntil(this.comopnentDestroyed))
       .subscribe(depot => {

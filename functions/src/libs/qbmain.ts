@@ -11,9 +11,9 @@ import * as uuid from "uuid";
 import * as util from "util";
 import * as moment from "moment";
 import * as _ from "underscore";
-import { QbTypes } from "../models/QbTypes";
-import { Invoice } from "../models/Qbo/Invoice";
-import { Payment } from "../models/Qbo/Payment";
+import {QbTypes} from "../models/QbTypes";
+import {Invoice} from "../models/Qbo/Invoice";
+import {Payment} from "../models/Qbo/Payment";
 
 const version = "2.0.24";
 const APP_CENTER_BASE = "https://appcenter.intuit.com";

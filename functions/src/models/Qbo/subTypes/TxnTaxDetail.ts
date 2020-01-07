@@ -1,4 +1,5 @@
-import { TaxLine } from "./TaxLine";
+import {TaxLine} from "./TaxLine";
+
 export interface TxnTaxDetail {
     TxnTaxCodeRef: {
         value: string;

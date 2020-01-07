@@ -1,11 +1,9 @@
-import { OMC } from "../../../../models/Daudi/omc/OMC";
-import { OMCConfig } from "../../../../models/Daudi/omc/Config";
 import { firestore } from "firebase-admin";
-import { Environment } from "../../../../models/Daudi/omc/Environments";
 import { QuickBooks } from "../../../../libs/qbmain";
+import { OMC } from "../../../../models/Daudi/omc/OMC";
+import { TaxAgency } from "../../../../models/Qbo/TaxAgency";
 import { TaxService } from "../../../../models/Qbo/TaxService";
 import { initTaxAgency } from "./TaxAgency/init";
-import { TaxAgency } from "../../../../models/Qbo/TaxAgency";
 
 /**
  * This is the generl initialization process for every tax configuration there is
@@ -14,7 +12,7 @@ import { TaxAgency } from "../../../../models/Qbo/TaxAgency";
  * @param config 
  * @param environment 
  */
-export function initTaxService(omc: OMC, config: OMCConfig, environment: Environment, qbo: QuickBooks) {
+export function initTaxService(omc: OMC, qbo: QuickBooks) {
 
     return initTaxAgency(qbo).then(response => {
         const res = response.TaxAgency as TaxAgency
@@ -39,16 +37,16 @@ export function initTaxService(omc: OMC, config: OMCConfig, environment: Environ
 
             return firestore().runTransaction(t => {
                 return t.get(ref).then(data => {
-                    const newconfig = data.data() as OMCConfig
+                    const newconfig = data.data()
                     const taxres = operationresult.Class as TaxService
 
                     const createdTaxRate = taxres.TaxRateDetails.find(rate => {
                         return rate.TaxRateName === taxRateName
                     })
 
-                    newconfig.Qbo[environment].taxConfig.taxAgency.Id = res.Id
-                    newconfig.Qbo[environment].taxConfig.taxCode.Id = taxres.TaxCodeId
-                    newconfig.Qbo[environment].taxConfig.taxRate.Id = createdTaxRate.TaxAgencyId
+                    newconfig.Qbo.taxConfig.taxAgency.Id = res.Id
+                    newconfig.Qbo.taxConfig.taxCode.Id = taxres.TaxCodeId
+                    newconfig.Qbo.taxConfig.taxRate.Id = createdTaxRate.TaxAgencyId
                     return t.update(ref, newconfig)
                 })
             })

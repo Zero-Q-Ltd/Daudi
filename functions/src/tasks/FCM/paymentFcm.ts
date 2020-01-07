@@ -1,8 +1,7 @@
-import { firestore, messaging } from "firebase-admin";
-import { EquityBulk } from "../../models/ipn/EquityBulk";
-import { Fcm } from "../../models/Cloud/Fcm";
-import { Admin } from "../../models/Daudi/admin/Admin";
-import { Environment } from '../../models/Daudi/omc/Environments';
+import {firestore, messaging} from "firebase-admin";
+import {EquityBulk} from "../../models/ipn/EquityBulk";
+import {Fcm} from "../../models/Cloud/Fcm";
+import {Admin} from "../../models/Daudi/admin/Admin";
 
 export function paymentFcm(ipn: EquityBulk) {
   console.log("sending payment FCM");
@@ -33,22 +32,14 @@ export function paymentFcm(ipn: EquityBulk) {
         .filter(rawadmindata => {
           const admin = rawadmindata.data() as Admin;
           /**
-           * Only users permitted to view sandbox can receive sandbox payments
            * Only users below level 3 can receive payment notifications
            * It is mandatory that the users have tokens
            */
-          if (ipn.daudiFields.environment === Environment.sandbox) {
-            return (
-              Number(admin.config.level) < 3 &&
-              admin.config.fcm.subscriptions.payment &&
-              admin.config.fcm.tokens.web
-            );
-          } else {
-            return (
-              Number(admin.config.level) < 3 &&
-              admin.config.fcm.tokens.web
-            );
-          }
+          (
+            Number(admin.config.level) < 3 &&
+            admin.config.fcm.subscriptions.payment &&
+            admin.config.fcm.tokens.web
+          );
         })
         .map(async rawadmindata => {
           const admin = rawadmindata.data() as Admin;

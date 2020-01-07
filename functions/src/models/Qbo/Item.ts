@@ -1,6 +1,6 @@
-import { ItemType } from "./enums/ItemType";
-import { FuelType } from '../Daudi/fuel/FuelType';
-import { ReferenceType } from "./subTypes/ClassRef";
+import {ItemType} from "./enums/ItemType";
+import {FuelType} from '../Daudi/fuel/FuelType';
+import {ReferenceType} from "./subTypes/ClassRef";
 
 export interface Item {
   Name: FuelType;

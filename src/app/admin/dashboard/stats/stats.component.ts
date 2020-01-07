@@ -13,14 +13,13 @@ import { StatsService } from "../../services/stats.service";
 import { PricesService } from "../../services/prices.service";
 import { Entry } from "../../../models/Daudi/fuel/Entry";
 import { Price } from "../../../models/Daudi/depot/Price";
-import { calculateMA } from "../charts/generalCalc";
 import { fuelgauge } from "../charts/qty";
 import { saleStats } from "../charts/sales";
 import { singleFuelpricestat } from "../charts/prices";
 import "echarts/theme/macarons.js";
 import { ReplaySubject } from "rxjs";
-import { takeUntil, skipWhile } from "rxjs/operators";
-import { FuelType, FuelNamesArray } from "../../../models/Daudi/fuel/FuelType";
+import { skipWhile, takeUntil } from "rxjs/operators";
+import { FuelNamesArray, FuelType } from "../../../models/Daudi/fuel/FuelType";
 import { CoreService } from "../../services/core/core.service";
 
 @Component({
@@ -281,7 +280,7 @@ export class StatsComponent implements OnInit, OnDestroy {
           // this.fuelstats = { ...allfuelstats };
           // if (this.axisdates.length == 29) {
           const position = this.axisdates.findIndex(mappeddate => {
-            return moment(price.user.time.toDate()).startOf("day").isSame(mappeddate.date);
+            return moment(price.user.date.toDate()).startOf("day").isSame(mappeddate.date);
           });
           // console.log(position, price);
           // console.log(this.fuelstats[price.fueltytype].series[1]);

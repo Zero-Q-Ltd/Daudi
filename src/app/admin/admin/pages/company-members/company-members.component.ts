@@ -1,6 +1,6 @@
-import { Component, Inject, OnInit } from "@angular/core";
+import {Component, Inject, OnInit} from "@angular/core";
 import * as moment from "moment";
-import { MAT_DIALOG_DATA, MatDialog } from "@angular/material"; //added dialog data receive
+import {MAT_DIALOG_DATA, MatDialog} from "@angular/material"; //added dialog data receive
 
 @Component({
   selector: "company-members",

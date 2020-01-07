@@ -1,21 +1,20 @@
-import { Component, Input, OnInit, ViewChild } from "@angular/core";
-import { MatDialog, MatPaginator, MatSort, MatTableDataSource, MatTreeNestedDataSource } from "@angular/material";
+import {Component, OnInit, ViewChild} from "@angular/core";
+import {MatDialog, MatPaginator, MatSort, MatTableDataSource} from "@angular/material";
 import * as moment from "moment";
-import { ActivatedRoute } from "@angular/router";
-import { animate, sequence, state, style, transition, trigger } from "@angular/animations";
-import { SendMsgComponent } from "../send-msg/send-msg.component";
-import { emptytruck, Truck } from "../../models/Daudi/order/truck/Truck";
-import { SMS } from "../../models/Daudi/sms/sms";
-import { firestore } from "firebase";
-import { ExcelService } from "../services/excel-service.service";
-import { ColumnsCustomizerComponent } from "../columns-customizer/columns-customizer.component";
-import { DepotService } from "../services/core/depot.service";
-import { ReplaySubject } from "rxjs";
-import { switchMap, takeUntil } from "rxjs/operators";
-import { OrdersService as OrderService } from "../services/orders.service";
-import { Order } from "../../models/Daudi/order/Order";
-import { MyTimestamp } from "../../models/firestore/firestoreTypes";
-import { CoreService } from "../services/core/core.service";
+import {ActivatedRoute} from "@angular/router";
+import {animate, sequence, state, style, transition, trigger} from "@angular/animations";
+import {SendMsgComponent} from "../send-msg/send-msg.component";
+import {emptytruck, Truck} from "../../models/Daudi/order/truck/Truck";
+import {SMS} from "../../models/Daudi/sms/sms";
+import {ExcelService} from "../services/excel-service.service";
+import {ColumnsCustomizerComponent} from "../columns-customizer/columns-customizer.component";
+import {DepotService} from "../services/core/depot.service";
+import {ReplaySubject} from "rxjs";
+import {takeUntil} from "rxjs/operators";
+import {OrdersService as OrderService} from "../services/orders.service";
+import {Order} from "../../models/Daudi/order/Order";
+import {MyTimestamp} from "../../models/firestore/firestoreTypes";
+import {CoreService} from "../services/core/core.service";
 
 
 @Component({

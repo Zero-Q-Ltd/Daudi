@@ -2,8 +2,7 @@ import { Injectable } from "@angular/core";
 import { AngularFirestore } from "@angular/fire/firestore";
 import { DepotService } from "./core/depot.service";
 import { BehaviorSubject } from "rxjs";
-import { distinctUntilKeyChanged } from "rxjs/operators";
-import { ConfigService } from "./core/config.service";
+import { AdminConfigService } from "./core/admin-config.service";
 import { EquityBulk } from "../../models/ipn/EquityBulk";
 
 @Injectable({
@@ -22,7 +21,7 @@ export class PaymentsService {
 
   constructor(
     private db: AngularFirestore,
-    private config: ConfigService,
+    private config: AdminConfigService,
     private depotservice: DepotService) {
 
   }

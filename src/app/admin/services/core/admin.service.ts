@@ -1,13 +1,10 @@
 import { Injectable } from "@angular/core";
-import { AngularFirestore } from "@angular/fire/firestore";
-import { Admin, emptyadmin } from "../../../models/Daudi/admin/Admin";
-import { BehaviorSubject, ReplaySubject } from "rxjs";
 import { AngularFireAuth } from "@angular/fire/auth";
-import * as moment from "moment";
-import { firestore } from "firebase";
+import { AngularFirestore } from "@angular/fire/firestore";
 import { Router } from "@angular/router";
-import { AngularFireDatabase } from "@angular/fire/database";
-import { take } from "rxjs/operators";
+import * as moment from "moment";
+import { ReplaySubject } from "rxjs";
+import { Admin, emptyadmin } from "../../../models/Daudi/admin/Admin";
 import { AssociatedUser } from "../../../models/Daudi/admin/AssociatedUser";
 import { MyTimestamp } from "../../../models/firestore/firestoreTypes";
 
@@ -28,6 +25,8 @@ export class AdminService {
 
   constructor(private db: AngularFirestore, private afAuth: AngularFireAuth, router: Router) {
     afAuth.authState.subscribe(state => {
+      // this.createUser();
+
       if (state) {
         this.getuser(afAuth.auth.currentUser);
       } else {
@@ -41,7 +40,6 @@ export class AdminService {
 
     this.observableuserdata.subscribe(userdata => {
       console.log(userdata);
-      // this.createUser();
       this.userdata = userdata;
     });
   }
@@ -50,7 +48,7 @@ export class AdminService {
    * make the user go offline before logging out
    */
   logoutsequence() {
-    this.db.firestore.collection("admin").doc(this.userdata.Id).update({
+    this.adminDoc(this.userdata.Id).update({
       status: {
         online: false,
         time: moment().toDate()
@@ -59,9 +57,15 @@ export class AdminService {
       this.afAuth.auth.signOut();
     });
   }
+  adminDoc(adminId: string) {
+    return this.adminsCollection().doc(adminId);
+  }
+  adminsCollection() {
+    return this.db.firestore.collection("admins");
+  }
 
   getalladmins() {
-    return this.db.firestore.collection("admin")
+    return this.adminsCollection()
       .where("Active", "==", true);
   }
 
@@ -71,17 +75,17 @@ export class AdminService {
   createuserobject(): AssociatedUser {
     return {
       name: this.userdata.profile.name,
-      uid: this.userdata.profile.uid,
-      time: MyTimestamp.now()
+      adminId: this.userdata.Id,
+      date: MyTimestamp.now()
     };
   }
 
   updateadmin(admin: Admin) {
-    return this.db.firestore.collection("admin").doc(admin.Id).update(admin);
+    return this.adminDoc(admin.Id).update(admin);
   }
 
   getuser(user, unsub?: boolean) {
-    const unsubscribe = this.db.firestore.collection("admin").doc(user.uid)
+    const unsubscribe = this.adminDoc(user.uid)
       .onSnapshot(userdata => {
         if (userdata.exists) {
 
@@ -104,10 +108,11 @@ export class AdminService {
     if (unsub) {
       unsubscribe();
     }
+
   }
 
   createUser() {
-    this.db.firestore.collection("admin").doc("yHyORAiKshgarh22LW49YB7lDfk2").set(emptyadmin);
+    this.db.firestore.collection("admins").doc("hyNsgvX1x5emqZS3W6xqcyGifjh1").set(emptyadmin);
   }
 
   unsubscribeAll() {

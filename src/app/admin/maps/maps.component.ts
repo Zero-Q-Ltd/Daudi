@@ -1,9 +1,8 @@
-import { Component, ElementRef, Inject, NgZone, OnInit, Optional, ViewChild } from "@angular/core";
-import { MAT_DIALOG_DATA } from "@angular/material"; // added dialog data receive
-import { FormControl } from "@angular/forms";
-import * as firebase from "firebase";
-import { MapsAPILoader } from "@agm/core";
-import { MyGeoPoint } from "../../models/firestore/firestoreTypes";
+import {Component, ElementRef, Inject, NgZone, OnInit, Optional, ViewChild} from "@angular/core";
+import {MAT_DIALOG_DATA} from "@angular/material"; // added dialog data receive
+import {FormControl} from "@angular/forms";
+import {MapsAPILoader} from "@agm/core";
+import {MyGeoPoint} from "../../models/firestore/firestoreTypes";
 
 // import * as maps from 'googlemaps';
 

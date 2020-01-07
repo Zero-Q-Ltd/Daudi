@@ -1,12 +1,9 @@
-import { Contact } from "./Contact";
-import { AssociatedUser } from "../admin/AssociatedUser";
-import { MyGeoPoint } from "../../firestore/firestoreTypes";
-import { Environment } from "../omc/Environments";
-import { CustomerDetail } from "./CustomerDetail";
+import {MyGeoPoint} from "../../firestore/firestoreTypes";
+import {AssociatedUser} from "../admin/AssociatedUser";
+import {CustomerDetail} from "./CustomerDetail";
 
 export interface DaudiCustomer extends CustomerDetail {
   Active: boolean;
-  environment: Environment;
   location: MyGeoPoint;
   kraverified: {
     status: boolean
@@ -23,7 +20,6 @@ export const emptyDaudiCustomer: DaudiCustomer = {
   Id: null,
   name: null,
   QbId: null,
-  environment: null,
   /**
    * make default location Somewhere in nbi
    */

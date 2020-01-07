@@ -3,20 +3,12 @@ import { deepCopy } from "../../utils/deepCopy";
 import { AdminType } from "../admin/AdminType";
 import { Meta } from "../universal/Meta";
 import { Metadata } from "../universal/Metadata";
-import { Environment } from "./Environments";
 import { emptyFuelConfig, FuelConfig } from "./FuelConfig";
-import { QBOAuthCOnfig } from "./QboAuthConfig";
-import { QboEnvironment } from "./QboEnvironment";
+import { QBOAuthCOnfig } from "../../Cloud/QboAuthConfig";
+import { QboCofig } from "../../Cloud/QboEnvironment";
 
-export interface OMCConfig {
+export interface AdminConfig {
     adminTypes: Array<AdminType>;
-    Qbo: {
-        /**
-         * Every company has a sandbox and a live config
-         */
-        [key in Environment]: QboEnvironment
-    };
-    status: boolean;
 }
 
 /**
@@ -38,7 +30,6 @@ export const emptyqboAuth: QBOAuthCOnfig = {
     clientId: "",
     clientSecret: "",
     webhooksVerifier: "",
-    environment: Environment.sandbox,
     authConfig: {
         previousDCT: MyTimestamp.fromDate(new Date()),
         accessToken: "",
@@ -50,48 +41,7 @@ export const emptyqboAuth: QBOAuthCOnfig = {
 };
 
 
-export const emptyConfig: OMCConfig = {
-    status: true,
-    Qbo: {
-        live: {
-            auth: deepCopy<QBOAuthCOnfig>(emptyqboAuth),
-            fuelconfig: {
-                pms: deepCopy<FuelConfig>(emptyFuelConfig),
-                ago: deepCopy<FuelConfig>(emptyFuelConfig),
-                ik: deepCopy<FuelConfig>(emptyFuelConfig)
-            },
-            taxConfig: {
-                taxAgency: {
-                    Id: "0"
-                },
-                taxCode: {
-                    Id: "0"
-                },
-                taxRate: {
-                    Id: "0"
-                },
-            }
-        },
-        sandbox: {
-            auth: deepCopy<QBOAuthCOnfig>(emptyqboAuth),
-            fuelconfig: {
-                pms: deepCopy<FuelConfig>(emptyFuelConfig),
-                ago: deepCopy<FuelConfig>(emptyFuelConfig),
-                ik: deepCopy<FuelConfig>(emptyFuelConfig)
-            },
-            taxConfig: {
-                taxAgency: {
-                    Id: "0"
-                },
-                taxCode: {
-                    Id: "0"
-                },
-                taxRate: {
-                    Id: "0"
-                },
-            }
-        },
-    },
+export const emptyConfig: AdminConfig = {
     /**
      * Hardcoded this so that the system always has System Admin values
      * Always... Tutatambulikaje???

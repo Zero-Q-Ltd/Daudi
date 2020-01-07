@@ -1,37 +1,23 @@
-import { createQbo } from "../../../sharedqb";
-import { Payment } from "../../../../models/Qbo/Payment";
-import * as admin from "firebase-admin";
 import * as moment from "moment";
-import { Order } from "../../../../models/Daudi/order/Order";
 import { QuickBooks } from "../../../../libs/qbmain";
-import { Estimate } from "../../../../models/Qbo/Estimate";
-import { PrintStatus } from "../../../../models/Qbo/enums/PrintStatus";
-import { OMCConfig } from "../../../../models/Daudi/omc/Config";
-import { QboEnvironment } from "../../../../models/Daudi/omc/QboEnvironment";
-import { Environment } from "../../../../models/Daudi/omc/Environments";
-import { TxnStatus } from "../../../../models/Qbo/enums/TxnStatus";
+import { FuelNamesArray } from '../../../../models/Daudi/fuel/FuelType';
+import { Order } from "../../../../models/Daudi/order/Order";
 import { EmailStatus } from "../../../../models/Qbo/enums/EmailStatus";
-import { Line } from "../../../../models/Qbo/subTypes/Line";
 import { LineDetailType } from "../../../../models/Qbo/enums/LineDetailType";
-import { FuelType, FuelNamesArray } from '../../../../models/Daudi/fuel/FuelType';
-import { FuelConfig } from "../../../../models/Daudi/omc/FuelConfig";
+import { PrintStatus } from "../../../../models/Qbo/enums/PrintStatus";
+import { TxnStatus } from "../../../../models/Qbo/enums/TxnStatus";
+import { Estimate } from "../../../../models/Qbo/Estimate";
+import { Line } from "../../../../models/Qbo/subTypes/Line";
+import { QboCofig } from "../../../../models/Cloud/QboEnvironment";
 
 
 export class createEstimate {
-
-    orderdata: Order;
-    qbo: QuickBooks;
-    config: OMCConfig;
-    environment: Environment;
-    constructor(_orderdata: Order, _qbo: QuickBooks, _config: OMCConfig, environment: Environment) {
+    constructor(private orderdata: Order, private config: QboCofig) {
         /**
-    * format the timestamp again as it loses it when it doesnt directly go to the database
-    */
-        _orderdata.stagedata["1"].user.time = moment().toDate() as any;
-        this.orderdata = _orderdata;
-        this.qbo = _qbo;
-        this.config = _config;
-        this.environment = environment
+         * format the timestamp again as it loses it when it doesnt directly go to the database
+         */
+        orderdata.orderStageData["1"].user.date = moment().toDate() as any;
+
     }
 
     syncfueltypes(): Array<any> {
@@ -42,12 +28,12 @@ export class createEstimate {
                     Amount: this.orderdata.fuel[fuel].priceconfig.nonTaxprice * this.orderdata.fuel[fuel].qty,
                     DetailType: LineDetailType.GroupLineDetail,
                     Description: `VAT-Exempt : ${this.orderdata.fuel[fuel].priceconfig.nonTax} \t Taxable Amount: ${this.orderdata.fuel[fuel].priceconfig.taxableAmnt} \t VAT Total : ${this.orderdata.fuel[fuel].priceconfig.taxAmnt} \t`,
-                    Id: this.config.Qbo[this.environment].fuelconfig[fuel].groupId,
+                    Id: this.config.fuelconfig[fuel].groupId,
                     GroupLineDetail: {
                         Quantity: this.orderdata.fuel[fuel].qty,
                         GroupItemRef: {
                             name: fuel,
-                            value: this.config.Qbo[this.environment].fuelconfig[fuel].groupId
+                            value: this.config.fuelconfig[fuel].groupId
                         },
                         Line: [
                             /**
@@ -58,11 +44,11 @@ export class createEstimate {
                                 Amount: this.orderdata.fuel[fuel].priceconfig.nonTaxprice * this.orderdata.fuel[fuel].qty,
                                 Description: "",
                                 DetailType: LineDetailType.SalesItemLineDetail,
-                                Id: this.config.Qbo[this.environment].fuelconfig[fuel].aseId,
+                                Id: this.config.fuelconfig[fuel].aseId,
                                 SalesItemLineDetail: {
                                     ItemRef: {
                                         name: fuel,
-                                        value: this.config.Qbo[this.environment].fuelconfig[fuel].aseId
+                                        value: this.config.fuelconfig[fuel].aseId
                                     },
                                     Qty: this.orderdata.fuel[fuel].qty,
                                     TaxCodeRef: {
@@ -75,11 +61,11 @@ export class createEstimate {
                                 Amount: 0,
                                 Description: "",
                                 DetailType: LineDetailType.SalesItemLineDetail,
-                                Id: this.config.Qbo[this.environment].fuelconfig[fuel].entryId,
+                                Id: this.config.fuelconfig[fuel].entryId,
                                 SalesItemLineDetail: {
                                     ItemRef: {
                                         name: fuel,
-                                        value: this.config.Qbo[this.environment].fuelconfig[fuel].entryId
+                                        value: this.config.fuelconfig[fuel].entryId
                                     },
                                     Qty: this.orderdata.fuel[fuel].qty,
                                     TaxCodeRef: {
@@ -115,7 +101,7 @@ export class createEstimate {
             TxnTaxDetail: {
                 TotalTax: this.orderdata.fuel.pms.priceconfig.taxAmnt + this.orderdata.fuel.ago.priceconfig.taxAmnt + this.orderdata.fuel.ik.priceconfig.taxAmnt,
                 TxnTaxCodeRef: {
-                    value: this.config.Qbo[this.environment].taxConfig.taxCode.Id
+                    value: this.config.taxConfig.taxCode.Id
                 },
                 TaxLine: [{
                     Amount: (this.orderdata.fuel.pms.priceconfig.taxAmnt + this.orderdata.fuel.ago.priceconfig.taxAmnt + this.orderdata.fuel.ik.priceconfig.taxAmnt),
@@ -125,7 +111,7 @@ export class createEstimate {
                         PercentBased: false,
                         TaxPercent: 8,
                         TaxRateRef: {
-                            value: this.config.Qbo[this.environment].taxConfig.taxRate.Id
+                            value: this.config.taxConfig.taxRate.Id
                         }
                     }
                 }]
@@ -137,7 +123,9 @@ export class createEstimate {
                 name: this.orderdata.config.depot.name,
                 value: this.orderdata.QbConfig.departmentId
             },
-
+            ClassRef: {
+                value: "5000000000000007280"
+            },
             Line: this.syncfueltypes()
         };
 

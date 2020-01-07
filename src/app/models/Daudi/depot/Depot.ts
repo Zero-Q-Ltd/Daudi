@@ -1,7 +1,7 @@
-import { Metadata, emptymetadata } from "../universal/Metadata";
-import { DepotCreator } from "./DepotCreator";
-import { deepCopy } from "../../utils/deepCopy";
-import { MyTimestamp, MyGeoPoint } from "../../firestore/firestoreTypes";
+import {emptymetadata, Metadata} from "../universal/Metadata";
+import {DepotCreator} from "./DepotCreator";
+import {deepCopy} from "../../utils/deepCopy";
+import {MyGeoPoint, MyTimestamp} from "../../firestore/firestoreTypes";
 
 export interface Depot {
   Id: string;

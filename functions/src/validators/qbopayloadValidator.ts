@@ -1,5 +1,5 @@
-import { Companyconfig } from "../models/Qbo/Company";
-import { createHmac } from "crypto";
+import {Companyconfig} from "../models/Qbo/Company";
+import {createHmac} from "crypto";
 
 /**
  * Validates the payload with the intuit-signature hash

@@ -6,7 +6,7 @@ export function creteOrder(order: Order, omcId: string) {
     return admin.firestore()
         .collection("omc")
         .doc(omcId)
-        .collection("order")
+        .collection("orders")
         .doc(order.Id)
         .set(order);
 }
@@ -15,7 +15,7 @@ export function updateOrder(order: Order, omcId: string) {
     return admin.firestore()
         .collection("omc")
         .doc(omcId)
-        .collection("order")
+        .collection("orders")
         .doc(order.Id)
         .update(order)
 }

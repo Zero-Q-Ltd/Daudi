@@ -1,7 +1,7 @@
 import { animate, sequence, state, style, transition, trigger } from "@angular/animations";
 import { Component, HostListener, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import { AngularFireFunctions } from "@angular/fire/functions";
-import { MatDialog, MatPaginator, MatSnackBar, MatSort, MatTableDataSource } from "@angular/material";
+import { MatPaginator, MatSort, MatTableDataSource } from "@angular/material";
 import * as moment from "moment";
 import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
@@ -12,9 +12,7 @@ import { emptyomc, OMC } from "../../../../models/Daudi/omc/OMC";
 import { MyTimestamp } from "../../../../models/firestore/firestoreTypes";
 import { NotificationService } from "../../../../shared/services/notification.service";
 import { AdminService } from "../../../services/core/admin.service";
-import { ConfigService } from "../../../services/core/config.service";
 import { CoreService } from "../../../services/core/core.service";
-import { DepotService } from "../../../services/core/depot.service";
 
 
 @Component({
@@ -74,7 +72,7 @@ export class UserManagementComponent implements OnInit, OnDestroy {
             return value as Admin;
           });
         });
-        this.core.config.pipe(takeUntil(this.comopnentDestroyed)).subscribe(co => {
+        this.core.adminConfig.pipe(takeUntil(this.comopnentDestroyed)).subscribe(co => {
           // this.originalCompany = co;
         });
       }

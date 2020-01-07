@@ -1,12 +1,12 @@
-import { Component, OnDestroy } from "@angular/core";
-import { OrdersService } from "../../../services/orders.service";
-import { ReplaySubject } from "rxjs";
-import { takeUntil } from "rxjs/operators"; // get our service
-import { DepotService } from "../../../services/core/depot.service";
-import { Depot, emptydepot } from "../../../../models/Daudi/depot/Depot";
-import { OrderStageIds } from "../../../../models/Daudi/order/OrderStages";
-import { TruckStageNames } from "../../../../models/Daudi/order/truck/TruckStages";
-import { CoreService } from "../../..//services/core/core.service";
+import {Component, OnDestroy} from "@angular/core";
+import {OrdersService} from "../../../services/orders.service";
+import {ReplaySubject} from "rxjs";
+import {takeUntil} from "rxjs/operators"; // get our service
+import {DepotService} from "../../../services/core/depot.service";
+import {Depot, emptydepot} from "../../../../models/Daudi/depot/Depot";
+import {OrderStageIds} from "../../../../models/Daudi/order/OrderStages";
+import {TruckStageNames} from "../../../../models/Daudi/order/truck/TruckStages";
+import {CoreService} from "../../..//services/core/core.service";
 
 @Component({
   selector: "my-app-sidenav-menu",

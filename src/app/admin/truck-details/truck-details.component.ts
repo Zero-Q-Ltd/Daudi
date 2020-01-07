@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnDestroy, OnInit } from "@angular/core";
-import { emptytruck, Truck } from "../../models/Daudi/order/truck/Truck";
+import { Truck } from "../../models/Daudi/order/truck/Truck";
 import { Order } from "../../models/Daudi/order/Order";
 import * as moment from "moment";
 import { ConfirmDialogComponent } from "../confirm-dialog/confirm-dialog.component";
@@ -13,7 +13,6 @@ import { MatDialog } from "@angular/material";
 import { AngularFirestore } from "@angular/fire/firestore";
 import { takeUntil } from "rxjs/operators";
 import { ReplaySubject } from "rxjs";
-
 
 
 @Component({
@@ -146,11 +145,11 @@ export class TruckDetailsComponent implements OnInit, OnDestroy {
    *
    * @param truck
    */
-  freezetruck(truck: Truck) {
+  freezeOrder() {
     const dialogRef = this.dialog.open(ConfirmDialogComponent,
       {
         role: "dialog",
-        data: truck.frozen ? "Are you sure?" : "Freeze this truck? This will disable modifications from the app"
+        data: this.order.frozen ? "Are you sure to Unfreeze?" : "Freeze this Order? This will disable modifications from the app"
       });
     dialogRef.afterClosed().pipe(takeUntil(this.comopnentDestroyed)).subscribe(result => {
       if (result) {
@@ -252,7 +251,7 @@ export class TruckDetailsComponent implements OnInit, OnDestroy {
    *
    * @param truck
    */
-  resetTruck(truck: Truck) {
+  resetTruck() {
     const dialogRef = this.dialog.open(ConfirmDialogComponent,
       {
         role: "dialog",
@@ -260,17 +259,17 @@ export class TruckDetailsComponent implements OnInit, OnDestroy {
       });
     dialogRef.afterClosed().pipe(takeUntil(this.comopnentDestroyed)).subscribe(result => {
       if (result) {
-        truck.stagedata[1].user = this.adminservice.createuserobject();
-        truck.stagedata[1].expiry = [
-          // {
-          //   duration: "00:45:00",
-          //   timeCreated: MyTimestamp.now(),
-          //   expiry: MyTimestamp.fromDate(moment().add(45, "minutes").toDate())
-          // }
-        ];
-        truck.stagedata[2].expiry = [];
-        truck.stagedata[3].expiry = [];
-        truck.stage = 1;
+        this.order.printStatus = {
+          LoadingOrder: {
+            status: null,
+            user: null
+          },
+          gatepass: {
+            status: null,
+            user: null
+          },
+        };
+        this.order.stage = 4.1;
         // this.truckservice.updatetruck(truck.Id).update(truck).then(value => {
         //   this.notification.notify({
         //     body: "Truck reset",

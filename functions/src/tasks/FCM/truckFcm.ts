@@ -1,6 +1,6 @@
-import { firestore, messaging } from "firebase-admin";
-import { Admin } from "../../models/Daudi/admin/Admin";
-import { Order } from "../../models/Daudi/order/Order";
+import {firestore, messaging} from "firebase-admin";
+import {Admin} from "../../models/Daudi/admin/Admin";
+import {Order} from "../../models/Daudi/order/Order";
 
 export function truckFcm(
   order: Order,

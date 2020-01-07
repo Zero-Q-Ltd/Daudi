@@ -1,5 +1,5 @@
-import { CHARTCONFIG } from "./charts.config";
-import { EChartOption } from "echarts";
+import {CHARTCONFIG} from "./charts.config";
+import {EChartOption} from "echarts";
 
 export let saleStats: EChartOption = {
   toolbox: {

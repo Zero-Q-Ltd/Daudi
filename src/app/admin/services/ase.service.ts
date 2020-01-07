@@ -1,12 +1,6 @@
 import { Injectable } from "@angular/core";
-import { BehaviorSubject } from "rxjs";
-import { AngularFirestore, QueryFn } from "@angular/fire/firestore";
-import { DepotService } from "./core/depot.service";
-import { FuelType, FuelNamesArray } from "../../models/Daudi/fuel/FuelType";
-import { OmcService } from "./core/omc.service";
-import { skipWhile, map } from "rxjs/operators";
-import { ASE, emptyASEs } from "../../models/Daudi/fuel/ASE";
-import { CoreService } from "./core/core.service";
+import { AngularFirestore } from "@angular/fire/firestore";
+import { FuelType } from "../../models/Daudi/fuel/FuelType";
 
 @Injectable({
   providedIn: "root"
@@ -20,7 +14,7 @@ export class AseService {
   ASECollection(omcId: string) {
     return this.db.firestore.collection("omc")
       .doc(omcId)
-      .collection("ase");
+      .collection("ases");
   }
 
 
