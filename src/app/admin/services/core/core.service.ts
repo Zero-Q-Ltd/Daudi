@@ -265,7 +265,6 @@ export class CoreService {
       /**
        * cancel any previous queries
        */
-      console.log(stage);
       if (this.subscriptions.get(`orders${stage}`)) {
         this.subscriptions.get(`orders${stage}`)();
       }

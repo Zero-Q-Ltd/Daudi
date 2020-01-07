@@ -45,20 +45,20 @@
             <ng-container matColumnDef="Time">
               <th *matHeaderCellDef mat-header-cell mat-sort-header>Time Created</th>
               <td *matCellDef="let order " mat-cell>
-                {{order.stagedata["1"]?.user?.time?.toDate() | date: 'short'}}
+                {{order.orderStageData["1"]?.user?.date?.toDate() | date: 'short'}}
               </td>
             </ng-container>
             <!-- Time Column -->
             <ng-container matColumnDef="Time Approved">
               <th *matHeaderCellDef mat-header-cell mat-sort-header>Time Approved</th>
               <td *matCellDef="let order " mat-cell>
-                {{order.stagedata["4"]?.user?.time?.toDate() | date: 'short'}}
+                {{order.orderStageData["4"]?.user?.date?.toDate() | date: 'short'}}
               </td>
             </ng-container>
             <ng-container matColumnDef="User">
               <th *matHeaderCellDef mat-header-cell mat-sort-header>User</th>
               <td *matCellDef="let order " mat-cell>
-                {{order.stagedata["1"]?.user?.name}}
+                {{order.orderStageData["1"]?.user?.name}}
               </td>
             </ng-container>
             <!-- PMS Column -->
