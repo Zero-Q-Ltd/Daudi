@@ -13,6 +13,7 @@ import { MatDialog } from "@angular/material";
 import { AngularFirestore } from "@angular/fire/firestore";
 import { takeUntil } from "rxjs/operators";
 import { ReplaySubject } from "rxjs";
+import { CoreService } from "../services/core/core.service";
 
 
 @Component({
@@ -100,8 +101,8 @@ export class TruckDetailsComponent implements OnInit, OnDestroy {
     public db: AngularFirestore,
     private notification: NotificationService,
     private orderservice: OrdersService,
-    private adminservice: AdminService,
     private dialog: MatDialog,
+    private core: CoreService,
     private componentcommunication: ComponentCommunicationService) {
     this.componentcommunication.clickedorder.pipe(takeUntil(this.comopnentDestroyed)).subscribe(order => {
       if (!order) {
@@ -153,14 +154,15 @@ export class TruckDetailsComponent implements OnInit, OnDestroy {
       });
     dialogRef.afterClosed().pipe(takeUntil(this.comopnentDestroyed)).subscribe(result => {
       if (result) {
-        // this.truckservice.updatetruck(truck.Id).update(truck).then(value => {
-        //   this.notification.notify({
-        //     body: "Saved",
-        //     alert_type: "success",
-        //     title: "Success",
-        //     duration: 2000
-        //   });
-        // });
+        this.order.frozen = true;
+        this.orderservice.updateorder(this.order.Id, this.core.currentOmc.value.Id, this.order).then(value => {
+          this.notification.notify({
+            body: "Saved",
+            alert_type: "success",
+            title: "Success",
+            duration: 2000
+          });
+        });
       }
     });
   }

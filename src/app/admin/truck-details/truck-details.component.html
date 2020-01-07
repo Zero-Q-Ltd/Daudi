@@ -45,13 +45,13 @@
     </thead>
     <tbody>
       <tr
-        [ngClass]="{ 'color-danger' : order.truck.stage == 1 && expired(order.truckStageData[1].expiry[0]?.timestamp) ,
-                       'color-success' : order.truck.stage == 1 && !expired(order.truckStageData['1'].expiry[0]?.timestamp)} ">
+        [ngClass]="{ 'color-danger' : order.truck.stage == 1 && expired(order.truckStageData[1].expiry[0]?.date) ,
+                       'color-success' : order.truck.stage == 1 && !expired(order.truckStageData['1'].expiry[0]?.date)} ">
         <td class="order-stage">Processing</td>
         <td>
           <span *ngIf="order.truck.stage == 1 else completed">
             <span *ngIf="order.printStatus.LoadingOrder; else not_printed">
-              {{resolvetime(order.truckStageData["1"].expiry[0]?.timestamp)}}
+              {{resolvetime(order.truckStageData["1"].expiry[0]?.date)}}
             </span>
             <ng-template #not_printed>
               Not Printed
@@ -88,12 +88,12 @@
         <td></td>
       </tr>
       <tr
-        [ngClass]="{ 'color-danger' : order.truck.stage == 2 && expired(order.truckStageData['2'].expiry[0]?.timestamp) ,
-                       'color-success' : order.truck.stage == 2 && !expired(order.truckStageData['2'].expiry[0]?.timestamp)} ">
+        [ngClass]="{ 'color-danger' : order.truck.stage == 2 && expired(order.truckStageData['2'].expiry[0]?.date) ,
+                       'color-success' : order.truck.stage == 2 && !expired(order.truckStageData['2'].expiry[0]?.date)} ">
         <td class="order-stage">Queued</td>
         <td>
           <span *ngIf="order.truck.stage == 2">
-            {{resolvetime(order.truckStageData["2"].expiry[0]?.timestamp)}}
+            {{resolvetime(order.truckStageData["2"].expiry[0]?.date)}}
           </span>
           <span *ngIf="order.truck.stage > 2" class="color-success">
             Completed
@@ -123,12 +123,12 @@
         </td>
       </tr>
       <tr
-        [ngClass]="{ 'color-danger' : order.truck.stage == 3 && expired(order.truckStageData['3'].expiry[0]?.timestamp) ,
-                       'color-success' : order.truck.stage == 3 && !expired(order.truckStageData['3'].expiry[0]?.timestamp)} ">
+        [ngClass]="{ 'color-danger' : order.truck.stage == 3 && expired(order.truckStageData['3'].expiry[0]?.date) ,
+                       'color-success' : order.truck.stage == 3 && !expired(order.truckStageData['3'].expiry[0]?.date)} ">
         <td class="order-stage">Loading</td>
         <td>
           <span *ngIf="order.truck.stage == 3">
-            {{resolvetime(order.truckStageData["3"].expiry[0]?.timestamp)}}
+            {{resolvetime(order.truckStageData["3"].expiry[0]?.date)}}
           </span>
           <span *ngIf="order.truck.stage > 3" class="color-success">
             Completed
