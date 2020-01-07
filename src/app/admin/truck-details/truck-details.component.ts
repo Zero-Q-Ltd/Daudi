@@ -150,7 +150,7 @@ export class TruckDetailsComponent implements OnInit, OnDestroy {
     const dialogRef = this.dialog.open(ConfirmDialogComponent,
       {
         role: "dialog",
-        data: this.order.frozen ? "Are you sure to Unfreeze?" : "Freeze this Order? This will disable modifications from the app"
+        data: this.order.frozen ? "Are you sure you want to restore to normal?" : "Freeze this Order? This will disable any modifications"
       });
     dialogRef.afterClosed().pipe(takeUntil(this.comopnentDestroyed)).subscribe(result => {
       if (result) {
@@ -226,23 +226,14 @@ export class TruckDetailsComponent implements OnInit, OnDestroy {
       if (result) {
         this.componentcommunication.truckDeleted.next(true);
         this.order.loaded = false;
-        const batchaction = this.db.firestore.batch();
-        // batchaction.update(this.orderservice.updateorder(this.clickedtruck.Id), this.order);
-        // batchaction.delete(this.truckservice.updatetruck(this.clickedtruck.Id));
-        // batchaction.commit().then(result => {
-        //   /**
-        //    * unsubscribe after truck is deleted
-        //    */
-        //   this.subscriptions.get(`truck`)();
-        //   this.componentcommunication.clickedorder.next(null);
-
-        //   this.notification.notify({
-        //     body: "Truck deleted",
-        //     title: "Deleted",
-        //     alert_type: "warning",
-        //     duration: 2000
-        //   });
-        // });
+        this.orderservice.updateorder(this.order.Id, this.core.currentOmc.value.Id, this.order).then(() => {
+          this.notification.notify({
+            body: "Truck deleted",
+            title: "Deleted",
+            alert_type: "warning",
+            duration: 2000
+          });
+        });
       }
 
     });
