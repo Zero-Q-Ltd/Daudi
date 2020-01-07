@@ -10,6 +10,8 @@ import { AdminService } from "../services/core/admin.service";
 import { DepotService } from "../services/core/depot.service";
 import { OrdersService } from "../services/orders.service";
 import { EmptyGenericTruckStage } from "../../models/Daudi/order/GenericStage";
+import { FuelType } from "../../models/Daudi/fuel/FuelType";
+import { deepCopy } from "../../models/utils/deepCopy";
 
 @Component({
   selector: "compartments",
@@ -31,17 +33,33 @@ export class CompartmentsComponent implements OnInit, OnDestroy {
    * this keeps a local copy of all the subscriptions within this service
    */
   subscriptions: Map<string, any> = new Map<string, any>();
-
+  /**
+   * Keeps the total loaded of each fueltypes across different compartments
+   */
+  temporaryQuantities: {
+    [key in FuelType]: number
+  } = {
+      ago: 0,
+      ik: 0,
+      pms: 0
+    };
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
-
+  /**
+   * We dont want to mutate the original order data sent from the table
+   */
+  order: Order;
   // added to constructor to inject the data
   constructor(
-    @Inject(MAT_DIALOG_DATA) public order: Order,
+    @Inject(MAT_DIALOG_DATA) public _order: Order,
     private notification: NotificationService,
     private orderservice: OrdersService,
     private depotservice: DepotService,
     private dialogRef: MatDialogRef<OrderDetailsComponent>,
     private adminservice: AdminService) {
+    /**
+     * Copy the data in a way that avoids mutation
+     */
+    this.order = deepCopy(_order);
     for (let i = 0; i < 7; i++) {
       this.order.truck.compartments[i] = {
         position: i,
@@ -49,7 +67,6 @@ export class CompartmentsComponent implements OnInit, OnDestroy {
         qty: 0,
       };
     }
-    console.log(this.order);
   }
 
 
@@ -70,21 +87,28 @@ export class CompartmentsComponent implements OnInit, OnDestroy {
 
   setfueltype(index: number, fueltype) {
     this.order.truck.compartments[index].fueltype = fueltype;
-    this.fueltypesArray.forEach(type => {
-      this.order.fuel[type].qty = 0;
-    });
-    this.order.truck.compartments.forEach((compartment, _) => {
-      if (compartment.fueltype != null) {
-        this.order.fuel[compartment.fueltype].qty += compartment.qty;
-      }
+    /**
+     * Calculate the totals ever time the compartment volume changes
+     */
+    this.temporaryQuantities = {
+      ago: 0,
+      ik: 0,
+      pms: 0
+    };
+    this.order.truck.compartments.forEach(compartment => {
+      this.temporaryQuantities[compartment.fueltype] += compartment.qty;
     });
   }
 
   checkvalidity() {
     // if(this.nameControl.valid && this.IdControl.valid && this.plateControl.valid){
     let errorcheck = false;
+    /**
+     * Check total fuel loaded
+     */
     this.fueltypesArray.forEach(fueltype => {
-      if (Number(this.order.fuel[fueltype].qty) !== Number(this.order.fuel[fueltype].qty)) {
+
+      if (Number(this.order.fuel[fueltype].qty) !== this.temporaryQuantities[fueltype]) {
         errorcheck = true;
         this.notification.notify({
           alert_type: "error",
@@ -95,6 +119,9 @@ export class CompartmentsComponent implements OnInit, OnDestroy {
         });
       }
     });
+    /**
+     * Check driver details
+     */
     if (!this.order.truck.driverdetail.name || this.order.truck.driverdetail.name.length < 4) {
       this.notification.notify({
         alert_type: "error",
@@ -120,11 +147,7 @@ export class CompartmentsComponent implements OnInit, OnDestroy {
   }
 
   reset() {
-    this.order.truck.compartments.forEach((compartment, index) => {
-      compartment.fueltype = null;
-      compartment.qty = 0;
-    });
-    this.setfueltype(1, null);
+    this.order = deepCopy(this._order);
   }
 
 }

@@ -6,6 +6,7 @@ import { deepCopy } from "../utils/deepCopy";
 import { emptyqboAuth } from "../Daudi/omc/Config";
 
 export interface QboCofig {
+    sandbox: boolean,
     auth: QBOAuthCOnfig;
     fuelconfig: {
         [key in FuelType]: FuelConfig;
@@ -14,6 +15,7 @@ export interface QboCofig {
 }
 
 export const EmptyQboConfig: QboCofig = {
+    sandbox: true,
     auth: deepCopy<QBOAuthCOnfig>(emptyqboAuth),
     fuelconfig: {
         pms: deepCopy<FuelConfig>(emptyFuelConfig),
