@@ -11,9 +11,9 @@ import * as uuid from "uuid";
 import * as util from "util";
 import * as moment from "moment";
 import * as _ from "underscore";
-import {QbTypes} from "../models/QbTypes";
-import {Invoice} from "../models/Qbo/Invoice";
-import {Payment} from "../models/Qbo/Payment";
+import { QbTypes } from "../models/QbTypes";
+import { QboOrder } from "../models/Qbo/QboOrder";
+import { Payment } from "../models/Qbo/Payment";
 
 const version = "2.0.24";
 const APP_CENTER_BASE = "https://appcenter.intuit.com";
@@ -346,7 +346,7 @@ export class QuickBooks {
    * @param  {object} invoice - The unsaved invoice, to be persisted in QuickBooks
    * persistent Invoice
    */
-  createInvoice(invoice: Invoice): Promise<any> {
+  createInvoice(invoice: QboOrder): Promise<any> {
     return create("invoice", invoice);
   }
 
@@ -1049,7 +1049,7 @@ export class QuickBooks {
    * @param  {object} invoice - The persistent Invoice, including Id and Synctoken fields
    * persistent Invoice
    */
-  updateInvoice(invoice: Invoice): Promise<any> {
+  updateInvoice(invoice: QboOrder): Promise<any> {
     return update("invoice", invoice);
   }
 
