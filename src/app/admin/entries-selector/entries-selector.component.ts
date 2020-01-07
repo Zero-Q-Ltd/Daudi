@@ -395,12 +395,31 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
              * Leave the second entry active if neccessary
              */
             const active = this.drawnEntry[fueltype][1].remainqty > 0 ? true : false;
-            batchaction.update(this.entriesService.entryCollection(this.core.currentOmc.value.Id)
-              .doc(this.drawnEntry[fueltype][1].id), { active });
+
+            /**
+             * filter to find the second entry that has been assigned
+             */
+            let secondDrawnId = 0;
+            this.depotEntries[fueltype].forEach((t, index) => {
+              if (t.Id === this.drawnEntry[fueltype][1].id) {
+                secondDrawnId = index;
+              }
+            });
+            this.depotEntries[fueltype][secondDrawnId].active = active;
+            this.depotEntries[fueltype][secondDrawnId].qty.directLoad = {
+              total: this.depotEntries[fueltype][secondDrawnId].qty.directLoad.total + this.drawnEntry[fueltype][1].qtydrawn,
+              accumulated: {
+                usable: 0,
+                total: this.depotEntries[fueltype][secondDrawnId].qty.directLoad.accumulated.total
+              },
+            };
             /**
              * Add the qty drawn to the used amount value of the ASE
              */
-            this.depotEntries[fueltype][0].qty.used += this.drawnEntry[fueltype][1].qtydrawn;
+            this.depotEntries[fueltype][secondDrawnId].qty.used += this.drawnEntry[fueltype][1].qtydrawn;
+
+            batchaction.update(this.entriesService.entryCollection(this.core.currentOmc.value.Id)
+              .doc(this.drawnEntry[fueltype][secondDrawnId].id), this.depotEntries[fueltype][secondDrawnId]);
 
           } else {
             /**
