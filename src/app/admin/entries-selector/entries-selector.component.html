@@ -1,5 +1,5 @@
 <h2 mat-dialog-title>Truck for {{order.customer.name}}
-  <div *ngIf="activedepot.depot.config.private">
+  <div *ngIf="!activedepot.depot.config.private">
     <span class="color-pms">
       PMS:<span matTooltip="PMS Available ASE">
         {{stock.qty.pms.ase.totalActive - stock.qty.pms.ase.used}}
@@ -14,7 +14,7 @@
         {{stock.qty.ik.ase.totalActive - stock.qty.ik.ase.used}}</span>
     </span> {{order.fuel.ik.qty}}
   </div>
-  <div *ngIf="!activedepot.depot.config.private">
+  <div *ngIf="activedepot.depot.config.private">
     <span class="color-pms">
       PMS:<span matTooltip="PMS Available ASE">
         {{activedepot.config.stock.pms.ase.totalActive - activedepot.config.stock.pms.ase.used }}
