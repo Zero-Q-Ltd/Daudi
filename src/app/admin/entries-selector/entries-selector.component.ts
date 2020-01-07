@@ -110,7 +110,6 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
 
     this.core.stock.pipe(takeUntil(this.comopnentDestroyed)).subscribe(stock => {
       this.stock = stock;
-      console.log(this.stock);
       this.calculateqty();
     });
     const ordersubscription = this.ordersservice.getOrder(orderId, core.currentOmc.value.Id)
@@ -336,7 +335,8 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
             expiry: MyTimestamp.fromDate(moment().add(45, "minutes").toDate()),
           }],
       };
-      this.order.truck.stage = 4;
+      this.order.order.stage = 4;
+      this.order.truck.stage = 1;
       this.order.loaded = true;
 
       this.order.orderStageData["4"].user = data.user;
@@ -431,14 +431,14 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
         batchaction.update(this.ordersservice.ordersCollection(this.core.currentOmc.value.Id).doc(this.orderId), this.order);
 
       });
-      // batchaction.commit().then(value => {
-      //   this.notification.notify({
-      //     alert_type: "success",
-      //     title: "Success",
-      //     body: `Truck Approved`
-      //   });
-      //   this.dialogRef.close();
-      // });
+      batchaction.commit().then(value => {
+        this.notification.notify({
+          alert_type: "success",
+          title: "Success",
+          body: `Truck Approved`
+        });
+        this.dialogRef.close();
+      });
     }
 
   }
