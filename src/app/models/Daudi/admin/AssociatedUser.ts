@@ -10,7 +10,7 @@ export interface AssociatedUser extends Meta {
 export const EmptyAssociatedUser: AssociatedUser = {
     name: "",
     adminId: "",
-    date: MyTimestamp.now()
+    date: new Date() as any
 };
 
 

@@ -72,7 +72,7 @@ export function syncEntry(omcId: string, fuelConfig: { [key in FuelType]: FuelCo
         /**
          * make sure the Entry doenst already exist before writing to db
          */
-        const fetchedEntry = await directory.where("entry.name", "==", convertedEntry.entry.name).get()
+        const fetchedEntry = await (await directory.where("entry.name", "==", convertedEntry.entry.name).get())
 
         if (fetchedEntry.empty) {
             console.log("creating new Entry");
@@ -84,13 +84,16 @@ export function syncEntry(omcId: string, fuelConfig: { [key in FuelType]: FuelCo
              */
             const existingEntry = await directory.where("entry.refs", "array-contains", convertedEntry.entry.refs[0]).get();
 
-            if (existingEntry.empty) {
+            if (!existingEntry.empty) {
+                console.log("Entry exists")
+                return Promise.resolve()
+            } else {
                 /**
-               * Add the quantity to the existing batch
-               */
+                 * Add the quantity to the existing batch
+                 */
                 console.log("Entry exists, merging values");
                 totalAdded[item.fueltype] += convertedEntry.qty.total
-                const newEntry: Entry = existingEntry.docs[0].data() as Entry
+                const newEntry: Entry = fetchedEntry.docs[0].data() as Entry
                 /**
                  * add the totals
                  */
@@ -99,10 +102,8 @@ export function syncEntry(omcId: string, fuelConfig: { [key in FuelType]: FuelCo
                  * Add the object to the list of ids
                  */
                 newEntry.entry.refs.push(convertedEntry.entry.refs[0])
-                return batch.update(directory.doc(existingEntry.docs[0].id), newEntry)
-            } else {
-                console.log("Entry exists")
-                return Promise.resolve()
+                return batch.update(directory.doc(fetchedEntry.docs[0].id), newEntry)
+
             }
         }
     })).then(async () => {
@@ -115,6 +116,14 @@ export function syncEntry(omcId: string, fuelConfig: { [key in FuelType]: FuelCo
             return batch.commit()
         })
     })
+    const t = {
+        "body": {},
+        "contentLength": -1,
+        "cookies": {
+            "1P_JAR":
+                { "domain": ".google.com", "expires": "Mon, 10 Feb 2020 08:00:59 GMT", "httpOnly": false, "maxAge": 0, "path": "/", "secure": true, "value": "2020-01-11-08" }, "NID": { "domain": ".google.com", "expires": "Sun, 12 Jul 2020 08:00:59 GMT", "httpOnly": true, "maxAge": 0, "path": "/", "secure": false, "value": "195=mkrZeToWud1LUOV72tzyyBKXWV6rjtx9Rn9xQVLgEGDfnyRPgWzWIm23bFtZCFeeW96ULIt8pnWOuFf4YYonyVKKqqCyPmfnsI5QRSxT7SR-sY25GJYCCoTp8DDbNZAnY2-txq3bVuQVWZUnJ_a8k3bAoNf91FQcNxvNSLaVkzw" }
+        }, "headers": { "Alt-Svc": ["quic=\":443\"; ma=2592000; v=\"46,43\",h3-Q050=\":443\"; ma=2592000,h3-Q049=\":443\"; ma=2592000,h3-Q048=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000"], "Cache-Control": ["private, max-age=0"], "Content-Type": ["text/html; charset=ISO-8859-1"], "Date": ["Sat, 11 Jan 2020 08:00:59 GMT"], "Expires": ["-1"], "P3p": ["CP=\"This is not a P3P policy! See g.co/p3phelp for more info.\""], "Server": ["gws"], "Set-Cookie": ["1P_JAR=2020-01-11-08; expires=Mon, 10-Feb-2020 08:00:59 GMT; path=/; domain=.google.com; Secure", "NID=195=mkrZeToWud1LUOV72tzyyBKXWV6rjtx9Rn9xQVLgEGDfnyRPgWzWIm23bFtZCFeeW96ULIt8pnWOuFf4YYonyVKKqqCyPmfnsI5QRSxT7SR-sY25GJYCCoTp8DDbNZAnY2-txq3bVuQVWZUnJ_a8k3bAoNf91FQcNxvNSLaVkzw; expires=Sun, 12-Jul-2020 08:00:59 GMT; path=/; domain=.google.com; HttpOnly"], "X-Frame-Options": ["SAMEORIGIN"], "X-Xss-Protection": ["0"] }, "status": "200 OK", "statusCode": 200
+    }
 }
 
 function covertBillToEntry(convertedBill: Bill, fueltype: FuelType, LineitemIndex: number): Entry {

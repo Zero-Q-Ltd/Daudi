@@ -1,9 +1,7 @@
 import * as requester from "request";
 import * as _ from "underscore";
 import * as admin from "firebase-admin";
-import {SMS} from "../../models/Daudi/sms/sms";
-
-const https = require("https");
+import { SMS } from "../../models/Daudi/sms/sms";
 
 //[START AfricasTalking credentials]
 const querystring = require("querystring");
@@ -37,7 +35,7 @@ function sendMessage(to: string, message: string) {
     username: username,
     to: to,
     message: message,
-    from: "Emkay"
+    from: "Emkay",
   });
 
   console.log(post_data);
@@ -48,7 +46,7 @@ function sendMessage(to: string, message: string) {
       "Content-Type": "application/x-www-form-urlencoded",
       "Content-Length": post_data.length,
       Accept: "application/json",
-      apikey: apikey
+      apikey
     },
     json: true,
     body: post_data

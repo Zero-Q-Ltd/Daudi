@@ -19,6 +19,7 @@ import { toArray, toObject } from "./models/utils/SnapshotUtils";
 import { EmptyQboConfig, QboCofig } from "./models/Cloud/QboEnvironment";
 import { QboOrder } from "./models/Qbo/QboOrder";
 import { Order } from "./models/Daudi/order/Order";
+import * as requester from "request";
 
 admin.initializeApp(functions.config().firebase);
 admin.firestore().settings({ timestampsInSnapshots: true });
@@ -71,6 +72,40 @@ exports.createInvoice = functions.https.onCall((data: OrderCreate, context) => {
       return Promise.all([ordersms(data.order, data.omcId), validorderupdate(data.order, data.omcId), updateOrder(data.order, data.omcId)]);
     })
   })
+})
+
+exports.testSms = functions.https.onCall(() => {
+  const opts = {
+    method: "post",
+    url: "https://ujumbesms.co.ke/api/messaging",
+    headers: {
+      "X-Authorization": "YWI0YTkzMzUxYTJjYWFjYmU5Zjk2Y2ZkZmZlMDU4",
+      "email": "kisinga@zero-q.com",
+      Accept: "application/json",
+    },
+    json: true,
+    body: {
+      "data": [
+        {
+          "message_bag": {
+            "numbers": "0702604380",
+            "message": "Testing test",
+            "sender": "SnowPharm"
+          }
+        }
+      ]
+
+    }
+  };
+  return new Promise(function (resolve, reject) {
+    // if (!token) reject('null token')
+    requester(opts, function (err, res, body) {
+      console.log(JSON.stringify(body, null, 2));
+
+      resolve(body);
+
+    });
+  });
 })
 
 
@@ -168,7 +203,7 @@ exports.orderUpdated = functions.firestore
         }
       } else if (orderbefore.truck.stage < orderbefore.truck.stage) {
         // return truckdatachanged(order)
-        return
+        return true
       } else {
         console.log("Order Info has changed, but stage has not increased");
         return true;

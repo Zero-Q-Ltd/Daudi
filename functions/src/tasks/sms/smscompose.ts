@@ -120,7 +120,7 @@ function resolveOrderText(order: Order): string {
   let text = ` ID ${order.customer.QbId}`;
   switch (order.stage) {
     case 1:
-      text += ` Estimate# ${order.QbConfig.EstimateId} [RECEIVED] Thank you for making it Emkay today.`;
+      text += ` Estimate# ${order.QbConfig.EstimateId} [SENT] for approval. Thank you for making it Emkay today.`;
       break;
     case 2:
       text +=

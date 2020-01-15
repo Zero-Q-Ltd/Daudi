@@ -1,7 +1,10 @@
 <mat-tab-group>
   <mat-tab *ngFor='let fueltype of fueltypesArray'>
     <ng-template mat-tab-label>
-      <button class="btn btn-{{fueltype}}"> {{fueltype | uppercase}} : {{availablefuel[fueltype]}}</button>
+      <button class="btn btn-{{fueltype}}">
+        {{fueltype | uppercase}} :
+        <!-- {{stock[fueltype].entry.totalActive}} -->
+      </button>
     </ng-template>
     <mat-card>
       <mat-card-content>
@@ -24,7 +27,7 @@
 
             <ng-container matColumnDef="id">
               <th *matHeaderCellDef mat-header-cell> Entry ID</th>
-              <td *matCellDef="let entry" mat-cell> {{entry.Id}}</td>
+              <td *matCellDef="let entry" mat-cell> {{entry.entry.name}}</td>
 
             </ng-container>
 
