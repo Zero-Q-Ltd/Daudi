@@ -1,12 +1,15 @@
-import {StockTransfer} from "./StockTransfer";
-import {StockLoadDetail} from "./StockLoadDetail";
+import { StockTransfer } from "./StockTransfer";
+import { StockLoadDetail } from "./StockLoadDetail";
 
 export interface StockQty {
     /**
-     * The total quantity that has been loaded directly at
+     * The total quantity that was been loaded directly at
      * any KPC Depot
      */
     total: number;
+    /**
+     * The total that has been loaded, excluding amounts accumulated
+     */
     used: number;
     /**
      * Quantity transferred to private depots

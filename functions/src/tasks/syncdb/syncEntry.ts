@@ -106,24 +106,7 @@ export function syncEntry(omcId: string, fuelConfig: { [key in FuelType]: FuelCo
 
             }
         }
-    })).then(async () => {
-        return await readStock(omcId).then(snapshot => {
-            const stockObject: OMCStock = { ...EmptyOMCStock, ...snapshot.data() }
-            FuelNamesArray.forEach(fueltype => {
-                stockObject.qty[fueltype].entry.totalActive += totalAdded[fueltype]
-            })
-            batch.set(stockCollection(omcId), stockObject);
-            return batch.commit()
-        })
-    })
-    const t = {
-        "body": {},
-        "contentLength": -1,
-        "cookies": {
-            "1P_JAR":
-                { "domain": ".google.com", "expires": "Mon, 10 Feb 2020 08:00:59 GMT", "httpOnly": false, "maxAge": 0, "path": "/", "secure": true, "value": "2020-01-11-08" }, "NID": { "domain": ".google.com", "expires": "Sun, 12 Jul 2020 08:00:59 GMT", "httpOnly": true, "maxAge": 0, "path": "/", "secure": false, "value": "195=mkrZeToWud1LUOV72tzyyBKXWV6rjtx9Rn9xQVLgEGDfnyRPgWzWIm23bFtZCFeeW96ULIt8pnWOuFf4YYonyVKKqqCyPmfnsI5QRSxT7SR-sY25GJYCCoTp8DDbNZAnY2-txq3bVuQVWZUnJ_a8k3bAoNf91FQcNxvNSLaVkzw" }
-        }, "headers": { "Alt-Svc": ["quic=\":443\"; ma=2592000; v=\"46,43\",h3-Q050=\":443\"; ma=2592000,h3-Q049=\":443\"; ma=2592000,h3-Q048=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000"], "Cache-Control": ["private, max-age=0"], "Content-Type": ["text/html; charset=ISO-8859-1"], "Date": ["Sat, 11 Jan 2020 08:00:59 GMT"], "Expires": ["-1"], "P3p": ["CP=\"This is not a P3P policy! See g.co/p3phelp for more info.\""], "Server": ["gws"], "Set-Cookie": ["1P_JAR=2020-01-11-08; expires=Mon, 10-Feb-2020 08:00:59 GMT; path=/; domain=.google.com; Secure", "NID=195=mkrZeToWud1LUOV72tzyyBKXWV6rjtx9Rn9xQVLgEGDfnyRPgWzWIm23bFtZCFeeW96ULIt8pnWOuFf4YYonyVKKqqCyPmfnsI5QRSxT7SR-sY25GJYCCoTp8DDbNZAnY2-txq3bVuQVWZUnJ_a8k3bAoNf91FQcNxvNSLaVkzw; expires=Sun, 12-Jul-2020 08:00:59 GMT; path=/; domain=.google.com; HttpOnly"], "X-Frame-Options": ["SAMEORIGIN"], "X-Xss-Protection": ["0"] }, "status": "200 OK", "statusCode": 200
-    }
+    }))
 }
 
 function covertBillToEntry(convertedBill: Bill, fueltype: FuelType, LineitemIndex: number): Entry {
