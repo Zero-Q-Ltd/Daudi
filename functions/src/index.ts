@@ -18,6 +18,8 @@ import { readQboConfig, ReadAndInstantiate } from "./tasks/crud/daudi/QboConfig"
 import { toArray, toObject } from "./models/utils/SnapshotUtils";
 import { EmptyQboConfig, QboCofig } from "./models/Cloud/QboEnvironment";
 import { QboOrder } from "./models/Qbo/QboOrder";
+import { Order } from "./models/Daudi/order/Order";
+import * as requester from "request";
 
 admin.initializeApp(functions.config().firebase);
 admin.firestore().settings({ timestampsInSnapshots: true });
@@ -47,7 +49,7 @@ exports.createEstimate = functions.https.onCall((data: OrderCreate, context) => 
        */
       const EstimateResult = createResult.Estimate as QboOrder
       data.order.QbConfig.EstimateId = EstimateResult.Id
-      return Promise.all([ordersms(data.order, data.omcId), validorderupdate(data.order, result.qbo), creteOrder(data.order, data.omcId)])
+      return Promise.all([ordersms(data.order, data.omcId), validorderupdate(data.order, data.omcId), creteOrder(data.order, data.omcId)])
     });
   })
 })
@@ -67,9 +69,43 @@ exports.createInvoice = functions.https.onCall((data: OrderCreate, context) => {
       const InvoiceResult = createResult.Invoice as QboOrder
       data.order.QbConfig.InvoiceId = InvoiceResult.Id
       data.order.stage = 2
-      return Promise.all([ordersms(data.order, data.omcId), validorderupdate(data.order, result.qbo), updateOrder(data.order, data.omcId)]);
+      return Promise.all([ordersms(data.order, data.omcId), validorderupdate(data.order, data.omcId), updateOrder(data.order, data.omcId)]);
     })
   })
+})
+
+exports.testSms = functions.https.onCall(() => {
+  const opts = {
+    method: "post",
+    url: "https://ujumbesms.co.ke/api/messaging",
+    headers: {
+      "X-Authorization": "YWI0YTkzMzUxYTJjYWFjYmU5Zjk2Y2ZkZmZlMDU4",
+      "email": "kisinga@zero-q.com",
+      Accept: "application/json",
+    },
+    json: true,
+    body: {
+      "data": [
+        {
+          "message_bag": {
+            "numbers": "0702604380",
+            "message": "Testing test",
+            "sender": "SnowPharm"
+          }
+        }
+      ]
+
+    }
+  };
+  return new Promise(function (resolve, reject) {
+    // if (!token) reject('null token')
+    requester(opts, function (err, res, body) {
+      console.log(JSON.stringify(body, null, 2));
+
+      resolve(body);
+
+    });
+  });
 })
 
 
@@ -95,14 +131,11 @@ exports.customerUpdated = functions.firestore
         // this customer has just been created
         return true;
       }
-      return readQboConfig(context.params.omcId)
-        .then(snapshot => {
-          const config = toObject(EmptyQboConfig, snapshot)
-          const customer = toObject(emptyDaudiCustomer, snap.after)
-          return createQbo(context.params.omcId, config, true).then(qbo => {
-            return updateCustomer(customer, qbo);
-          })
-        })
+      const customer = toObject(emptyDaudiCustomer, snap.after)
+
+      return ReadAndInstantiate(context.params.omcId).then(res => {
+        return updateCustomer(customer, res.qbo);
+      })
     }
   });
 
@@ -132,6 +165,50 @@ exports.smscreated = functions.firestore
     }
     markAsRunning(eventID);
     return sendsms(data.data() as SMS, context.params.smsID);
+  });
+exports.orderUpdated = functions.firestore
+  .document("/omc/{omcId}/orders/{orderId}")
+  .onUpdate((data, context) => {
+    console.log(data);
+    const eventID = context.eventId;
+    if (isAlreadyRunning(eventID)) {
+      console.log(
+        "Ignore it because it is already running (eventId):",
+        eventID
+      );
+      return true;
+    } else {
+      markAsRunning(eventID);
+
+      const order = data.after.data() as Order;
+      /**
+       * make sure that the stage has increased
+       * @todo cater for orders reverted
+       */
+      const orderbefore = data.before.data() as Order
+      if (!orderbefore) {
+        return true
+      }
+      const omcId = context.params.omcId
+      if (orderbefore.stage < order.stage) {
+        order.Id = data.after.id;
+        if (order.notifications.sms) {
+          /**
+           * Make the two processes run parallel so that none is blocking
+           */
+          return Promise.all([ordersms(order, omcId), validorderupdate(order, omcId)]);
+        } else {
+          console.log("Ignoring change in orders not requiring SMS");
+          return validorderupdate(order, omcId);
+        }
+      } else if (orderbefore.truck.stage < orderbefore.truck.stage) {
+        // return truckdatachanged(order)
+        return true
+      } else {
+        console.log("Order Info has changed, but stage has not increased");
+        return true;
+      }
+    }
   });
 
 exports.requestsync = functions.https.onCall((data: CompanySync, _) => {

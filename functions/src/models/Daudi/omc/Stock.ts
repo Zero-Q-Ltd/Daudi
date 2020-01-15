@@ -1,6 +1,6 @@
-import {deepCopy} from "../../utils/deepCopy";
-import {FuelType} from "../fuel/FuelType";
-import {emptytaxExempt, TaxExempt} from "./TaxExempt";
+import { deepCopy } from "../../utils/deepCopy";
+import { FuelType } from "../fuel/FuelType";
+import { emptytaxExempt, TaxExempt } from "./TaxExempt";
 
 
 export interface OMCStock {
@@ -15,10 +15,6 @@ export interface OMCStock {
                 totalActive: number,
                 used: number
             },
-            entry: {
-                totalActive: number,
-                used: number
-            }
         }
     };
     taxExempt: {
@@ -34,10 +30,6 @@ export const EmptyOMCStock: OMCStock = {
                 used: 0,
                 totalActive: 0
             },
-            entry: {
-                used: 0,
-                totalActive: 0
-            }
         },
         ik: {
             allocation: 0,
@@ -45,10 +37,6 @@ export const EmptyOMCStock: OMCStock = {
                 used: 0,
                 totalActive: 0
             },
-            entry: {
-                used: 0,
-                totalActive: 0
-            }
         },
         pms: {
             allocation: 0,
@@ -56,10 +44,7 @@ export const EmptyOMCStock: OMCStock = {
                 used: 0,
                 totalActive: 0
             },
-            entry: {
-                used: 0,
-                totalActive: 0
-            }
+
         }
     },
     taxExempt: {

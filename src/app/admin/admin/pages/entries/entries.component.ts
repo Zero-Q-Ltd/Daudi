@@ -9,6 +9,7 @@ import { NotificationService } from "../../../../shared/services/notification.se
 import { CoreService } from "../../../services/core/core.service";
 import { EntriesService } from "../../../services/entries.service";
 import { CoreAdminService } from "../../services/core.service";
+import { OMCStock } from "../../../../models/Daudi/omc/Stock";
 
 
 @Component({
@@ -37,16 +38,7 @@ export class EntriesComponent implements OnInit {
       ago: true,
       ik: true
     };
-  availablefuel: {
-    pms: number,
-    ago: number,
-    ik: number
-  } = {
-      pms: 0,
-      ago: 0,
-      ik: 0
-    };
-
+  stock: OMCStock;
   /**
    * this keeps a local copy of all the subscriptions within this service
    */
@@ -65,7 +57,9 @@ export class EntriesComponent implements OnInit {
         ago: true,
         ik: true
       };
-
+      this.core.stock.subscribe(stock => {
+        this.stock = stock;
+      });
       if (depotvata.depot.Id) {
         this.fueltypesArray.forEach((fueltype: FuelType) => {
           /**
@@ -90,13 +84,6 @@ export class EntriesComponent implements OnInit {
           this.core.depotEntries[fueltype]
             .pipe(takeUntil(this.comopnentDestroyed))
             .subscribe((batches: Array<Entry>) => {
-              /**
-               * Reset the values every time batches change
-               */
-              this.availablefuel[fueltype] = 0;
-              batches.forEach(batch => {
-                this.availablefuel[fueltype] += this.getTotalAvailable(batch);
-              });
             });
         });
       }
