@@ -23,19 +23,19 @@
       </mat-form-field>
       <mat-form-field appearance="outline" class="half-width">
         <mat-label>Phone</mat-label>
-        <input [(ngModel)]="tempcompany.contactDetails.phone" matInput required>
+        <input [(ngModel)]="tempcompany.contactperson[0].phone" matInput required>
         <mat-icon class="secondary-text" matSuffix>phone_enabled</mat-icon>
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="half-width">
         <mat-label>Email</mat-label>
-        <input [(ngModel)]="tempcompany.contactDetails.email" matInput required>
+        <input [(ngModel)]="tempcompany.contactperson[0].email" matInput required>
         <mat-icon class="secondary-text" matSuffix>email</mat-icon>
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="half-width">
         <mat-label>Address</mat-label>
-        <input [(ngModel)]="tempcompany.contactDetails.address" matInput required>
+        <input [(ngModel)]="tempcompany.contactperson[0].address" matInput required>
         <mat-icon class="secondary-text" matSuffix>account_balance</mat-icon>
       </mat-form-field>
       <br>
@@ -43,31 +43,31 @@
       <br>
       <mat-form-field appearance="outline" class="half-width">
         <mat-label>Name</mat-label>
-        <input [(ngModel)]="tempcompany.contactperson.name" matInput required>
+        <input [(ngModel)]="tempcompany.contactperson[0].name" matInput required>
         <mat-icon class="secondary-text" matSuffix>account_circle</mat-icon>
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="half-width">
         <mat-label>Phone</mat-label>
-        <input [(ngModel)]="tempcompany.contactperson.phone" matInput required>
+        <input [(ngModel)]="tempcompany.contactperson[0].phone" matInput required>
         <mat-icon class="secondary-text" matSuffix>phone_enabled</mat-icon>
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="half-width">
         <mat-label>Email</mat-label>
-        <input [(ngModel)]="tempcompany.contactperson.email" matInput required>
+        <input [(ngModel)]="tempcompany.contactperson[0].email" matInput required>
         <mat-icon class="secondary-text" matSuffix>email</mat-icon>
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="half-width">
         <mat-label>Position</mat-label>
-        <input [(ngModel)]="tempcompany.contactperson.position" matInput required>
+        <input [(ngModel)]="tempcompany.contactperson[0].position" matInput required>
         <mat-icon class="secondary-text" matSuffix>event_seat</mat-icon>
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Address</mat-label>
-        <input [(ngModel)]="tempcompany.contactperson.address" matInput required>
+        <input [(ngModel)]="tempcompany.contactperson[0].address" matInput required>
         <mat-icon class="secondary-text" matSuffix>account_balance</mat-icon>
       </mat-form-field>
       <button mat-raised-button color="primary" (click)="savecompany()">

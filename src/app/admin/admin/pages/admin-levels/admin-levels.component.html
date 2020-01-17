@@ -62,20 +62,20 @@
   </div>
   <br>
   <mat-accordion>
-    <mat-expansion-panel *ngFor="let admintype of tempcompany.adminTypes ; let i = index">
+    <mat-expansion-panel *ngFor="let admintype of config.adminTypes ; let i = index">
       <mat-expansion-panel-header>
         <mat-panel-title>
-          {{tempcompany.adminTypes[i].name}}
+          {{config.adminTypes[i].name}}
         </mat-panel-title>
         <mat-panel-description>
-          {{tempcompany.adminTypes[i].description}}
+          {{config.adminTypes[i].description}}
         </mat-panel-description>
       </mat-expansion-panel-header>
       <div fxLayout fxLayout.xs="column" fxLayoutAlign="center" fxLayoutGap="10px" fxLayoutGap.xs="0">
         <div fxFlex>
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Type Name</mat-label>
-            <input matInput [(ngModel)]="tempcompany.adminTypes[i].name" required>
+            <input matInput [(ngModel)]="config.adminTypes[i].name" required>
             <mat-icon class="secondary-text" matSuffix>
               monetization_on
             </mat-icon>
@@ -90,7 +90,7 @@
         <div fxFlex>
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Description</mat-label>
-            <textarea matInput [(ngModel)]="tempcompany.adminTypes[i].description" required></textarea>
+            <textarea matInput [(ngModel)]="config.adminTypes[i].description" required></textarea>
             <mat-icon class="secondary-text" matSuffix>
               monetization_on
             </mat-icon>
@@ -98,7 +98,7 @@
         </div>
       </div>
       <p>Levels</p>
-      <div *ngFor="let adminlevel of tempcompany.adminTypes[i].levels; let j = index">
+      <div *ngFor="let adminlevel of config.adminTypes[i].levels; let j = index">
         <div fxLayout fxLayout.xs="column" fxLayoutAlign="center" fxLayoutGap="10px" fxLayoutGap.xs="0">
           <div fxFlex>
             <mat-form-field appearance="outline" class="full-width">
