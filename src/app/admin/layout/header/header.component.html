@@ -49,8 +49,9 @@
           <div class="row no-gutters border-spacing">
             <div class="btn-group" role="group">
               <div class="col-md-12">
-                <button [ngClass]="{ 'disabled' :activedepot.Id =='36'}" [routerLinkActiveOptions]="{ exact: true }"
-                  [routerLink]="['/admin/edit-price']" class="btn btn-primary" routerLinkActive='active' type="button">
+                <button [ngClass]="{ 'disabled' :activedepot.depot.Id =='36'}"
+                  [routerLinkActiveOptions]="{ exact: true }" [routerLink]="['/admin/edit-price']"
+                  class="btn btn-primary" routerLinkActive='active' type="button">
                   <span *ngFor='let pricetype of fueltypesArray'>
                     <i *ngIf="connectionStatus" class="fa fa-circle color-{{pricetype}}"></i>
                     <i *ngIf="!connectionStatus" class="fa fa-circle color-light-grey"></i>

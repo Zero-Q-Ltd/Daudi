@@ -333,13 +333,14 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
           {
             timeCreated: MyTimestamp.now(),
             expiry: MyTimestamp.fromDate(moment().add(45, "minutes").toDate()),
+            user: this.adminservice.createuserobject()
           }],
       };
       this.order.stage = 4;
       this.order.truck.stage = 1;
       this.order.loaded = true;
 
-      this.order.orderStageData["4"].user = data.user;
+      this.order.orderStageData[4].user = data[0].user;
 
       this.order.truckStageData["1"] = data;
 

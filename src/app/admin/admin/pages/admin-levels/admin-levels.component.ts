@@ -17,6 +17,7 @@ import { AdminService } from "../../../services/core/admin.service";
 import { ConfirmDialogComponent } from "../../../confirm-dialog/confirm-dialog.component";
 import { deepCopy } from "../../../../models/utils/deepCopy";
 import { CoreService } from "../../../services/core/core.service";
+import { AdminConfig } from "../../../../models/Daudi/omc/Config";
 
 @Component({
   selector: "app-admin-levels",
@@ -27,7 +28,7 @@ export class AdminLevelsComponent implements OnInit, OnDestroy {
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
   newadminform: FormGroup<NewAdminType>;
   originalCompany: OMC = deepCopy<OMC>(emptyomc);
-  tempcompany: OMC = deepCopy<OMC>(emptyomc);
+  config: AdminConfig;
 
   constructor(
     private companyservice: AdminConfigService,
@@ -50,9 +51,8 @@ export class AdminLevelsComponent implements OnInit, OnDestroy {
     this.comopnentDestroyed.complete();
   }
   initvalues(): void {
-    this.core.adminConfig.pipe(takeUntil(this.comopnentDestroyed)).subscribe(co => {
-      // this.originalCompany = co;
-      // this.tempcompany = Object.assign({}, co);
+    this.core.adminConfig.pipe(takeUntil(this.comopnentDestroyed)).subscribe(conf => {
+      this.config = conf;
       this.initforms();
     });
   }
@@ -77,7 +77,6 @@ export class AdminLevelsComponent implements OnInit, OnDestroy {
   }
 
   savecompany(): void {
-    console.log(this.tempcompany);
     const dialogRef = this._matDialog.open(ConfirmDialogComponent,
 
       {

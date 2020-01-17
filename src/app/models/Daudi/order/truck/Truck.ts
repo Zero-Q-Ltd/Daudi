@@ -1,10 +1,11 @@
 import { MyTimestamp } from "../../../firestore/firestoreTypes";
 import { Compartment } from "./Compartment";
-
+import { AssociatedUser } from "../../admin/AssociatedUser";
 
 export interface Expiry {
   timeCreated: MyTimestamp;
   expiry: MyTimestamp;
+  user: AssociatedUser;
 }
 
 export interface TruckEntry {
