@@ -136,7 +136,7 @@ export class CompartmentsComponent implements OnInit, OnDestroy {
       return false;
     } else {
       this.order.truckStageData[0] = { ...EmptyGenericTruckStage };
-      this.order.truckStageData[0].user = this.adminservice.createuserobject();
+      this.order.truckStageData[0].expiry[0].user = this.adminservice.createuserobject();
       this.order.truck.truckdetail.numberplate = this.order.truck.truckdetail.numberplate ? this.order.truck.truckdetail.numberplate.toUpperCase() : null;
       this.order.truck.driverdetail.name = this.order.truck.driverdetail.name ? this.order.truck.driverdetail.name.toUpperCase() : null;
 
