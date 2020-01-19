@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
-import { MatPaginator, MatTableDataSource } from "@angular/material";
+import { MatPaginator, MatTableDataSource, MatDialog } from "@angular/material";
 import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { ASE, emptyASEs } from "../../../../models/Daudi/fuel/ASE";
@@ -8,6 +8,7 @@ import { NotificationService } from "../../../../shared/services/notification.se
 import { AseService } from "../../../services/ase.service";
 import { CoreService } from "../../../services/core/core.service";
 import { CoreAdminService } from "../../services/core.service";
+import { TransferComponent } from "./dialogs/transfer/transfer.component";
 
 @Component({
   selector: "app-ase",
@@ -25,7 +26,7 @@ export class AseComponent implements OnInit {
   @ViewChild(MatPaginator, { static: true }) pmspaginator: MatPaginator;
   @ViewChild(MatPaginator, { static: true }) agopaginator: MatPaginator;
   @ViewChild(MatPaginator, { static: true }) ikpaginator: MatPaginator;
-  displayedColumns: string[] = ["id", "date", "entry", "totalqty", "transferred", "accumuated", "loadedqty", "availableqty", "status"];
+  displayedColumns: string[] = ["daudiId", "date", "id", "totalqty"];
   loading: {
     pms: boolean,
     ago: boolean,
@@ -50,20 +51,24 @@ export class AseComponent implements OnInit {
    */
   subscriptions: Map<string, any> = new Map<string, any>();
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
-
+  private = true;
   constructor(
     private notification: NotificationService,
     private core: CoreService,
     private coreAdmin: CoreAdminService,
+    private dialog: MatDialog,
     private aseService: AseService) {
-    this.core.activedepot.pipe(takeUntil(this.comopnentDestroyed)).subscribe(depotvata => {
+    this.core.activedepot.pipe(takeUntil(this.comopnentDestroyed)).subscribe(depotdata => {
       this.loading = {
         pms: true,
         ago: true,
         ik: true
       };
-
-      if (depotvata.depot.Id) {
+      if (depotdata.depot.Id) {
+        /**
+         * Only show transfer column when in a KPC depot
+         */
+        this.private = depotdata.depot.config.private;
         this.fueltypesArray.forEach((fueltype: FuelType) => {
           /**
            * Create a subscrition for 1000 batches history
@@ -93,7 +98,15 @@ export class AseComponent implements OnInit {
       value();
     });
   }
+  trasfer(fuelType: FuelType) {
+    const dialogRef = this.dialog.open(TransferComponent, {
+      role: "dialog",
+      data: fuelType,
+      height: "auto"
+      // width: '100%%',
+    });
 
+  }
   syncdb() {
     this.creatingsync = true;
     this.coreAdmin.syncdb(["BillPayment"])

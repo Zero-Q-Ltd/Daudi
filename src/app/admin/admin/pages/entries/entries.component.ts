@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
 import { AngularFireFunctions } from "@angular/fire/functions";
-import { MatPaginator, MatTableDataSource } from "@angular/material";
+import { MatPaginator, MatTableDataSource, MatDialog } from "@angular/material";
 import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { emptyEntry, Entry } from "../../../../models/Daudi/fuel/Entry";
@@ -122,6 +122,7 @@ export class EntriesComponent implements OnInit {
           });
         });
   }
+
 
   getTotalAvailable(batch: Entry) {
     const totalqty = batch.qty.total;

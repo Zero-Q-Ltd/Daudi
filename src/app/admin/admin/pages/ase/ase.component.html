@@ -20,10 +20,13 @@
                             <mat-spinner *ngIf='creatingsync' [diameter]="19" matSuffix></mat-spinner>
                         </mat-form-field>
                     </div>
+                    <button mat-raised-button color="primary" *ngIf="!private"
+                        (click)="trasfer(fueltype)">Transfer</button>
+
                     <table [dataSource]="datasource[fueltype]" mat-table style="width: 100%">
 
-                        <ng-container matColumnDef="id">
-                            <th *matHeaderCellDef mat-header-cell> Entry ID</th>
+                        <ng-container matColumnDef="daudiId">
+                            <th *matHeaderCellDef mat-header-cell> Daudi ID</th>
                             <td *matCellDef="let ase" mat-cell> {{ase.Id}}</td>
 
                         </ng-container>
@@ -36,51 +39,15 @@
 
                         <!-- Item Column -->
 
-                        <ng-container matColumnDef="entry">
-                            <th *matHeaderCellDef mat-header-cell> Entry #</th>
+                        <ng-container matColumnDef="id">
+                            <th *matHeaderCellDef mat-header-cell> ASE ID</th>
                             <td *matCellDef="let ase" mat-cell> {{ase.ase.id}}</td>
                         </ng-container>
 
                         <!-- Cost Column -->
                         <ng-container matColumnDef="totalqty">
-                            <th *matHeaderCellDef mat-header-cell> Total Batch Qty</th>
+                            <th *matHeaderCellDef mat-header-cell> Total ASE Qty</th>
                             <td *matCellDef="let ase" mat-cell>{{ase.qty.total}}</td>
-                        </ng-container>
-
-                        <!-- Cost Column -->
-                        <ng-container matColumnDef="transferred">
-                            <th *matHeaderCellDef mat-header-cell>Transferred</th>
-                            <td *matCellDef="let ase" mat-cell>{{ase.qty.transferred.total}}</td>
-                        </ng-container>
-
-                        <!-- Cost Column -->
-                        <ng-container matColumnDef="accumuated">
-                            <th *matHeaderCellDef mat-header-cell>Accumulated</th>
-                            <td *matCellDef="let ase" mat-cell>{{ase.qty.transferred.total}}</td>
-                        </ng-container>
-
-                        <!-- Cost Column -->
-                        <ng-container matColumnDef="loadedqty">
-                            <th *matHeaderCellDef mat-header-cell> Loaded Qty</th>
-                            <td *matCellDef="let ase" mat-cell> {{ase.qty.directLoad.total}}</td>
-                        </ng-container>
-                        <!-- Cost Column -->
-                        <ng-container matColumnDef="availableqty">
-                            <th *matHeaderCellDef mat-header-cell> Available Qty</th>
-                            <td *matCellDef="let ase" mat-cell>
-                                {{ase.qty.total - ase.qty.transferred.total - ase.qty.directLoad.total}}</td>
-                        </ng-container>
-                        <!-- Cost Column -->
-                        <ng-container matColumnDef="status">
-                            <th *matHeaderCellDef mat-header-cell> Entry Status</th>
-                            <td *matCellDef="let ase ;let i = index" mat-cell>
-                                <button *ngIf="ase.active" class="btn btn-outline-success btn-sm">
-                                    ACTIVE
-                                </button>
-                                <button *ngIf="!ase.active" class="btn btn-outline-danger btn-sm">
-                                    INACTIVE
-                                </button>
-                            </td>
                         </ng-container>
 
                         <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
