@@ -25,7 +25,7 @@ export class AseComponent implements OnInit {
   @ViewChild(MatPaginator, { static: true }) pmspaginator: MatPaginator;
   @ViewChild(MatPaginator, { static: true }) agopaginator: MatPaginator;
   @ViewChild(MatPaginator, { static: true }) ikpaginator: MatPaginator;
-  displayedColumns: string[] = ["id", "date", "entry", "totalqty", "transferred", "accumuated", "loadedqty", "availableqty", "status"];
+  displayedColumns: string[] = ["daudiId", "date", "id", "totalqty"];
   loading: {
     pms: boolean,
     ago: boolean,
