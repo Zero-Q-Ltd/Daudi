@@ -10,7 +10,6 @@ import { CoreService } from "../../../services/core/core.service";
 import { EntriesService } from "../../../services/entries.service";
 import { CoreAdminService } from "../../services/core.service";
 import { OMCStock } from "../../../../models/Daudi/omc/Stock";
-import { TransferComponent } from "./dialogs/transfer/transfer.component";
 
 
 @Component({
@@ -29,7 +28,7 @@ export class EntriesComponent implements OnInit {
   @ViewChild(MatPaginator, { static: true }) pmspaginator: MatPaginator;
   @ViewChild(MatPaginator, { static: true }) agopaginator: MatPaginator;
   @ViewChild(MatPaginator, { static: true }) ikpaginator: MatPaginator;
-  displayedColumns: string[] = ["id", "date", "entry", "totalqty", "transferred", "loadedqty", "availableqty", "status", "transfer"];
+  displayedColumns: string[] = ["id", "date", "entry", "totalqty", "transferred", "loadedqty", "availableqty", "status"];
   loading: {
     pms: boolean,
     ago: boolean,
@@ -50,7 +49,6 @@ export class EntriesComponent implements OnInit {
     private notification: NotificationService,
     private functions: AngularFireFunctions,
     private core: CoreService,
-    private dialog: MatDialog,
     private coreAdmin: CoreAdminService,
     private entriesService: EntriesService) {
     this.core.activedepot.pipe(takeUntil(this.comopnentDestroyed)).subscribe(depotvata => {
@@ -124,16 +122,7 @@ export class EntriesComponent implements OnInit {
           });
         });
   }
-  trasfer(entry: Entry) {
-    const dialogRef = this.dialog.open(TransferComponent, {
-      role: "dialog",
-      data: {},
-      height: "auto"
-      // width: '100%%',
 
-    });
-
-  }
 
   getTotalAvailable(batch: Entry) {
     const totalqty = batch.qty.total;

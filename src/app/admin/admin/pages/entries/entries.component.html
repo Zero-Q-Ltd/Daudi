@@ -78,12 +78,7 @@
                 </button>
               </td>
             </ng-container>
-            <!-- Cost Column -->
-            <ng-container matColumnDef="transfer">
-              <th *matHeaderCellDef mat-header-cell>Action</th>
-              <td *matCellDef="let entry" mat-cell>
-                <button mat-raised-button color="primary" (click)="trasfer(entry)">Transfer</button>
-            </ng-container>
+
             <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
             <tr *matRowDef="let row; columns: displayedColumns;" mat-row></tr>
           </table>

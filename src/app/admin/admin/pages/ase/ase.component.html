@@ -20,6 +20,9 @@
                             <mat-spinner *ngIf='creatingsync' [diameter]="19" matSuffix></mat-spinner>
                         </mat-form-field>
                     </div>
+                    <button mat-raised-button color="primary" *ngIf="!private"
+                        (click)="trasfer(fueltype)">Transfer</button>
+
                     <table [dataSource]="datasource[fueltype]" mat-table style="width: 100%">
 
                         <ng-container matColumnDef="daudiId">
@@ -46,7 +49,6 @@
                             <th *matHeaderCellDef mat-header-cell> Total ASE Qty</th>
                             <td *matCellDef="let ase" mat-cell>{{ase.qty.total}}</td>
                         </ng-container>
-
 
                         <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
                         <tr *matRowDef="let row; columns: displayedColumns;" mat-row></tr>
