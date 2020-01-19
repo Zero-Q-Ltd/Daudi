@@ -98,6 +98,7 @@ import {AseComponent} from "./admin/pages/ase/ase.component";
 import {CalculationsComponent} from "./create-order/components/calculations/calculations.component";
 import {ContactFormComponent} from "./create-order/components/contact-form/contact-form.component";
 import {PriceComparisonComponent} from "./price-comparison/price-comparison.component";
+import { TransferComponent } from './admin/pages/entries/dialogs/transfer/transfer.component';
 
 
 @NgModule({
@@ -201,6 +202,7 @@ import {PriceComparisonComponent} from "./price-comparison/price-comparison.comp
     CalculationsComponent,
     ContactFormComponent,
     PriceComparisonComponent,
+    TransferComponent,
 
   ],
   providers: [UsersGuard,
@@ -220,7 +222,8 @@ import {PriceComparisonComponent} from "./price-comparison/price-comparison.comp
     CustomerManagementComponent,
     ConfirmDepotComponent,
     CompartmentsComponent,
-    CalendarRangesComponent]
+    CalendarRangesComponent,
+    TransferComponent]
 })
 export class AdminModule {
 

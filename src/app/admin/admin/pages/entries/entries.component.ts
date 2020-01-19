@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
 import { AngularFireFunctions } from "@angular/fire/functions";
-import { MatPaginator, MatTableDataSource } from "@angular/material";
+import { MatPaginator, MatTableDataSource, MatDialog } from "@angular/material";
 import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { emptyEntry, Entry } from "../../../../models/Daudi/fuel/Entry";
@@ -10,6 +10,7 @@ import { CoreService } from "../../../services/core/core.service";
 import { EntriesService } from "../../../services/entries.service";
 import { CoreAdminService } from "../../services/core.service";
 import { OMCStock } from "../../../../models/Daudi/omc/Stock";
+import { TransferComponent } from "./dialogs/transfer/transfer.component";
 
 
 @Component({
@@ -28,7 +29,7 @@ export class EntriesComponent implements OnInit {
   @ViewChild(MatPaginator, { static: true }) pmspaginator: MatPaginator;
   @ViewChild(MatPaginator, { static: true }) agopaginator: MatPaginator;
   @ViewChild(MatPaginator, { static: true }) ikpaginator: MatPaginator;
-  displayedColumns: string[] = ["id", "date", "entry", "totalqty", "transferred", "loadedqty", "availableqty", "status"];
+  displayedColumns: string[] = ["id", "date", "entry", "totalqty", "transferred", "loadedqty", "availableqty", "status", "transfer"];
   loading: {
     pms: boolean,
     ago: boolean,
@@ -49,6 +50,7 @@ export class EntriesComponent implements OnInit {
     private notification: NotificationService,
     private functions: AngularFireFunctions,
     private core: CoreService,
+    private dialog: MatDialog,
     private coreAdmin: CoreAdminService,
     private entriesService: EntriesService) {
     this.core.activedepot.pipe(takeUntil(this.comopnentDestroyed)).subscribe(depotvata => {
@@ -121,6 +123,16 @@ export class EntriesComponent implements OnInit {
             title: "Error"
           });
         });
+  }
+  trasfer(entry: Entry) {
+    const dialogRef = this.dialog.open(TransferComponent, {
+      role: "dialog",
+      data: {},
+      height: "auto"
+      // width: '100%%',
+
+    });
+
   }
 
   getTotalAvailable(batch: Entry) {
