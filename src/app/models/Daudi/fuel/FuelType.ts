@@ -3,4 +3,5 @@ export enum FuelType {
     ago = "ago",
     ik = "ik"
 }
+
 export const FuelNamesArray = Object.values(FuelType);

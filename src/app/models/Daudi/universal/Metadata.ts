@@ -8,6 +8,7 @@ export interface Metadata {
     created?: Meta;
     edited: Meta;
 }
+
 export const emptymetadata: Metadata = {
     created: deepCopy<Meta>(emptyMeta),
     edited: deepCopy<Meta>(emptyMeta),

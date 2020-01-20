@@ -17,6 +17,7 @@ export interface BaseStockModel {
     Id: string;
     active: boolean; // 1 for active, 0 for inactive
 }
+
 export const EmptyBaseStockModel: BaseStockModel = {
     Id: null,
     fuelType: null,

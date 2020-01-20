@@ -1,9 +1,9 @@
-import { QBOAuthCOnfig } from "../../Cloud/QboAuthConfig";
-import { MyTimestamp } from "../../firestore/firestoreTypes";
-import { deepCopy } from "../../utils/deepCopy";
-import { AdminType } from "../admin/AdminType";
-import { Meta } from "../universal/Meta";
-import { Metadata } from "../universal/Metadata";
+import {QBOAuthCOnfig} from "../../Cloud/QboAuthConfig";
+import {MyTimestamp} from "../../firestore/firestoreTypes";
+import {deepCopy} from "../../utils/deepCopy";
+import {AdminType} from "../admin/AdminType";
+import {Meta} from "../universal/Meta";
+import {Metadata} from "../universal/Metadata";
 
 export interface AdminConfig {
     adminTypes: Array<AdminType>;

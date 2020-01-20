@@ -1,35 +1,36 @@
-import { Injectable } from "@angular/core";
-import { AngularFirestore } from "@angular/fire/firestore";
-import { Admin } from "../../../models/Daudi/admin/Admin";
-import { emptyConfig, AdminConfig } from "../../../models/Daudi/omc/Config";
+import {Injectable} from "@angular/core";
+import {AngularFirestore} from "@angular/fire/firestore";
+import {Admin} from "../../../models/Daudi/admin/Admin";
+import {AdminConfig, emptyConfig} from "../../../models/Daudi/omc/Config";
 
 @Injectable({
-  providedIn: "root"
+    providedIn: "root"
 })
 export class AdminConfigService {
 
-  constructor(private db: AngularFirestore) {
+    constructor(private db: AngularFirestore) {
 
-  }
-  /**
-   * @param omcId
-   */
+    }
 
-  configDoc(omcId: string) {
-    return this.db.firestore.collection("omc")
-      .doc(omcId)
-      .collection("configs")
-      .doc(`admin`);
-  }
+    /**
+     * @param omcId
+     */
+
+    configDoc(omcId: string) {
+        return this.db.firestore.collection("omc")
+            .doc(omcId)
+            .collection("configs")
+            .doc(`admin`);
+    }
 
 
-  initConfig(admin: Admin) {
-    const newConfig: AdminConfig = { ...emptyConfig };
-    this.saveConfig(admin.config.omcId, newConfig);
-  }
+    initConfig(admin: Admin) {
+        const newConfig: AdminConfig = {...emptyConfig};
+        this.saveConfig(admin.config.omcId, newConfig);
+    }
 
-  saveConfig(omcId: string, data: AdminConfig) {
-    return this.configDoc(omcId)
-      .set(data);
-  }
+    saveConfig(omcId: string, data: AdminConfig) {
+        return this.configDoc(omcId)
+            .set(data);
+    }
 }

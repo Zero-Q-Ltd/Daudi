@@ -4,25 +4,26 @@ import {OmcService} from "./core/omc.service";
 import {SMS} from "../../models/Daudi/sms/sms";
 
 @Injectable({
-  providedIn: "root"
+    providedIn: "root"
 })
 export class SmsService {
 
-  constructor(private db: AngularFirestore, private omc: OmcService) {
-  }
+    constructor(private db: AngularFirestore, private omc: OmcService) {
+    }
 
-  createsms(omcId: string, sms: SMS) {
-    return this.smsCollection(omcId).add(sms);
-  }
-  smsCollection(omcId: string) {
-    return this.db.firestore.collection("omc")
-      .doc(omcId)
-      .collection("sms");
-  }
+    createsms(omcId: string, sms: SMS) {
+        return this.smsCollection(omcId).add(sms);
+    }
 
-  getsmslogs() {
-    return this.db.firestore.collection("sms")
-      .orderBy("MyTimestamp", "desc")
-      .limit(1000);
-  }
+    smsCollection(omcId: string) {
+        return this.db.firestore.collection("omc")
+            .doc(omcId)
+            .collection("sms");
+    }
+
+    getsmslogs() {
+        return this.db.firestore.collection("sms")
+            .orderBy("MyTimestamp", "desc")
+            .limit(1000);
+    }
 }

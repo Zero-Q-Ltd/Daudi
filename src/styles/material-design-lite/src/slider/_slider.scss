@@ -80,10 +80,10 @@ _:-ms-input-placeholder, :root .mdl-slider.mdl-slider.is-upgraded {
       // Margin on -ms-track doesn't work right, so we use gradients on the
       // fills.
       background: linear-gradient(to right,
-        transparent,
-        transparent 16px,
-        $range-color 16px,
-        $range-color 0);
+              transparent,
+              transparent 16px,
+              $range-color 16px,
+              $range-color 0);
     }
 
     &::-ms-fill-upper {
@@ -91,10 +91,10 @@ _:-ms-input-placeholder, :root .mdl-slider.mdl-slider.is-upgraded {
       // Margin on -ms-track doesn't work right, so we use gradients on the
       // fills.
       background: linear-gradient(to left,
-        transparent,
-        transparent 16px,
-        $range-bg-color 16px,
-        $range-bg-color 0);
+              transparent,
+              transparent 16px,
+              $range-bg-color 16px,
+              $range-bg-color 0);
     }
 
 
@@ -160,10 +160,10 @@ _:-ms-input-placeholder, :root .mdl-slider.mdl-slider.is-upgraded {
 
     &:focus:not(:active)::-ms-thumb {
       background: radial-gradient(circle closest-side,
-        $range-color 0%,
-        $range-color 37.5%,
-        $range-faded-color 37.5%,
-        $range-faded-color 100%);
+              $range-color 0%,
+              $range-color 37.5%,
+              $range-faded-color 37.5%,
+              $range-faded-color 100%);
       transform: scale(1);
     }
 
@@ -216,30 +216,30 @@ _:-ms-input-placeholder, :root .mdl-slider.mdl-slider.is-upgraded {
 
     &.is-lowest-value::-ms-thumb {
       background: radial-gradient(circle closest-side,
-        transparent 0%,
-        transparent 66.67%,
-        $range-bg-color 66.67%,
-        $range-bg-color 100%);
+              transparent 0%,
+              transparent 66.67%,
+              $range-bg-color 66.67%,
+              $range-bg-color 100%);
     }
 
     &.is-lowest-value:focus:not(:active)::-ms-thumb {
       background: radial-gradient(circle closest-side,
-        $range-bg-focus-color 0%,
-        $range-bg-focus-color 25%,
-        $range-bg-color 25%,
-        $range-bg-color 37.5%,
-        $range-bg-focus-color 37.5%,
-        $range-bg-focus-color 100%);
+              $range-bg-focus-color 0%,
+              $range-bg-focus-color 25%,
+              $range-bg-color 25%,
+              $range-bg-color 37.5%,
+              $range-bg-focus-color 37.5%,
+              $range-bg-focus-color 100%);
       transform: scale(1);
     }
 
     &.is-lowest-value:active::-ms-thumb {
       transform: scale(0.5625);
       background: radial-gradient(circle closest-side,
-        transparent 0%,
-        transparent 77.78%,
-        $range-bg-color 77.78%,
-        $range-bg-color 100%);
+              transparent 0%,
+              transparent 77.78%,
+              $range-bg-color 77.78%,
+              $range-bg-color 100%);
     }
 
     &.is-lowest-value::-ms-fill-lower {
@@ -314,19 +314,19 @@ _:-ms-input-placeholder, :root .mdl-slider.mdl-slider.is-upgraded {
     &.is-lowest-value:disabled::-ms-thumb {
       transform: scale(0.25);
       background: radial-gradient(circle closest-side,
-        transparent 0%,
-        transparent 50%,
-        $range-bg-color 50%,
-        $range-bg-color 100%);
+              transparent 0%,
+              transparent 50%,
+              $range-bg-color 50%,
+              $range-bg-color 100%);
     }
 
     &:disabled::-ms-fill-lower {
       margin-right: 6px;
       background: linear-gradient(to right,
-        transparent,
-        transparent 25px,
-        $range-bg-color 25px,
-        $range-bg-color 0);
+              transparent,
+              transparent 25px,
+              $range-bg-color 25px,
+              $range-bg-color 0);
     }
 
     &:disabled::-ms-fill-upper {

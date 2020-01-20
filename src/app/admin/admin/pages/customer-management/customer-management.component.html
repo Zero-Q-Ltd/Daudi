@@ -1,106 +1,112 @@
 <mat-card>
-  <mat-card-content>
-    <div class="loading-container">
-      <div *ngIf="loadingcompanies" class="loading-shade">
-        <mat-spinner></mat-spinner>
-      </div>
-      <div>
-        <mat-form-field appearance="legacy">
-          <input (keyup)="filtercompanies($event.target.value)" matInput placeholder="Filter">
-          <button (click)='syncdb()' *ngIf='!creatingsync' mat-icon-button matSuffix type="button">
+    <mat-card-content>
+        <div class="loading-container">
+            <div *ngIf="loadingcompanies" class="loading-shade">
+                <mat-spinner></mat-spinner>
+            </div>
+            <div>
+                <mat-form-field appearance="legacy">
+                    <input (keyup)="filtercompanies($event.target.value)" matInput placeholder="Filter">
+                    <button (click)='syncdb()' *ngIf='!creatingsync' mat-icon-button matSuffix type="button">
             <span class="nav-icon nav-dot material-icons kra-save" matTooltip="Update">
               autorenew
             </span>
-          </button>
-          <mat-spinner *ngIf='creatingsync' [diameter]="19" matSuffix></mat-spinner>
-        </mat-form-field>
-      </div>
-      <div class="ot-container">
-        <table [dataSource]="companiesdatasource" mat-table matSort style="width: 100%">
-          <!--ID Column-->
-          <!-- Checkbox Column -->
-          <ng-container matColumnDef="select">
-            <th *matHeaderCellDef mat-header-cell>
-              <mat-checkbox (change)="$event ? masterToggle() : null"
-                [checked]="selection.hasValue() && isAllSelected()"
-                [indeterminate]="selection.hasValue() && !isAllSelected()">
-              </mat-checkbox>
-            </th>
-            <td *matCellDef="let row" mat-cell>
-              <mat-checkbox (change)="$event ? selection.toggle(row) : null" (click)="$event.stopPropagation()"
-                [checked]="selection.isSelected(row)">
-              </mat-checkbox>
-            </td>
-          </ng-container>
-          <ng-container matColumnDef="QbId">
-            <th *matHeaderCellDef mat-header-cell mat-sort-header> Company ID</th>
-            <td *matCellDef="let company" mat-cell> {{company.QbId}}</td>
-          </ng-container>
-          <!-- Name Column -->
-          <ng-container matColumnDef="name">
-            <th *matHeaderCellDef mat-header-cell mat-sort-header> Company Name</th>
-            <td *matCellDef="let company" [ngClass]="{ 'color-danger' : !company.Active  } " mat-cell> {{company.name}}
-            </td>
-          </ng-container>
-          <!-- Email Column -->
-          <ng-container matColumnDef="email">
-            <th *matHeaderCellDef mat-header-cell> Company Email</th>
-            <td *matCellDef="let company" mat-cell>{{company.contact[0].email}}</td>
-          </ng-container>
-          <!-- Phone Column -->
-          <ng-container matColumnDef="phone">
-            <th *matHeaderCellDef mat-header-cell> Company Phone</th>
-            <td *matCellDef="let company" mat-cell>{{company.contact[0].phone}}</td>
-          </ng-container>
-          <!-- KRA Column -->
-          <ng-container matColumnDef="krapin">
-            <th *matHeaderCellDef mat-header-cell mat-sort-header> KRA PIN</th>
-            <td *matCellDef="let company" mat-cell>
-              <mat-form-field class="half-width">
-                <input [(ngModel)]="company.krapin" [disabled]="company.kraverified.status" matInput required>
-                <mat-spinner *ngIf='savingcompany' [diameter]="19" matSuffix></mat-spinner>
-                <button (click)='approvecompany(company)' [hidden]="savingcompany || company.kraverified.status"
-                  mat-icon-button matSuffix type="button">
-                  <span class="nav-icon nav-dot material-icons kra-save" matTooltip="Update">check_circle</span>
+                    </button>
+                    <mat-spinner *ngIf='creatingsync' [diameter]="19" matSuffix></mat-spinner>
+                </mat-form-field>
+            </div>
+            <div class="ot-container">
+                <table [dataSource]="companiesdatasource" mat-table matSort style="width: 100%">
+                    <!--ID Column-->
+                    <!-- Checkbox Column -->
+                    <ng-container matColumnDef="select">
+                        <th *matHeaderCellDef mat-header-cell>
+                            <mat-checkbox (change)="$event ? masterToggle() : null"
+                                          [checked]="selection.hasValue() && isAllSelected()"
+                                          [indeterminate]="selection.hasValue() && !isAllSelected()">
+                            </mat-checkbox>
+                        </th>
+                        <td *matCellDef="let row" mat-cell>
+                            <mat-checkbox (change)="$event ? selection.toggle(row) : null"
+                                          (click)="$event.stopPropagation()"
+                                          [checked]="selection.isSelected(row)">
+                            </mat-checkbox>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="QbId">
+                        <th *matHeaderCellDef mat-header-cell mat-sort-header> Company ID</th>
+                        <td *matCellDef="let company" mat-cell> {{company.QbId}}</td>
+                    </ng-container>
+                    <!-- Name Column -->
+                    <ng-container matColumnDef="name">
+                        <th *matHeaderCellDef mat-header-cell mat-sort-header> Company Name</th>
+                        <td *matCellDef="let company" [ngClass]="{ 'color-danger' : !company.Active  } "
+                            mat-cell> {{company.name}}
+                        </td>
+                    </ng-container>
+                    <!-- Email Column -->
+                    <ng-container matColumnDef="email">
+                        <th *matHeaderCellDef mat-header-cell> Company Email</th>
+                        <td *matCellDef="let company" mat-cell>{{company.contact[0].email}}</td>
+                    </ng-container>
+                    <!-- Phone Column -->
+                    <ng-container matColumnDef="phone">
+                        <th *matHeaderCellDef mat-header-cell> Company Phone</th>
+                        <td *matCellDef="let company" mat-cell>{{company.contact[0].phone}}</td>
+                    </ng-container>
+                    <!-- KRA Column -->
+                    <ng-container matColumnDef="krapin">
+                        <th *matHeaderCellDef mat-header-cell mat-sort-header> KRA PIN</th>
+                        <td *matCellDef="let company" mat-cell>
+                            <mat-form-field class="half-width">
+                                <input [(ngModel)]="company.krapin" [disabled]="company.kraverified.status" matInput
+                                       required>
+                                <mat-spinner *ngIf='savingcompany' [diameter]="19" matSuffix></mat-spinner>
+                                <button (click)='approvecompany(company)'
+                                        [hidden]="savingcompany || company.kraverified.status"
+                                        mat-icon-button matSuffix type="button">
+                                    <span class="nav-icon nav-dot material-icons kra-save" matTooltip="Update">check_circle</span>
+                                </button>
+                                <mat-hint *ngIf='!savingcompany' align="start">
+                                    <i *ngIf="company.kraverified.status">
+                                        Approved by {{company.kraverified.user.name}}
+                                    </i>
+                                </mat-hint>
+                                <mat-error>
+                                    KRA is <strong>required</strong>
+                                </mat-error>
+                            </mat-form-field>
+                        </td>
+                    </ng-container>
+                    <!-- Balance Column -->
+                    <ng-container matColumnDef="balance">
+                        <th *matHeaderCellDef mat-header-cell mat-sort-header>Balance</th>
+                        <td *matCellDef="let company"
+                            [ngClass]="{ 'color-danger' : company.balance > 0 , 'color-success' :   company.balance < 0} "
+                            mat-cell>
+                            {{company.balance | number}}
+                        </td>
+                    </ng-container>
+                    <!-- Column -->
+                    <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
+                    <tr *matRowDef="let row; columns: displayedColumns;" mat-row></tr>
+                </table>
+            </div>
+        </div>
+        <div class="row">
+            <div *ngIf="selection.hasValue()" class="col-md-1">
+                <p class="selected-p">Selected: {{selection.selected.length}}</p>
+            </div>
+            <div class="col-md-1">
+                <button (click)="submitcompanies()" *ngIf="selection.hasValue()" class="add-icon" mat-raised-button>
+                    <mat-icon>add_box</mat-icon>
+                    {{purpose || 'SMS'}}
                 </button>
-                <mat-hint *ngIf='!savingcompany' align="start">
-                  <i *ngIf="company.kraverified.status">
-                    Approved by {{company.kraverified.user.name}}
-                  </i>
-                </mat-hint>
-                <mat-error>
-                  KRA is <strong>required</strong>
-                </mat-error>
-              </mat-form-field>
-            </td>
-          </ng-container>
-          <!-- Balance Column -->
-          <ng-container matColumnDef="balance">
-            <th *matHeaderCellDef mat-header-cell mat-sort-header>Balance</th>
-            <td *matCellDef="let company"
-              [ngClass]="{ 'color-danger' : company.balance > 0 , 'color-success' :   company.balance < 0} " mat-cell>
-              {{company.balance | number}}
-            </td>
-          </ng-container>
-          <!-- Column -->
-          <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
-          <tr *matRowDef="let row; columns: displayedColumns;" mat-row></tr>
-        </table>
-      </div>
-    </div>
-    <div class="row">
-      <div *ngIf="selection.hasValue()" class="col-md-1">
-        <p class="selected-p">Selected: {{selection.selected.length}}</p>
-      </div>
-      <div class="col-md-1">
-        <button (click)="submitcompanies()" *ngIf="selection.hasValue()" class="add-icon" mat-raised-button>
-          <mat-icon>add_box</mat-icon>
-          {{purpose || 'SMS'}}
-        </button>
-      </div>
-      <div class="col-md-10">
-        <mat-paginator [pageSizeOptions]="[10, 20, 50, 100]" [pageSize]="10" showFirstLastButtons></mat-paginator>
-      </div>
-    </div>
-  </mat-card-content>
+            </div>
+            <div class="col-md-10">
+                <mat-paginator [pageSizeOptions]="[10, 20, 50, 100]" [pageSize]="10"
+                               showFirstLastButtons></mat-paginator>
+            </div>
+        </div>
+    </mat-card-content>
 </mat-card>

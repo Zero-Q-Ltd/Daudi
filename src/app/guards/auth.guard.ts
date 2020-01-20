@@ -7,41 +7,41 @@ import {Observable} from "rxjs";
 
 @Injectable()
 export class AuthGuard implements CanActivate, CanActivateChild {
-  public loader = true;
+    public loader = true;
 
-  constructor(private router: Router, private af: AngularFireAuth) {
+    constructor(private router: Router, private af: AngularFireAuth) {
 
-  }
+    }
 
-  canActivate(): Observable<boolean> {
-    this.loader = true;
-    return this.af.authState.pipe(
-      take(1),
-      map(authState => !!authState),
-      tap(authenticated => {
-        this.loader = false;
+    canActivate(): Observable<boolean> {
+        this.loader = true;
+        return this.af.authState.pipe(
+            take(1),
+            map(authState => !!authState),
+            tap(authenticated => {
+                this.loader = false;
 
-        if (!authenticated) {
-          this.router.navigate(["/admin/login"]);
-          return false;
-        } else {
-          return true;
-        }
+                if (!authenticated) {
+                    this.router.navigate(["/admin/login"]);
+                    return false;
+                } else {
+                    return true;
+                }
 
-      }));
-  }
+            }));
+    }
 
-  canActivateChild(): Observable<boolean> {
-    this.loader = true;
-    return this.af.authState.pipe(
-      take(1),
-      map(authState => !!authState),
-      tap(authenticated => {
-        this.loader = false;
+    canActivateChild(): Observable<boolean> {
+        this.loader = true;
+        return this.af.authState.pipe(
+            take(1),
+            map(authState => !!authState),
+            tap(authenticated => {
+                this.loader = false;
 
-        if (!authenticated) {
-          this.router.navigate(["/admin/login"]);
-        }
-      }));
-  }
+                if (!authenticated) {
+                    this.router.navigate(["/admin/login"]);
+                }
+            }));
+    }
 }

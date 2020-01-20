@@ -16,7 +16,7 @@
                         <ng-container matColumnDef="{{pricetype}}_price">
                             <mat-header-cell *matHeaderCellDef class="" mat-sort-header>
                                 <i class="material-icons rangi-{{pricetype}}"
-                                    matTooltip="{{pricetype | uppercase}} Price">attach_money</i>
+                                   matTooltip="{{pricetype | uppercase}} Price">attach_money</i>
                             </mat-header-cell>
                             <mat-cell *matCellDef="let depot" class="color-{{pricetype}}">
                                 {{depot.currentpriceconfig ? depot.currentpriceconfig[pricetype]?.price : 0}}
@@ -26,7 +26,7 @@
                         <ng-container matColumnDef="{{pricetype}}_avgprice">
                             <mat-header-cell *matHeaderCellDef mat-sort-header>
                                 <i class="material-icons rangi-{{pricetype}}"
-                                    matTooltip="{{pricetype | uppercase}} Avg Price">compare_arrows</i>
+                                   matTooltip="{{pricetype | uppercase}} Avg Price">compare_arrows</i>
                             </mat-header-cell>
                             <mat-cell *matCellDef="let depot" class="color-{{pricetype}}"> {{depot[pricetype]}}
                             </mat-cell>

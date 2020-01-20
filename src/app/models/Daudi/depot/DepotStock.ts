@@ -4,6 +4,7 @@ export interface DepotStock {
         used: number
     };
 }
+
 export const EmptyDepotQty: DepotStock = {
     ase: {
         used: 0,

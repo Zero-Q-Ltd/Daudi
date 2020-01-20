@@ -20,8 +20,9 @@
                             <mat-spinner *ngIf='creatingsync' [diameter]="19" matSuffix></mat-spinner>
                         </mat-form-field>
                     </div>
-                    <button mat-raised-button color="primary" *ngIf="!private"
-                        (click)="trasfer(fueltype)">Transfer</button>
+                    <button (click)="trasfer(fueltype)" *ngIf="!private" color="primary"
+                            mat-raised-button>Transfer
+                    </button>
 
                     <table [dataSource]="datasource[fueltype]" mat-table style="width: 100%">
 

@@ -1,12 +1,12 @@
 import {Pipe, PipeTransform} from "@angular/core";
 
 @Pipe({
-  name: "batches"
+    name: "batches"
 })
 export class BatchesPipe implements PipeTransform {
 
-  transform(value: any, args?: any): any {
+    transform(value: any, args?: any): any {
 
-  }
+    }
 
 }

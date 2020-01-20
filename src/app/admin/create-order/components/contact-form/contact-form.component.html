@@ -3,8 +3,8 @@
         <div fxFlex>
 
             <mat-form-field class="full-width">
-                <input formControlName="companyName" [matAutocomplete]="auto" aria-label="Company Name" matInput
-                    placeholder="Company name" type="text">
+                <input [matAutocomplete]="auto" aria-label="Company Name" formControlName="companyName" matInput
+                       placeholder="Company name" type="text">
                 <!-- <mat-hint *ngIf="companyInfo.newcompany">
                     <strong>A NEW COMPANY BY THIS NAME WILL BE CREATED</strong>
                 </mat-hint> -->
@@ -12,7 +12,7 @@
                 <span matPrefix> &nbsp; </span>
                 <mat-autocomplete #auto="matAutocomplete">
                     <mat-option (onSelectionChange)="companyselect(option)"
-                        *ngFor="let option of filteredCompanies | async" [value]="option.name">
+                                *ngFor="let option of filteredCompanies | async" [value]="option.name">
                         {{option.name}}
                     </mat-option>
                 </mat-autocomplete>
@@ -22,7 +22,7 @@
         <div fxFlex>
             <mat-form-field class="full-width">
                 <input formControlName="name" matInput name="contactName" placeholder="Contact Name"
-                    style="text-transform:uppercase;">
+                       style="text-transform:uppercase;">
                 <mat-icon matPrefix>perm_identity</mat-icon>
                 <span matPrefix> &nbsp; </span>
                 <mat-error>
@@ -34,7 +34,7 @@
         <div fxFlex>
             <mat-form-field class="full-width">
                 <input formControlName="phone" matInput maxlength="9" minlength="9" name="companyPhone"
-                    placeholder="Phone number" type="tel">
+                       placeholder="Phone number" type="tel">
                 <mat-icon matPrefix>phone</mat-icon>
                 <span matPrefix> &nbsp; +254 &nbsp;</span>
                 <mat-error>
@@ -58,7 +58,7 @@
             <mat-form-field class="full-width">
                 <!--  #kraPin (input)="kraPin.value=$event.target.value.toUpperCase()" -->
                 <input #kraControl formControlName="kraPin" matInput placeholder="KRA PIN"
-                    style="text-transform:uppercase;" type="text">
+                       style="text-transform:uppercase;" type="text">
                 <mat-icon matPrefix>payment</mat-icon>
                 <span matPrefix> &nbsp; P &nbsp;</span>
                 <mat-error>

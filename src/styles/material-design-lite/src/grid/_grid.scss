@@ -96,7 +96,7 @@
   .mdl-cell {
     margin: $grid-phone-gutter / 2;
     @include partial-size($grid-cell-default-columns, $grid-phone-columns,
-      $grid-phone-gutter);
+            $grid-phone-gutter);
   }
 
   .mdl-cell--hide-phone {
@@ -146,7 +146,7 @@
   .mdl-cell {
     margin: $grid-tablet-gutter / 2;
     @include partial-size($grid-cell-default-columns, $grid-tablet-columns,
-      $grid-tablet-gutter);
+            $grid-tablet-gutter);
   }
 
   .mdl-cell--hide-tablet {
@@ -196,7 +196,7 @@
   .mdl-cell {
     margin: $grid-desktop-gutter / 2;
     @include partial-size($grid-cell-default-columns, $grid-desktop-columns,
-      $grid-desktop-gutter);
+            $grid-desktop-gutter);
   }
 
   .mdl-cell--hide-desktop {

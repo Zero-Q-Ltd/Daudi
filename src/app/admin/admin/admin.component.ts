@@ -11,65 +11,65 @@ import {CoreService} from "../services/core/core.service";
 
 
 @Component({
-  selector: "app-admin",
-  templateUrl: "./admin.component.html",
-  styleUrls: ["./admin.component.scss"]
+    selector: "app-admin",
+    templateUrl: "./admin.component.html",
+    styleUrls: ["./admin.component.scss"]
 })
 
 
 export class AdminComponent implements OnInit, OnDestroy {
 
-  position = "above";
-  phoneControl: FormControl = new FormControl({ value: "" }, [Validators.required, Validators.maxLength(8), Validators.minLength(8)]);
+    position = "above";
+    phoneControl: FormControl = new FormControl({value: ""}, [Validators.required, Validators.maxLength(8), Validators.minLength(8)]);
 
-  alldepots: Array<Depot>;
-  comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
+    alldepots: Array<Depot>;
+    comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
 
-  constructor(
-    private adminservice: AdminService,
-    private dialog: MatDialog,
-    private core: CoreService,
-    private depotsservice: DepotService) {
+    constructor(
+        private adminservice: AdminService,
+        private dialog: MatDialog,
+        private core: CoreService,
+        private depotsservice: DepotService) {
 
-    this.core.depots.pipe(takeUntil(this.comopnentDestroyed)).subscribe(depots => {
-      this.alldepots = depots;
-    });
-  }
-
-  isauthenticated(level) {
-    if (this.adminservice.userdata.config.level <= level) {
-      return true;
-      // console.log('authenticated')
-    } else {
-      return false;
+        this.core.depots.pipe(takeUntil(this.comopnentDestroyed)).subscribe(depots => {
+            this.alldepots = depots;
+        });
     }
-  }
+
+    isauthenticated(level) {
+        if (this.adminservice.userdata.config.level <= level) {
+            return true;
+            // console.log('authenticated')
+        } else {
+            return false;
+        }
+    }
 
 
-  ngOnInit() {
+    ngOnInit() {
 
-  }
-
-
-  ngOnDestroy(): void {
-    this.comopnentDestroyed.next(true);
-    this.comopnentDestroyed.complete();
-  }
+    }
 
 
-  openBatchTrucks(batchkey, batchdId) {
-    // console.log(batchkey, batchdId);
-    const dialogRef = this.dialog.open(BatchTrucksComponent, {
-      role: "dialog",
-      data: {
-        batchkey,
-        batchdId
-      },
-      height: "auto"
-      // width: '100%%',
+    ngOnDestroy(): void {
+        this.comopnentDestroyed.next(true);
+        this.comopnentDestroyed.complete();
+    }
 
-    });
 
-  }
+    openBatchTrucks(batchkey, batchdId) {
+        // console.log(batchkey, batchdId);
+        const dialogRef = this.dialog.open(BatchTrucksComponent, {
+            role: "dialog",
+            data: {
+                batchkey,
+                batchdId
+            },
+            height: "auto"
+            // width: '100%%',
+
+        });
+
+    }
 
 }

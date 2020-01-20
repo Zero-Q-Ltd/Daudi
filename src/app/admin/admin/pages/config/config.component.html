@@ -1,78 +1,78 @@
 <div class="container-fluid">
-  <div class="row">
-    <div class="col-md-8">
-      <mat-card>
-        <agm-map [latitude]="defaultlat" [longitude]="defaultlng" [zoomControl]="false" [zoom]="zoom"
-          (mapClick)="mapClicked($event)">
-          <agm-marker [latitude]="tempcompany.location.latitude" [longitude]="tempcompany.location.longitude"
-            [markerDraggable]=true>
-          </agm-marker>
-        </agm-map>
-      </mat-card>
+    <div class="row">
+        <div class="col-md-8">
+            <mat-card>
+                <agm-map (mapClick)="mapClicked($event)" [latitude]="defaultlat" [longitude]="defaultlng" [zoomControl]="false"
+                         [zoom]="zoom">
+                    <agm-marker [latitude]="tempcompany.location.latitude" [longitude]="tempcompany.location.longitude"
+                                [markerDraggable]=true>
+                    </agm-marker>
+                </agm-map>
+            </mat-card>
+        </div>
+
+        <div class="col-md-4">
+            <br>
+            Customer Details
+            <br>
+            <mat-form-field appearance="outline" class="half-width">
+                <mat-label>Customer Name</mat-label>
+                <input [(ngModel)]="tempcompany.name" matInput required>
+                <mat-icon class="secondary-text" matSuffix>account_box</mat-icon>
+                <mat-error>Name is required!</mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="half-width">
+                <mat-label>Phone</mat-label>
+                <input [(ngModel)]="tempcompany.contactperson[0].phone" matInput required>
+                <mat-icon class="secondary-text" matSuffix>phone_enabled</mat-icon>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="half-width">
+                <mat-label>Email</mat-label>
+                <input [(ngModel)]="tempcompany.contactperson[0].email" matInput required>
+                <mat-icon class="secondary-text" matSuffix>email</mat-icon>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="half-width">
+                <mat-label>Address</mat-label>
+                <input [(ngModel)]="tempcompany.contactperson[0].address" matInput required>
+                <mat-icon class="secondary-text" matSuffix>account_balance</mat-icon>
+            </mat-form-field>
+            <br>
+            Contact Person Details
+            <br>
+            <mat-form-field appearance="outline" class="half-width">
+                <mat-label>Name</mat-label>
+                <input [(ngModel)]="tempcompany.contactperson[0].name" matInput required>
+                <mat-icon class="secondary-text" matSuffix>account_circle</mat-icon>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="half-width">
+                <mat-label>Phone</mat-label>
+                <input [(ngModel)]="tempcompany.contactperson[0].phone" matInput required>
+                <mat-icon class="secondary-text" matSuffix>phone_enabled</mat-icon>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="half-width">
+                <mat-label>Email</mat-label>
+                <input [(ngModel)]="tempcompany.contactperson[0].email" matInput required>
+                <mat-icon class="secondary-text" matSuffix>email</mat-icon>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="half-width">
+                <mat-label>Position</mat-label>
+                <input [(ngModel)]="tempcompany.contactperson[0].position" matInput required>
+                <mat-icon class="secondary-text" matSuffix>event_seat</mat-icon>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Address</mat-label>
+                <input [(ngModel)]="tempcompany.contactperson[0].address" matInput required>
+                <mat-icon class="secondary-text" matSuffix>account_balance</mat-icon>
+            </mat-form-field>
+            <button (click)="savecompany()" color="primary" mat-raised-button>
+                SAVE
+            </button>
+        </div>
     </div>
-
-    <div class="col-md-4">
-      <br>
-      Customer Details
-      <br>
-      <mat-form-field appearance="outline" class="half-width">
-        <mat-label>Customer Name</mat-label>
-        <input [(ngModel)]="tempcompany.name" matInput required>
-        <mat-icon class="secondary-text" matSuffix>account_box</mat-icon>
-        <mat-error>Name is required!</mat-error>
-      </mat-form-field>
-      <mat-form-field appearance="outline" class="half-width">
-        <mat-label>Phone</mat-label>
-        <input [(ngModel)]="tempcompany.contactperson[0].phone" matInput required>
-        <mat-icon class="secondary-text" matSuffix>phone_enabled</mat-icon>
-      </mat-form-field>
-
-      <mat-form-field appearance="outline" class="half-width">
-        <mat-label>Email</mat-label>
-        <input [(ngModel)]="tempcompany.contactperson[0].email" matInput required>
-        <mat-icon class="secondary-text" matSuffix>email</mat-icon>
-      </mat-form-field>
-
-      <mat-form-field appearance="outline" class="half-width">
-        <mat-label>Address</mat-label>
-        <input [(ngModel)]="tempcompany.contactperson[0].address" matInput required>
-        <mat-icon class="secondary-text" matSuffix>account_balance</mat-icon>
-      </mat-form-field>
-      <br>
-      Contact Person Details
-      <br>
-      <mat-form-field appearance="outline" class="half-width">
-        <mat-label>Name</mat-label>
-        <input [(ngModel)]="tempcompany.contactperson[0].name" matInput required>
-        <mat-icon class="secondary-text" matSuffix>account_circle</mat-icon>
-      </mat-form-field>
-
-      <mat-form-field appearance="outline" class="half-width">
-        <mat-label>Phone</mat-label>
-        <input [(ngModel)]="tempcompany.contactperson[0].phone" matInput required>
-        <mat-icon class="secondary-text" matSuffix>phone_enabled</mat-icon>
-      </mat-form-field>
-
-      <mat-form-field appearance="outline" class="half-width">
-        <mat-label>Email</mat-label>
-        <input [(ngModel)]="tempcompany.contactperson[0].email" matInput required>
-        <mat-icon class="secondary-text" matSuffix>email</mat-icon>
-      </mat-form-field>
-
-      <mat-form-field appearance="outline" class="half-width">
-        <mat-label>Position</mat-label>
-        <input [(ngModel)]="tempcompany.contactperson[0].position" matInput required>
-        <mat-icon class="secondary-text" matSuffix>event_seat</mat-icon>
-      </mat-form-field>
-
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Address</mat-label>
-        <input [(ngModel)]="tempcompany.contactperson[0].address" matInput required>
-        <mat-icon class="secondary-text" matSuffix>account_balance</mat-icon>
-      </mat-form-field>
-      <button mat-raised-button color="primary" (click)="savecompany()">
-        SAVE
-      </button>
-    </div>
-  </div>
 </div>

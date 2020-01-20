@@ -3,10 +3,10 @@ import {CommonModule} from '@angular/common';
 import {LoginComponent} from './login/login.component';
 
 @NgModule({
-  declarations: [LoginComponent],
-  imports: [
-    CommonModule
-  ]
+    declarations: [LoginComponent],
+    imports: [
+        CommonModule
+    ]
 })
 export class FamilyModule {
 }

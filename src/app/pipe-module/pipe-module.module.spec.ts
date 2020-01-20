@@ -1,13 +1,13 @@
 import {PipeModuleModule} from "./pipe-module.module";
 
 describe("PipeModuleModule", () => {
-  let pipeModuleModule: PipeModuleModule;
+    let pipeModuleModule: PipeModuleModule;
 
-  beforeEach(() => {
-    pipeModuleModule = new PipeModuleModule();
-  });
+    beforeEach(() => {
+        pipeModuleModule = new PipeModuleModule();
+    });
 
-  it("should create an instance", () => {
-    expect(pipeModuleModule).toBeTruthy();
-  });
+    it("should create an instance", () => {
+        expect(pipeModuleModule).toBeTruthy();
+    });
 });

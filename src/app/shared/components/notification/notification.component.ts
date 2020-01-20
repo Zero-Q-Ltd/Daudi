@@ -4,17 +4,17 @@ import {Alert} from "../../../models/Daudi/notification/Alert";
 
 
 @Component({
-  selector: "app-notification",
-  templateUrl: "./notification.component.html",
-  styleUrls: ["./notification.component.scss"]
+    selector: "app-notification",
+    templateUrl: "./notification.component.html",
+    styleUrls: ["./notification.component.scss"]
 })
 
 export class NotificationComponent implements OnInit {
 
-  constructor(@Inject(MAT_SNACK_BAR_DATA) public notificationdata: Alert) {
-  }
+    constructor(@Inject(MAT_SNACK_BAR_DATA) public notificationdata: Alert) {
+    }
 
-  ngOnInit() {
-  }
+    ngOnInit() {
+    }
 
 }

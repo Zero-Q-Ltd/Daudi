@@ -1,4 +1,4 @@
-import { MyTimestamp } from "../firestore/firestoreTypes";
+import {MyTimestamp} from "../firestore/firestoreTypes";
 
 
 export interface QBOAuthCOnfig {
@@ -8,6 +8,7 @@ export interface QBOAuthCOnfig {
     webhooksVerifier: string;
     authConfig: AuthConfig;
 }
+
 export interface AuthConfig {
     previousDCT: MyTimestamp;
     accessToken: string;

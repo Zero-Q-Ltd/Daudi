@@ -1,4 +1,3 @@
-
 export enum TruckStages {
     "Created",
     "Processing",

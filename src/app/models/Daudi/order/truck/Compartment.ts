@@ -1,4 +1,4 @@
-import { FuelType } from "../../fuel/FuelType";
+import {FuelType} from "../../fuel/FuelType";
 
 export interface Compartment {
     /**

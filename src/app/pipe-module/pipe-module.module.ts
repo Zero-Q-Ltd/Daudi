@@ -7,11 +7,11 @@ import {GetomcPipe} from './getomc.pipe';
 
 
 @NgModule({
-  imports: [
-    CommonModule
-  ],
-  declarations: [MaptoArrayPipe, FormatOrdersPipe, BatchesPipe, CountdownPipe, GetomcPipe],
-  exports: [MaptoArrayPipe, FormatOrdersPipe, BatchesPipe, GetomcPipe]
+    imports: [
+        CommonModule
+    ],
+    declarations: [MaptoArrayPipe, FormatOrdersPipe, BatchesPipe, CountdownPipe, GetomcPipe],
+    exports: [MaptoArrayPipe, FormatOrdersPipe, BatchesPipe, GetomcPipe]
 })
 export class PipeModuleModule {
 }

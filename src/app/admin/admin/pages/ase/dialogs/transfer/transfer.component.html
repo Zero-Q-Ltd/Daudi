@@ -11,14 +11,14 @@
 </mat-form-field>
 <table *ngIf="selectedDepot" [dataSource]="depotEntries" mat-table style="width: 100%">
     <ng-container matColumnDef="select">
-        <th mat-header-cell *matHeaderCellDef>
-            <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
-                [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()">
+        <th *matHeaderCellDef mat-header-cell>
+            <mat-checkbox (change)="$event ? masterToggle() : null" [aria-label]="checkboxLabel()"
+                          [checked]="selection.hasValue() && isAllSelected()" [indeterminate]="selection.hasValue() && !isAllSelected()">
             </mat-checkbox>
         </th>
-        <td mat-cell *matCellDef="let row">
-            <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
-                [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
+        <td *matCellDef="let row" mat-cell>
+            <mat-checkbox (change)="$event ? selection.toggle(row) : null" (click)="$event.stopPropagation()"
+                          [aria-label]="checkboxLabel(row)" [checked]="selection.isSelected(row)">
             </mat-checkbox>
         </td>
     </ng-container>
@@ -52,8 +52,8 @@
         <th *matHeaderCellDef mat-header-cell>Qty To Transfer</th>
         <td *matCellDef="let entry" mat-cell>
             <mat-form-field>
-                <input [disabled]="!selection.isSelected(entry)" type="number" matInput placeholder="Qty to transfer"
-                    value="0">
+                <input [disabled]="!selection.isSelected(entry)" matInput placeholder="Qty to transfer" type="number"
+                       value="0">
             </mat-form-field>
         </td>
     </ng-container>

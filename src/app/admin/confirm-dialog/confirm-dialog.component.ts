@@ -3,21 +3,21 @@ import {MAT_DIALOG_DATA} from "@angular/material";
 import {ReplaySubject} from "rxjs"; //added dialog data receive
 
 @Component({
-  selector: "app-confirm-dialog",
-  templateUrl: "./confirm-dialog.component.html",
-  styleUrls: ["./confirm-dialog.component.scss"]
+    selector: "app-confirm-dialog",
+    templateUrl: "./confirm-dialog.component.html",
+    styleUrls: ["./confirm-dialog.component.scss"]
 })
 export class ConfirmDialogComponent implements OnInit, OnDestroy {
-  comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
+    comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
 
-  constructor(@Optional() @Inject(MAT_DIALOG_DATA) public title?: string) {
-  }
+    constructor(@Optional() @Inject(MAT_DIALOG_DATA) public title?: string) {
+    }
 
-  ngOnInit() {
-  }
+    ngOnInit() {
+    }
 
-  ngOnDestroy(): void {
-    this.comopnentDestroyed.next(true);
-    this.comopnentDestroyed.complete();
-  }
+    ngOnDestroy(): void {
+        this.comopnentDestroyed.next(true);
+        this.comopnentDestroyed.complete();
+    }
 }

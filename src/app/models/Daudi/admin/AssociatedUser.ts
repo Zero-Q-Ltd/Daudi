@@ -1,5 +1,4 @@
-import { MyTimestamp } from "../../firestore/firestoreTypes";
-import { Meta } from "../universal/Meta";
+import {Meta} from "../universal/Meta";
 
 
 export interface AssociatedUser extends Meta {

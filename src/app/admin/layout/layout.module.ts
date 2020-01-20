@@ -4,12 +4,12 @@ import {SharedModule} from "../shared/shared.module";
 
 
 @NgModule({
-  imports: [
-    LayoutRoutingModule,
-    SharedModule
-    // MyMaterialModule,
-  ],
-  declarations: []
+    imports: [
+        LayoutRoutingModule,
+        SharedModule
+        // MyMaterialModule,
+    ],
+    declarations: []
 })
 
 export class LayoutModule {

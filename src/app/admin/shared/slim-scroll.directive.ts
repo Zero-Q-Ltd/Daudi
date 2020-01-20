@@ -5,18 +5,18 @@ import * as $ from "jquery";
 @Directive({selector: "[mySlimScroll]"})
 
 export class SlimScrollDirective implements AfterViewInit {
-  el: ElementRef;
-  @Input() scrollHeight: string;
+    el: ElementRef;
+    @Input() scrollHeight: string;
 
-  constructor(el: ElementRef) {
-    this.el = el;
-  }
+    constructor(el: ElementRef) {
+        this.el = el;
+    }
 
-  ngAfterViewInit() {
-    const $el = $(this.el.nativeElement);
+    ngAfterViewInit() {
+        const $el = $(this.el.nativeElement);
 
-    ($el).slimScroll({
-      height: this.scrollHeight || '100%'
-    });
-  }
+        ($el).slimScroll({
+            height: this.scrollHeight || '100%'
+        });
+    }
 }

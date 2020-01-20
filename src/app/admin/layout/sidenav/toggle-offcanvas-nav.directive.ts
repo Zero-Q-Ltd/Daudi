@@ -5,21 +5,21 @@ import * as $ from "jquery";
 @Directive({selector: "[myToggleOffcanvasNav]"})
 
 export class ToggleOffcanvasNavDirective implements AfterViewInit {
-  el: ElementRef;
+    el: ElementRef;
 
-  constructor(el: ElementRef) {
-    this.el = el;
-  }
+    constructor(el: ElementRef) {
+        this.el = el;
+    }
 
-  ngAfterViewInit() {
+    ngAfterViewInit() {
 
-    const $navToggler = $(this.el.nativeElement);
-    const $body = $("#body");
+        const $navToggler = $(this.el.nativeElement);
+        const $body = $("#body");
 
-    $navToggler.on("click", (e) => {
-      // _sidebar.scss, _page-container.scss
-      $body.toggleClass("sidebar-mobile-open");
-      e.preventDefault();
-    });
-  }
+        $navToggler.on("click", (e) => {
+            // _sidebar.scss, _page-container.scss
+            $body.toggleClass("sidebar-mobile-open");
+            e.preventDefault();
+        });
+    }
 }

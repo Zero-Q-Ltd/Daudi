@@ -6,14 +6,14 @@ import {MyMaterialModule} from "../material.module";
 import {TermsComponent} from "./terms/terms.component";
 
 @NgModule({
-  imports: [
-    MyMaterialModule,
-    CommonModule,
-    FrontendRoutingModule
-  ],
-  declarations: [
-    TermsComponent
-  ]
+    imports: [
+        MyMaterialModule,
+        CommonModule,
+        FrontendRoutingModule
+    ],
+    declarations: [
+        TermsComponent
+    ]
 })
 export class FrontendModule {
 }

@@ -1,6 +1,6 @@
-import { AssociatedUser, EmptyAssociatedUser } from "../admin/AssociatedUser";
-import { Expiry } from "./truck/Truck";
-import { deepCopy } from "../../utils/deepCopy";
+import {AssociatedUser, EmptyAssociatedUser} from "../admin/AssociatedUser";
+import {Expiry} from "./truck/Truck";
+import {deepCopy} from "../../utils/deepCopy";
 
 /**
  * @description Base model for every Stage movement carried out via the web-App
@@ -8,6 +8,7 @@ import { deepCopy } from "../../utils/deepCopy";
 export interface GenericStage {
     user: AssociatedUser;
 }
+
 export interface GenericTruckStage extends GenericStage {
     expiry: Expiry[];
 }
