@@ -1,10 +1,10 @@
-import {Injectable} from "@angular/core";
-import {AngularFirestore} from "@angular/fire/firestore";
-import {OmcService} from "./core/omc.service";
-import {SMS} from "../../models/Daudi/sms/sms";
+import { Injectable } from "@angular/core";
+import { AngularFirestore } from "@angular/fire/firestore";
+import { SMS } from 'app/models/Daudi/sms/sms';
+import { OmcService } from "./core/omc.service";
 
 @Injectable({
-    providedIn: "root"
+    providedIn: 'root'
 })
 export class SmsService {
 
@@ -16,14 +16,14 @@ export class SmsService {
     }
 
     smsCollection(omcId: string) {
-        return this.db.firestore.collection("omc")
+        return this.db.firestore.collection('omc')
             .doc(omcId)
-            .collection("sms");
+            .collection('sms');
     }
 
     getsmslogs() {
-        return this.db.firestore.collection("sms")
-            .orderBy("MyTimestamp", "desc")
+        return this.db.firestore.collection('sms')
+            .orderBy('MyTimestamp', 'desc')
             .limit(1000);
     }
 }

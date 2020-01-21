@@ -34,6 +34,7 @@
     "@angular/platform-browser": "^8.2.14",
     "@angular/platform-browser-dynamic": "^8.2.14",
     "@angular/router": "^8.2.14",
+    "@types/jest": "^24.9.0",
     "angular2-text-mask": "^9.0.0",
     "echarts": "^4.5.0",
     "file-saver": "^2.0.2",

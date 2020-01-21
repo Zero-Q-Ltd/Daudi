@@ -1,24 +1,24 @@
-import { Component, Inject, OnDestroy, OnInit } from "@angular/core";
-import { AngularFirestore } from "@angular/fire/firestore";
-import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material";
-import * as moment from "moment";
-import { ReplaySubject } from "rxjs";
-import { takeUntil } from "rxjs/operators";
-import { Depot, emptydepot } from "../../models/Daudi/depot/Depot";
-import { DepotConfig, emptyDepotConfig } from "../../models/Daudi/depot/DepotConfig";
-import { Entry } from "../../models/Daudi/fuel/Entry";
-import { FuelNamesArray, FuelType } from "../../models/Daudi/fuel/FuelType";
-import { EmptyOMCStock, OMCStock } from "../../models/Daudi/omc/Stock";
-import { emptyorder, Order } from "../../models/Daudi/order/Order";
-import { MyTimestamp } from "../../models/firestore/firestoreTypes";
-import { NotificationService } from "../../shared/services/notification.service";
-import { GenericTruckStage } from "../../models/Daudi/order/GenericStage";
-import { AdminService } from "app/services/core/admin.service";
-import { CoreService } from "app/services/core/core.service";
-import { EntriesService } from "app/services/entries.service";
-import { AdminConfigService } from "app/services/core/admin-config.service";
-import { StocksService } from "app/services/core/stocks.service";
-import { OrdersService } from "app/services/orders.service";
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { AngularFirestore } from '@angular/fire/firestore';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
+import { AdminConfigService } from 'app/services/core/admin-config.service';
+import { AdminService } from 'app/services/core/admin.service';
+import { CoreService } from 'app/services/core/core.service';
+import { StocksService } from 'app/services/core/stocks.service';
+import { EntriesService } from 'app/services/entries.service';
+import { OrdersService } from 'app/services/orders.service';
+import * as moment from 'moment';
+import { ReplaySubject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { Depot, emptydepot } from '../../models/Daudi/depot/Depot';
+import { DepotConfig, emptyDepotConfig } from '../../models/Daudi/depot/DepotConfig';
+import { Entry } from '../../models/Daudi/fuel/Entry';
+import { FuelNamesArray, FuelType } from '../../models/Daudi/fuel/FuelType';
+import { EmptyOMCStock, OMCStock } from '../../models/Daudi/omc/Stock';
+import { GenericTruckStage } from '../../models/Daudi/order/GenericStage';
+import { emptyorder, Order } from '../../models/Daudi/order/Order';
+import { MyTimestamp } from '../../models/firestore/firestoreTypes';
+import { NotificationService } from '../../shared/services/notification.service';
 
 interface EntryContent {
     id: string;
@@ -33,23 +33,22 @@ interface EntryContent {
 }
 
 @Component({
-    selector: "app-entries-selector",
-    templateUrl: "./entries-selector.component.html",
-    styleUrls: ["./entries-selector.component.scss"]
+    selector: 'app-entries-selector',
+    templateUrl: './entries-selector.component.html',
+    styleUrls: ['./entries-selector.component.scss']
 })
-
 
 export class EntriesSelectorComponent implements OnInit, OnDestroy {
     depotEntries: {
-        pms: Array<Entry>,
-        ago: Array<Entry>,
-        ik: Array<Entry>
+        pms: Entry[],
+        ago: Entry[],
+        ik: Entry[]
     } = {
             pms: [],
             ago: [],
             ik: []
         };
-    displayedColumns: string[] = ["id", "batch", "totalqty", "accumulated", "loadedqty", "availableqty", "drawnqty", "remainingqty", "status"];
+    displayedColumns: string[] = ['id', 'batch', 'totalqty', 'accumulated', 'loadedqty', 'availableqty', 'drawnqty', 'remainingqty', 'status'];
 
     drawnEntry: {
         [key in FuelType]: EntryContent[]
@@ -92,7 +91,7 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
         this.fueltypesArray.forEach((fueltype: FuelType) => {
             this.core.depotEntries[fueltype]
                 .pipe(takeUntil(this.comopnentDestroyed))
-                .subscribe((entries: Array<Entry>) => {
+                .subscribe((entries: Entry[]) => {
                     // console.log(entries);
                     this.depotEntries[fueltype] = entries;
                     /**
@@ -319,7 +318,7 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
                 this.dialogRef.disableClose = false;
                 HasError = true;
                 return this.notification.notify({
-                    alert_type: "error",
+                    alert_type: 'error',
                     title: `Error`,
                     body: this.fuelerror[fueltype].errorString,
                     duration: 6000
@@ -335,7 +334,7 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
                 expiry: [
                     {
                         timeCreated: MyTimestamp.now(),
-                        expiry: MyTimestamp.fromDate(moment().add(45, "minutes").toDate()),
+                        expiry: MyTimestamp.fromDate(moment().add(45, 'minutes').toDate()),
                         user: this.adminservice.createuserobject()
                     }],
             };
@@ -345,7 +344,7 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
 
             this.order.orderStageData[4].user = data[0].user;
 
-            this.order.truckStageData["1"] = data;
+            this.order.truckStageData['1'] = data;
 
             const batchaction = this.db.firestore.batch();
             batchaction.update(this.ordersservice.ordersCollection(this.core.currentOmc.value.Id).doc(this.orderId), this.order);
@@ -469,8 +468,8 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
             });
             batchaction.commit().then(value => {
                 this.notification.notify({
-                    alert_type: "success",
-                    title: "Success",
+                    alert_type: 'success',
+                    title: 'Success',
                     body: `Truck Approved`
                 });
                 this.dialogRef.close();
