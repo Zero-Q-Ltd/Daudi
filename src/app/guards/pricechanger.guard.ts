@@ -1,11 +1,11 @@
-import {Injectable} from "@angular/core";
-import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from "@angular/router";
-import {Observable} from "rxjs";
-import {map} from "rxjs/operators";
-import {Admin} from "../../models/Daudi/admin/Admin";
-import {DepotService} from "../services/core/depot.service";
-import {AdminService} from "../services/core/admin.service";
-import {NotificationService} from "../../shared/services/notification.service";
+import { Injectable } from "@angular/core";
+import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from "@angular/router";
+import { Observable } from "rxjs";
+import { map } from "rxjs/operators";
+import { Admin } from "../models/Daudi/admin/Admin";
+import { DepotService } from "../services/core/depot.service";
+import { AdminService } from "../services/core/admin.service";
+import { NotificationService } from "../shared/services/notification.service";
 
 @Injectable({
     providedIn: "root"

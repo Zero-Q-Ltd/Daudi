@@ -1,7 +1,6 @@
-import {Component, OnInit} from "@angular/core";
-import {NavigationEnd, Router} from "@angular/router";
-import {APPCONFIG} from "./admin/config";
-import {AuthGuard} from "./guards/auth.guard"; //service
+import { Component, OnInit } from "@angular/core";
+import { NavigationEnd, Router } from "@angular/router";
+import { APPCONFIG } from "./config";
 // 3rd
 import "styles/material2-theme.scss";
 import "styles/bootstrap.scss";
@@ -22,7 +21,7 @@ import "styles/app.scss";
 export class AppComponent implements OnInit {
     public AppConfig: any;
 
-    constructor(private router: Router, public authguard: AuthGuard) {
+    constructor(private router: Router) {
 
     }
 

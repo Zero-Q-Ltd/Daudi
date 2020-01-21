@@ -1,24 +1,24 @@
-import {Component, Inject, OnDestroy, OnInit} from "@angular/core";
-import {AngularFirestore} from "@angular/fire/firestore";
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
+import { Component, Inject, OnDestroy, OnInit } from "@angular/core";
+import { AngularFirestore } from "@angular/fire/firestore";
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material";
 import * as moment from "moment";
-import {ReplaySubject} from "rxjs";
-import {takeUntil} from "rxjs/operators";
-import {Depot, emptydepot} from "../../models/Daudi/depot/Depot";
-import {DepotConfig, emptyDepotConfig} from "../../models/Daudi/depot/DepotConfig";
-import {Entry} from "../../models/Daudi/fuel/Entry";
-import {FuelNamesArray, FuelType} from "../../models/Daudi/fuel/FuelType";
-import {EmptyOMCStock, OMCStock} from "../../models/Daudi/omc/Stock";
-import {emptyorder, Order} from "../../models/Daudi/order/Order";
-import {MyTimestamp} from "../../models/firestore/firestoreTypes";
-import {NotificationService} from "../../shared/services/notification.service";
-import {AdminService} from "../services/core/admin.service";
-import {AdminConfigService} from "../services/core/admin-config.service";
-import {CoreService} from "../services/core/core.service";
-import {EntriesService} from "../services/entries.service";
-import {OrdersService} from "../services/orders.service";
-import {GenericTruckStage} from "../../models/Daudi/order/GenericStage";
-import {StocksService} from "../services/core/stocks.service";
+import { ReplaySubject } from "rxjs";
+import { takeUntil } from "rxjs/operators";
+import { Depot, emptydepot } from "../../models/Daudi/depot/Depot";
+import { DepotConfig, emptyDepotConfig } from "../../models/Daudi/depot/DepotConfig";
+import { Entry } from "../../models/Daudi/fuel/Entry";
+import { FuelNamesArray, FuelType } from "../../models/Daudi/fuel/FuelType";
+import { EmptyOMCStock, OMCStock } from "../../models/Daudi/omc/Stock";
+import { emptyorder, Order } from "../../models/Daudi/order/Order";
+import { MyTimestamp } from "../../models/firestore/firestoreTypes";
+import { NotificationService } from "../../shared/services/notification.service";
+import { GenericTruckStage } from "../../models/Daudi/order/GenericStage";
+import { AdminService } from "app/services/core/admin.service";
+import { CoreService } from "app/services/core/core.service";
+import { EntriesService } from "app/services/entries.service";
+import { AdminConfigService } from "app/services/core/admin-config.service";
+import { StocksService } from "app/services/core/stocks.service";
+import { OrdersService } from "app/services/orders.service";
 
 interface EntryContent {
     id: string;
@@ -45,28 +45,28 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
         ago: Array<Entry>,
         ik: Array<Entry>
     } = {
-        pms: [],
-        ago: [],
-        ik: []
-    };
+            pms: [],
+            ago: [],
+            ik: []
+        };
     displayedColumns: string[] = ["id", "batch", "totalqty", "accumulated", "loadedqty", "availableqty", "drawnqty", "remainingqty", "status"];
 
     drawnEntry: {
         [key in FuelType]: EntryContent[]
     } = {
-        pms: [],
-        ago: [],
-        ik: [],
-    };
+            pms: [],
+            ago: [],
+            ik: [],
+        };
     fuelerror: {
         [key in FuelType]: { status: boolean, errorString: string }
     } = {
-        ago: {status: false, errorString: null},
-        ik: {status: false, errorString: null},
-        pms: {status: false, errorString: null}
-    };
+            ago: { status: false, errorString: null },
+            ik: { status: false, errorString: null },
+            pms: { status: false, errorString: null }
+        };
     saving = false;
-    order: Order = {...emptyorder};
+    order: Order = { ...emptyorder };
     donecalculating = false;
     fueltypesArray = FuelNamesArray;
     fetchingEntries: boolean;
@@ -75,8 +75,8 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
      * this keeps a local copy of all the subscriptions within this service
      */
     subscriptions: Map<string, () => void> = new Map<string, any>();
-    stock: OMCStock = {...EmptyOMCStock};
-    activedepot: { depot: Depot, config: DepotConfig } = {depot: {...emptydepot}, config: {...emptyDepotConfig}};
+    stock: OMCStock = { ...EmptyOMCStock };
+    activedepot: { depot: Depot, config: DepotConfig } = { depot: { ...emptydepot }, config: { ...emptyDepotConfig } };
 
     constructor(
         public dialogRef: MatDialogRef<EntriesSelectorComponent>,
