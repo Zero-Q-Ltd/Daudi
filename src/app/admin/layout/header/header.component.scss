@@ -19,6 +19,10 @@
   height: 105px;
   background-color: $mk-grey;
 }
+.depot-select.mat-select-panel {
+  background: rgba(0, 0, 255, 0.5);
+  height: 100px;
+}
 
 /* .app-sidebar .sidebar-header {
     line-height: 100px;
