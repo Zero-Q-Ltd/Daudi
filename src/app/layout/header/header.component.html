@@ -28,21 +28,18 @@
                     <div class="row no-gutters loading-border-b">
                         <div class="col-md-12">
                             <div class="btn-group" role="group">
-                                <button [routerLinkActiveOptions]="{ exact: true }"
-                                    [routerLink]="['/admin/orders-table', 1]" class=" btn btn-primary "
-                                    routerLinkActive='active' type="button">
+                                <button [routerLinkActiveOptions]="{ exact: true }" [routerLink]="['/orders-table', 1]"
+                                    class=" btn btn-primary " routerLinkActive='active' type="button">
                                     <span class="badge badge-info">{{orderscount[1]}}</span>
                                     ESTIMATES
                                 </button>
-                                <button [routerLinkActiveOptions]="{ exact: true }"
-                                    [routerLink]="['/admin/orders-table', 2]" class="btn btn-primary "
-                                    routerLinkActive='active' type="button">
+                                <button [routerLinkActiveOptions]="{ exact: true }" [routerLink]="['/orders-table', 2]"
+                                    class="btn btn-primary " routerLinkActive='active' type="button">
                                     <span class="badge badge-info">{{orderscount[2]}}</span>
                                     INVOICED
                                 </button>
-                                <button [routerLinkActiveOptions]="{ exact: true }"
-                                    [routerLink]="['/admin/orders-table', 3]" class="btn btn-primary "
-                                    routerLinkActive='active' type="button">
+                                <button [routerLinkActiveOptions]="{ exact: true }" [routerLink]="['/orders-table', 3]"
+                                    class="btn btn-primary " routerLinkActive='active' type="button">
                                     <span class="badge badge-info">{{orderscount[3]}}</span>
                                     PAID
                                 </button>
@@ -52,7 +49,7 @@
                     <div class="row no-gutters border-spacing">
                         <div class="btn-group" role="group">
                             <div class="col-md-12">
-                                <button [routerLinkActiveOptions]="{ exact: true }" [routerLink]="['/admin/edit-price']"
+                                <button [routerLinkActiveOptions]="{ exact: true }" [routerLink]="['/edit-price']"
                                     class="btn btn-primary" routerLinkActive='active' type="button">
                                     <span *ngFor='let pricetype of fueltypesArray'>
                                         <i *ngIf="connectionStatus" class="fa fa-circle color-{{pricetype}}"></i>
@@ -79,9 +76,8 @@
                 <li class="list-inline-item">
                     <div class="row no-gutters loading-border-c">
                         <div class="col-md-12">
-                            <button [routerLinkActiveOptions]="{ exact: true }"
-                                [routerLink]="['/admin/orders-table', 4]" class="btn btn-primary  btn-block"
-                                routerLinkActive='active' type="button">
+                            <button [routerLinkActiveOptions]="{ exact: true }" [routerLink]="['/orders-table', 4]"
+                                class="btn btn-primary  btn-block" routerLinkActive='active' type="button">
                                 <span class="badge badge-info">{{orderscount[4]}}</span> LOADING ORDERS
                                 <i class="fa fa-truck"></i>
                             </button>
@@ -90,21 +86,18 @@
                     <div class="row no-gutters loading-border border-spacing">
                         <div class="col-md-12">
                             <div class="btn-group" role="group">
-                                <button [routerLinkActiveOptions]="{ exact: true }"
-                                    [routerLink]="['/admin/trucks-table', 1]" class="btn btn-primary "
-                                    routerLinkActive='active' type="button">
+                                <button [routerLinkActiveOptions]="{ exact: true }" [routerLink]="['/trucks-table', 1]"
+                                    class="btn btn-primary " routerLinkActive='active' type="button">
                                     <span class="badge badge-info">{{truckscount[1]}}</span>
                                     Processing
                                 </button>
-                                <button [routerLinkActiveOptions]="{ exact: true }"
-                                    [routerLink]="['/admin/trucks-table', 2]" class="btn btn-primary "
-                                    routerLinkActive='active' type="button">
+                                <button [routerLinkActiveOptions]="{ exact: true }" [routerLink]="['/trucks-table', 2]"
+                                    class="btn btn-primary " routerLinkActive='active' type="button">
                                     <span class="badge badge-info">{{truckscount[2]}}</span>
                                     Queued
                                 </button>
-                                <button [routerLinkActiveOptions]="{ exact: true }"
-                                    [routerLink]="['/admin/trucks-table', 3]" class="btn btn-primary "
-                                    routerLinkActive='active' type="button">
+                                <button [routerLinkActiveOptions]="{ exact: true }" [routerLink]="['/trucks-table', 3]"
+                                    class="btn btn-primary " routerLinkActive='active' type="button">
                                     <span class="badge badge-info">{{truckscount[3]}}</span>
                                     Loading
                                 </button>
@@ -116,19 +109,17 @@
                     <div class="row no-gutters loading-border-b">
                         <div class="col-md-12">
                             <div class="btn-group nafasi-l" role="group">
-                                <button [routerLinkActiveOptions]="{ exact: true }"
-                                    [routerLink]="['/admin/orders-table', 5]" class="btn btn-primary"
-                                    routerLinkActive='active' type="button">
+                                <button [routerLinkActiveOptions]="{ exact: true }" [routerLink]="['/orders-table', 5]"
+                                    class="btn btn-primary" routerLinkActive='active' type="button">
                                     <span class="badge badge-info">{{orderscount[5]}}</span>
                                     COMPLETE
                                 </button>
-                                <button [routerLinkActiveOptions]="{ exact: true }"
-                                    [routerLink]="['/admin/orders-table', 6]" class="btn btn-primary "
-                                    routerLinkActive='active' type="button">
+                                <button [routerLinkActiveOptions]="{ exact: true }" [routerLink]="['/orders-table', 6]"
+                                    class="btn btn-primary " routerLinkActive='active' type="button">
                                     <span class="badge badge-info">{{orderscount[6]}}</span>
                                     DELETED
                                 </button>
-                                <button [routerLinkActiveOptions]="{ exact: true }" [routerLink]="['/admin/archive']"
+                                <button [routerLinkActiveOptions]="{ exact: true }" [routerLink]="['/archive']"
                                     class="btn btn-primary " routerLinkActive='active' type="button">
                                     SEARCH
                                     <i aria-hidden="true" class="fa fa-search"></i>
@@ -140,13 +131,13 @@
                         <div class="col-md-6">
                             <div class="btn-group katikati" role="group">
                                 <button [matTooltipPosition]="position2" [routerLinkActiveOptions]="{ exact: true }"
-                                    [routerLink]="['/admin/create-order']" class="btn btn-primary nafasi"
+                                    [routerLink]="['/create-order']" class="btn btn-primary nafasi"
                                     matTooltip="Create New Order" routerLinkActive='active' type="button">
                                     <!--Create-->
                                     <i aria-hidden="true" class="fa fa-pencil color-yellow"></i>
                                 </button>
                                 <button [matTooltipPosition]="position2" [routerLinkActiveOptions]="{ exact: true }"
-                                    [routerLink]="['/admin/superadmin']" class="btn btn-primary nafasi"
+                                    [routerLink]="['/superadmin']" class="btn btn-primary nafasi"
                                     matTooltip="Admin Config" routerLinkActive='active' type="button">
                                     <!--Config-->
                                     <i aria-hidden="true" class="fa fa-cog color-yellow"></i>
@@ -214,7 +205,7 @@
                                 {{currentuser.profile.name}}
                             </span>
                             <hr>
-                            <!-- <button mat-menu-item [routerLink]="['/admin/account-details']">My Account</button> -->
+                            <!-- <button mat-menu-item [routerLink]="['/account-details']">My Account</button> -->
                             <button (click)="onLogoutClick()" mat-menu-item>
                                 <span class="pull-right">
                                     <i aria-hidden="true" class="fa fa-sign-out"></i> Log Out </span>

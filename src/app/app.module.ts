@@ -11,13 +11,13 @@ import { AngularFireDatabase } from '@angular/fire/database';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireFunctionsModule } from '@angular/fire/functions';
 import { AngularFireMessagingModule } from '@angular/fire/messaging';
-import { FlexLayoutModule } from "@angular/flex-layout";
+import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatCheckboxModule, MatChipsModule, MatDatepickerModule, MatExpansionModule, MatInputModule, MatNativeDateModule, MatPaginatorModule, MatProgressBarModule, MatProgressSpinnerModule, MatSelectModule, MatSlideToggleModule, MatSortModule, MatTableModule, MatTreeModule } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TextMaskModule } from 'angular2-text-mask';
 import { Ng5SliderModule } from 'ng5-slider';
-import { NgxEchartsModule } from "ngx-echarts";
+import { NgxEchartsModule } from 'ngx-echarts';
 import { SatDatepickerModule, SatNativeDateModule } from 'saturn-datepicker';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -50,7 +50,6 @@ import { AppSidenavMenuComponent } from './layout/sidenav/sidenav-menu/sidenav-m
 import { AppSidenavComponent } from './layout/sidenav/sidenav.component';
 import { ToggleOffcanvasNavDirective } from './layout/sidenav/toggle-offcanvas-nav.directive';
 import { SupportChatComponent } from './layout/support-chat/support-chat.component';
-import { MyMaterialModule } from './material.module';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { AccountDetailsComponent } from './pages/account-details/account-details.component';
 import { AdminComponent } from './pages/admin/admin.component';
@@ -109,7 +108,6 @@ const firebaseConfig = {
     BrowserAnimationsModule,
     AppRoutingModule,
     FlexLayoutModule,
-    MyMaterialModule,
     // Sub modules
     MatProgressSpinnerModule,
     AngularFireModule.initializeApp(firebaseConfig, 'EmkayNow'),
@@ -121,7 +119,6 @@ const firebaseConfig = {
 
     PipeModuleModule,
     CommonModule,
-    MyMaterialModule,
     FlexLayoutModule,
     FormsModule,
     MatDatepickerModule,
@@ -234,7 +231,8 @@ const firebaseConfig = {
     PricesService,
     FcmService],
   bootstrap: [AppComponent],
-  exports: [PipeModuleModule, MyMaterialModule
+  exports: [PipeModuleModule,
+    SharedModule
   ],
   entryComponents: [
     NotificationComponent,

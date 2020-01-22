@@ -44,8 +44,6 @@
     "hammerjs": "^2.0.8",
     "howler": "^2.1.3",
     "intro.js": "^2.9.3",
-    "jquery": "^3.4.1",
-    "jquery-slimscroll": "^1.3.8",
     "lodash": "^4.17.15",
     "moment": "^2.24.0",
     "ng5-slider": "^1.2.4",
@@ -56,7 +54,9 @@
     "stacktrace-js": "^2.0.2",
     "tslib": "^1.9.0",
     "xlsx": "^0.15.4",
-    "zone.js": "^0.10.2"
+    "zone.js": "^0.10.2",
+    "jquery": "^3.4.1",
+    "jquery-slimscroll": "^1.3.8"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.803.23",

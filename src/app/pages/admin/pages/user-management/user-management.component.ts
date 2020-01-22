@@ -1,18 +1,18 @@
-import { animate, sequence, state, style, transition, trigger } from "@angular/animations";
-import { Component, HostListener, OnDestroy, OnInit, ViewChild } from "@angular/core";
-import { AngularFireFunctions } from "@angular/fire/functions";
-import { MatPaginator, MatSort, MatTableDataSource } from "@angular/material";
+import { animate, sequence, state, style, transition, trigger } from '@angular/animations';
+import { Component, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AngularFireFunctions } from '@angular/fire/functions';
+import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 import { AdminService } from 'app/services/core/admin.service';
 import { CoreService } from 'app/services/core/core.service';
-import * as moment from "moment";
-import { ReplaySubject } from "rxjs";
-import { takeUntil } from "rxjs/operators";
-import { SyncRequest } from "../../../../models/Cloud/Sync";
-import { Admin, emptyadmin } from "../../../../models/Daudi/admin/Admin";
-import { Depot } from "../../../../models/Daudi/depot/Depot";
-import { emptyomc, OMC } from "../../../../models/Daudi/omc/OMC";
-import { MyTimestamp } from "../../../../models/firestore/firestoreTypes";
-import { NotificationService } from "../../../../shared/services/notification.service";
+import * as moment from 'moment';
+import { ReplaySubject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { SyncRequest } from '../../../../models/Cloud/Sync';
+import { Admin, emptyadmin } from '../../../../models/Daudi/admin/Admin';
+import { Depot } from '../../../../models/Daudi/depot/Depot';
+import { emptyomc, OMC } from '../../../../models/Daudi/omc/OMC';
+import { MyTimestamp } from '../../../../models/firestore/firestoreTypes';
+import { NotificationService } from '../../../../shared/services/notification.service';
 @Component({
     selector: "user-management",
     templateUrl: './user-management.component.html',
