@@ -1,28 +1,27 @@
-import {Component, OnDestroy, OnInit} from "@angular/core";
-import {MatDialog} from "@angular/material";
-import {AdminConfigService} from "../../../services/core/admin-config.service";
-import {ReplaySubject} from "rxjs";
-import {takeUntil} from "rxjs/operators";
-import {emptyomc, OMC} from "../../../../models/Daudi/omc/OMC";
-import {FormArray, FormBuilder, FormGroup} from "ngx-strongly-typed-forms";
-
-import {NotificationService} from "../../../../shared/services/notification.service";
-import * as firebase from "firebase";
-import {AdminType, NewAdminType} from "../../../../models/Daudi/admin/AdminType";
-import {Validators} from "@angular/forms";
-import {AdminLevel} from "../../../../models/Daudi/admin/AdminLevel";
-import {Meta} from "../../../../models/Daudi/universal/Meta";
-import {Metadata} from "../../../../models/Daudi/universal/Metadata";
-import {AdminService} from "../../../services/core/admin.service";
-import {ConfirmDialogComponent} from "../../../confirm-dialog/confirm-dialog.component";
-import {deepCopy} from "../../../../models/utils/deepCopy";
-import {CoreService} from "../../../services/core/core.service";
-import {AdminConfig} from "../../../../models/Daudi/omc/Config";
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material';
+import { ConfirmDialogComponent } from 'app/components/confirm-dialog/confirm-dialog.component';
+import { AdminLevel } from 'app/models/Daudi/admin/AdminLevel';
+import { AdminType, NewAdminType } from 'app/models/Daudi/admin/AdminType';
+import { AdminConfig } from 'app/models/Daudi/omc/Config';
+import { emptyomc, OMC } from 'app/models/Daudi/omc/OMC';
+import { DaudiMeta } from 'app/models/Daudi/universal/Meta';
+import { Metadata } from 'app/models/Daudi/universal/Metadata';
+import { deepCopy } from 'app/models/utils/deepCopy';
+import { AdminConfigService } from 'app/services/core/admin-config.service';
+import { AdminService } from 'app/services/core/admin.service';
+import { CoreService } from 'app/services/core/core.service';
+import { NotificationService } from 'app/shared/services/notification.service';
+import * as firebase from 'firebase';
+import { FormArray, FormBuilder, FormGroup } from 'ngx-strongly-typed-forms';
+import { ReplaySubject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
-    selector: "app-admin-levels",
-    templateUrl: "./admin-levels.component.html",
-    styleUrls: ["./admin-levels.component.scss"]
+    selector: 'app-admin-levels',
+    templateUrl: './admin-levels.component.html',
+    styleUrls: ['./admin-levels.component.scss']
 })
 export class AdminLevelsComponent implements OnInit, OnDestroy {
     comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
@@ -59,7 +58,7 @@ export class AdminLevelsComponent implements OnInit, OnDestroy {
 
     saveadminType(): void {
         const newtype: NewAdminType = this.newadminform.getRawValue();
-        const meta: Meta = {
+        const meta: DaudiMeta = {
             adminId: this.adminService.userdata.Id,
             date: firebase.firestore.Timestamp.now()
         };
@@ -68,7 +67,7 @@ export class AdminLevelsComponent implements OnInit, OnDestroy {
             created: meta,
             edited: meta
         };
-        const withMeta: AdminType = Object.assign({}, newtype, {metadata: newMeta});
+        const withMeta: AdminType = Object.assign({}, newtype, { metadata: newMeta });
         // @TODO temporary hack
         // @ts-ignore
         delete (withMeta.level);
@@ -80,7 +79,7 @@ export class AdminLevelsComponent implements OnInit, OnDestroy {
         const dialogRef = this._matDialog.open(ConfirmDialogComponent,
 
             {
-                role: "dialog",
+                role: 'dialog',
                 data: `Are you sure?`
             });
         dialogRef.afterClosed().pipe(takeUntil(this.comopnentDestroyed)).subscribe(result => {
@@ -99,7 +98,7 @@ export class AdminLevelsComponent implements OnInit, OnDestroy {
      * Retruns the form array for dynamic manipulation
      */
     getlevelsArray(): FormArray<AdminLevel> {
-        return this.newadminform.get("levels") as FormArray<AdminLevel>;
+        return this.newadminform.get('levels') as FormArray<AdminLevel>;
     }
 
     /**
@@ -107,8 +106,8 @@ export class AdminLevelsComponent implements OnInit, OnDestroy {
      */
     addLevelsform() {
         this.getlevelsArray().push(this.formBuilder.group<AdminLevel>({
-            name: ["", Validators.required],
-            description: ["", Validators.required],
+            name: ['', Validators.required],
+            description: ['', Validators.required],
         }));
     }
 
@@ -135,7 +134,7 @@ export class AdminLevelsComponent implements OnInit, OnDestroy {
     deleteTypedirect(index: number) {
         const dialogRef = this._matDialog.open(ConfirmDialogComponent,
             {
-                role: "dialog",
+                role: 'dialog',
                 data: `Are you sure?`
             });
         dialogRef.afterClosed().pipe(takeUntil(this.comopnentDestroyed)).subscribe(result => {
@@ -159,8 +158,8 @@ export class AdminLevelsComponent implements OnInit, OnDestroy {
         this.newadminform = this.formBuilder.group<NewAdminType>({
             level: [1, Validators.compose([Validators.required, Validators.min(1)])],
             levels: this.formBuilder.array<AdminLevel>([]),
-            name: ["", Validators.required],
-            description: ["", Validators.required]
+            name: ['', Validators.required],
+            description: ['', Validators.required]
         });
         this.addLevelsform();
     }

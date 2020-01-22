@@ -1,19 +1,19 @@
-import {Component, OnInit, ViewChild} from "@angular/core";
-import {MatDialog, MatPaginator, MatTableDataSource} from "@angular/material";
-import {ReplaySubject} from "rxjs";
-import {takeUntil} from "rxjs/operators";
-import {ASE, emptyASEs} from "../../../../models/Daudi/fuel/ASE";
-import {FuelNamesArray, FuelType} from "../../../../models/Daudi/fuel/FuelType";
-import {NotificationService} from "../../../../shared/services/notification.service";
-import {AseService} from "../../../services/ase.service";
-import {CoreService} from "../../../services/core/core.service";
-import {CoreAdminService} from "../../services/core.service";
-import {TransferComponent} from "./dialogs/transfer/transfer.component";
+import { Component, OnInit, ViewChild } from "@angular/core";
+import { MatDialog, MatPaginator, MatTableDataSource } from "@angular/material";
+import { AseService } from 'app/services/ase.service';
+import { CoreService } from 'app/services/core/core.service';
+import { ReplaySubject } from "rxjs";
+import { takeUntil } from "rxjs/operators";
+import { ASE, emptyASEs } from "../../../../models/Daudi/fuel/ASE";
+import { FuelNamesArray, FuelType } from "../../../../models/Daudi/fuel/FuelType";
+import { NotificationService } from "../../../../shared/services/notification.service";
+import { CoreAdminService } from "../../services/core.service";
+import { TransferComponent } from "./dialogs/transfer/transfer.component";
 
 @Component({
-    selector: "app-ase",
-    templateUrl: "./ase.component.html",
-    styleUrls: ["./ase.component.scss"]
+    selector: 'app-ase',
+    templateUrl: './ase.component.html',
+    styleUrls: ['./ase.component.scss']
 })
 export class AseComponent implements OnInit {
     fueltypesArray = FuelNamesArray;
@@ -23,28 +23,28 @@ export class AseComponent implements OnInit {
         ik: new MatTableDataSource<ASE>()
     };
     creatingsync = false;
-    @ViewChild(MatPaginator, {static: true}) pmspaginator: MatPaginator;
-    @ViewChild(MatPaginator, {static: true}) agopaginator: MatPaginator;
-    @ViewChild(MatPaginator, {static: true}) ikpaginator: MatPaginator;
-    displayedColumns: string[] = ["daudiId", "date", "id", "totalqty"];
+    @ViewChild(MatPaginator, { static: true }) pmspaginator: MatPaginator;
+    @ViewChild(MatPaginator, { static: true }) agopaginator: MatPaginator;
+    @ViewChild(MatPaginator, { static: true }) ikpaginator: MatPaginator;
+    displayedColumns: string[] = ['daudiId', 'date', 'id', 'totalqty'];
     loading: {
         pms: boolean,
         ago: boolean,
         ik: boolean
     } = {
-        pms: true,
-        ago: true,
-        ik: true
-    };
+            pms: true,
+            ago: true,
+            ik: true
+        };
     availablefuel: {
         pms: number,
         ago: number,
         ik: number
     } = {
-        pms: 0,
-        ago: 0,
-        ik: 0
-    };
+            pms: 0,
+            ago: 0,
+            ik: 0
+        };
 
     /**
      * this keeps a local copy of all the subscriptions within this service
@@ -102,9 +102,9 @@ export class AseComponent implements OnInit {
 
     trasfer(fuelType: FuelType) {
         const dialogRef = this.dialog.open(TransferComponent, {
-            role: "dialog",
+            role: 'dialog',
             data: fuelType,
-            height: "auto"
+            height: 'auto'
             // width: '100%%',
         });
 
@@ -112,22 +112,22 @@ export class AseComponent implements OnInit {
 
     syncdb() {
         this.creatingsync = true;
-        this.coreAdmin.syncdb(["BillPayment"])
+        this.coreAdmin.syncdb(['BillPayment'])
             .then(res => {
-                    this.creatingsync = false;
-                    this.notification.notify({
-                        alert_type: "success",
-                        body: "Entries updated",
-                        title: "Success"
-                    });
-                },
+                this.creatingsync = false;
+                this.notification.notify({
+                    alert_type: 'success',
+                    body: 'Entries updated',
+                    title: 'Success'
+                });
+            },
                 err => {
                     console.error(err);
                     this.creatingsync = false;
                     this.notification.notify({
-                        alert_type: "error",
-                        body: "Error Syncronising",
-                        title: "Error"
+                        alert_type: 'error',
+                        body: 'Error Syncronising',
+                        title: 'Error'
                     });
                 });
     }

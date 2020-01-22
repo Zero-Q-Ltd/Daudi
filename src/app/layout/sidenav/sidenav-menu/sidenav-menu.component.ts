@@ -1,17 +1,17 @@
-import {Component, OnDestroy} from "@angular/core";
-import {OrdersService} from "../../../services/orders.service";
-import {ReplaySubject} from "rxjs";
-import {takeUntil} from "rxjs/operators"; // get our service
-import {DepotService} from "../../../services/core/depot.service";
-import {Depot, emptydepot} from "../../../../models/Daudi/depot/Depot";
-import {OrderStageIds} from "../../../../models/Daudi/order/OrderStages";
-import {TruckStageNames} from "../../../../models/Daudi/order/truck/TruckStages";
-import {CoreService} from "../../..//services/core/core.service";
+import { Component, OnDestroy } from '@angular/core';
+import { Depot, emptydepot } from 'app/models/Daudi/depot/Depot';
+import { OrderStageIds } from 'app/models/Daudi/order/OrderStages';
+import { TruckStageNames } from 'app/models/Daudi/order/truck/TruckStages';
+import { CoreService } from 'app/services/core/core.service';
+import { DepotService } from 'app/services/core/depot.service';
+import { OrdersService } from 'app/services/orders.service';
+import { ReplaySubject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
     selector: "my-app-sidenav-menu",
     styles: [],
-    templateUrl: "./sidenav-menu.component.html"
+    templateUrl: './sidenav-menu.component.html'
 })
 
 export class AppSidenavMenuComponent implements OnDestroy {
@@ -30,7 +30,7 @@ export class AppSidenavMenuComponent implements OnDestroy {
         4: 0
     };
     comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
-    alldepots: Array<Depot>;
+    alldepots: Depot[];
     activedepot: Depot = Object.assign({}, emptydepot);
 
     constructor(
@@ -43,7 +43,7 @@ export class AppSidenavMenuComponent implements OnDestroy {
         TruckStageNames.forEach(stage => {
             // this.truckservice.trucks[stage].pipe(takeUntil(this.comopnentDestroyed)).subscribe(trucks => this.truckscount[stage] = trucks.length);
         });
-        this.core.depots.pipe(takeUntil(this.comopnentDestroyed)).subscribe((alldepots: Array<Depot>) => {
+        this.core.depots.pipe(takeUntil(this.comopnentDestroyed)).subscribe((alldepots: Depot[]) => {
             this.alldepots = alldepots;
         });
         this.core.activedepot.pipe(takeUntil(this.comopnentDestroyed)).subscribe((depot) => {

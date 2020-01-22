@@ -1,21 +1,20 @@
-import {Component, OnInit, ViewChild} from "@angular/core";
-import {AngularFireFunctions} from "@angular/fire/functions";
-import {MatPaginator, MatTableDataSource} from "@angular/material";
-import {ReplaySubject} from "rxjs";
-import {takeUntil} from "rxjs/operators";
-import {emptyEntry, Entry} from "../../../../models/Daudi/fuel/Entry";
-import {FuelNamesArray, FuelType} from "../../../../models/Daudi/fuel/FuelType";
-import {NotificationService} from "../../../../shared/services/notification.service";
-import {CoreService} from "../../../services/core/core.service";
-import {EntriesService} from "../../../services/entries.service";
-import {CoreAdminService} from "../../services/core.service";
-import {OMCStock} from "../../../../models/Daudi/omc/Stock";
-
+import { Component, OnInit, ViewChild } from "@angular/core";
+import { AngularFireFunctions } from "@angular/fire/functions";
+import { MatPaginator, MatTableDataSource } from "@angular/material";
+import { CoreService } from 'app/services/core/core.service';
+import { EntriesService } from 'app/services/entries.service';
+import { ReplaySubject } from "rxjs";
+import { takeUntil } from "rxjs/operators";
+import { emptyEntry, Entry } from "../../../../models/Daudi/fuel/Entry";
+import { FuelNamesArray, FuelType } from "../../../../models/Daudi/fuel/FuelType";
+import { OMCStock } from "../../../../models/Daudi/omc/Stock";
+import { NotificationService } from "../../../../shared/services/notification.service";
+import { CoreAdminService } from "../../services/core.service";
 
 @Component({
-    selector: "app-entries",
-    templateUrl: "./entries.component.html",
-    styleUrls: ["./entries.component.scss"]
+    selector: 'app-entries',
+    templateUrl: './entries.component.html',
+    styleUrls: ['./entries.component.scss']
 })
 export class EntriesComponent implements OnInit {
     fueltypesArray = FuelNamesArray;
@@ -25,19 +24,19 @@ export class EntriesComponent implements OnInit {
         ik: new MatTableDataSource<Entry>()
     };
     creatingsync = false;
-    @ViewChild(MatPaginator, {static: true}) pmspaginator: MatPaginator;
-    @ViewChild(MatPaginator, {static: true}) agopaginator: MatPaginator;
-    @ViewChild(MatPaginator, {static: true}) ikpaginator: MatPaginator;
-    displayedColumns: string[] = ["id", "date", "entry", "totalqty", "transferred", "loadedqty", "availableqty", "status"];
+    @ViewChild(MatPaginator, { static: true }) pmspaginator: MatPaginator;
+    @ViewChild(MatPaginator, { static: true }) agopaginator: MatPaginator;
+    @ViewChild(MatPaginator, { static: true }) ikpaginator: MatPaginator;
+    displayedColumns: string[] = ['id', 'date', 'entry', 'totalqty', 'transferred', 'loadedqty', 'availableqty', 'status'];
     loading: {
         pms: boolean,
         ago: boolean,
         ik: boolean
     } = {
-        pms: true,
-        ago: true,
-        ik: true
-    };
+            pms: true,
+            ago: true,
+            ik: true
+        };
     stock: OMCStock;
     /**
      * this keeps a local copy of all the subscriptions within this service
@@ -66,7 +65,7 @@ export class EntriesComponent implements OnInit {
                      * Create a subscrition for 1000 batches history
                      */
                     const subscription = this.entriesService.entryCollection(this.core.currentOmc.value.Id)
-                        .where("fuelType", "==", fueltype)
+                        .where('fuelType', '==', fueltype)
                         .limit(100)
                         .onSnapshot(snapshot => {
                             this.loading[fueltype] = false;
@@ -83,7 +82,7 @@ export class EntriesComponent implements OnInit {
                      */
                     this.core.depotEntries[fueltype]
                         .pipe(takeUntil(this.comopnentDestroyed))
-                        .subscribe((batches: Array<Entry>) => {
+                        .subscribe((batches: Entry[]) => {
                         });
                 });
             }
@@ -103,26 +102,25 @@ export class EntriesComponent implements OnInit {
 
     syncdb() {
         this.creatingsync = true;
-        this.coreAdmin.syncdb(["BillPayment"])
+        this.coreAdmin.syncdb(['BillPayment'])
             .then(res => {
-                    this.creatingsync = false;
-                    this.notification.notify({
-                        alert_type: "success",
-                        body: "Entries updated",
-                        title: "Success"
-                    });
-                },
+                this.creatingsync = false;
+                this.notification.notify({
+                    alert_type: 'success',
+                    body: 'Entries updated',
+                    title: 'Success'
+                });
+            },
                 err => {
                     console.error(err);
                     this.creatingsync = false;
                     this.notification.notify({
-                        alert_type: "error",
-                        body: "Error Syncronising",
-                        title: "Error"
+                        alert_type: 'error',
+                        body: 'Error Syncronising',
+                        title: 'Error'
                     });
                 });
     }
-
 
     getTotalAvailable(batch: Entry) {
         const totalqty = batch.qty.total;

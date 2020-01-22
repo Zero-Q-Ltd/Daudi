@@ -1,9 +1,9 @@
-import {Injectable} from "@angular/core";
-import {AngularFirestore} from "@angular/fire/firestore";
-import {Entry} from "../../models/Daudi/fuel/Entry";
+import { Injectable } from '@angular/core';
+import { AngularFirestore } from '@angular/fire/firestore';
+import { Entry } from 'app/models/Daudi/fuel/Entry';
 
 @Injectable({
-    providedIn: "root"
+    providedIn: 'root'
 })
 export class EntriesService {
 
@@ -13,9 +13,9 @@ export class EntriesService {
     }
 
     entryCollection(omcId: string) {
-        return this.db.firestore.collection("omc")
+        return this.db.firestore.collection('omc')
             .doc(omcId)
-            .collection("entries");
+            .collection('entries');
     }
 
     updateEntry(omcId: string, entry: Entry) {

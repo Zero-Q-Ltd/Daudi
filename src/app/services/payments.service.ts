@@ -1,18 +1,18 @@
-import {Injectable} from "@angular/core";
-import {AngularFirestore} from "@angular/fire/firestore";
-import {DepotService} from "./core/depot.service";
-import {BehaviorSubject} from "rxjs";
-import {AdminConfigService} from "./core/admin-config.service";
-import {EquityBulk} from "../../models/ipn/EquityBulk";
+import { Injectable } from '@angular/core';
+import { AngularFirestore } from '@angular/fire/firestore';
+import { EquityBulk } from 'app/models/ipn/EquityBulk';
+import { BehaviorSubject } from 'rxjs';
+import { AdminConfigService } from './core/admin-config.service';
+import { DepotService } from './core/depot.service';
 
 @Injectable({
-    providedIn: "root"
+    providedIn: 'root'
 })
 export class PaymentsService {
 
-    proddbstring = "prodpayments";
-    sandboxdbstring = "sandboxpayments";
-    unprocessedpayments: BehaviorSubject<Array<EquityBulk>> = new BehaviorSubject<Array<EquityBulk>>([]);
+    proddbstring = 'prodpayments';
+    sandboxdbstring = 'sandboxpayments';
+    unprocessedpayments: BehaviorSubject<EquityBulk[]> = new BehaviorSubject<EquityBulk[]>([]);
 
     /**
      * this keeps a local copy of all the subscriptions within this service

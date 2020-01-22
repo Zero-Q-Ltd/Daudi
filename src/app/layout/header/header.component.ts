@@ -1,27 +1,27 @@
-import { Component, OnDestroy, OnInit } from "@angular/core";
-import { ReplaySubject } from "rxjs";
-import { skipWhile, takeUntil } from "rxjs/operators";
-import { Admin, emptyadmin } from "../../../models/Daudi/admin/Admin";
-import { Depot, emptydepot } from "../../../models/Daudi/depot/Depot";
-import { DepotConfig, emptyDepotConfig } from "../../../models/Daudi/depot/DepotConfig";
-import { FuelNamesArray } from "../../../models/Daudi/fuel/FuelType";
-import { OrderStageIds } from "../../../models/Daudi/order/OrderStages";
-import { TruckStageNames } from "../../../models/Daudi/order/truck/TruckStages";
-import { APPCONFIG } from "../../config";
-import { AdminService } from "../../services/core/admin.service";
-import { CoreService } from "../../services/core/core.service";
-import { StatusService } from "../../services/core/status.service";
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { APPCONFIG } from 'app/config';
+import { Admin, emptyadmin } from 'app/models/Daudi/admin/Admin';
+import { Depot, emptydepot } from 'app/models/Daudi/depot/Depot';
+import { DepotConfig, emptyDepotConfig } from 'app/models/Daudi/depot/DepotConfig';
+import { FuelNamesArray } from 'app/models/Daudi/fuel/FuelType';
+import { OrderStageIds } from 'app/models/Daudi/order/OrderStages';
+import { TruckStageNames } from 'app/models/Daudi/order/truck/TruckStages';
+import { AdminService } from 'app/services/core/admin.service';
+import { CoreService } from 'app/services/core/core.service';
+import { StatusService } from 'app/services/core/status.service';
+import { ReplaySubject } from 'rxjs';
+import { skipWhile, takeUntil } from 'rxjs/operators';
 
 @Component({
     selector: "my-app-header",
-    templateUrl: "./header.component.html",
-    styleUrls: ["./header.component.scss"]
+    templateUrl: './header.component.html',
+    styleUrls: ['./header.component.scss']
 })
 
 export class AppHeaderComponent implements OnInit, OnDestroy {
-    position = "after";
-    position1 = "before";
-    position2 = "above";
+    position = 'after';
+    position1 = 'before';
+    position2 = 'above';
     public AppConfig: any;
     isLoggedIn: boolean;
     loggedInUser: string;
@@ -33,9 +33,9 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
     activedepot: { depot: Depot, config: DepotConfig } = { depot: { ...emptydepot }, config: { ...emptyDepotConfig } };
     currentuser: Admin = { ...emptyadmin };
     connectionStatus: boolean;
-    alldepots: Array<Depot> = [];
-    privateDepots: Array<Depot> = [];
-    kpcDepots: Array<Depot> = [];
+    alldepots: Depot[] = [];
+    privateDepots: Depot[] = [];
+    kpcDepots: Depot[] = [];
     orderscount = {
         1: 0,
         2: 0,
@@ -66,7 +66,7 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
                 this.activedepot = depot;
             });
         this.core.depots
-            .pipe(takeUntil(this.comopnentDestroyed)).subscribe((alldepots: Array<Depot>) => {
+            .pipe(takeUntil(this.comopnentDestroyed)).subscribe((alldepots: Depot[]) => {
                 this.alldepots = alldepots;
                 this.kpcDepots = alldepots.filter(depot => {
                     return !depot.config.private;

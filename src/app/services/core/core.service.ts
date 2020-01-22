@@ -1,45 +1,45 @@
-import {Injectable} from "@angular/core";
-import {AngularFirestore} from "@angular/fire/firestore";
-import * as moment from "moment";
-import {BehaviorSubject} from "rxjs";
-import {distinctUntilChanged, skipWhile} from "rxjs/operators";
-import {DaudiCustomer, emptyDaudiCustomer} from "../../../models/Daudi/customer/Customer";
-import {Depot, emptydepot} from "../../../models/Daudi/depot/Depot";
-import {DepotConfig, emptyDepotConfig} from "../../../models/Daudi/depot/DepotConfig";
-import {emptyEntry, Entry} from "../../../models/Daudi/fuel/Entry";
-import {FuelNamesArray} from "../../../models/Daudi/fuel/FuelType";
-import {AdminConfig, emptyConfig} from "../../../models/Daudi/omc/Config";
-import {emptyomc, OMC} from "../../../models/Daudi/omc/OMC";
-import {EmptyOMCStock, OMCStock} from "../../../models/Daudi/omc/Stock";
-import {emptyorder, Order} from "../../../models/Daudi/order/Order";
-import {OrderStageIds, OrderStages} from "../../../models/Daudi/order/OrderStages";
-import {CustomerService} from "../customers.service";
-import {EntriesService} from "../entries.service";
-import {OrdersService} from "../orders.service";
-import {AdminService} from "./admin.service";
-import {AdminConfigService} from "./admin-config.service";
-import {DepotService} from "./depot.service";
-import {OmcService} from "./omc.service";
-import {toArray, toObject} from "../../../models/utils/SnapshotUtils";
-import {StocksService} from "./stocks.service";
+import { Injectable } from '@angular/core';
+import { AngularFirestore } from '@angular/fire/firestore';
+import { DaudiCustomer, emptyDaudiCustomer } from 'app/models/Daudi/customer/Customer';
+import { Depot, emptydepot } from 'app/models/Daudi/depot/Depot';
+import { DepotConfig, emptyDepotConfig } from 'app/models/Daudi/depot/DepotConfig';
+import { emptyEntry, Entry } from 'app/models/Daudi/fuel/Entry';
+import { FuelNamesArray } from 'app/models/Daudi/fuel/FuelType';
+import { AdminConfig, emptyConfig } from 'app/models/Daudi/omc/Config';
+import { emptyomc, OMC } from 'app/models/Daudi/omc/OMC';
+import { EmptyOMCStock, OMCStock } from 'app/models/Daudi/omc/Stock';
+import { emptyorder, Order } from 'app/models/Daudi/order/Order';
+import { OrderStageIds, OrderStages } from 'app/models/Daudi/order/OrderStages';
+import { toArray, toObject } from 'app/models/utils/SnapshotUtils';
+import * as moment from 'moment';
+import { BehaviorSubject } from 'rxjs';
+import { distinctUntilChanged, skipWhile } from 'rxjs/operators';
+import { CustomerService } from '../customers.service';
+import { EntriesService } from '../entries.service';
+import { OrdersService } from '../orders.service';
+import { AdminConfigService } from './admin-config.service';
+import { AdminService } from './admin.service';
+import { DepotService } from './depot.service';
+import { OmcService } from './omc.service';
+import { StocksService } from './stocks.service';
 
 @Injectable({
-    providedIn: "root"
+    providedIn: 'root'
 })
 /**
  * This singleton keeps all the variables needed by the app to run and automatically keeps and manages the subscriptions
  */
 export class CoreService {
-    adminConfig: BehaviorSubject<AdminConfig> = new BehaviorSubject<AdminConfig>({...emptyConfig});
-    depots: BehaviorSubject<Array<Depot>> = new BehaviorSubject([]);
-    customers: BehaviorSubject<Array<DaudiCustomer>> = new BehaviorSubject<Array<DaudiCustomer>>([]);
-    omcs: BehaviorSubject<Array<OMC>> = new BehaviorSubject<Array<OMC>>([]);
-    stock: BehaviorSubject<OMCStock> = new BehaviorSubject<OMCStock>({...EmptyOMCStock});
+    adminConfig: BehaviorSubject<AdminConfig> = new BehaviorSubject<AdminConfig>({ ...emptyConfig });
+    depots: BehaviorSubject<Depot[]> = new BehaviorSubject([]);
+    customers: BehaviorSubject<DaudiCustomer[]> = new BehaviorSubject<DaudiCustomer[]>([]);
+    omcs: BehaviorSubject<OMC[]> = new BehaviorSubject<OMC[]>([]);
+    stock: BehaviorSubject<OMCStock> = new BehaviorSubject<OMCStock>({ ...EmptyOMCStock });
     currentOmc: BehaviorSubject<OMC> = new BehaviorSubject<OMC>(emptyomc);
     /**
      * Be careful when subscribing to this value because it will always emit a value
      */
-    activedepot: BehaviorSubject<{ depot: Depot, config: DepotConfig }> = new BehaviorSubject({depot: {...emptydepot}, config: {...emptyDepotConfig}});
+    activedepot: BehaviorSubject<{ depot: Depot, config: DepotConfig }> = new BehaviorSubject({ depot: { ...emptydepot }, config: { ...emptyDepotConfig } });
     /**
      * this keeps a local copy of all the subscriptions within this service
      */
@@ -57,26 +57,26 @@ export class CoreService {
         stock: new BehaviorSubject<boolean>(true)
     };
     depotEntries: {
-        pms: BehaviorSubject<Array<Entry>>,
-        ago: BehaviorSubject<Array<Entry>>,
-        ik: BehaviorSubject<Array<Entry>>,
+        pms: BehaviorSubject<Entry[]>,
+        ago: BehaviorSubject<Entry[]>,
+        ik: BehaviorSubject<Entry[]>,
     } = {
-        pms: new BehaviorSubject([]),
-        ago: new BehaviorSubject([]),
-        ik: new BehaviorSubject([])
-    };
+            pms: new BehaviorSubject([]),
+            ago: new BehaviorSubject([]),
+            ik: new BehaviorSubject([])
+        };
 
     fueltypesArray = FuelNamesArray;
     orders: {
-        [key in OrderStages]: BehaviorSubject<Array<Order>>
+        [key in OrderStages]: BehaviorSubject<Order[]>
     } = {
-        1: new BehaviorSubject<Array<Order>>([]),
-        2: new BehaviorSubject<Array<Order>>([]),
-        3: new BehaviorSubject<Array<Order>>([]),
-        4: new BehaviorSubject<Array<Order>>([]),
-        5: new BehaviorSubject<Array<Order>>([]),
-        6: new BehaviorSubject<Array<Order>>([])
-    };
+            1: new BehaviorSubject<Order[]>([]),
+            2: new BehaviorSubject<Order[]>([]),
+            3: new BehaviorSubject<Order[]>([]),
+            4: new BehaviorSubject<Order[]>([]),
+            5: new BehaviorSubject<Order[]>([]),
+            6: new BehaviorSubject<Order[]>([])
+        };
     queuedorders = new BehaviorSubject([]);
     omcId: string;
 
@@ -94,7 +94,7 @@ export class CoreService {
             .pipe(distinctUntilChanged())
             .subscribe(admin => {
                 this.unsubscribeAll();
-                this.subscriptions.set("configSubscription", this.adminConfigService.configDoc(admin.config.omcId)
+                this.subscriptions.set('configSubscription', this.adminConfigService.configDoc(admin.config.omcId)
                     .onSnapshot(t => {
                         const config = toObject(emptyConfig, t);
                         // this.duplicate(admin.config.omcId, "configs", "admin", { adminTypes: config.adminTypes });
@@ -123,7 +123,7 @@ export class CoreService {
 
     duplicate(name: string, id: string, doc, omcId?: string) {
         if (omcId) {
-            return this.db.firestore.collection("omc")
+            return this.db.firestore.collection('omc')
                 .doc(omcId)
                 .collection(name)
                 .doc(id)
@@ -137,7 +137,7 @@ export class CoreService {
 
     getStocks() {
         this.loaders.stock.next(true);
-        this.subscriptions.set("stock", this.stockService.stockDoc(this.omcId)
+        this.subscriptions.set('stock', this.stockService.stockDoc(this.omcId)
             .onSnapshot(t => {
                 this.stock.next(toObject(EmptyOMCStock, t));
                 this.loaders.stock.next(false);
@@ -149,10 +149,10 @@ export class CoreService {
      */
     getDepots() {
         this.loaders.depots.next(true);
-        this.subscriptions.set("alldepots", this.depotService
+        this.subscriptions.set('alldepots', this.depotService
             .depotsCollection()
-            .where("Active", "==", true)
-            .orderBy("Name", "asc")
+            .where('Active', '==', true)
+            .orderBy('Name', 'asc')
             .onSnapshot((data) => {
                 /**
                  * Only subscribe to depot when the user data changes
@@ -181,13 +181,13 @@ export class CoreService {
      * fetches all omc's and filters the one belonging the the currently logged in user
      */
     getOmcs() {
-        this.subscriptions.set("omcs", this.omc.omcCollection()
-            .orderBy("name", "asc")
+        this.subscriptions.set('omcs', this.omc.omcCollection()
+            .orderBy('name', 'asc')
             .onSnapshot(data => {
                 this.omcs.next(toArray(emptyomc, data));
                 this.omcs.value.forEach(co => {
                     if (co.Id === this.omcId) {
-                        console.log("Current OMC found");
+                        console.log('Current OMC found');
                         this.currentOmc.next(co);
                     }
                 });
@@ -207,7 +207,7 @@ export class CoreService {
      */
     getallcustomers() {
         this.loaders.customers.next(true);
-        this.subscriptions.set("allcustomers", this.customerService.customerCollection(this.omcId)
+        this.subscriptions.set('allcustomers', this.customerService.customerCollection(this.omcId)
             .onSnapshot(data => {
                 this.loaders.customers.next(false);
                 this.customers.next(toArray(emptyDaudiCustomer, data));
@@ -224,17 +224,17 @@ export class CoreService {
         //   .add(emptyDepotConfig);
         this.loaders.depotConfig.next(true);
         if (JSON.stringify(depot) !== JSON.stringify(this.activedepot.value)) {
-            this.subscriptions.set("currentDepotConfig", this.depotService
+            this.subscriptions.set('currentDepotConfig', this.depotService
                 .depotConfigDoc(this.omcId, depot.Id)
                 .onSnapshot(t => {
                     if (t.exists) {
                         const config: DepotConfig = toObject(emptyDepotConfig, t);
-                        console.log("changing to:", depot.Name, config.depotId, config.Id);
-                        this.activedepot.next({depot, config});
+                        console.log('changing to:', depot.Name, config.depotId, config.Id);
+                        this.activedepot.next({ depot, config });
                         this.loaders.depotConfig.next(false);
                     } else {
-                        console.log("this depot doesnt have a valid config");
-                        this.activedepot.next({depot, config: {...emptyDepotConfig}});
+                        console.log('this depot doesnt have a valid config');
+                        this.activedepot.next({ depot, config: { ...emptyDepotConfig } });
                         this.loaders.depotConfig.next(false);
                     }
                 })
@@ -254,7 +254,6 @@ export class CoreService {
             value();
         });
     }
-
 
     /**
      * Fetches all orders and trucks Relevant to the header
@@ -280,9 +279,9 @@ export class CoreService {
             }
 
             const subscriprion = this.orderService.ordersCollection(this.omcId)
-                .where("stage", "==", stage)
-                .where("config.depot.id", "==", depotId)
-                .orderBy("orderStageData.1.user.date", "asc")
+                .where('stage', '==', stage)
+                .where('config.depot.id', '==', depotId)
+                .orderBy('orderStageData.1.user.date', 'asc')
                 .onSnapshot(Data => {
                     /**
                      * reset the array at the postion when data changes
@@ -296,15 +295,15 @@ export class CoreService {
             this.subscriptions.set(`orders${stage}`, subscriprion);
         });
 
-        const startofweek = moment().startOf("week").toDate();
+        const startofweek = moment().startOf('week').toDate();
         /**
          * Fetch completed orders
          */
         const stage5subscriprion = this.orderService.ordersCollection(this.omcId)
-            .where("stage", "==", 5)
-            .where("config.depot.id", "==", depotId)
-            .where("orderStageData.1.user.date", "<=", startofweek)
-            .orderBy("orderStageData.1.user.date", "asc")
+            .where('stage', '==', 5)
+            .where('config.depot.id', '==', depotId)
+            .where('orderStageData.1.user.date', '<=', startofweek)
+            .orderBy('orderStageData.1.user.date', 'asc')
             .onSnapshot(Data => {
                 /**
                  * reset the array at the postion when data changes
@@ -325,9 +324,9 @@ export class CoreService {
     fetchActiveEntries() {
         this.loaders.entries.next(true);
         this.fueltypesArray.forEach(fuelType => {
-            this.subscriptions.set("entries", this.entriesService.entryCollection(this.omcId)
-                .where("active", "==", true)
-                .where("fuelType", "==", fuelType)
+            this.subscriptions.set('entries', this.entriesService.entryCollection(this.omcId)
+                .where('active', '==', true)
+                .where('fuelType', '==', fuelType)
                 .onSnapshot(data => {
                     this.loaders.entries.next(false);
                     this.depotEntries[fuelType].next(toArray(emptyEntry, data));

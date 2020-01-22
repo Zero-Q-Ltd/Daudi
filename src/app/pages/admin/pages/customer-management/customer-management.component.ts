@@ -1,34 +1,33 @@
-import {SelectionModel} from "@angular/cdk/collections";
-import {Component, Inject, OnDestroy, OnInit, Optional, ViewChild} from "@angular/core";
-import {AngularFireFunctions} from "@angular/fire/functions";
-import {MAT_DIALOG_DATA, MatDialog, MatDialogRef, MatPaginator, MatSnackBar, MatSort, MatTableDataSource} from "@angular/material";
-import {ReplaySubject} from "rxjs";
-import {takeUntil} from "rxjs/operators";
-import {DaudiCustomer} from "../../../../models/Daudi/customer/Customer";
-import {SMS} from "../../../../models/Daudi/sms/sms";
-import {MyTimestamp} from "../../../../models/firestore/firestoreTypes";
-import {NotificationService} from "../../../../shared/services/notification.service";
-import {SendMsgComponent} from "../../../send-msg/send-msg.component";
-import {AdminService} from "../../../services/core/admin.service";
-import {CoreService} from "../../../services/core/core.service";
-import {CustomerService} from "../../../services/customers.service";
-import {CompanyMembersComponent} from "../company-members/company-members.component";
-import {CoreAdminService} from "../../services/core.service";
-
+import { SelectionModel } from "@angular/cdk/collections";
+import { Component, Inject, OnDestroy, OnInit, Optional, ViewChild } from "@angular/core";
+import { AngularFireFunctions } from "@angular/fire/functions";
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef, MatPaginator, MatSnackBar, MatSort, MatTableDataSource } from "@angular/material";
+import { SendMsgComponent } from 'app/components/send-msg/send-msg.component';
+import { AdminService } from 'app/services/core/admin.service';
+import { CoreService } from 'app/services/core/core.service';
+import { CustomerService } from 'app/services/customers.service';
+import { ReplaySubject } from "rxjs";
+import { takeUntil } from "rxjs/operators";
+import { DaudiCustomer } from "../../../../models/Daudi/customer/Customer";
+import { SMS } from "../../../../models/Daudi/sms/sms";
+import { MyTimestamp } from "../../../../models/firestore/firestoreTypes";
+import { NotificationService } from "../../../../shared/services/notification.service";
+import { CoreAdminService } from "../../services/core.service";
+import { CompanyMembersComponent } from "../company-members/company-members.component";
 
 @Component({
     selector: "customer-management",
-    templateUrl: "./customer-management.component.html",
-    styleUrls: ["./customer-management.component.scss"]
+    templateUrl: './customer-management.component.html',
+    styleUrls: ['./customer-management.component.scss']
 })
 
 export class CustomerManagementComponent implements OnInit, OnDestroy {
 
     dialogProperties: object = {};
-    displayedColumns: string[] = ["select", "QbId", "name", "email", "phone", "krapin", "balance"];
+    displayedColumns: string[] = ['select', 'QbId', 'name', 'email', 'phone', 'krapin', 'balance'];
     companiesdatasource = new MatTableDataSource<DaudiCustomer>();
-    @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
-    @ViewChild(MatSort, {static: true}) sort: MatSort;
+    @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+    @ViewChild(MatSort, { static: true }) sort: MatSort;
     creatingsync = false;
     selection = new SelectionModel<DaudiCustomer>(true, []);
     loadingcompanies = true;
@@ -46,7 +45,7 @@ export class CustomerManagementComponent implements OnInit, OnDestroy {
         private core: CoreService,
         private coreAdmin: CoreAdminService,
         @Optional() public dialogRef: MatDialogRef<CustomerManagementComponent>,
-        @Optional() @Inject(MAT_DIALOG_DATA) public purpose: "SMS" | "Attach") {
+        @Optional() @Inject(MAT_DIALOG_DATA) public purpose: 'SMS' | 'Attach') {
         this.core.activedepot
             .pipe(takeUntil(this.comopnentDestroyed))
             .subscribe(depotvata => {
@@ -55,7 +54,7 @@ export class CustomerManagementComponent implements OnInit, OnDestroy {
                 if (depotvata.depot.Id) {
                     if (purpose) {
                         switch (purpose) {
-                            case "Attach": {
+                            case 'Attach': {
                                 /**
                                  * disable mutiselect and channge the buttontext
                                  */
@@ -91,9 +90,9 @@ export class CustomerManagementComponent implements OnInit, OnDestroy {
     openMembers(id: string) {
         console.log(id);
         this.dialog.open(CompanyMembersComponent, {
-            role: "dialog",
+            role: 'dialog',
             data: id,
-            height: "auto"
+            height: 'auto'
             // width: '100%%',
 
         });
@@ -106,8 +105,8 @@ export class CustomerManagementComponent implements OnInit, OnDestroy {
     }
 
     submitcompanies() {
-        if (!this.purpose || this.purpose === "SMS") {
-            const sms: Array<SMS> = this.selection.selected.map(company => {
+        if (!this.purpose || this.purpose === 'SMS') {
+            const sms: SMS[] = this.selection.selected.map(company => {
                 const sms: SMS = {
                     Id: null,
                     company: {
@@ -119,9 +118,9 @@ export class CustomerManagementComponent implements OnInit, OnDestroy {
                     contact: company.contact,
                     type: {
                         reason: null,
-                        origin: "custom" as "custom"
+                        origin: 'custom' as 'custom'
                     },
-                    greeting: "Jambo",
+                    greeting: 'Jambo',
                     msg: null,
                     status: {
                         delivered: false,
@@ -132,16 +131,15 @@ export class CustomerManagementComponent implements OnInit, OnDestroy {
                 return sms;
             });
             this.dialog.open(SendMsgComponent, {
-                role: "dialog",
+                role: 'dialog',
                 data: sms,
-                height: "auto"
+                height: 'auto'
             });
         } else {
             this.dialogRef.close(this.selection.selected);
         }
         // this.dialog.open(SendMsgComponent);
     }
-
 
     /** Selects all rows if they are not all selected; otherwise clear selection. */
     masterToggle() {
@@ -152,19 +150,19 @@ export class CustomerManagementComponent implements OnInit, OnDestroy {
 
     syncdb() {
         this.creatingsync = true;
-        this.coreAdmin.syncdb(["Customer"]).then(res => {
+        this.coreAdmin.syncdb(['Customer']).then(res => {
             this.creatingsync = false;
             this.notification.notify({
-                alert_type: "success",
-                title: "Success",
-                body: "Companies Synchronized"
+                alert_type: 'success',
+                title: 'Success',
+                body: 'Companies Synchronized'
             });
         }).catch(e => {
             this.creatingsync = false;
             this.notification.notify({
-                alert_type: "error",
-                title: "Error",
-                body: "Sync failed, please try again later"
+                alert_type: 'error',
+                title: 'Error',
+                body: 'Sync failed, please try again later'
             });
             /**
              * @todo send the error to the database
@@ -193,9 +191,9 @@ export class CustomerManagementComponent implements OnInit, OnDestroy {
                 } else {
                     this.savingcompany = false;
                     this.notification.notify({
-                        alert_type: "error",
-                        title: "Error",
-                        body: "Duplicate KRA pin"
+                        alert_type: 'error',
+                        title: 'Error',
+                        body: 'Duplicate KRA pin'
                     });
                 }
             });
@@ -221,7 +219,7 @@ export class CustomerManagementComponent implements OnInit, OnDestroy {
         // company.verifiedByUser = this.authService.getUser().displayName;
         // update company
         // this.updateCompanies(company.$key, company)
-        this.snackBar.open("Company details updated!", "Emkay Now ", {duration: 4000});
+        this.snackBar.open('Company details updated!', 'Emkay Now ', { duration: 4000 });
 
     }
 
@@ -229,6 +227,6 @@ export class CustomerManagementComponent implements OnInit, OnDestroy {
         console.log(company);
         // update company
         // this.updateCompanies(company.$key, company)
-        this.snackBar.open("Company details updated!", "Emkay Now ", {duration: 4000});
+        this.snackBar.open('Company details updated!', 'Emkay Now ', { duration: 4000 });
     }
 }

@@ -1,18 +1,17 @@
-import {Injectable} from "@angular/core";
-import {AngularFirestore} from "@angular/fire/firestore";
-import {AngularFireFunctions} from "@angular/fire/functions";
-import {Observable} from "rxjs";
-import {DaudiCustomer} from "../../models/Daudi/customer/Customer";
+import { Injectable } from "@angular/core";
+import { AngularFirestore } from "@angular/fire/firestore";
+import { AngularFireFunctions } from "@angular/fire/functions";
+import { DaudiCustomer } from 'app/models/Daudi/customer/Customer';
+import { Observable } from "rxjs";
 
 @Injectable({
-    providedIn: "root"
+    providedIn: 'root'
 })
 export class CustomerService {
 
     constructor(
         private db: AngularFirestore,
         private functions: AngularFireFunctions) {
-
 
     }
 
@@ -22,8 +21,8 @@ export class CustomerService {
      */
     queryActivecompany(krapin: string, omcId: string) {
         return this.customerCollection(omcId)
-            .where("krapin", "==", krapin)
-            .where("Active", "==", true)
+            .where('krapin', '==', krapin)
+            .where('Active', '==', true)
             .limit(1);
     }
 
@@ -32,26 +31,24 @@ export class CustomerService {
             .doc(customerid);
     }
 
-
     /**
      * The KRA PIN to checked for uniqueness
      * @param {string} krapin
      */
     verifykra(krapin: string, omcId: string) {
         return this.customerCollection(omcId)
-            .where("krapin", "==", krapin);
+            .where('krapin', '==', krapin);
     }
 
     customerCollection(omcId: string) {
-        return this.db.firestore.collection("omc")
+        return this.db.firestore.collection('omc')
             .doc(omcId)
             .collection(`customers`);
     }
 
     createcompany(company: DaudiCustomer): Observable<any> {
-        return this.functions.httpsCallable("createcustomer")(company);
+        return this.functions.httpsCallable('createcustomer')(company);
     }
-
 
     updateCustomer(customer: DaudiCustomer, omcId: string) {
         return this.customerCollection(omcId)

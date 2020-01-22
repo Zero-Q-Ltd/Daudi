@@ -1,19 +1,19 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output} from "@angular/core";
-import {OrderContactForm} from "./../../../../models/Daudi/forms/CreateOrder";
-import {Order} from "./../../../../models/Daudi/order/Order";
-import {CustomerDetail} from "../../../../models/Daudi/customer/CustomerDetail";
-import {FormBuilder, FormControl, FormGroup} from "ngx-strongly-typed-forms";
-import {Validators} from "@angular/forms";
-import {ReplaySubject, Subject} from "rxjs";
-import {DaudiCustomer} from "./../../../../models/Daudi/customer/Customer";
-import {takeUntil} from "rxjs/operators";
-import {CustomerService} from "./../../../services/customers.service";
-import {CoreService} from "./../../../services/core/core.service";
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from "@angular/core";
+import { Validators } from "@angular/forms";
+import { CoreService } from 'app/services/core/core.service';
+import { CustomerService } from 'app/services/customers.service';
+import { FormBuilder, FormControl, FormGroup } from "ngx-strongly-typed-forms";
+import { ReplaySubject, Subject } from "rxjs";
+import { takeUntil } from "rxjs/operators";
+import { CustomerDetail } from "../../../../models/Daudi/customer/CustomerDetail";
+import { DaudiCustomer } from "./../../../../models/Daudi/customer/Customer";
+import { OrderContactForm } from "./../../../../models/Daudi/forms/CreateOrder";
+import { Order } from "./../../../../models/Daudi/order/Order";
 
 @Component({
-    selector: "app-contact-form",
-    templateUrl: "./contact-form.component.html",
-    styleUrls: ["./contact-form.component.scss"]
+    selector: 'app-contact-form',
+    templateUrl: './contact-form.component.html',
+    styleUrls: ['./contact-form.component.scss']
 })
 export class ContactFormComponent implements OnInit, OnChanges {
     @Input() initData: Order;
@@ -31,11 +31,11 @@ export class ContactFormComponent implements OnInit, OnChanges {
     subscriptions: Map<string, any> = new Map<string, any>();
 
     contactForm: FormGroup<OrderContactForm> = new FormGroup<OrderContactForm>({
-        kraPin: new FormControl<string>("", [Validators.required]),
-        email: new FormControl<string>("", [Validators.required, Validators.email]),
-        companyName: new FormControl<string>("", [Validators.required]),
-        name: new FormControl<string>("", [Validators.required, Validators.minLength(4)]),
-        phone: new FormControl<string>("", [Validators.required, Validators.pattern("[0-9].{8}")])
+        kraPin: new FormControl<string>('', [Validators.required]),
+        email: new FormControl<string>('', [Validators.required, Validators.email]),
+        companyName: new FormControl<string>('', [Validators.required]),
+        name: new FormControl<string>('', [Validators.required, Validators.minLength(4)]),
+        phone: new FormControl<string>('', [Validators.required, Validators.pattern('[0-9].{8}')])
     });
 
     constructor(
@@ -83,10 +83,10 @@ export class ContactFormComponent implements OnInit, OnChanges {
         /**
          * Silently update the related values
          */
-        this.contactForm.controls.kraPin.setValue(selectedcompany.krapin, {emitEvent: false});
-        this.contactForm.controls.name.setValue(selectedcompany.contact[0].name, {emitEvent: false});
-        this.contactForm.controls.phone.setValue(selectedcompany.contact[0].phone, {emitEvent: false});
-        this.contactForm.controls.email.setValue(selectedcompany.contact[0].email, {emitEvent: false});
+        this.contactForm.controls.kraPin.setValue(selectedcompany.krapin, { emitEvent: false });
+        this.contactForm.controls.name.setValue(selectedcompany.contact[0].name, { emitEvent: false });
+        this.contactForm.controls.phone.setValue(selectedcompany.contact[0].phone, { emitEvent: false });
+        this.contactForm.controls.email.setValue(selectedcompany.contact[0].email, { emitEvent: false });
         /**
          * emit the cahnges at once
          */
@@ -108,15 +108,15 @@ export class ContactFormComponent implements OnInit, OnChanges {
     ngOnChanges(changes: any) {
         if (!this.newOrder) {
             this.contactForm.disable();
-            this.contactForm.controls.companyName.setValue(this.initData.customer.name, {emitEvent: false});
-            this.contactForm.controls.kraPin.setValue(this.initData.customer.krapin, {emitEvent: false});
+            this.contactForm.controls.companyName.setValue(this.initData.customer.name, { emitEvent: false });
+            this.contactForm.controls.kraPin.setValue(this.initData.customer.krapin, { emitEvent: false });
             /**
              * Check if the contact array has values, as the initialization data which may trigger a change detection is empty
              */
             if (this.initData.customer.contact.length > 0) {
-                this.contactForm.controls.email.setValue(this.initData.customer.contact[0].email, {emitEvent: false});
-                this.contactForm.controls.name.setValue(this.initData.customer.contact[0].name, {emitEvent: false});
-                this.contactForm.controls.phone.setValue(this.initData.customer.contact[0].phone, {emitEvent: false});
+                this.contactForm.controls.email.setValue(this.initData.customer.contact[0].email, { emitEvent: false });
+                this.contactForm.controls.name.setValue(this.initData.customer.contact[0].name, { emitEvent: false });
+                this.contactForm.controls.phone.setValue(this.initData.customer.contact[0].phone, { emitEvent: false });
             }
         }
         this.contactForm.updateValueAndValidity();

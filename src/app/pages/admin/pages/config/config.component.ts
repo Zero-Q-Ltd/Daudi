@@ -1,27 +1,27 @@
-import {Component, OnDestroy, OnInit} from "@angular/core";
-import {CommunicationService} from "../../communication.service";
-import {MatDialog} from "@angular/material";
-import {AdminConfigService} from "../../../services/core/admin-config.service";
-import {ReplaySubject} from "rxjs";
-import {takeUntil} from "rxjs/operators";
-import {emptyomc, OMC} from "../../../../models/Daudi/omc/OMC";
+import { Component, OnDestroy, OnInit } from "@angular/core";
+import { MatDialog } from "@angular/material";
+import { ReplaySubject } from "rxjs";
+import { takeUntil } from "rxjs/operators";
+import { emptyomc, OMC } from "../../../../models/Daudi/omc/OMC";
+import { CommunicationService } from "../../communication.service";
 
-import {NotificationService} from "../../../../shared/services/notification.service";
-import {ConfirmDialogComponent} from "../../../confirm-dialog/confirm-dialog.component";
-import {deepCopy} from "../../../../models/utils/deepCopy";
-import {CoreService} from "../../../services/core/core.service";
+import { ConfirmDialogComponent } from 'app/components/confirm-dialog/confirm-dialog.component';
+import { AdminConfigService } from 'app/services/core/admin-config.service';
+import { CoreService } from 'app/services/core/core.service';
+import { deepCopy } from "../../../../models/utils/deepCopy";
+import { NotificationService } from "../../../../shared/services/notification.service";
 
 @Component({
-    selector: "app-company",
-    templateUrl: "./config.component.html",
-    styleUrls: ["./config.component.scss"]
+    selector: 'app-company',
+    templateUrl: './config.component.html',
+    styleUrls: ['./config.component.scss']
 })
 export class ConfigComponent implements OnInit, OnDestroy {
     /**
      * the payment channels that require collection of transaction details
      */
-        // customizablepaymentchannels: Array<PaymentChannel>;
-        // confirmDialogRef: MatDialogRef<FuseConfirmDialogComponent>;
+    // customizablepaymentchannels: Array<PaymentChannel>;
+    // confirmDialogRef: MatDialogRef<FuseConfirmDialogComponent>;
     defaultlat = -1.3373943;
     defaultlng = 36.7208522;
     zoom = 15;
@@ -29,7 +29,6 @@ export class ConfigComponent implements OnInit, OnDestroy {
     originalCompany: OMC = deepCopy<OMC>(emptyomc);
     // paymentchannels: Array<PaymentChannel> = [];
     comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
-
 
     constructor(
         private notificationservice: NotificationService,
@@ -49,7 +48,6 @@ export class ConfigComponent implements OnInit, OnDestroy {
         this.initvalues();
 
     }
-
 
     ngOnDestroy(): void {
         this.comopnentDestroyed.next(true);
@@ -82,7 +80,7 @@ export class ConfigComponent implements OnInit, OnDestroy {
         const dialogRef = this._matDialog.open(ConfirmDialogComponent,
 
             {
-                role: "dialog",
+                role: 'dialog',
                 data: `Are you sure?`
             });
         dialogRef.afterClosed().pipe(takeUntil(this.comopnentDestroyed)).subscribe(result => {

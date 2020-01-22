@@ -1,4 +1,4 @@
-@import "../admin";
+@import "./../../admin";
 
 .table thead th {
   background-color: $mk-primary;
@@ -12,7 +12,8 @@
   color: $mk-black;
 }
 
-.table th, .table td {
+.table th,
+.table td {
   padding: 0.75rem;
   vertical-align: middle;
   text-align: center;

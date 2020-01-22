@@ -1,28 +1,26 @@
-import {Injectable} from "@angular/core";
-import {AngularFirestore} from "@angular/fire/firestore";
-import {FuelType} from "../../models/Daudi/fuel/FuelType";
-
+import { Injectable } from '@angular/core';
+import { AngularFirestore } from '@angular/fire/firestore';
+import { FuelType } from 'app/models/Daudi/fuel/FuelType';
 @Injectable({
-    providedIn: "root"
+    providedIn: 'root'
 })
 export class AseService {
 
     constructor(
-        private db: AngularFirestore,) {
+        private db: AngularFirestore, ) {
     }
 
     ASECollection(omcId: string) {
-        return this.db.firestore.collection("omc")
+        return this.db.firestore.collection('omc')
             .doc(omcId)
-            .collection("ases");
+            .collection('ases');
     }
-
 
     getASEs(omcId: string, type: FuelType) {
 
         return this.ASECollection(omcId)
-            .where("fuelType", "==", type)
-            .orderBy("active", "desc");
+            .where('fuelType', '==', type)
+            .orderBy('active', 'desc');
     }
 
     updateASE(omcId: string, ASEId: string) {

@@ -1,4 +1,4 @@
-@import "../admin";
+@import "./../../admin";
 
 mat-card-title {
   padding-left: 10px;
@@ -63,7 +63,7 @@ mat-card-title {
 .avg-prices {
   border-bottom: 1px dotted $mk-default;
   display: block;
-  width: 100%
+  width: 100%;
 }
 
 .mat-card-title {

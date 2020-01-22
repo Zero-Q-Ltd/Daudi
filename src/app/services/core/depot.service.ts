@@ -1,9 +1,9 @@
-import {Injectable} from "@angular/core";
-import {AngularFirestore} from "@angular/fire/firestore";
-import {Depot} from "../../../models/Daudi/depot/Depot";
+import { Injectable } from '@angular/core';
+import { AngularFirestore } from '@angular/fire/firestore';
+import { Depot } from 'app/models/Daudi/depot/Depot';
 
 @Injectable({
-    providedIn: "root"
+    providedIn: 'root'
 })
 export class DepotService {
     constructor(
@@ -15,18 +15,17 @@ export class DepotService {
         return this.depotsCollection().doc(depot.Id).update(depot);
     }
 
-
     createDepot(depot: Depot) {
         return this.depotsCollection()
             .add(depot);
     }
 
     depotsCollection() {
-        return this.db.firestore.collection("depots");
+        return this.db.firestore.collection('depots');
     }
 
     depotConfigCollection(omcId: string) {
-        return this.db.firestore.collection("omc")
+        return this.db.firestore.collection('omc')
             .doc(omcId)
             .collection(`depotConfigs`);
     }

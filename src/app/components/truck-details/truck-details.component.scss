@@ -1,5 +1,4 @@
-@import "../admin";
-@import "../admin";
+@import "./../../admin";
 
 .container-fluid {
   padding-top: 60px;
@@ -27,7 +26,6 @@ table {
 thead {
   //color: $mk-primary;
 }
-
 
 tr.detail-row {
   height: 0;
@@ -200,7 +198,7 @@ mat-panel-title {
   }
 }
 
-/deep/ .mat-sort-header-button {
+::ng-deep .mat-sort-header-button {
   text-transform: uppercase;
 }
 
@@ -214,4 +212,3 @@ mat-panel-title {
   color: $mk-white;
   box-shadow: 0 0 0 2px rgba($mk-qb, 0.5);
 }
-

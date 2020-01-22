@@ -1,0 +1,54 @@
+@import "sass/abstracts/functions";
+@import "sass/abstracts/mixins";
+@import "sass/abstracts/variables";
+@import "sass/base/animations";
+@import "sass/base/typography";
+@import "sass/base/utilities";
+@import "sass/components/buttons";
+
+.mat-cell {
+  color: $mk-qb;
+  font-weight: 300;
+}
+
+.mat-card {
+  color: $mk-qb;
+}
+
+.mat-expansion-panel {
+  color: $mk-qb;
+}
+
+.mat-dialog-container {
+  color: $mk-qb;
+}
+
+th.mat-header-cell {
+  color: $mk-default;
+  text-transform: uppercase;
+}
+
+.loading-shade {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 56px;
+  right: 0;
+  background: rgba(0, 0, 0, 0.15);
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loading-container {
+  position: relative;
+}
+
+// Truncate
+.text-truncate {
+  // display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

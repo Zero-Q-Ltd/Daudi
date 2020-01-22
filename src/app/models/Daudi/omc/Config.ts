@@ -1,9 +1,9 @@
-import {QBOAuthCOnfig} from "../../Cloud/QboAuthConfig";
-import {MyTimestamp} from "../../firestore/firestoreTypes";
-import {deepCopy} from "../../utils/deepCopy";
-import {AdminType} from "../admin/AdminType";
-import {Meta} from "../universal/Meta";
-import {Metadata} from "../universal/Metadata";
+import { QBOAuthCOnfig } from "../../Cloud/QboAuthConfig";
+import { MyTimestamp } from "../../firestore/firestoreTypes";
+import { deepCopy } from "../../utils/deepCopy";
+import { AdminType } from "../admin/AdminType";
+import { DaudiMeta } from "../universal/Meta";
+import { Metadata } from "../universal/Metadata";
 
 export interface AdminConfig {
     adminTypes: Array<AdminType>;
@@ -13,7 +13,7 @@ export interface AdminConfig {
  * This is an initialization variable for the undeletable level for System Admins
  * More levels can be added via db, but these init values are forced to exist
  */
-const happy: Meta = {
+const happy: DaudiMeta = {
     adminId: "oSGSG2uCQJd3SqpZf6TXObrbDo73",
     date: MyTimestamp.fromDate(new Date("Aug 29, 2019"))
 };

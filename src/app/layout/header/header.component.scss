@@ -1,6 +1,8 @@
-@import "../admin/admin";
+@import "./../../admin";
 
-.mat-button, .mat-raised-button, .mat-icon-button {
+.mat-button,
+.mat-raised-button,
+.mat-icon-button {
   font-family: Roboto, "Helvetica Neue", sans-serif;
   font-size: 14px;
   font-weight: normal;
@@ -53,17 +55,17 @@ row {
 
 .color-pms {
   color: $mk-pms;
-  font-size: 14px
+  font-size: 14px;
 }
 
 .color-ago {
   color: $mk-ago;
-  font-size: 14px
+  font-size: 14px;
 }
 
 .color-ik {
   color: $mk-ik;
-  font-size: 14px
+  font-size: 14px;
 }
 
 .color-yellow {
@@ -78,7 +80,6 @@ row {
   color: $mk-white;
   font-size: 14px;
   font-weight: bold;
-
 }
 
 .color-primary {
@@ -129,7 +130,8 @@ row {
   font-weight: 500px;
 }
 
-.btn-group > .btn, .btn-group-vertical > .btn {
+.btn-group > .btn,
+.btn-group-vertical > .btn {
   padding-left: 0.55em;
   padding-right: 0.55em;
 }
@@ -174,7 +176,6 @@ row {
   margin-right: 25%;
 }
 
-
 .btn-primary.active {
   font-weight: 500;
   color: #fff;
@@ -184,10 +185,10 @@ row {
   color: darkgrey;
 }
 
-.btn-primary:focus, .btn-primary.focus {
+.btn-primary:focus,
+.btn-primary.focus {
   box-shadow: 0 0 0 2px rgba($mk-grey, 0.5);
 }
-
 
 .color-light-grey {
   color: lightgrey;
