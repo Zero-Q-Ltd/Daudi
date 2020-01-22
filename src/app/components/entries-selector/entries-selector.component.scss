@@ -1,5 +1,6 @@
-@import ".././orders-table/orders-table.component";
+@import "./orders-table/orders-table.component";
 
-.table th, .table td {
+.table th,
+.table td {
   color: $mk-qb;
 }

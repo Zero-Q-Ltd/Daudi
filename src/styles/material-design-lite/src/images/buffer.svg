@@ -1,9 +1,0 @@
-<?xml version="1.0"?>
-<svg height="4" version="1.1" viewPort="0 0 12 4" width="12" xmlns="http://www.w3.org/2000/svg">
-    <ellipse cx="2" cy="2" rx="2" ry="2">
-        <animate attributeName="cx" dur="0.6s" from="2" repeatCount="indefinite" to="-10"/>
-    </ellipse>
-    <ellipse class="loader" cx="14" cy="2" rx="2" ry="2">
-        <animate attributeName="cx" dur="0.6s" from="14" repeatCount="indefinite" to="2"/>
-    </ellipse>
-</svg>

@@ -1,6 +1,5 @@
-import {NgModule} from "@angular/core";
-import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {TextMaskModule} from "angular2-text-mask"; // for input mask
+import { NgModule } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
     MatAutocompleteModule,
     MatButtonModule,
@@ -16,7 +15,8 @@ import {
     MatTabsModule,
     MatToolbarModule,
     MatTooltipModule
-} from "@angular/material";
+} from '@angular/material';
+import { TextMaskModule } from 'angular2-text-mask'; // for input mask
 
 @NgModule({
     imports: [

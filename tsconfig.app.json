@@ -1,22 +1,18 @@
 {
   "extends": "./tsconfig.json",
-  "compileOnSave": true,
   "compilerOptions": {
-    "outDir": "../out-tsc/app",
-    "typeRoots": [
-      "../../node_modules/@firebase/firestore-types"
-    ],
-    "paths": {
-      "*": [
-        "../../node_modules/@firebase/firestore-types"
-      ]
-    }
+    "outDir": "./out-tsc/app",
+    "types": []
   },
+  "files": [
+    "src/main.ts",
+    "src/polyfills.ts"
+  ],
   "include": [
-    "./**/*.ts"
+    "src/**/*.ts"
   ],
   "exclude": [
-    "./test.ts",
-    "./**/*.spec.ts"
+    "src/test.ts",
+    "src/**/*.spec.ts"
   ]
 }

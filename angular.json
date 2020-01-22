@@ -3,48 +3,29 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "daudi": {
-      "root": "",
-      "sourceRoot": "src",
+    "Daudi": {
       "projectType": "application",
-      "prefix": "app",
       "schematics": {
         "@schematics/angular:component": {
           "style": "scss"
         }
       },
+      "root": "",
+      "sourceRoot": "src",
+      "prefix": "app",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist",
+            "outputPath": "dist/",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
-            "assets": [
-              "src/assets",
-              "src/vendors",
-              "src/favicon.ico",
-              "src/firebase-messaging-sw.js",
-              "src/manifest.json"
-            ],
-            "styles": [
-              "src/styles/app.scss",
-              "src/styles/bootstrap.scss",
-              "src/styles/font-awesome.scss",
-              "src/styles/layout.scss",
-              "src/styles/loader.scss",
-              "src/styles/material2-theme.scss",
-              "src/styles/theme.scss",
-              "src/styles/ui.scss",
-              "src/vendors/loader.css",
-              "src/vendors/material-design-icons/iconfont/material-icons.css"
-            ],
-            "scripts": [
-              "node_modules/jquery/dist/jquery.min.js"
-            ],
-            "es5BrowserSupport": true
+            "aot": false,
+            "assets": ["src/favicon.ico", "src/assets"],
+            "styles": ["src/styles.scss"],
+            "scripts": []
           },
           "configurations": {
             "production": {
@@ -68,6 +49,11 @@
                   "type": "initial",
                   "maximumWarning": "2mb",
                   "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
                 }
               ]
             }
@@ -76,18 +62,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "daudi:build"
+            "browserTarget": "Daudi:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "daudi:build:production"
+              "browserTarget": "Daudi:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "daudi:build"
+            "browserTarget": "Daudi:build"
           }
         },
         "test": {
@@ -96,25 +82,10 @@
             "main": "src/test.ts",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.spec.json",
-            "karmaConfig": "src/karma.conf.js",
-            "styles": [
-              "src/styles/app.scss",
-              "src/styles/bootstrap.scss",
-              "src/styles/font-awesome.scss",
-              "src/styles/layout.scss",
-              "src/styles/loader.scss",
-              "src/styles/material2-theme.scss",
-              "src/styles/theme.scss",
-              "src/styles/ui.scss",
-              "src/vendors/loader.css",
-              "src/vendors/material-design-icons/iconfont/material-icons.css"
-            ],
-            "scripts": [],
-            "assets": [
-              "src/assets",
-              "src/vendors",
-              "src/favicon.ico"
-            ]
+            "karmaConfig": "karma.conf.js",
+            "assets": ["src/favicon.ico", "src/assets"],
+            "styles": ["src/styles.scss"],
+            "scripts": []
           }
         },
         "lint": {
@@ -122,43 +93,26 @@
           "options": {
             "tsConfig": [
               "tsconfig.app.json",
-              "tsconfig.spec.json"
+              "tsconfig.spec.json",
+              "e2e/tsconfig.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
-        }
-      }
-    },
-    "daudi-e2e": {
-      "root": "e2e/",
-      "projectType": "application",
-      "prefix": "",
-      "architect": {
+        },
         "e2e": {
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "daudi:serve"
+            "devServerTarget": "Daudi:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "daudi:serve:production"
+              "devServerTarget": "Daudi:serve:production"
             }
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": "e2e/tsconfig.e2e.json",
-            "exclude": [
-              "**/node_modules/**"
-            ]
           }
         }
       }
     }
   },
-  "defaultProject": "daudi"
+  "defaultProject": "Daudi"
 }

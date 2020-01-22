@@ -5,34 +5,17 @@
     "outDir": "./dist/out-tsc",
     "sourceMap": true,
     "declaration": false,
+    "downlevelIteration": true,
+    "experimentalDecorators": true,
     "module": "esnext",
     "moduleResolution": "node",
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
     "importHelpers": true,
-    "resolveJsonModule": true,
-    "paths": {
-      "core-js/es7/reflect": [
-        "../node_modules/core-js/proposals/reflect-metadata"
-      ],
-      "core-js/es6/*": [
-        "../node_modules/core-js/es/*"
-      ],
-      "core-js/es7/*": [
-        "../node_modules/core-js/es/*"
-      ]
-    },
-    "target": "es6",
-    "typeRoots": [
-      "node_modules/@types",
-    ],
-    "lib": [
-      "es2018",
-      "dom"
-    ]
+    "target": "es2015",
+    "typeRoots": ["node_modules/@types"],
+    "lib": ["es2018", "dom"]
   },
   "angularCompilerOptions": {
-    "fullTemplateTypeCheck": false,
-    "strictInjectionParameters": false
+    "fullTemplateTypeCheck": true,
+    "strictInjectionParameters": true
   }
 }
