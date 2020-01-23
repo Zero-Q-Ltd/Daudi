@@ -1,10 +1,5 @@
-import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-
 import { AgmCoreModule } from '@agm/core';
-import { LayoutModule } from '@angular/cdk/layout';
-import { CdkTableModule } from '@angular/cdk/table';
-import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireAuth, AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFireDatabase } from '@angular/fire/database';
@@ -13,26 +8,10 @@ import { AngularFireFunctionsModule } from '@angular/fire/functions';
 import { AngularFireMessagingModule } from '@angular/fire/messaging';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import {
-  MatCheckboxModule,
-  MatChipsModule,
-  MatDatepickerModule,
-  MatExpansionModule,
-  MatInputModule,
-  MatNativeDateModule,
-  MatPaginatorModule,
-  MatProgressBarModule,
-  MatProgressSpinnerModule,
-  MatSelectModule,
-  MatSlideToggleModule,
-  MatSortModule,
-  MatTableModule,
-  MatTreeModule
-} from '@angular/material';
+import { MatProgressSpinnerModule } from '@angular/material';
+import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TextMaskModule } from 'angular2-text-mask';
-import { Ng5SliderModule } from 'ng5-slider';
-import { NgxEchartsModule } from 'ngx-echarts';
 import { SatDatepickerModule, SatNativeDateModule } from 'saturn-datepicker';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -67,22 +46,9 @@ import { ToggleOffcanvasNavDirective } from './layout/sidenav/toggle-offcanvas-n
 import { SupportChatComponent } from './layout/support-chat/support-chat.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { AccountDetailsComponent } from './pages/account-details/account-details.component';
-import { AdminComponent } from './pages/admin/admin.component';
-import { AdminLevelsComponent } from './pages/admin/pages/admin-levels/admin-levels.component';
-import { AdminRolesComponent } from './pages/admin/pages/admin-roles/admin-roles.component';
-import { AseComponent } from './pages/admin/pages/ase/ase.component';
 import { TransferComponent } from './pages/admin/pages/ase/dialogs/transfer/transfer.component';
 import { CompanyMembersComponent } from './pages/admin/pages/company-members/company-members.component';
-import { ConfigComponent } from './pages/admin/pages/config/config.component';
-import { CustomerManagementComponent } from './pages/admin/pages/customer-management/customer-management.component';
-import { DepotManagementComponent } from './pages/admin/pages/depot-management/depot-management.component';
-import { EntriesComponent } from './pages/admin/pages/entries/entries.component';
-import { OmcManagementComponent } from './pages/admin/pages/omc-management/omc-management.component';
 import { CreateComponent } from './pages/admin/pages/payments/create/create.component';
-import { PaymentsComponent } from './pages/admin/pages/payments/payments.component';
-import { SmsLogsComponent } from './pages/admin/pages/sms-logs/sms-logs.component';
-import { UserLevelsComponent } from './pages/admin/pages/user-levels/user-levels.component';
-import { UserManagementComponent } from './pages/admin/pages/user-management/user-management.component';
 import { ArchiveComponent } from './pages/archive/archive.component';
 import { CalculationsComponent } from './pages/create-order/components/calculations/calculations.component';
 import { ConfirmDepotComponent } from './pages/create-order/components/confirm-depot/confirm-depot.component';
@@ -132,31 +98,7 @@ const firebaseConfig = {
     AngularFireAuthModule,
     AngularFireFunctionsModule,
 
-    PipeModuleModule,
-    CommonModule,
-    FlexLayoutModule,
-    FormsModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
-    ReactiveFormsModule,
-    MatSlideToggleModule,
-    MatTableModule,
-    MatSortModule,
-    MatPaginatorModule,
-    CdkTableModule,
-    MatTreeModule,
-    MatCheckboxModule,
-    MatProgressSpinnerModule,
-    MatExpansionModule,
-    MatProgressBarModule,
-    PipeModuleModule,
-    SharedModule,
-    LayoutModule,
-    Ng5SliderModule,
-    MatChipsModule,
-    MatInputModule,
-    MatSelectModule,
-    NgxEchartsModule,
+
     AgmCoreModule.forRoot({
       apiKey: 'AIzaSyD73FGSNb0x-4dXOTksPjtl4RwowhzYqSs',
       libraries: ['places']
@@ -201,34 +143,20 @@ const firebaseConfig = {
     CompartmentsComponent,
     TrucksTableComponent,
     TruckDetailsComponent,
-    AdminComponent,
     ConfirmDialogComponent,
     ArchiveComponent,
     BatchTrucksComponent,
-    UserManagementComponent,
     SendMsgComponent,
-    CustomerManagementComponent,
-    CompanyMembersComponent,
-    SmsLogsComponent,
     MapsComponent,
     DashboardComponent,
     LoginComponent,
     EntriesSelectorComponent,
-    PaymentsComponent,
     ReasonComponent,
     ColumnsCustomizerComponent,
-    DepotManagementComponent,
-    OmcManagementComponent,
-    EntriesComponent,
     CalendarRangesComponent,
     ConfirmDepotComponent,
     StatsComponent,
-    UserLevelsComponent,
-    ConfigComponent,
-    AdminRolesComponent,
-    AdminLevelsComponent,
     CreateComponent,
-    AseComponent,
     CalculationsComponent,
     ContactFormComponent,
     PriceComparisonComponent,
@@ -260,7 +188,6 @@ const firebaseConfig = {
     EntriesSelectorComponent,
     ReasonComponent,
     ColumnsCustomizerComponent,
-    CustomerManagementComponent,
     ConfirmDepotComponent,
     CompartmentsComponent,
     CalendarRangesComponent,

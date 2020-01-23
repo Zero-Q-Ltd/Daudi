@@ -50,10 +50,7 @@ const routes: Routes = [{
       path: 'page-not-found',
       component: PageNotFoundComponent
     },
-    {
-      path: 'admin',
-      component: AdminComponent
-    },
+    { path: 'admin', loadChildren: () => import('./pages/admin/admin.module').then(m => m.AdminModule) },
     {
       path: 'archive',
       component: ArchiveComponent
@@ -65,7 +62,6 @@ const routes: Routes = [{
   component: LoginComponent
 },
 { path: '**', component: PageNotFoundComponent },
-  { path: 'admin', loadChildren: () => import('./pages/admin/admin/admin.module').then(m => m.AdminModule) }
 ];
 
 @NgModule({

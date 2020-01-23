@@ -1,26 +1,43 @@
+import { LayoutModule } from '@angular/cdk/layout';
+import { CdkTableModule } from '@angular/cdk/table';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
     MatAutocompleteModule,
     MatButtonModule,
     MatCardModule,
+    MatCheckboxModule,
+    MatChipsModule,
+    MatDatepickerModule,
     MatDialogModule,
+    MatExpansionModule,
     MatIconModule,
     MatInputModule,
     MatListModule,
     MatMenuModule,
+    MatNativeDateModule,
+    MatPaginatorModule,
+    MatProgressBarModule,
+    MatProgressSpinnerModule,
     MatSelectModule,
     MatSidenavModule,
+    MatSlideToggleModule,
     MatSnackBarModule,
+    MatSortModule,
+    MatTableModule,
     MatTabsModule,
     MatToolbarModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatTreeModule
 } from '@angular/material';
 import { TextMaskModule } from 'angular2-text-mask';
+import { PipeModuleModule } from 'app/pipe-module/pipe-module.module';
+import { Ng5SliderModule } from 'ng5-slider';
+import { NgxEchartsModule } from 'ngx-echarts';
 import { CommonPipe } from './pipes/common.pipe';
 import { SlimScrollDirective } from './slim-scroll.directive';
-
 @NgModule({
     imports: [
         CommonModule,
@@ -40,11 +57,34 @@ import { SlimScrollDirective } from './slim-scroll.directive';
         MatAutocompleteModule,
         FormsModule,
         ReactiveFormsModule,
-        TextMaskModule
+        TextMaskModule,
+        PipeModuleModule,
+        FlexLayoutModule,
+        FormsModule,
+        MatDatepickerModule,
+        MatNativeDateModule,
+        ReactiveFormsModule,
+        MatSlideToggleModule,
+        MatTableModule,
+        MatSortModule,
+        MatPaginatorModule,
+        CdkTableModule,
+        MatTreeModule,
+        MatCheckboxModule,
+        MatProgressSpinnerModule,
+        MatExpansionModule,
+        MatProgressBarModule,
+        PipeModuleModule,
+        LayoutModule,
+        Ng5SliderModule,
+        MatChipsModule,
+        MatInputModule,
+        MatSelectModule,
+        NgxEchartsModule,
     ],
     exports:
         [
-            SlimScrollDirective,
+            CommonModule,
             MatButtonModule,
             MatMenuModule,
             MatToolbarModule,
@@ -61,7 +101,31 @@ import { SlimScrollDirective } from './slim-scroll.directive';
             MatAutocompleteModule,
             FormsModule,
             ReactiveFormsModule,
-            TextMaskModule]
+            TextMaskModule,
+            PipeModuleModule,
+            FlexLayoutModule,
+            FormsModule,
+            MatDatepickerModule,
+            MatNativeDateModule,
+            ReactiveFormsModule,
+            MatSlideToggleModule,
+            MatTableModule,
+            MatSortModule,
+            MatPaginatorModule,
+            CdkTableModule,
+            MatTreeModule,
+            MatCheckboxModule,
+            MatProgressSpinnerModule,
+            MatExpansionModule,
+            MatProgressBarModule,
+            PipeModuleModule,
+            LayoutModule,
+            Ng5SliderModule,
+            MatChipsModule,
+            MatInputModule,
+            MatSelectModule,
+            NgxEchartsModule,
+        ]
     ,
     providers: [],
     declarations: [CommonPipe, SlimScrollDirective]
