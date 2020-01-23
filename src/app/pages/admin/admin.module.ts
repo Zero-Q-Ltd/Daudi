@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 
+import { AgmCoreModule } from '@agm/core';
 import { SharedModule } from 'app/shared/shared.module';
 import { AdminRoutingModule } from './admin-routing.module';
 import { AdminComponent } from './admin.component';
@@ -17,6 +18,7 @@ import { PaymentsComponent } from './pages/payments/payments.component';
 import { SmsLogsComponent } from './pages/sms-logs/sms-logs.component';
 import { UserLevelsComponent } from './pages/user-levels/user-levels.component';
 import { UserManagementComponent } from './pages/user-management/user-management.component';
+import { CreatePaymentComponent } from './components/create-payment/create-payment.component';
 
 @NgModule({
   declarations: [
@@ -34,15 +36,18 @@ import { UserManagementComponent } from './pages/user-management/user-management
     SmsLogsComponent,
     UserLevelsComponent,
     UserManagementComponent,
-
+    CreatePaymentComponent,
   ],
   imports: [
     CommonModule,
     AdminRoutingModule,
-    SharedModule
+    SharedModule,
+    AgmCoreModule
   ],
   entryComponents: [
     CustomerManagementComponent,
+    CompanyMembersComponent,
+    CreatePaymentComponent,
 
   ]
 })

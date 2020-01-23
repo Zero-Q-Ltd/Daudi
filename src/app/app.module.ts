@@ -47,7 +47,6 @@ import { SupportChatComponent } from './layout/support-chat/support-chat.compone
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { AccountDetailsComponent } from './pages/account-details/account-details.component';
 import { TransferComponent } from './pages/admin/pages/ase/dialogs/transfer/transfer.component';
-import { CompanyMembersComponent } from './pages/admin/pages/company-members/company-members.component';
 import { CreateComponent } from './pages/admin/pages/payments/create/create.component';
 import { ArchiveComponent } from './pages/archive/archive.component';
 import { CalculationsComponent } from './pages/create-order/components/calculations/calculations.component';
@@ -68,6 +67,7 @@ import { OrdersService } from './services/orders.service';
 import { PricesService } from './services/prices.service';
 import { NotificationComponent } from './shared/components/notification/notification.component';
 import { SharedModule } from './shared/shared.module';
+import { EntrySelectorComponent } from './components/entry-selector/entry-selector.component';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyD6abjtAtMf2kK7YEtgpyKqT_EPkHqjYXo',
@@ -98,13 +98,13 @@ const firebaseConfig = {
     AngularFireAuthModule,
     AngularFireFunctionsModule,
 
-
     AgmCoreModule.forRoot({
       apiKey: 'AIzaSyD73FGSNb0x-4dXOTksPjtl4RwowhzYqSs',
       libraries: ['places']
     }),
     SatDatepickerModule,
-    SatNativeDateModule
+    SatNativeDateModule,
+    SharedModule
   ],
   declarations: [
     AppComponent,
@@ -161,6 +161,7 @@ const firebaseConfig = {
     ContactFormComponent,
     PriceComparisonComponent,
     TransferComponent,
+    EntrySelectorComponent,
 
   ],
   providers: [
@@ -177,13 +178,13 @@ const firebaseConfig = {
   exports: [
     PipeModuleModule,
     SharedModule,
+    EntrySelectorComponent,
   ],
   entryComponents: [
     NotificationComponent,
     ConfirmDialogComponent,
     BatchTrucksComponent,
     SendMsgComponent,
-    CompanyMembersComponent,
     MapsComponent,
     EntriesSelectorComponent,
     ReasonComponent,
@@ -191,7 +192,8 @@ const firebaseConfig = {
     ConfirmDepotComponent,
     CompartmentsComponent,
     CalendarRangesComponent,
-    TransferComponent
+    TransferComponent,
+    EntrySelectorComponent
   ]
 })
 export class AppModule { }

@@ -7,6 +7,7 @@ import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { DaudiCustomer } from "../../../../models/Daudi/customer/Customer";
 import { EquityBulk } from "../../../../models/ipn/EquityBulk";
+import { CreatePaymentComponent } from '../../components/create-payment/create-payment.component';
 import { CustomerManagementComponent } from "../customer-management/customer-management.component";
 
 @Component({
@@ -60,5 +61,11 @@ export class PaymentsComponent implements OnInit, OnDestroy {
 
         });
 
+    }
+    addPayment() {
+        this.dialog.open(CreatePaymentComponent, {
+            width: '80%',
+            data: 'Attach'
+        });
     }
 }

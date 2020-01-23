@@ -26,7 +26,7 @@ interface EntryContent {
     name: string;
     totalqty: number;
     /**
-     * @description the amount that will remail
+     * @description the amount that will remain
      */
     remainqty: number;
     resultstatus: boolean;

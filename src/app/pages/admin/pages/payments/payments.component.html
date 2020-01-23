@@ -1,7 +1,6 @@
 <mat-card>
     <mat-card-content>
         <mat-tab-group>
-
             <mat-tab>
                 <ng-template mat-tab-label>
                     Pending
@@ -53,14 +52,10 @@
                 </ng-template>
                 COMING SOON...
             </mat-tab>
-            <mat-tab>
-                <ng-template mat-tab-label>
-                    Create
-                </ng-template>
-                <ng-template #createpayment>
-                    <app-create-payment></app-create-payment>
-                </ng-template>
-            </mat-tab>
         </mat-tab-group>
     </mat-card-content>
+
 </mat-card>
+<button (click)="addPayment()" mat-fab aria-label="Create new payment">
+    <mat-icon>add</mat-icon>
+</button>
