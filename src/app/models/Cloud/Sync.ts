@@ -1,8 +1,8 @@
-import {QbTypes} from "../QbTypes";
-import {MyTimestamp} from "../firestore/firestoreTypes";
+import {MyTimestamp} from '../firestore/firestoreTypes';
+import {QbTypes} from '../QbTypes';
 
 export interface SyncRequest {
-    synctype: Array<QbTypes>;
-    time: MyTimestamp;
+  synctype: Array<QbTypes>;
+  time: MyTimestamp;
 }
 

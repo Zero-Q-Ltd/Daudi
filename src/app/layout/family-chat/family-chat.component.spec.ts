@@ -1,25 +1,25 @@
-import {async, ComponentFixture, TestBed} from "@angular/core/testing";
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {FamilyChatComponent} from "./family-chat.component";
+import {FamilyChatComponent} from './family-chat.component';
 
-describe("FamilyChatComponent", () => {
-    let component: FamilyChatComponent;
-    let fixture: ComponentFixture<FamilyChatComponent>;
+describe('FamilyChatComponent', () => {
+  let component: FamilyChatComponent;
+  let fixture: ComponentFixture<FamilyChatComponent>;
 
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
-            declarations: [FamilyChatComponent]
-        })
-            .compileComponents();
-    }));
+  beforeEach(async(() => {
+    TestBed.configureTestingModule({
+      declarations: [FamilyChatComponent]
+    })
+      .compileComponents();
+  }));
 
-    beforeEach(() => {
-        fixture = TestBed.createComponent(FamilyChatComponent);
-        component = fixture.componentInstance;
-        fixture.detectChanges();
-    });
+  beforeEach(() => {
+    fixture = TestBed.createComponent(FamilyChatComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
 
-    it("should create", () => {
-        expect(component).toBeTruthy();
-    });
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
 });

@@ -1,1 +1,1 @@
-export type TruckAction = "created" | "deleted" | "approved" | "completed";
+export type TruckAction = 'created' | 'deleted' | 'approved' | 'completed';

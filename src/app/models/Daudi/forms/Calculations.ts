@@ -1,10 +1,10 @@
-import {FuelType} from "../fuel/FuelType";
+import {FuelType} from '../fuel/FuelType';
 
 export type Calculations = {
-    [key in FuelType]: FuelCalculation
+  [key in FuelType]: FuelCalculation
 };
 
 export interface FuelCalculation {
-    price: number;
-    qty: number;
+  price: number;
+  qty: number;
 }

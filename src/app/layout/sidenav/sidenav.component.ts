@@ -1,27 +1,27 @@
-import {Component, OnInit} from "@angular/core";
-import {APPCONFIG} from "../../config";
+import {Component, OnInit} from '@angular/core';
+import {APPCONFIG} from '../../config';
 
 @Component({
-    selector: "my-app-sidenav",
-    styles: [`.nav-img {
+  selector: 'my-app-sidenav',
+  styles: [`.nav-img {
       height: 40px;
   }`],
-    templateUrl: "./sidenav.component.html"
+  templateUrl: './sidenav.component.html'
 })
 
 export class AppSidenavComponent implements OnInit {
-    AppConfig;
-    sales: boolean = false;
+  AppConfig;
+  sales: boolean = false;
 
-    constructor() {
+  constructor() {
 
-    }
+  }
 
-    ngOnInit() {
-        this.AppConfig = APPCONFIG;
-    }
+  ngOnInit() {
+    this.AppConfig = APPCONFIG;
+  }
 
-    toggleCollapsedNav() {
-        this.AppConfig.navCollapsed = !this.AppConfig.navCollapsed;
-    }
+  toggleCollapsedNav() {
+    this.AppConfig.navCollapsed = !this.AppConfig.navCollapsed;
+  }
 }

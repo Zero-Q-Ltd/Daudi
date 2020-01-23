@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 
 @Component({
   templateUrl: './create-payment.component.html',
@@ -6,7 +6,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CreatePaymentComponent implements OnInit {
 
-  constructor() { }
+  constructor() {
+  }
 
   ngOnInit() {
   }

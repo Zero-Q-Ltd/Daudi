@@ -1,14 +1,14 @@
 <mat-form-field>
-    <mat-label>Select destination Depot</mat-label>
-    <mat-select [(value)]="selectedDepot">
-        <mat-option *ngFor="let depot of privateDepots" [value]="depot">
-            {{depot.Name}}
-        </mat-option>
-    </mat-select>
+  <mat-label>Select destination Depot</mat-label>
+  <mat-select [(value)]="selectedDepot">
+    <mat-option *ngFor="let depot of privateDepots" [value]="depot">
+      {{depot.Name}}
+    </mat-option>
+  </mat-select>
 </mat-form-field>
 <mat-form-field>
-    <input [disabled]="!selectedDepot" matInput [(ngModel)]="qty" placeholder="Enter ASE amount" value="0">
+  <input [(ngModel)]="qty" [disabled]="!selectedDepot" matInput placeholder="Enter ASE amount" value="0">
 </mat-form-field>
 <div *ngIf="selectedDepot">
-    <app-entry-selector [fuelType]='fuelType' [qty]="qty"></app-entry-selector>
+  <app-entry-selector [fuelType]='fuelType' [qty]="qty"></app-entry-selector>
 </div>

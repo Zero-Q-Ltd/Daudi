@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { NavigationEnd, Router } from '@angular/router';
-import { APPCONFIG } from './config';
+import {Component, OnInit} from '@angular/core';
+import {NavigationEnd, Router} from '@angular/router';
+import {APPCONFIG} from './config';
 
 @Component({
   selector: 'app-root',
@@ -10,6 +10,7 @@ import { APPCONFIG } from './config';
 export class AppComponent implements OnInit {
   title = 'Daudi';
   public AppConfig: any;
+
   constructor(private router: Router) {
 
   }

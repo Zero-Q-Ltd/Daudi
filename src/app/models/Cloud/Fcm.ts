@@ -1,7 +1,7 @@
 export interface Fcm {
-    notification: {
-        title: string;
-        body: string;
-        icon: string;
-    };
+  notification: {
+    title: string;
+    body: string;
+    icon: string;
+  };
 }

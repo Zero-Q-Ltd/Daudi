@@ -1,6 +1,6 @@
-import {QbRef} from "./QbRef";
+import {QbRef} from './QbRef';
 
 export interface EntryRef {
-    name: string;
-    refs: QbRef[];
+  name: string;
+  refs: QbRef[];
 }

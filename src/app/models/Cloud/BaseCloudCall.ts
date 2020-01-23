@@ -1,3 +1,3 @@
 export interface BaseCloudCall {
-    omcId: string;
+  omcId: string;
 }

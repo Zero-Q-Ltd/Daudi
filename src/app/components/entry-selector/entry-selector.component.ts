@@ -1,11 +1,11 @@
-import { SelectionModel } from '@angular/cdk/collections';
-import { Component, EventEmitter, Inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { MAT_DIALOG_DATA, MatTableDataSource } from '@angular/material';
-import { Entry } from 'app/models/Daudi/fuel/Entry';
-import { FuelType } from 'app/models/Daudi/fuel/FuelType';
-import { CoreService } from 'app/services/core/core.service';
-import { ReplaySubject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import {SelectionModel} from '@angular/cdk/collections';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {MatTableDataSource} from '@angular/material';
+import {Entry} from 'app/models/Daudi/fuel/Entry';
+import {FuelType} from 'app/models/Daudi/fuel/FuelType';
+import {CoreService} from 'app/services/core/core.service';
+import {ReplaySubject} from 'rxjs';
+import {takeUntil} from 'rxjs/operators';
 
 @Component({
   selector: 'app-entry-selector',
@@ -21,6 +21,7 @@ export class EntrySelectorComponent implements OnInit, OnDestroy {
   @Input() fuelType: FuelType;
   @Input() qty: number;
   @Output() selectedEntries = new EventEmitter<Entry[]>();
+
   constructor(
     private core: CoreService) {
 

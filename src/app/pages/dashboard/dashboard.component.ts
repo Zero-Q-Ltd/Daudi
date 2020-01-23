@@ -1,23 +1,23 @@
-import {Component, OnInit} from "@angular/core";
-import {ReplaySubject} from "rxjs";
+import {Component, OnInit} from '@angular/core';
+import {ReplaySubject} from 'rxjs';
 
 @Component({
-    selector: "app-dashboard",
-    templateUrl: "./dashboard.component.html",
-    styleUrls: ["./dashboard.component.scss"]
+  selector: 'app-dashboard',
+  templateUrl: './dashboard.component.html',
+  styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit {
-    comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
+  comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
 
-    constructor() {
-    }
+  constructor() {
+  }
 
-    ngOnInit() {
-    }
+  ngOnInit() {
+  }
 
-    ngOnDestroy(): void {
-        this.comopnentDestroyed.next(true);
-        this.comopnentDestroyed.complete();
-    }
+  ngOnDestroy(): void {
+    this.comopnentDestroyed.next(true);
+    this.comopnentDestroyed.complete();
+  }
 
 }
