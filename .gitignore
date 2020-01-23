@@ -6,9 +6,17 @@
 /out-tsc
 # Only exists if Bazel was run
 /bazel-out
+# Firestore functions
+/functions/lib
+/functions/dist
+
+#Firebase deploy cache
+/.firebase
+etc/
 
 # dependencies
 /node_modules
+/functions/node_modules
 
 # profiling files
 chrome-profiler-events*.json

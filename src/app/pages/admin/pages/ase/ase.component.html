@@ -1,7 +1,10 @@
 <mat-tab-group>
     <mat-tab *ngFor='let fueltype of fueltypesArray'>
         <ng-template mat-tab-label>
-            <button class="btn btn-{{fueltype}}"> {{fueltype | uppercase}} : {{availablefuel[fueltype]}}</button>
+            <button class="btn btn-{{fueltype}}">
+                {{fueltype | uppercase}} :
+                {{stock.qty[fueltype].ase-stock.qty[fueltype].ase}}
+            </button>
         </ng-template>
         <mat-card>
             <mat-card-content>
@@ -23,7 +26,7 @@
                     <button (click)="trasfer(fueltype)" color="primary" [disabled]="private" mat-raised-button>Transfer
                     </button>
 
-                    <table [dataSource]="datasource[fueltype]" mat-table style="width: 100%">
+                    <table *ngIf="!loading[fueltype]" [dataSource]="datasource[fueltype]" mat-table style="width: 100%">
 
                         <ng-container matColumnDef="daudiId">
                             <th *matHeaderCellDef mat-header-cell> Daudi ID</th>

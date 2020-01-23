@@ -152,7 +152,7 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
              */
             const value = this.core.activedepot.value.depot.config.private ?
                 (this.activedepot.config.stock[fueltype].ase.totalActive - this.activedepot.config.stock[fueltype].ase.used) :
-                (this.stock.qty[fueltype].ase.totalActive - this.stock.qty[fueltype].ase.used);
+                (this.stock.qty[fueltype].ase);
 
             /**
              * check if there is enough ASE for that fuel
@@ -458,7 +458,7 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
                             this.activedepot.config.stock[fueltype].ase.used += this.order.fuel[fueltype].qty;
                             batchaction.update(this.configService.configDoc(this.core.currentOmc.value.Id), this.activedepot.config);
                         } else {
-                            this.stock.qty[fueltype].ase.used += this.order.fuel[fueltype].qty;
+                            this.stock.qty[fueltype].ase -= this.order.fuel[fueltype].qty;
                             batchaction.update(this.stockService.stockDoc(this.core.currentOmc.value.Id), this.stock);
                         }
                     }

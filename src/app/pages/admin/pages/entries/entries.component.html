@@ -1,10 +1,7 @@
 <mat-tab-group>
     <mat-tab *ngFor='let fueltype of fueltypesArray'>
         <ng-template mat-tab-label>
-            <button class="btn btn-{{fueltype}}">
-                {{fueltype | uppercase}} :
-                <!-- {{stock[fueltype].entry.totalActive}} -->
-            </button>
+            <button class="btn btn-{{fueltype}}"> {{fueltype | uppercase}} : {{availablefuel[fueltype]}}</button>
         </ng-template>
         <mat-card>
             <mat-card-content>
@@ -16,14 +13,14 @@
                         <mat-form-field appearance="legacy">
                             <input (keyup)="filterbatches(fueltype, $event.target.value)" matInput placeholder="Filter">
                             <button (click)='syncdb()' *ngIf='!creatingsync' mat-icon-button matSuffix type="button">
-                <span class="nav-icon nav-dot material-icons kra-save" matTooltip="Update">
-                  autorenew
-                </span>
+                                <span class="nav-icon nav-dot material-icons kra-save" matTooltip="Update">
+                                    autorenew
+                                </span>
                             </button>
                             <mat-spinner *ngIf='creatingsync' [diameter]="19" matSuffix></mat-spinner>
                         </mat-form-field>
                     </div>
-                    <table [dataSource]="datasource[fueltype]" mat-table style="width: 100%">
+                    <table *ngIf="!loading[fueltype]" [dataSource]="datasource[fueltype]" mat-table style="width: 100%">
 
                         <ng-container matColumnDef="id">
                             <th *matHeaderCellDef mat-header-cell> Entry ID</th>
@@ -33,8 +30,8 @@
 
                         <ng-container matColumnDef="date">
                             <th *matHeaderCellDef mat-header-cell> Date</th>
-                            <td *matCellDef="let entry"
-                                mat-cell> {{entry.date?.toDate() | date: 'dd/MM/yyyy, h:mm a'}}</td>
+                            <td *matCellDef="let entry" mat-cell> {{entry.date?.toDate() | date: 'dd/MM/yyyy, h:mm a'}}
+                            </td>
                         </ng-container>
 
                         <!-- Item Column -->

@@ -1,7 +1,6 @@
-import {deepCopy} from "../../utils/deepCopy";
-import {FuelType} from "../fuel/FuelType";
-import {emptytaxExempt, TaxExempt} from "./TaxExempt";
-
+import { deepCopy } from '../../utils/deepCopy';
+import { FuelType } from '../fuel/FuelType';
+import { emptytaxExempt, TaxExempt } from './TaxExempt';
 
 export interface OMCStock {
     qty: {
@@ -11,10 +10,7 @@ export interface OMCStock {
             /**
              * Total amount of ASE in KPC depots
              */
-            ase: {
-                totalActive: number,
-                used: number
-            },
+            ase: number
         }
     };
     taxExempt: {
@@ -26,25 +22,15 @@ export const EmptyOMCStock: OMCStock = {
     qty: {
         ago: {
             allocation: 0,
-            ase: {
-                used: 0,
-                totalActive: 0
-            },
+            ase: 0
         },
         ik: {
             allocation: 0,
-            ase: {
-                used: 0,
-                totalActive: 0
-            },
+            ase: 0
         },
         pms: {
             allocation: 0,
-            ase: {
-                used: 0,
-                totalActive: 0
-            },
-
+            ase: 0
         }
     },
     taxExempt: {
