@@ -1,12 +1,12 @@
-import { DaudiMeta } from '../universal/Meta';
+import {DaudiMeta} from '../universal/Meta';
 
 export interface AssociatedUser extends DaudiMeta {
-    name: string;
+  name: string;
 }
 
 export const EmptyAssociatedUser: AssociatedUser = {
-    name: '',
-    adminId: '',
-    date: new Date() as any
+  name: '',
+  adminId: '',
+  date: new Date() as any
 };
 

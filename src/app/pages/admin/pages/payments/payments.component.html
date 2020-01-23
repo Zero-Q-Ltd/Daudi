@@ -1,66 +1,61 @@
 <mat-card>
-    <mat-card-content>
-        <mat-tab-group>
+  <mat-card-content>
+    <mat-tab-group>
+      <mat-tab>
+        <ng-template mat-tab-label>
+          Pending
+        </ng-template>
+        <table [dataSource]="unprocesseddatasource" mat-table matSort style="width: 100%">
+          <!--ID Column-->
+          <!-- Checkbox Column -->
 
-            <mat-tab>
-                <ng-template mat-tab-label>
-                    Pending
-                </ng-template>
-                <table [dataSource]="unprocesseddatasource" mat-table matSort style="width: 100%">
-                    <!--ID Column-->
-                    <!-- Checkbox Column -->
+          <ng-container matColumnDef="bank">
+            <th *matHeaderCellDef mat-header-cell mat-sort-header> Bank</th>
+            <td *matCellDef="let ipn" mat-cell> {{ipn.daudiFields.bank}}</td>
+          </ng-container>
 
-                    <ng-container matColumnDef="bank">
-                        <th *matHeaderCellDef mat-header-cell mat-sort-header> Bank</th>
-                        <td *matCellDef="let ipn" mat-cell> {{ipn.daudiFields.bank}}</td>
-                    </ng-container>
+          <ng-container matColumnDef="name">
+            <th *matHeaderCellDef mat-header-cell mat-sort-header> Paid By</th>
+            <td *matCellDef="let ipn" mat-cell> {{ipn.debitcustname}}</td>
+          </ng-container>
 
-                    <ng-container matColumnDef="name">
-                        <th *matHeaderCellDef mat-header-cell mat-sort-header> Paid By</th>
-                        <td *matCellDef="let ipn" mat-cell> {{ipn.debitcustname}}</td>
-                    </ng-container>
+          <ng-container matColumnDef="phone">
+            <th *matHeaderCellDef mat-header-cell mat-sort-header> Phone</th>
+            <td *matCellDef="let ipn" mat-cell> {{ipn.phonenumber}}</td>
+          </ng-container>
 
-                    <ng-container matColumnDef="phone">
-                        <th *matHeaderCellDef mat-header-cell mat-sort-header> Phone</th>
-                        <td *matCellDef="let ipn" mat-cell> {{ipn.phonenumber}}</td>
-                    </ng-container>
+          <ng-container matColumnDef="amount">
+            <th *matHeaderCellDef mat-header-cell mat-sort-header> Amount</th>
+            <td *matCellDef="let ipn" mat-cell> {{ipn.billAmount}}</td>
+          </ng-container>
 
-                    <ng-container matColumnDef="amount">
-                        <th *matHeaderCellDef mat-header-cell mat-sort-header> Amount</th>
-                        <td *matCellDef="let ipn" mat-cell> {{ipn.billAmount}}</td>
-                    </ng-container>
-
-                    <ng-container matColumnDef="mode">
-                        <th *matHeaderCellDef mat-header-cell mat-sort-header> Payment Mode</th>
-                        <td *matCellDef="let ipn" mat-cell> {{ipn.paymentMode}}</td>
-                    </ng-container>
-
-
-                    <ng-container matColumnDef="bankref">
-                        <th *matHeaderCellDef mat-header-cell mat-sort-header> Bank Ref</th>
-                        <td *matCellDef="let ipn" mat-cell> {{ipn.bankreference}}</td>
-                    </ng-container>
+          <ng-container matColumnDef="mode">
+            <th *matHeaderCellDef mat-header-cell mat-sort-header> Payment Mode</th>
+            <td *matCellDef="let ipn" mat-cell> {{ipn.paymentMode}}</td>
+          </ng-container>
 
 
-                    <!-- Column -->
-                    <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
-                    <tr (click)="attachpayment(row)" *matRowDef="let row; columns: displayedColumns;" mat-row></tr>
-                </table>
-            </mat-tab>
-            <mat-tab>
-                <ng-template mat-tab-label>
-                    Processed
-                </ng-template>
-                COMING SOON...
-            </mat-tab>
-            <mat-tab>
-                <ng-template mat-tab-label>
-                    Create
-                </ng-template>
-                <ng-template #createpayment>
-                    <app-create-payment></app-create-payment>
-                </ng-template>
-            </mat-tab>
-        </mat-tab-group>
-    </mat-card-content>
+          <ng-container matColumnDef="bankref">
+            <th *matHeaderCellDef mat-header-cell mat-sort-header> Bank Ref</th>
+            <td *matCellDef="let ipn" mat-cell> {{ipn.bankreference}}</td>
+          </ng-container>
+
+
+          <!-- Column -->
+          <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
+          <tr (click)="attachpayment(row)" *matRowDef="let row; columns: displayedColumns;" mat-row></tr>
+        </table>
+      </mat-tab>
+      <mat-tab>
+        <ng-template mat-tab-label>
+          Processed
+        </ng-template>
+        COMING SOON...
+      </mat-tab>
+    </mat-tab-group>
+  </mat-card-content>
+
 </mat-card>
+<button (click)="addPayment()" aria-label="Create new payment" mat-fab>
+  <mat-icon>add</mat-icon>
+</button>

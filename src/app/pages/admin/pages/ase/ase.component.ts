@@ -1,14 +1,15 @@
-import { Component, OnInit, ViewChild } from "@angular/core";
-import { MatDialog, MatPaginator, MatTableDataSource } from "@angular/material";
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatDialog, MatPaginator, MatTableDataSource } from '@angular/material';
+import { EmptyOMCStock, OMCStock } from 'app/models/Daudi/omc/Stock';
 import { AseService } from 'app/services/ase.service';
 import { CoreService } from 'app/services/core/core.service';
-import { ReplaySubject } from "rxjs";
-import { takeUntil } from "rxjs/operators";
-import { ASE, emptyASEs } from "../../../../models/Daudi/fuel/ASE";
-import { FuelNamesArray, FuelType } from "../../../../models/Daudi/fuel/FuelType";
-import { NotificationService } from "../../../../shared/services/notification.service";
-import { CoreAdminService } from "../../services/core.service";
-import { TransferComponent } from "./dialogs/transfer/transfer.component";
+import { ReplaySubject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { ASE, emptyASEs } from '../../../../models/Daudi/fuel/ASE';
+import { FuelNamesArray, FuelType } from '../../../../models/Daudi/fuel/FuelType';
+import { NotificationService } from '../../../../shared/services/notification.service';
+import { CoreAdminService } from '../../services/core.service';
+import { TransferComponent } from './dialogs/transfer/transfer.component';
 
 @Component({
     selector: 'app-ase',
@@ -36,15 +37,6 @@ export class AseComponent implements OnInit {
             ago: true,
             ik: true
         };
-    availablefuel: {
-        pms: number,
-        ago: number,
-        ik: number
-    } = {
-            pms: 0,
-            ago: 0,
-            ik: 0
-        };
 
     /**
      * this keeps a local copy of all the subscriptions within this service
@@ -52,6 +44,7 @@ export class AseComponent implements OnInit {
     subscriptions: Map<string, any> = new Map<string, any>();
     comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
     private = true;
+    stock: OMCStock = { ...EmptyOMCStock };
 
     constructor(
         private notification: NotificationService,
@@ -65,6 +58,9 @@ export class AseComponent implements OnInit {
                 ago: true,
                 ik: true
             };
+            this.core.stock.subscribe(stock => {
+                this.stock = stock;
+            });
             if (depotdata.depot.Id) {
                 /**
                  * Only show transfer column when in a KPC depot
@@ -83,7 +79,7 @@ export class AseComponent implements OnInit {
                                 return value;
                             });
                         });
-                    this.subscriptions.set(`batches`, subscription);
+                    this.subscriptions.set(`ases`, subscription);
                 });
             }
         });
@@ -104,8 +100,8 @@ export class AseComponent implements OnInit {
         const dialogRef = this.dialog.open(TransferComponent, {
             role: 'dialog',
             data: fuelType,
-            height: 'auto'
-            // width: '100%%',
+            height: 'auto',
+            width: '75%%',
         });
 
     }

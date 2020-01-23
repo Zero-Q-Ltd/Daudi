@@ -1,104 +1,104 @@
 <form [formGroup]="calculationsForm">
-    <div class="table-responsive">
-        <table class="table table-borderless mat-elevation-z2">
-            <thead class="thead-light vat-title1">
-            <th>Quantity</th>
-            <th *ngIf="!newOrder">Requested Price</th>
-            <th>Selling Price</th>
-            <th class="vat-title">VAT Exempt</th>
-            <th class="vat-title">VAT Amount</th>
-            <th class="vat-title">Line Total</th>
-            </thead>
-            <tbody>
-            <tr *ngFor='let pricetype of  fueltypesArray' [formGroupName]="pricetype">
-                <td>
-                    <mat-form-field class="full-width">
-                        <input formControlName="qty" matInput name="{{pricetype | uppercase}}Qty"
-                               placeholder="{{pricetype | uppercase}} Quantity">
-                        <mat-icon class="nav-icon nav-dot material-icons color-{{pricetype}}" matPrefix
-                                  matTooltip="{{pricetype}}">local_gas_station
-                        </mat-icon>
-                        <mat-error>Min 1000 for at least one fuel</mat-error>
-                        <span matPrefix> &nbsp; </span>
-                    </mat-form-field>
-                </td>
-                <td *ngIf="!newOrder">
+  <div class="table-responsive">
+    <table class="table table-borderless mat-elevation-z2">
+      <thead class="thead-light vat-title1">
+      <th>Quantity</th>
+      <th *ngIf="!newOrder">Requested Price</th>
+      <th>Selling Price</th>
+      <th class="vat-title">VAT Exempt</th>
+      <th class="vat-title">VAT Amount</th>
+      <th class="vat-title">Line Total</th>
+      </thead>
+      <tbody>
+      <tr *ngFor='let pricetype of  fueltypesArray' [formGroupName]="pricetype">
+        <td>
+          <mat-form-field class="full-width">
+            <input formControlName="qty" matInput name="{{pricetype | uppercase}}Qty"
+                   placeholder="{{pricetype | uppercase}} Quantity">
+            <mat-icon class="nav-icon nav-dot material-icons color-{{pricetype}}" matPrefix
+                      matTooltip="{{pricetype}}">local_gas_station
+            </mat-icon>
+            <mat-error>Min 1000 for at least one fuel</mat-error>
+            <span matPrefix> &nbsp; </span>
+          </mat-form-field>
+        </td>
+        <td *ngIf="!newOrder">
                         <span *ngIf="!newOrder" class="text-danger" matPrefix>
                             {{initData.fuel[pricetype].priceconfig.requestedPrice}}
                         </span>
 
-                </td>
-                <td>
-                    <mat-form-field class="full-width">
-                        <input formControlName="price" matInput name="{{pricetype}}Sp"
-                               placeholder="{{pricetype}} Selling Price (min: {{activedepot.config.price[pricetype].minPrice | number : '1.0-2'}})">
-                        <mat-error>Min allowed price is
-                            {{activedepot.config.price[pricetype].minPrice | number : '1.0-2'}}
-                        </mat-error>
+        </td>
+        <td>
+          <mat-form-field class="full-width">
+            <input formControlName="price" matInput name="{{pricetype}}Sp"
+                   placeholder="{{pricetype}} Selling Price (min: {{activedepot.config.price[pricetype].minPrice | number : '1.0-2'}})">
+            <mat-error>Min allowed price is
+              {{activedepot.config.price[pricetype].minPrice | number : '1.0-2'}}
+            </mat-error>
 
-                    </mat-form-field>
-                </td>
+          </mat-form-field>
+        </td>
 
-                <td class="vat-title">
+        <td class="vat-title">
                         <span class="label label-{{pricetype}}">
                             {{stock.taxExempt[pricetype].amount }}
                         </span>
-                </td>
+        </td>
 
-                <td class="vat-title">
+        <td class="vat-title">
                         <span class="label label-{{pricetype}}">
                             {{initData.fuel[pricetype].priceconfig.taxAmnt }}
 
                         </span>
-                </td>
+        </td>
 
-                <td class="vat-title">
+        <td class="vat-title">
                         <span class="label label-{{pricetype}}">
                             {{initData.fuel[pricetype].priceconfig.total }}
                         </span>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="3">
-                    <strong>Total:</strong>
-                </td>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="3">
+          <strong>Total:</strong>
+        </td>
 
-                <td class="order-title">
-                    {{initData.fuel.pms.priceconfig.taxAmnt + initData.fuel.ago.priceconfig.taxAmnt +
-                initData.fuel.ik.priceconfig.taxAmnt | number : '1.2-2'}}
-                </td>
-                <td class="order-title">
-                    {{initData.fuel.pms.priceconfig.total + initData.fuel.ago.priceconfig.total +
-                initData.fuel.ik.priceconfig.total | number : '1.2-2'}}
-                </td>
-            </tr>
-            </tbody>
-        </table>
+        <td class="order-title">
+          {{initData.fuel.pms.priceconfig.taxAmnt + initData.fuel.ago.priceconfig.taxAmnt +
+        initData.fuel.ik.priceconfig.taxAmnt | number : '1.2-2'}}
+        </td>
+        <td class="order-title">
+          {{initData.fuel.pms.priceconfig.total + initData.fuel.ago.priceconfig.total +
+        initData.fuel.ik.priceconfig.total | number : '1.2-2'}}
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="" fxLayout fxLayout.xs="column" fxLayoutAlign="center" fxLayoutGap="10px" fxLayoutGap.xs="0">
+    <div fxFlex>
+      <p>{{determinediscount()}}
+        Excluding 8% VAT</p>
     </div>
-
-    <div class="" fxLayout fxLayout.xs="column" fxLayoutAlign="center" fxLayoutGap="10px" fxLayoutGap.xs="0">
-        <div fxFlex>
-            <p>{{determinediscount()}}
-                Excluding 8% VAT</p>
-        </div>
-        <div fxFlex>
-            <label class="custom-control custom-checkbox pull-right">
-                <mat-slide-toggle [(ngModel)]="initData.notifications.sms" [ngModelOptions]="{standalone: true}">
-                    Allow SMS &nbsp;
-                </mat-slide-toggle>
-                <mat-slide-toggle [(ngModel)]="initData.notifications.email" [ngModelOptions]="{standalone: true}">
-                    Allow EMAIL
-                </mat-slide-toggle>
-            </label>
-        </div>
-        <div class="fuel-totals" fxFlex>
+    <div fxFlex>
+      <label class="custom-control custom-checkbox pull-right">
+        <mat-slide-toggle [(ngModel)]="initData.notifications.sms" [ngModelOptions]="{standalone: true}">
+          Allow SMS &nbsp;
+        </mat-slide-toggle>
+        <mat-slide-toggle [(ngModel)]="initData.notifications.email" [ngModelOptions]="{standalone: true}">
+          Allow EMAIL
+        </mat-slide-toggle>
+      </label>
+    </div>
+    <div class="fuel-totals" fxFlex>
             <span>
                 <strong>Total Amount :Ksh
-                    {{ initData.fuel.pms.priceconfig.total +
-                    initData.fuel.ago.priceconfig.total + initData.fuel.ik.priceconfig.total | number : '1.2-2'}}</strong>
+                  {{ initData.fuel.pms.priceconfig.total +
+                  initData.fuel.ago.priceconfig.total + initData.fuel.ik.priceconfig.total | number : '1.2-2'}}</strong>
             </span>
-        </div>
     </div>
-    <br>
+  </div>
+  <br>
 
 </form>

@@ -1,15 +1,15 @@
-import {inject, TestBed} from "@angular/core/testing";
+import {inject, TestBed} from '@angular/core/testing';
 
-import {PricechangerGuard} from "./pricechanger.guard";
+import {PricechangerGuard} from './pricechanger.guard';
 
-describe("PricechangerGuard", () => {
-    beforeEach(() => {
-        TestBed.configureTestingModule({
-            providers: [PricechangerGuard]
-        });
+describe('PricechangerGuard', () => {
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [PricechangerGuard]
     });
+  });
 
-    it("should ...", inject([PricechangerGuard], (guard: PricechangerGuard) => {
-        expect(guard).toBeTruthy();
-    }));
+  it('should ...', inject([PricechangerGuard], (guard: PricechangerGuard) => {
+    expect(guard).toBeTruthy();
+  }));
 });

@@ -1,15 +1,15 @@
 <h2 mat-dialog-title>Reason</h2>
 
 <mat-form-field class="full-width">
-    <input [formControl]="reasoncontrol" matInput placeholder="Reason for your actions">
-    <mat-icon class="nav-icon nav-dot material-icons " matPrefix>warning
-    </mat-icon>
-    <mat-error>Reason MUST be at least 15 characters</mat-error>
-    <span matPrefix> &nbsp; </span>
+  <input [formControl]="reasoncontrol" matInput placeholder="Reason for your actions">
+  <mat-icon class="nav-icon nav-dot material-icons " matPrefix>warning
+  </mat-icon>
+  <mat-error>Reason MUST be at least 15 characters</mat-error>
+  <span matPrefix> &nbsp; </span>
 </mat-form-field>
 
 <mat-dialog-actions>
-    <button mat-button mat-dialog-close>No</button>
-    <!-- The mat-dialog-close directive optionally accepts a value as a result for the dialog. -->
-    <button (click)="closeDialog()" mat-button>Yes</button>
+  <button mat-button mat-dialog-close>No</button>
+  <!-- The mat-dialog-close directive optionally accepts a value as a result for the dialog. -->
+  <button (click)="closeDialog()" mat-button>Yes</button>
 </mat-dialog-actions>

@@ -1,4 +1,4 @@
-import { SlimScrollDirective } from './slim-scroll.directive';
+import {SlimScrollDirective} from './slim-scroll.directive';
 
 describe('SlimScrollDirective', () => {
   it('should create an instance', () => {

@@ -1,9 +1,9 @@
 export enum TruckStages {
-    "Created",
-    "Processing",
-    "Queued",
-    "Loaded",
-    "Complete",
+  'Created',
+  'Processing',
+  'Queued',
+  'Loaded',
+  'Complete',
 }
 
 export const TruckStageIds = Object.keys(TruckStages).filter(key => isNaN(Number(TruckStages[key])));

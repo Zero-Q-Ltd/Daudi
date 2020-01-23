@@ -1,75 +1,75 @@
 <legend>Send {{bulk ? 'Bulk' : ''}} SMS</legend>
 <mat-dialog-content>
-    <div *ngIf="!bulk" class="container">
-        <div class="row">
-            <div class="col">
-                <mat-form-field class="full-width">
-                    <input disabled matInput name="companyName" placeholder="Company Name"
-                           value="{{tempsms.company.name}}">
-                    <mat-icon matPrefix>account_balance</mat-icon>
-                    <span matPrefix> &nbsp; </span>
-                </mat-form-field>
-            </div>
-            <div class="col">
-                <mat-form-field class="full-width">
-                    <input disabled matInput name="contactName" placeholder="Contact Name"
-                           value="{{tempsms.contact[0].name}}">
-                    <mat-icon matPrefix>perm_identity</mat-icon>
-                    <span matPrefix> &nbsp; </span>
-                </mat-form-field>
-            </div>
-            <div class="col">
-                <mat-form-field class="full-width">
-                    <input disabled matInput name="companyPhone" placeholder="Phone number" type="tel"
-                           value="{{tempsms.contact[0].phone}}">
-                    <mat-icon matPrefix>phone</mat-icon>
-                    <span matPrefix> &nbsp; +254 &nbsp;</span>
-                </mat-form-field>
-            </div>
+  <div *ngIf="!bulk" class="container">
+    <div class="row">
+      <div class="col">
+        <mat-form-field class="full-width">
+          <input disabled matInput name="companyName" placeholder="Company Name"
+                 value="{{tempsms.company.name}}">
+          <mat-icon matPrefix>account_balance</mat-icon>
+          <span matPrefix> &nbsp; </span>
+        </mat-form-field>
+      </div>
+      <div class="col">
+        <mat-form-field class="full-width">
+          <input disabled matInput name="contactName" placeholder="Contact Name"
+                 value="{{tempsms.contact[0].name}}">
+          <mat-icon matPrefix>perm_identity</mat-icon>
+          <span matPrefix> &nbsp; </span>
+        </mat-form-field>
+      </div>
+      <div class="col">
+        <mat-form-field class="full-width">
+          <input disabled matInput name="companyPhone" placeholder="Phone number" type="tel"
+                 value="{{tempsms.contact[0].phone}}">
+          <mat-icon matPrefix>phone</mat-icon>
+          <span matPrefix> &nbsp; +254 &nbsp;</span>
+        </mat-form-field>
+      </div>
 
-        </div>
-        <form class="">
-            <mat-form-field class="full-width">
-                <textarea [(ngModel)]="tempsms.greeting" matInput name="greeting" placeholder="Greeting"></textarea>
-            </mat-form-field>
-            <p>ID {{this.tempsms.company.QbId}}</p>
-            <mat-form-field class=" full-width">
-                <textarea [(ngModel)]="tempsms.msg" matInput name="message" placeholder="Text Content"></textarea>
-            </mat-form-field>
-            <mat-form-field class="full-width">
-                <textarea [(ngModel)]="tempsms.type.reason" matInput name="reason" placeholder="SMS Reason"></textarea>
-            </mat-form-field>
-        </form>
     </div>
-    <div *ngIf="bulk" class="container">
-        <form class="">
-            <mat-form-field class="full-width">
+    <form class="">
+      <mat-form-field class="full-width">
+        <textarea [(ngModel)]="tempsms.greeting" matInput name="greeting" placeholder="Greeting"></textarea>
+      </mat-form-field>
+      <p>ID {{this.tempsms.company.QbId}}</p>
+      <mat-form-field class=" full-width">
+        <textarea [(ngModel)]="tempsms.msg" matInput name="message" placeholder="Text Content"></textarea>
+      </mat-form-field>
+      <mat-form-field class="full-width">
+        <textarea [(ngModel)]="tempsms.type.reason" matInput name="reason" placeholder="SMS Reason"></textarea>
+      </mat-form-field>
+    </form>
+  </div>
+  <div *ngIf="bulk" class="container">
+    <form class="">
+      <mat-form-field class="full-width">
                 <textarea [(ngModel)]="tempbulkmodel.greeting" matInput name="greeting"
                           placeholder="Greeting"></textarea>
-            </mat-form-field>
-            <div>
-                Selected companies : (Deleted Companies are automatically omitted)
-                <mat-chip-list #chipList>
-                    <mat-chip *ngFor="let sms of tempsms"
-                              [color]="validatephone(sms.company[0].phone)? 'primary' : 'warn'"
-                              selected>
-                        {{sms.company.name}}
-                    </mat-chip>
-                </mat-chip-list>
-            </div>
-            <mat-form-field class="full-width">
-                <textarea [(ngModel)]="tempbulkmodel.msg" matInput name="message" placeholder="Text Content"></textarea>
-            </mat-form-field>
-            <mat-form-field class="full-width">
+      </mat-form-field>
+      <div>
+        Selected companies : (Deleted Companies are automatically omitted)
+        <mat-chip-list #chipList>
+          <mat-chip *ngFor="let sms of tempsms"
+                    [color]="validatephone(sms.company[0].phone)? 'primary' : 'warn'"
+                    selected>
+            {{sms.company.name}}
+          </mat-chip>
+        </mat-chip-list>
+      </div>
+      <mat-form-field class="full-width">
+        <textarea [(ngModel)]="tempbulkmodel.msg" matInput name="message" placeholder="Text Content"></textarea>
+      </mat-form-field>
+      <mat-form-field class="full-width">
                 <textarea [(ngModel)]="tempbulkmodel.type.reason" matInput name="reason"
                           placeholder="SMS Reason"></textarea>
-            </mat-form-field>
-        </form>
-    </div>
-    <div>
-        <button [disabled]="saving " class="float-left" color="warn" mat-stroked-button matDialogClose>DISMISS</button>
-        <mat-spinner *ngIf='saving ' [diameter]="27"></mat-spinner>
-        <button (click)='sendSMS()' [disabled]="saving " class="float-right" color="primary" mat-stroked-button>SEND
-        </button>
-    </div>
+      </mat-form-field>
+    </form>
+  </div>
+  <div>
+    <button [disabled]="saving " class="float-left" color="warn" mat-stroked-button matDialogClose>DISMISS</button>
+    <mat-spinner *ngIf='saving ' [diameter]="27"></mat-spinner>
+    <button (click)='sendSMS()' [disabled]="saving " class="float-right" color="primary" mat-stroked-button>SEND
+    </button>
+  </div>
 </mat-dialog-content>
