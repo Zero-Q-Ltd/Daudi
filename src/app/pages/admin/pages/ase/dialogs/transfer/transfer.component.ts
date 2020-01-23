@@ -1,12 +1,12 @@
-import { SelectionModel } from "@angular/cdk/collections";
-import { Component, Inject, OnDestroy, OnInit } from "@angular/core";
-import { MAT_DIALOG_DATA, MatTableDataSource } from "@angular/material";
+import { SelectionModel } from '@angular/cdk/collections';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { MAT_DIALOG_DATA, MatTableDataSource } from '@angular/material';
 import { CoreService } from 'app/services/core/core.service';
-import { ReplaySubject } from "rxjs";
-import { takeUntil } from "rxjs/operators";
-import { Depot } from "../../../../../../models/Daudi/depot/Depot";
-import { Entry } from "../../../../../../models/Daudi/fuel/Entry";
-import { FuelType } from "../../../../../../models/Daudi/fuel/FuelType";
+import { ReplaySubject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { Depot } from '../../../../../../models/Daudi/depot/Depot';
+import { Entry } from '../../../../../../models/Daudi/fuel/Entry';
+import { FuelType } from '../../../../../../models/Daudi/fuel/FuelType';
 
 @Component({
     selector: 'app-transfer',
@@ -14,7 +14,7 @@ import { FuelType } from "../../../../../../models/Daudi/fuel/FuelType";
     styleUrls: ['./transfer.component.scss']
 })
 export class TransferComponent implements OnInit, OnDestroy {
-    depots: Depot[] = [];
+    privateDepots: Depot[] = [];
     selectedDepot: Depot;
     depotEntries: MatTableDataSource<Entry> = new MatTableDataSource<Entry>([]);
     comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
@@ -25,7 +25,10 @@ export class TransferComponent implements OnInit, OnDestroy {
         @Inject(MAT_DIALOG_DATA) private fuelType: FuelType,
         private core: CoreService) {
         this.core.depots.pipe(takeUntil(this.comopnentDestroyed)).subscribe(depots => {
-            this.depots = depots;
+            /**
+             * Only allow fuel to be transferred to a private depot
+             */
+            this.privateDepots = depots.filter(d => d.config.private);
         });
         this.core.depotEntries[fuelType].pipe(takeUntil(this.comopnentDestroyed)).subscribe(entries => {
             this.depotEntries.data = entries;
