@@ -64,7 +64,6 @@ const routes: Routes = [{
   path: 'login',
   component: LoginComponent
 },
-
 { path: '**', component: PageNotFoundComponent }
 ];
 

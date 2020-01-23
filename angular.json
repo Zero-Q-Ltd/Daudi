@@ -23,8 +23,27 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
             "aot": false,
-            "assets": ["src/favicon.ico", "src/assets"],
-            "styles": ["src/styles.scss"],
+            "assets": [
+              "src/favicon.ico",
+              "src/firebase-messaging-sw.js",
+              "src/assets",
+              "src/vendors",
+              "src/favicon.ico"
+            ],
+            "styles": [
+              "src/styles/app.scss",
+              "src/styles/bootstrap.scss",
+              "src/styles/font-awesome.scss",
+              "src/styles/layout.scss",
+              "src/styles/loader.scss",
+              "src/styles/material2-theme.scss",
+              "src/styles/theme.scss",
+              "src/styles/ui.scss",
+              "src/vendors/loader.css",
+              "src/vendors/material-design-icons/iconfont/material-icons.css",
+              "./node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css",
+              "src/styles.scss"
+            ],
             "scripts": ["node_modules/jquery/dist/jquery.min.js"]
           },
           "configurations": {
@@ -84,7 +103,10 @@
             "tsConfig": "tsconfig.spec.json",
             "karmaConfig": "karma.conf.js",
             "assets": ["src/favicon.ico", "src/assets"],
-            "styles": ["src/styles.scss"],
+            "styles": [
+              "./node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css",
+              "src/styles.scss"
+            ],
             "scripts": []
           }
         },

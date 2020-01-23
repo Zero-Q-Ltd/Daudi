@@ -13,7 +13,22 @@ import { AngularFireFunctionsModule } from '@angular/fire/functions';
 import { AngularFireMessagingModule } from '@angular/fire/messaging';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatCheckboxModule, MatChipsModule, MatDatepickerModule, MatExpansionModule, MatInputModule, MatNativeDateModule, MatPaginatorModule, MatProgressBarModule, MatProgressSpinnerModule, MatSelectModule, MatSlideToggleModule, MatSortModule, MatTableModule, MatTreeModule } from '@angular/material';
+import {
+  MatCheckboxModule,
+  MatChipsModule,
+  MatDatepickerModule,
+  MatExpansionModule,
+  MatInputModule,
+  MatNativeDateModule,
+  MatPaginatorModule,
+  MatProgressBarModule,
+  MatProgressSpinnerModule,
+  MatSelectModule,
+  MatSlideToggleModule,
+  MatSortModule,
+  MatTableModule,
+  MatTreeModule
+} from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TextMaskModule } from 'angular2-text-mask';
 import { Ng5SliderModule } from 'ng5-slider';
@@ -182,7 +197,7 @@ const firebaseConfig = {
     EditPriceComponent,
     OrderDetailsComponent,
     OrdersTableComponent,
-    PageNotFoundComponent,
+    // PageNotFoundComponent,
     CompartmentsComponent,
     TrucksTableComponent,
     TruckDetailsComponent,
@@ -231,8 +246,9 @@ const firebaseConfig = {
     PricesService,
     FcmService],
   bootstrap: [AppComponent],
-  exports: [PipeModuleModule,
-    SharedModule
+  exports: [
+    PipeModuleModule,
+    SharedModule,
   ],
   entryComponents: [
     NotificationComponent,
