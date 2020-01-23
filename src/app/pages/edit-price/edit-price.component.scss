@@ -1,0 +1,136 @@
+@import "./../../admin";
+
+mat-card-title {
+  padding-left: 10px;
+}
+
+.mat-input-custom {
+  padding: 0.18em 0;
+  border-top: 0.84375em solid transparent;
+  text-align: center;
+  font-weight: 500px;
+}
+
+.color {
+  font-size: 18px;
+
+  &-pms {
+    color: $mk-pms;
+  }
+
+  &-ago {
+    color: $mk-ago;
+  }
+
+  &-ik {
+    color: $mk-ik;
+  }
+
+  &-def {
+    color: $mk-default;
+    display: block;
+  }
+
+  &-danger {
+    font-size: 16px;
+  }
+}
+
+.rangi {
+  &-pms {
+    color: $mk-pms;
+    font-size: 17px;
+    font-weight: bolder;
+  }
+
+  &-ago {
+    color: $mk-ago;
+    font-size: 17px;
+    font-weight: bolder;
+  }
+
+  &-ik {
+    color: $mk-ik;
+    font-size: 17px;
+    font-weight: bolder;
+  }
+}
+
+.mat-input-element {
+  text-align: center;
+}
+
+.avg-prices {
+  border-bottom: 1px dotted $mk-default;
+  display: block;
+  width: 100%;
+}
+
+.mat-card-title {
+  font-size: 18px;
+  font-weight: 300;
+  // text-align: center;
+  margin-bottom: 0px;
+}
+
+.title-center {
+  text-align: center;
+}
+
+.btn {
+  &-pms {
+    color: $mk-white;
+    background-color: $mk-pms;
+    border-color: $mk-pms;
+
+    &:hover {
+      color: $mk-white;
+      background-color: $mk-danger;
+      border-color: $mk-danger;
+    }
+  }
+
+  &-ago {
+    color: $mk-white;
+    background-color: $mk-ago;
+    border-color: $mk-ago;
+  }
+
+  &-ik {
+    color: $mk-white;
+    background-color: $mk-ik;
+    border-color: $mk-ik;
+  }
+}
+
+.mat-elevation-z2 {
+  padding: 10px;
+  margin: 15px;
+}
+
+.mat-card {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+.expansion-title {
+  position: absolute;
+  right: 50%;
+  font-weight: bolder;
+  color: $mk-default;
+  font-weight: 20px;
+}
+
+.expansion-depot {
+  color: $mk-default;
+}
+
+.order-title1 {
+  font-weight: bold;
+  font-size: 15px;
+}
+
+.mat-form-field {
+  font-size: 14px;
+  width: 100%;
+}

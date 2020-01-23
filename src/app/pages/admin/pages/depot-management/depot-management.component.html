@@ -1,0 +1,82 @@
+<div class="row" style="width: 100%">
+    <div class="col-md-9">
+        <mat-card>
+            <agm-map [latitude]="lat" [longitude]="lng" [zoom]="zoom">
+                <agm-marker [latitude]="company.location.latitude" [longitude]="company.location.longitude">
+                    <agm-info-window [isOpen]="true" [maxWidth]="200">
+                        <strong>Head Office</strong>
+                    </agm-info-window>
+                </agm-marker>
+                <agm-marker *ngFor="let depot of alldepots">
+                    <agm-info-window>
+                        <strong>{{depot.Name}} </strong>
+                    </agm-info-window>
+                </agm-marker>
+            </agm-map>
+        </mat-card>
+    </div>
+    <div class="col-md-3">
+        <div class="row">
+            <div class="col-md-10">
+                <h4>Depots</h4>
+            </div>
+            <div class="col-md-1">
+                <button (click)='syncdb()' mat-icon-button type="button">
+                    <span *ngIf='!creatingsync' class="material-icons" matTooltip="Update">autorenew</span>
+                    <mat-spinner *ngIf='creatingsync' [diameter]="21" matPrefix></mat-spinner>
+                </button>
+            </div>
+        </div>
+        <mat-accordion>
+            <mat-expansion-panel *ngFor="let depot of alldepots">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        <span [ngClass]="{ 'color-danger' : depot.sandbox}">{{depot.Name}}</span>
+                    </mat-panel-title>
+                    <mat-panel-description>
+
+                    </mat-panel-description>
+                </mat-expansion-panel-header>
+                <mat-card>
+                    <mat-card-title>Person in Charge</mat-card-title>
+                    <mat-form-field>
+                        <input #personname [(value)]="depot.Contact.name" aria-label="Person name" matInput
+                               name="personname"
+                               placeholder="Name" type="text">
+                        <mat-icon matPrefix> perm_identity</mat-icon>
+                        <span matPrefix> &nbsp; </span>
+                    </mat-form-field>
+                    <mat-form-field>
+                        <input #personname [(value)]="activedepot.Contact.phone" aria-label="Person phone" disabled
+                               matInput
+                               name="personphone" placeholder="Phone" type="text">
+                        <mat-icon matPrefix> phone</mat-icon>
+                        <span matPrefix> &nbsp; +254 &nbsp;</span>
+
+                    </mat-form-field>
+                </mat-card>
+                <mat-card>
+                    <mat-card-title>Location Details</mat-card-title>
+                    <mat-card-content>
+
+                        <mat-form-field>
+                            <input [(ngModel)]="activedepot.Name" matInput minlength="2" name="depotname" name="name"
+                                   placeholder="Depot Name" required type="text">
+                        </mat-form-field>
+                        <!-- <mat-form-field (click)="openmaps()">
+                          <input #depotlocation aria-label="Company Location" matInput name="depotlocation"
+                            placeholder="Depot Location" type="text"
+                            value="{{activedepot.Location? tempdepot.Location.latitude : ''}}, {{activedepot.Location? activedepot.location.longitude : 'Empty Location'}}">
+                          <mat-icon matPrefix> location_on</mat-icon>
+                          <span matPrefix> &nbsp; </span>
+                          <mat-error *ngIf="depotlocation.errors?.required && depotlocation.touched">
+                            Location
+                            <strong>required</strong>
+                          </mat-error>
+                        </mat-form-field> -->
+                    </mat-card-content>
+                </mat-card>
+            </mat-expansion-panel>
+        </mat-accordion>
+    </div>
+</div>

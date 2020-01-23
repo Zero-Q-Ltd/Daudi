@@ -1,0 +1,199 @@
+@import "./../../admin";
+
+.mat-button,
+.mat-raised-button,
+.mat-icon-button {
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-size: 14px;
+  font-weight: normal;
+  padding-right: 10px;
+  padding-left: 10px;
+}
+
+.app-header {
+  padding: 0;
+  border: 0;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.app-header .app-header-inner {
+  height: 105px;
+  background-color: $mk-grey;
+}
+.depot-select.mat-select-panel {
+  background: rgba(0, 0, 255, 0.5);
+  height: 100px;
+}
+
+/* .app-sidebar .sidebar-header {
+    line-height: 100px;
+    padding: 0 18px;
+    box-shadow: 0 1px 1px rgba($color-black, .1);
+}
+
+.app-sidebar .sidebar-header {
+    display: block;
+    position: relative;
+    height: 100px;
+} */
+
+.badge-info {
+  color: $mk-primary;
+  background-color: lightgrey;
+  /*
+      Implement Color change to this when there's a NEW Order
+      background-color: $mk-secondary;
+  */
+  font-weight: bold;
+}
+
+row {
+  margin-right: -10px;
+  margin-left: -10px;
+}
+
+.color-pms {
+  color: $mk-pms;
+  font-size: 14px;
+}
+
+.color-ago {
+  color: $mk-ago;
+  font-size: 14px;
+}
+
+.color-ik {
+  color: $mk-ik;
+  font-size: 14px;
+}
+
+.color-yellow {
+  color: $mk-secondary;
+}
+
+.color-secondary {
+  color: $mk-secondary;
+}
+
+.color-white {
+  color: $mk-white;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.color-primary {
+  color: $mk-primary;
+}
+
+.color-black {
+  color: $mk-black;
+}
+
+.color-green {
+  color: $mk-success;
+}
+
+.color-red {
+  color: $mk-danger;
+}
+
+.loading-border {
+  border: 1px dashed $mk-secondary;
+  border-top: none;
+}
+
+.loading-border-b {
+  border-bottom: 1px solid $mk-secondary;
+  padding-bottom: 2px;
+}
+
+.loading-border-c {
+  border-bottom: 1px solid $mk-secondary;
+  padding-bottom: 3px;
+}
+
+.border-spacing {
+  padding: 2px;
+}
+
+.daudi-banner {
+  margin-left: 10px;
+  vertical-align: middle;
+  /* padding-top: 37.5px; */
+  padding-top: 38px;
+}
+
+.h-titles {
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-size: 14px;
+  font-weight: 500px;
+}
+
+.btn-group > .btn,
+.btn-group-vertical > .btn {
+  padding-left: 0.55em;
+  padding-right: 0.55em;
+}
+
+.badge,
+.badge-info {
+  background-color: lightgrey;
+  color: $mk-grey;
+}
+
+.badge:active {
+  background-color: lightgrey;
+  //color: $mk-secondary;
+}
+
+/* Minimum Resolution for displaying the Header */
+@media all and (max-width: 1365px) {
+  .deskContent {
+    display: none;
+  }
+}
+
+.depot-button {
+  margin-left: 10px;
+}
+
+.nafasi {
+  margin-right: 15px;
+}
+
+.nafasi-k {
+  margin-right: 10px;
+}
+
+.nafasi-l {
+  margin-left: 15px;
+  margin-right: 15px;
+}
+
+.katikati {
+  margin-left: 25%;
+  margin-right: 25%;
+}
+
+.btn-primary.active {
+  font-weight: 500;
+  color: #fff;
+}
+
+.btn-primary {
+  color: darkgrey;
+}
+
+.btn-primary:focus,
+.btn-primary.focus {
+  box-shadow: 0 0 0 2px rgba($mk-grey, 0.5);
+}
+
+.color-light-grey {
+  color: lightgrey;
+}
+
+.color-dark-grey {
+  color: darkgrey;
+}

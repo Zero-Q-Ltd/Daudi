@@ -1,14 +1,15 @@
-import {emptyMeta, Meta} from "./Meta";
+import {emptyMeta, DaudiMeta} from "./Meta";
 import {deepCopy} from "../../utils/deepCopy";
 
 export interface Metadata {
     /**
      * Sometimes we may just want to modify the last edited date
      */
-    created?: Meta;
-    edited: Meta;
+    created?: DaudiMeta;
+    edited: DaudiMeta;
 }
+
 export const emptymetadata: Metadata = {
-    created: deepCopy<Meta>(emptyMeta),
-    edited: deepCopy<Meta>(emptyMeta),
+    created: deepCopy<DaudiMeta>(emptyMeta),
+    edited: deepCopy<DaudiMeta>(emptyMeta),
 };

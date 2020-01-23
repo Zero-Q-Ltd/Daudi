@@ -1,11 +1,11 @@
-import {MyTimestamp} from "../../firestore/firestoreTypes";
+import { MyTimestamp } from '../../firestore/firestoreTypes';
 
-export interface Meta {
+export interface DaudiMeta {
     date: MyTimestamp;
     adminId: string;
 }
 
-export const emptyMeta: Meta = {
+export const emptyMeta: DaudiMeta = {
     adminId: null,
     date: MyTimestamp.now()
 };

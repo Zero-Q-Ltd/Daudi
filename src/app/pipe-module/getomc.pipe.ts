@@ -1,25 +1,25 @@
-import {Pipe, PipeTransform} from "@angular/core";
-import {CoreService} from "../admin/services/core/core.service";
+import { Pipe, PipeTransform } from '@angular/core';
+import { CoreService } from 'app/services/core/core.service';
 
 @Pipe({
-  name: "getomc"
+    name: 'getomc'
 })
 export class GetomcPipe implements PipeTransform {
 
-  constructor(private core: CoreService) {
+    constructor(private core: CoreService) {
 
-  }
-
-  transform(omcId: string): any {
-    if (this.core.omcs.value.filter(omc => {
-      return omc.Id === omcId;
-    }).length !== 0) {
-      return this.core.omcs.value.filter(admin => {
-        return admin.Id === omcId;
-      })[0].name;
-    } else {
-      return "";
     }
-  }
+
+    transform(omcId: string): any {
+        if (this.core.omcs.value.filter(omc => {
+            return omc.Id === omcId;
+        }).length !== 0) {
+            return this.core.omcs.value.filter(admin => {
+                return admin.Id === omcId;
+            })[0].name;
+        } else {
+            return '';
+        }
+    }
 
 }

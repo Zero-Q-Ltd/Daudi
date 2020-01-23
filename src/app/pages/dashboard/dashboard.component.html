@@ -1,0 +1,13 @@
+<br><br>
+<mat-tab-group>
+    <mat-tab label="All Depots">
+        <ng-template matTabContent>
+            <app-stats depotResolution="All"></app-stats>
+        </ng-template>
+    </mat-tab>
+    <mat-tab label="Current Depot">
+        <ng-template matTabContent>
+            <app-stats depotResolution="CurrentDepot"></app-stats>
+        </ng-template>
+    </mat-tab>
+</mat-tab-group>

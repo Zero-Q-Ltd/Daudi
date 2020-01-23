@@ -1,368 +1,368 @@
 ﻿{
-    "Sheet1": [
-        {
-            "license": "ERC/PET/3736",
-            "name": "ACER PETROLEUM LIMITED"
-        },
-        {
-            "license": "ERC/PET/4218",
-            "name": "AFRO PETROLEUM LTD"
-        },
-        {
-            "license": "ERC/PET/4723",
-            "name": "AFTAH PETROLEUM(K)LTD"
-        },
-        {
-            "license": "ERC/PET/2459",
-            "name": "AINUSHAMSI ENERGY LIMITED"
-        },
-        {
-            "license": "ERC/PET/5130",
-            "name": "ARECH PETROLEUM LIMITED"
-        },
-        {
-            "license": "ERC/PET/4241",
-            "name": "ASHARAMI SYNERGY LIMITED"
-        },
-        {
-            "license": "ERC/PET/5348",
-            "name": "ASPAM ENERGY KENYA LIMITED"
-        },
-        {
-            "license": "ERC/PET/4240",
-            "name": "ASTROL PETROLEUM COMPANY LIMITED"
-        },
-        {
-            "license": "ERC/PET/4073",
-            "name": "AWALI GROUP LIMITED"
-        },
-        {
-            "license": "ERC/PET/4819",
-            "name": "AXON ENERGY LIMITED"
-        },
-        {
-            "license": "ERC/PET/4208",
-            "name": "BACHULAL POPATLAL (KENYA) LIMITED"
-        },
-        {
-            "license": "ERC/PET/3840",
-            "name": "BE ENERGY LIMITED"
-        },
-        {
-            "license": "ERC/PET/5290",
-            "name": "BILHAN COMPANY LIMITED"
-        },
-        {
-            "license": "ERC/PET/3838",
-            "name": "BLUE SKY ENERGY LIMITED"
-        },
-        {
-            "license": "ERC/PET/4376",
-            "name": "BRAIN FIELD OIL AND GAS LIMITED"
-        },
-        {
-            "license": "ERC/PET/4291",
-            "name": "BULK PETROLEUM LIMITED"
-        },
-        {
-            "license": "ERC/PET/4458",
-            "name": "BUSHRA ENERGY LIMITED"
-        },
-        {
-            "license": "ERC/PET/4236",
-            "name": "BUZEKI ENTERPRISES LIMITED"
-        },
-        {
-            "license": "ERC/PET/3988",
-            "name": "CITY OIL (K) LIMITED"
-        },
-        {
-            "license": "ERC/PET/5271",
-            "name": "COSTALINA ENERGY LIMITED"
-        },
-        {
-            "license": "ERC/PET/5418",
-            "name": "DALBIT PETROLEUM LIMITED"
-        },
-        {
-            "license": "ERC/PET/4342",
-            "name": "DESERT STAR OIL CO.LIMITED"
-        },
-        {
-            "license": "ERC/PET/4967",
-            "name": "EAST AFRICAN GASOIL LIMITED"
-        },
-        {
-            "license": "ERC/PET/4034",
-            "name": "ELIORA ENERGY LIMITED"
-        },
-        {
-            "license": "ERC/PET/4182",
-            "name": "EMKAY INTERNATIONAL LIMITED"
-        },
-        {
-            "license": "ERC/PET/4211",
-            "name": "ENGEN KENYA LIMITED"
-        },
-        {
-            "license": "ERC/PET/3691",
-            "name": "EON ENERGY LIMITED-- CONDITIONAL LICENSE"
-        },
-        {
-            "license": "ERC/PET/4307",
-            "name": "EPPIC OIL (K) LIMITED"
-        },
-        {
-            "license": "ERC/PET/4609",
-            "name": "EVON INTERNATIONAL ENERGY LIMITED"
-        },
-        {
-            "license": "ERC/PET/3868",
-            "name": "FASTNETT ENERGY LIMITED"
-        },
-        {
-            "license": "ERC/PET/3931",
-            "name": "FINEJET LIMITED"
-        },
-        {
-            "license": "ERC/PET/3972",
-            "name": "FOSSIL SUPPLIES LIMITED"
-        },
-        {
-            "license": "ERC/PET/3917",
-            "name": "GALANA OIL KENYA LIMITED"
-        },
-        {
-            "license": "ERC/PET/4767",
-            "name": "GAPCO KENYA LIMITED"
-        },
-        {
-            "license": "ERC/PET/4385",
-            "name": "GLOBAL PETROLEUM PRODUCTS KENYA LIMITED"
-        },
-        {
-            "license": "ERC/PET/5167",
-            "name": "GULF ENERGY LIMITED"
-        },
-        {
-            "license": "ERC/PET/4253",
-            "name": "HARED ENERGY LIMITED"
-        },
-        {
-            "license": "ERC/PET/3956",
-            "name": "HASS PETROLEUM KENYA LIMITED"
-        },
-        {
-            "license": "ERC/PET/3828",
-            "name": "HELLER PETROLEUM LIMITED"
-        },
-        {
-            "license": "ERC/PET/4075",
-            "name": "ILADE OIL CO. LIMITED"
-        },
-        {
-            "license": "ERC/PET/4131",
-            "name": "JAK LINE COMPANY LTD"
-        },
-        {
-            "license": "ERC/PET/4832",
-            "name": "JOJES OIL DEALERS LIMITED"
-        },
-        {
-            "license": "ERC/PET/5037",
-            "name": "KAYMAN ENERGY LIMITED"
-        },
-        {
-            "license": "ERC/PET/5068",
-            "name": "KENCOR PETROLEUM LIMITED"
-        },
-        {
-            "license": "ERC/PET/2425",
-            "name": "KENOLKOBIL LIMITED"
-        },
-        {
-            "license": "ERC/PET/4639",
-            "name": "KOSMOIL PETROLEUM (EA) LIMITED"
-        },
-        {
-            "license": "ERC/PET/3739",
-            "name": "LEXO ENERGY KENYA LIMITED"
-        },
-        {
-            "license": "ERC/PET/3817",
-            "name": "LIBYA OIL KENYA LIMITED"
-        },
-        {
-            "license": "ERC/PET/4636",
-            "name": "LINK OIL LTD"
-        },
-        {
-            "license": "ERC/PET/4552",
-            "name": "LUQMAN PETROLEUM LIMITED"
-        },
-        {
-            "license": "ERC/PET/4232",
-            "name": "MENA ENERGY LIMITED"
-        },
-        {
-            "license": "ERC/PET/4194",
-            "name": "MERIDIAN ENERGY LIMITED"
-        },
-        {
-            "license": "ERC/PET/5483",
-            "name": "MOBILE KINETIC LIMITED"
-        },
-        {
-            "license": "ERC/PET/4404",
-            "name": "MOGAS KENYA LIMITED"
-        },
-        {
-            "license": "ERC/PET/4155",
-            "name": "MOIL KENYA LIMITED"
-        },
-        {
-            "license": "ERC/PET/4102",
-            "name": "MS OIL LIMITED"
-        },
-        {
-            "license": "ERC/PET/4084",
-            "name": "NATIONAL OIL CORPORATION OF KENYA"
-        },
-        {
-            "license": "ERC/PET/4115",
-            "name": "NETGAS AND ENERGY LIMITED"
-        },
-        {
-            "license": "ERC/PET/4897",
-            "name": "OCEAN ENERGY LIMITED"
-        },
-        {
-            "license": "ERC/PET/4746",
-            "name": "OIL ENERGY KENYA LIMITED"
-        },
-        {
-            "license": "ERC/PET/4531",
-            "name": "OILCOM (K) LIMITED"
-        },
-        {
-            "license": "ERC/PET/4607",
-            "name": "OILPRO LIMITED"
-        },
-        {
-            "license": "ERC/PET/3228",
-            "name": "OLYMPIC PETROLEUM LIMITED"
-        },
-        {
-            "license": "ERC/PET/4136",
-            "name": "ONE PETROLEUM LIMITED"
-        },
-        {
-            "license": "ERC/PET/4107",
-            "name": "ORYX ENERGIES KENYA LIMITED"
-        },
-        {
-            "license": "ERC/PET/4604",
-            "name": "PERFORMANCE PARTS LIMITED"
-        },
-        {
-            "license": "ERC/PET/3955",
-            "name": "PETRO OIL KENYA LIMITED"
-        },
-        {
-            "license": "ERC/PET/4744",
-            "name": "PETROCAM KENYA LTD"
-        },
-        {
-            "license": "ERC/PET/3084",
-            "name": "PETROKENYA OIL CO. LIMITED"
-        },
-        {
-            "license": "ERC/PET/5078",
-            "name": "PRIME REGIONAL SUPPLIES LIMITED"
-        },
-        {
-            "license": "ERC/PET/4703",
-            "name": "RAMJI HARIBHAI DEVANI LIMITED"
-        },
-        {
-            "license": "ERC/PET/4615",
-            "name": "RANWAY TRADERS LIMITED"
-        },
-        {
-            "license": "ERC/PET/4210",
-            "name": "RED STAR PETROLEUM LIMITED"
-        },
-        {
-            "license": "ERC/PET/4895",
-            "name": "REGNOL OIL (K) LIMITED"
-        },
-        {
-            "license": "ERC/PET/4280",
-            "name": "RIVA PETROLEUM DEALERS LIMITED"
-        },
-        {
-            "license": "ERC/PET/4040",
-            "name": "ROYAL ENERGY (K) LIMITED"
-        },
-        {
-            "license": "ERC/PET/4090",
-            "name": "SAVANNA ENERGY KENYA LIMITED"
-        },
-        {
-            "license": "ERC/PET/4072",
-            "name": "SOCIETE PETROLIERE KENYA LIMITED"
-        },
-        {
-            "license": "ERC/PET/3902",
-            "name": "STABEX INTERNATIONAL LTD"
-        },
-        {
-            "license": "ERC/PET/4276",
-            "name": "TAAM PETROLEUM LIMITED"
-        },
-        {
-            "license": "ERC/PET/4135",
-            "name": "TECAFLEX LIMITED"
-        },
-        {
-            "license": "ERC/PET/4193",
-            "name": "TESLOR CORPORATION LIMITED"
-        },
-        {
-            "license": "ERC/PET/4025",
-            "name": "TEXAS ENERGY LTD"
-        },
-        {
-            "license": "ERC/PET/5123",
-            "name": "TIBA OIL COMPANY LIMITED"
-        },
-        {
-            "license": "ERC/PET/5039",
-            "name": "TORCH ENERGY LTD"
-        },
-        {
-            "license": "ERC/PET/4188",
-            "name": "TOSHA PETROLEUM (KENYA) LIMITED"
-        },
-        {
-            "license": "ERC/PET/4579",
-            "name": "TOWBA PETROLEUM COMPANY LIMITED"
-        },
-        {
-            "license": "ERC/PET/5082",
-            "name": "TRISTAR TRANSPORT LIMITED"
-        },
-        {
-            "license": "ERC/PET/4622",
-            "name": "VIVO ENERGY KENYA LIMITED"
-        },
-        {
-            "license": "ERC/PET/4161",
-            "name": "ZACOSIA TRADING LIMITED"
-        },
-        {
-            "license": "ERC/PET/5373",
-            "name": "ZAP ENERGY LTD"
-        }
-    ]
+  "Sheet1": [
+    {
+      "license": "ERC/PET/3736",
+      "name": "ACER PETROLEUM LIMITED"
+    },
+    {
+      "license": "ERC/PET/4218",
+      "name": "AFRO PETROLEUM LTD"
+    },
+    {
+      "license": "ERC/PET/4723",
+      "name": "AFTAH PETROLEUM(K)LTD"
+    },
+    {
+      "license": "ERC/PET/2459",
+      "name": "AINUSHAMSI ENERGY LIMITED"
+    },
+    {
+      "license": "ERC/PET/5130",
+      "name": "ARECH PETROLEUM LIMITED"
+    },
+    {
+      "license": "ERC/PET/4241",
+      "name": "ASHARAMI SYNERGY LIMITED"
+    },
+    {
+      "license": "ERC/PET/5348",
+      "name": "ASPAM ENERGY KENYA LIMITED"
+    },
+    {
+      "license": "ERC/PET/4240",
+      "name": "ASTROL PETROLEUM COMPANY LIMITED"
+    },
+    {
+      "license": "ERC/PET/4073",
+      "name": "AWALI GROUP LIMITED"
+    },
+    {
+      "license": "ERC/PET/4819",
+      "name": "AXON ENERGY LIMITED"
+    },
+    {
+      "license": "ERC/PET/4208",
+      "name": "BACHULAL POPATLAL (KENYA) LIMITED"
+    },
+    {
+      "license": "ERC/PET/3840",
+      "name": "BE ENERGY LIMITED"
+    },
+    {
+      "license": "ERC/PET/5290",
+      "name": "BILHAN COMPANY LIMITED"
+    },
+    {
+      "license": "ERC/PET/3838",
+      "name": "BLUE SKY ENERGY LIMITED"
+    },
+    {
+      "license": "ERC/PET/4376",
+      "name": "BRAIN FIELD OIL AND GAS LIMITED"
+    },
+    {
+      "license": "ERC/PET/4291",
+      "name": "BULK PETROLEUM LIMITED"
+    },
+    {
+      "license": "ERC/PET/4458",
+      "name": "BUSHRA ENERGY LIMITED"
+    },
+    {
+      "license": "ERC/PET/4236",
+      "name": "BUZEKI ENTERPRISES LIMITED"
+    },
+    {
+      "license": "ERC/PET/3988",
+      "name": "CITY OIL (K) LIMITED"
+    },
+    {
+      "license": "ERC/PET/5271",
+      "name": "COSTALINA ENERGY LIMITED"
+    },
+    {
+      "license": "ERC/PET/5418",
+      "name": "DALBIT PETROLEUM LIMITED"
+    },
+    {
+      "license": "ERC/PET/4342",
+      "name": "DESERT STAR OIL CO.LIMITED"
+    },
+    {
+      "license": "ERC/PET/4967",
+      "name": "EAST AFRICAN GASOIL LIMITED"
+    },
+    {
+      "license": "ERC/PET/4034",
+      "name": "ELIORA ENERGY LIMITED"
+    },
+    {
+      "license": "ERC/PET/4182",
+      "name": "EMKAY INTERNATIONAL LIMITED"
+    },
+    {
+      "license": "ERC/PET/4211",
+      "name": "ENGEN KENYA LIMITED"
+    },
+    {
+      "license": "ERC/PET/3691",
+      "name": "EON ENERGY LIMITED-- CONDITIONAL LICENSE"
+    },
+    {
+      "license": "ERC/PET/4307",
+      "name": "EPPIC OIL (K) LIMITED"
+    },
+    {
+      "license": "ERC/PET/4609",
+      "name": "EVON INTERNATIONAL ENERGY LIMITED"
+    },
+    {
+      "license": "ERC/PET/3868",
+      "name": "FASTNETT ENERGY LIMITED"
+    },
+    {
+      "license": "ERC/PET/3931",
+      "name": "FINEJET LIMITED"
+    },
+    {
+      "license": "ERC/PET/3972",
+      "name": "FOSSIL SUPPLIES LIMITED"
+    },
+    {
+      "license": "ERC/PET/3917",
+      "name": "GALANA OIL KENYA LIMITED"
+    },
+    {
+      "license": "ERC/PET/4767",
+      "name": "GAPCO KENYA LIMITED"
+    },
+    {
+      "license": "ERC/PET/4385",
+      "name": "GLOBAL PETROLEUM PRODUCTS KENYA LIMITED"
+    },
+    {
+      "license": "ERC/PET/5167",
+      "name": "GULF ENERGY LIMITED"
+    },
+    {
+      "license": "ERC/PET/4253",
+      "name": "HARED ENERGY LIMITED"
+    },
+    {
+      "license": "ERC/PET/3956",
+      "name": "HASS PETROLEUM KENYA LIMITED"
+    },
+    {
+      "license": "ERC/PET/3828",
+      "name": "HELLER PETROLEUM LIMITED"
+    },
+    {
+      "license": "ERC/PET/4075",
+      "name": "ILADE OIL CO. LIMITED"
+    },
+    {
+      "license": "ERC/PET/4131",
+      "name": "JAK LINE COMPANY LTD"
+    },
+    {
+      "license": "ERC/PET/4832",
+      "name": "JOJES OIL DEALERS LIMITED"
+    },
+    {
+      "license": "ERC/PET/5037",
+      "name": "KAYMAN ENERGY LIMITED"
+    },
+    {
+      "license": "ERC/PET/5068",
+      "name": "KENCOR PETROLEUM LIMITED"
+    },
+    {
+      "license": "ERC/PET/2425",
+      "name": "KENOLKOBIL LIMITED"
+    },
+    {
+      "license": "ERC/PET/4639",
+      "name": "KOSMOIL PETROLEUM (EA) LIMITED"
+    },
+    {
+      "license": "ERC/PET/3739",
+      "name": "LEXO ENERGY KENYA LIMITED"
+    },
+    {
+      "license": "ERC/PET/3817",
+      "name": "LIBYA OIL KENYA LIMITED"
+    },
+    {
+      "license": "ERC/PET/4636",
+      "name": "LINK OIL LTD"
+    },
+    {
+      "license": "ERC/PET/4552",
+      "name": "LUQMAN PETROLEUM LIMITED"
+    },
+    {
+      "license": "ERC/PET/4232",
+      "name": "MENA ENERGY LIMITED"
+    },
+    {
+      "license": "ERC/PET/4194",
+      "name": "MERIDIAN ENERGY LIMITED"
+    },
+    {
+      "license": "ERC/PET/5483",
+      "name": "MOBILE KINETIC LIMITED"
+    },
+    {
+      "license": "ERC/PET/4404",
+      "name": "MOGAS KENYA LIMITED"
+    },
+    {
+      "license": "ERC/PET/4155",
+      "name": "MOIL KENYA LIMITED"
+    },
+    {
+      "license": "ERC/PET/4102",
+      "name": "MS OIL LIMITED"
+    },
+    {
+      "license": "ERC/PET/4084",
+      "name": "NATIONAL OIL CORPORATION OF KENYA"
+    },
+    {
+      "license": "ERC/PET/4115",
+      "name": "NETGAS AND ENERGY LIMITED"
+    },
+    {
+      "license": "ERC/PET/4897",
+      "name": "OCEAN ENERGY LIMITED"
+    },
+    {
+      "license": "ERC/PET/4746",
+      "name": "OIL ENERGY KENYA LIMITED"
+    },
+    {
+      "license": "ERC/PET/4531",
+      "name": "OILCOM (K) LIMITED"
+    },
+    {
+      "license": "ERC/PET/4607",
+      "name": "OILPRO LIMITED"
+    },
+    {
+      "license": "ERC/PET/3228",
+      "name": "OLYMPIC PETROLEUM LIMITED"
+    },
+    {
+      "license": "ERC/PET/4136",
+      "name": "ONE PETROLEUM LIMITED"
+    },
+    {
+      "license": "ERC/PET/4107",
+      "name": "ORYX ENERGIES KENYA LIMITED"
+    },
+    {
+      "license": "ERC/PET/4604",
+      "name": "PERFORMANCE PARTS LIMITED"
+    },
+    {
+      "license": "ERC/PET/3955",
+      "name": "PETRO OIL KENYA LIMITED"
+    },
+    {
+      "license": "ERC/PET/4744",
+      "name": "PETROCAM KENYA LTD"
+    },
+    {
+      "license": "ERC/PET/3084",
+      "name": "PETROKENYA OIL CO. LIMITED"
+    },
+    {
+      "license": "ERC/PET/5078",
+      "name": "PRIME REGIONAL SUPPLIES LIMITED"
+    },
+    {
+      "license": "ERC/PET/4703",
+      "name": "RAMJI HARIBHAI DEVANI LIMITED"
+    },
+    {
+      "license": "ERC/PET/4615",
+      "name": "RANWAY TRADERS LIMITED"
+    },
+    {
+      "license": "ERC/PET/4210",
+      "name": "RED STAR PETROLEUM LIMITED"
+    },
+    {
+      "license": "ERC/PET/4895",
+      "name": "REGNOL OIL (K) LIMITED"
+    },
+    {
+      "license": "ERC/PET/4280",
+      "name": "RIVA PETROLEUM DEALERS LIMITED"
+    },
+    {
+      "license": "ERC/PET/4040",
+      "name": "ROYAL ENERGY (K) LIMITED"
+    },
+    {
+      "license": "ERC/PET/4090",
+      "name": "SAVANNA ENERGY KENYA LIMITED"
+    },
+    {
+      "license": "ERC/PET/4072",
+      "name": "SOCIETE PETROLIERE KENYA LIMITED"
+    },
+    {
+      "license": "ERC/PET/3902",
+      "name": "STABEX INTERNATIONAL LTD"
+    },
+    {
+      "license": "ERC/PET/4276",
+      "name": "TAAM PETROLEUM LIMITED"
+    },
+    {
+      "license": "ERC/PET/4135",
+      "name": "TECAFLEX LIMITED"
+    },
+    {
+      "license": "ERC/PET/4193",
+      "name": "TESLOR CORPORATION LIMITED"
+    },
+    {
+      "license": "ERC/PET/4025",
+      "name": "TEXAS ENERGY LTD"
+    },
+    {
+      "license": "ERC/PET/5123",
+      "name": "TIBA OIL COMPANY LIMITED"
+    },
+    {
+      "license": "ERC/PET/5039",
+      "name": "TORCH ENERGY LTD"
+    },
+    {
+      "license": "ERC/PET/4188",
+      "name": "TOSHA PETROLEUM (KENYA) LIMITED"
+    },
+    {
+      "license": "ERC/PET/4579",
+      "name": "TOWBA PETROLEUM COMPANY LIMITED"
+    },
+    {
+      "license": "ERC/PET/5082",
+      "name": "TRISTAR TRANSPORT LIMITED"
+    },
+    {
+      "license": "ERC/PET/4622",
+      "name": "VIVO ENERGY KENYA LIMITED"
+    },
+    {
+      "license": "ERC/PET/4161",
+      "name": "ZACOSIA TRADING LIMITED"
+    },
+    {
+      "license": "ERC/PET/5373",
+      "name": "ZAP ENERGY LTD"
+    }
+  ]
 }

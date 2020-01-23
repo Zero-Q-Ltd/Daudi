@@ -1,8 +1,8 @@
-import { deepCopy } from "../../utils/deepCopy";
-import { AssociatedUser, EmptyAssociatedUser } from "../admin/AssociatedUser";
-import { FuelType } from "../fuel/FuelType";
-import { DepotPrice } from "./DepotPrice";
-import { DepotStock, EmptyDepotQty } from "./DepotStock";
+import {deepCopy} from "../../utils/deepCopy";
+import {AssociatedUser, EmptyAssociatedUser} from "../admin/AssociatedUser";
+import {FuelType} from "../fuel/FuelType";
+import {DepotPrice} from "./DepotPrice";
+import {DepotStock, EmptyDepotQty} from "./DepotStock";
 
 export interface DepotConfig {
     /**
@@ -25,6 +25,7 @@ export interface DepotConfig {
         [key in FuelType]: DepotStock;
     };
 }
+
 const initPrice: DepotPrice = {
     price: 0,
     minPrice: 0,

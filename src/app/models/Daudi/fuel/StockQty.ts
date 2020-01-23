@@ -1,5 +1,5 @@
-import { StockTransfer } from "./StockTransfer";
-import { StockLoadDetail } from "./StockLoadDetail";
+import {StockTransfer} from "./StockTransfer";
+import {StockLoadDetail} from "./StockLoadDetail";
 
 export interface StockQty {
     /**

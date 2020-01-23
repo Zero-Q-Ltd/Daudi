@@ -17,7 +17,6 @@ export interface OMC {
 }
 
 
-
 export const emptyomc: OMC = {
     license: null,
     contactperson: [],

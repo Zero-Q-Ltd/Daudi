@@ -1,0 +1,7 @@
+<h2 matDialogTitle>{{title}}</h2>
+<mat-dialog-content align="center">Are you sure?</mat-dialog-content>
+<mat-dialog-actions align="center">
+    <button color="warn" mat-button matDialogClose>No</button>
+    <!-- Can optionally provide a result for the closing dialog. -->
+    <button [matDialogClose]="true" color="primary" mat-button>Yes</button>
+</mat-dialog-actions>

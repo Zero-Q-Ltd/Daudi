@@ -1,0 +1,87 @@
+<mat-form-field>
+    <mat-label>Select destination Depot</mat-label>
+    <mat-select [(value)]="selectedDepot">
+        <mat-option *ngFor="let depot of depots" [value]="depot">
+            {{depot.Name}}
+        </mat-option>
+    </mat-select>
+</mat-form-field>
+<mat-form-field>
+    <input [disabled]="!selectedDepot" matInput placeholder="Enter ASE amount" value="0">
+</mat-form-field>
+<table *ngIf="selectedDepot" [dataSource]="depotEntries" mat-table style="width: 100%">
+    <ng-container matColumnDef="select">
+        <th *matHeaderCellDef mat-header-cell>
+            <mat-checkbox (change)="$event ? masterToggle() : null" [aria-label]="checkboxLabel()"
+                          [checked]="selection.hasValue() && isAllSelected()" [indeterminate]="selection.hasValue() && !isAllSelected()">
+            </mat-checkbox>
+        </th>
+        <td *matCellDef="let row" mat-cell>
+            <mat-checkbox (change)="$event ? selection.toggle(row) : null" (click)="$event.stopPropagation()"
+                          [aria-label]="checkboxLabel(row)" [checked]="selection.isSelected(row)">
+            </mat-checkbox>
+        </td>
+    </ng-container>
+
+    <ng-container matColumnDef="id">
+        <th *matHeaderCellDef mat-header-cell> Entry ID</th>
+        <td *matCellDef="let entry" mat-cell> {{entry.entry.name}}</td>
+
+    </ng-container>
+
+    <ng-container matColumnDef="date">
+        <th *matHeaderCellDef mat-header-cell> Date</th>
+        <td *matCellDef="let entry" mat-cell> {{entry.date?.toDate() | date: 'dd/MM/yyyy, h:mm a'}}</td>
+    </ng-container>
+
+    <!-- Item Column -->
+
+    <ng-container matColumnDef="entry">
+        <th *matHeaderCellDef mat-header-cell> Entry #</th>
+        <td *matCellDef="let entry" mat-cell> {{entry.entry.id}}</td>
+    </ng-container>
+
+    <!-- Cost Column -->
+    <ng-container matColumnDef="totalqty">
+        <th *matHeaderCellDef mat-header-cell> Total Batch Qty</th>
+        <td *matCellDef="let entry" mat-cell>{{entry.qty.total}}</td>
+    </ng-container>
+
+    <!-- Cost Column -->
+    <ng-container matColumnDef="transferqty">
+        <th *matHeaderCellDef mat-header-cell>Qty To Transfer</th>
+        <td *matCellDef="let entry" mat-cell>
+            <mat-form-field>
+                <input [disabled]="!selection.isSelected(entry)" matInput placeholder="Qty to transfer" type="number"
+                       value="0">
+            </mat-form-field>
+        </td>
+    </ng-container>
+
+    <!-- Cost Column -->
+    <ng-container matColumnDef="loadedqty">
+        <th *matHeaderCellDef mat-header-cell> Loaded Qty</th>
+        <td *matCellDef="let entry" mat-cell> {{entry.qty.directLoad.total}}</td>
+    </ng-container>
+    <!-- Cost Column -->
+    <ng-container matColumnDef="availableqty">
+        <th *matHeaderCellDef mat-header-cell> Available Qty</th>
+        <td *matCellDef="let entry" mat-cell>
+            {{entry.qty.total - entry.qty.transferred.total - entry.qty.directLoad.total}}</td>
+    </ng-container>
+    <!-- Cost Column -->
+    <ng-container matColumnDef="status">
+        <th *matHeaderCellDef mat-header-cell> Entry Status</th>
+        <td *matCellDef="let entry ;let i = index" mat-cell>
+            <button *ngIf="entry.active" class="btn btn-outline-success btn-sm">
+                ACTIVE
+            </button>
+            <button *ngIf="!entry.active" class="btn btn-outline-danger btn-sm">
+                INACTIVE
+            </button>
+        </td>
+    </ng-container>
+
+    <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
+    <tr *matRowDef="let row; columns: displayedColumns;" mat-row></tr>
+</table>

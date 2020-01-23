@@ -1,0 +1,45 @@
+<section class="container-fluid sixty-top">
+    <mat-card>
+        <mat-card-content>
+            <div class="container-fluid" fxFlex="row">
+                <app-price-comparison>
+
+                </app-price-comparison>
+
+            </div>
+            <div fxFlex="row">
+                <app-contact-form (formValid)="validContactForm = $event" [(initData)]="temporder"
+                                  [newOrder]="newOrder">
+                </app-contact-form>
+                <app-calculations (formValid)="validCalculationForm = $event" [(initData)]="temporder"
+                                  [newOrder]="newOrder">
+                </app-calculations>
+                <div>
+                    <div class="" fxLayout fxLayout.xs="column" fxLayoutAlign="center" fxLayoutGap="10px"
+                         fxLayoutGap.xs="0">
+                        <button class="btn-default1" mat-raised-button
+                                matTooltip="Orders processsing in the background">
+                            << {{queuedorders.length}} </button>
+                        <div fxFlex>&nbsp;</div>
+                        <div fxFlex>&nbsp;</div>
+                        <div *ngIf="newOrder" class="btn-group" role="group" style="width: 100%;">
+                            <button (click)="checkOrder(true)" [disabled]=" !validContactForm || !validCalculationForm"
+                                    class="btn-default" mat-flat-button>SAVE ONLY
+                            </button>&nbsp;&nbsp;
+                            <button (click)="checkOrder(false)" [disabled]=" !validContactForm || !validCalculationForm"
+                                    class="btn-default" mat-button>SAVE AND NEW
+                            </button>
+                            <!-- {{validContactForm }}{{validCalculationForm}} -->
+                        </div>
+                        <div *ngIf="!newOrder" class="btn-group" role="group" style="width: 100%;">
+                            <button (click)="checkOrder(false)"
+                                    [disabled]=" !validContactForm || !validCalculationForm || orderError"
+                                    class="btn-default" mat-button>APPROVE
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </mat-card-content>
+    </mat-card>
+</section>

@@ -7,6 +7,8 @@ import {firestore} from "firebase";
  * Imports not within models can be imported via the packages themselves
  */
 
-export class MyGeoPoint extends firestore.GeoPoint { }
+export class MyGeoPoint extends firestore.GeoPoint {
+}
 
-export class MyTimestamp extends firestore.Timestamp { }
+export class MyTimestamp extends firestore.Timestamp {
+}

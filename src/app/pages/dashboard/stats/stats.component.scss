@@ -1,0 +1,77 @@
+@import "./../../../admin";
+@import "~saturn-datepicker/theming";
+
+.bar-height {
+  height: 450px;
+}
+
+.gauge-height {
+  height: 200px;
+}
+
+.color-pms {
+  color: $mk-pms;
+}
+
+.color-ago {
+  color: $mk-ago;
+}
+
+.color-ik {
+  color: $mk-ik;
+}
+
+.stats-font {
+  font-size: 17px;
+  width: 100%;
+}
+
+.stats-font1 {
+  font-size: 16px;
+  padding-bottom: 1px;
+  width: 100%;
+}
+
+.accordionstyle {
+  padding-bottom: 75px;
+}
+
+.centerthings {
+  display: inline-block;
+}
+
+.totals-a {
+  font-size: 28px;
+  color: $mk-primary;
+}
+
+.totals-b {
+  font-size: 24px;
+  color: #404040;
+}
+
+.mat-form-field-label {
+  text-align: center;
+}
+
+input.mat-input-element {
+  text-align: center;
+}
+
+.date-hint {
+  color: $mk-danger;
+  font-weight: bolder;
+  text-align: center;
+}
+
+mat-form-field {
+  text-align: center;
+}
+
+mat-hint {
+  width: 100%;
+}
+
+.mat-form-field-hint-spacer {
+  display: none;
+}
