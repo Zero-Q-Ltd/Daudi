@@ -1,14 +1,27 @@
-<mat-form-field>
-  <mat-label>Select destination Depot</mat-label>
-  <mat-select [(value)]="selectedDepot">
-    <mat-option *ngFor="let depot of privateDepots" [value]="depot">
-      {{depot.Name}}
-    </mat-option>
-  </mat-select>
-</mat-form-field>
-<mat-form-field>
-  <input [(ngModel)]="qty" [disabled]="!selectedDepot" matInput placeholder="Enter ASE amount" value="0">
-</mat-form-field>
-<div *ngIf="selectedDepot">
-  <app-entry-selector [fuelType]='fuelType' [qty]="qty"></app-entry-selector>
+<h1 mat-dialog-title>Fuel Transfer</h1>
+
+<div mat-dialog-content class="parent-div">
+    <mat-form-field>
+        <mat-label>Select destination Depot</mat-label>
+        <mat-select [formControl]="depotControl">
+            <mat-option *ngFor="let depot of privateDepots" [value]="depot">
+                {{depot.Name}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+        <input [formControl]="qtyToDrawControl" matInput placeholder="Enter ASE amount">
+    </mat-form-field>
+    <div *ngIf="qtyToDrawControl.valid && selectedDepot">
+        <app-entry-selector [fuelType]='fuelType' [qtyToDraw]="+qtyToDrawControl.value"
+            (selectedEntries)="selectedEntries = $event" (validTotals)="validTotals = $event"
+            (validEntryForms)="validEntryForms = $event">
+        </app-entry-selector>
+    </div>
+
 </div>
+<mat-dialog-actions align="end">
+    <button mat-raised-button mat-dialog-close>Cancel</button>
+    <button mat-raised-button color="primary" [disabled]="!validEntryForms || !qtyToDrawControl.valid || !validTotals"
+        (click)="saveEntryChanges()" cdkFocusInitial>Transfer</button>
+</mat-dialog-actions>
