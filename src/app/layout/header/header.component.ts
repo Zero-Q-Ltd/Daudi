@@ -99,9 +99,8 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
 
     }
 
-    changeactivedepot(event) {
-        console.log(event.value);
-        this.core.changeactivedepot(event.value);
+    changeactivedepot() {
+        this.core.changeactivedepot(this.activedepot.depot);
     }
 
     ngOnInit() {
