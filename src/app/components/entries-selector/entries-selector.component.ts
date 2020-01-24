@@ -1,24 +1,24 @@
-import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
-import {AngularFirestore} from '@angular/fire/firestore';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
-import {AdminConfigService} from 'app/services/core/admin-config.service';
-import {AdminService} from 'app/services/core/admin.service';
-import {CoreService} from 'app/services/core/core.service';
-import {StocksService} from 'app/services/core/stocks.service';
-import {EntriesService} from 'app/services/entries.service';
-import {OrdersService} from 'app/services/orders.service';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { AngularFirestore } from '@angular/fire/firestore';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
+import { AdminConfigService } from 'app/services/core/admin-config.service';
+import { AdminService } from 'app/services/core/admin.service';
+import { CoreService } from 'app/services/core/core.service';
+import { StocksService } from 'app/services/core/stocks.service';
+import { EntriesService } from 'app/services/entries.service';
+import { OrdersService } from 'app/services/orders.service';
 import * as moment from 'moment';
-import {ReplaySubject} from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
-import {Depot, emptydepot} from '../../models/Daudi/depot/Depot';
-import {DepotConfig, emptyDepotConfig} from '../../models/Daudi/depot/DepotConfig';
-import {Entry} from '../../models/Daudi/fuel/Entry';
-import {FuelNamesArray, FuelType} from '../../models/Daudi/fuel/FuelType';
-import {EmptyOMCStock, OMCStock} from '../../models/Daudi/omc/Stock';
-import {GenericTruckStage} from '../../models/Daudi/order/GenericStage';
-import {emptyorder, Order} from '../../models/Daudi/order/Order';
-import {MyTimestamp} from '../../models/firestore/firestoreTypes';
-import {NotificationService} from '../../shared/services/notification.service';
+import { ReplaySubject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { Depot, emptydepot } from '../../models/Daudi/depot/Depot';
+import { DepotConfig, emptyDepotConfig } from '../../models/Daudi/depot/DepotConfig';
+import { Entry } from '../../models/Daudi/fuel/Entry';
+import { FuelNamesArray, FuelType } from '../../models/Daudi/fuel/FuelType';
+import { EmptyOMCStock, OMCStock } from '../../models/Daudi/omc/Stock';
+import { GenericTruckStage } from '../../models/Daudi/order/GenericStage';
+import { emptyorder, Order } from '../../models/Daudi/order/Order';
+import { MyTimestamp } from '../../models/firestore/firestoreTypes';
+import { NotificationService } from '../../shared/services/notification.service';
 
 interface EntryContent {
   id: string;
@@ -44,28 +44,28 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
     ago: Entry[],
     ik: Entry[]
   } = {
-    pms: [],
-    ago: [],
-    ik: []
-  };
+      pms: [],
+      ago: [],
+      ik: []
+    };
   displayedColumns: string[] = ['id', 'batch', 'totalqty', 'accumulated', 'loadedqty', 'availableqty', 'drawnqty', 'remainingqty', 'status'];
 
   drawnEntry: {
     [key in FuelType]: EntryContent[]
   } = {
-    pms: [],
-    ago: [],
-    ik: [],
-  };
+      pms: [],
+      ago: [],
+      ik: [],
+    };
   fuelerror: {
     [key in FuelType]: { status: boolean, errorString: string }
   } = {
-    ago: {status: false, errorString: null},
-    ik: {status: false, errorString: null},
-    pms: {status: false, errorString: null}
-  };
+      ago: { status: false, errorString: null },
+      ik: { status: false, errorString: null },
+      pms: { status: false, errorString: null }
+    };
   saving = false;
-  order: Order = {...emptyorder};
+  order: Order = { ...emptyorder };
   donecalculating = false;
   fueltypesArray = FuelNamesArray;
   fetchingEntries: boolean;
@@ -74,8 +74,8 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
    * this keeps a local copy of all the subscriptions within this service
    */
   subscriptions: Map<string, () => void> = new Map<string, any>();
-  stock: OMCStock = {...EmptyOMCStock};
-  activedepot: { depot: Depot, config: DepotConfig } = {depot: {...emptydepot}, config: {...emptyDepotConfig}};
+  stock: OMCStock = { ...EmptyOMCStock };
+  activedepot: { depot: Depot, config: DepotConfig } = { depot: { ...emptydepot }, config: { ...emptyDepotConfig } };
 
   constructor(
     public dialogRef: MatDialogRef<EntriesSelectorComponent>,
@@ -151,7 +151,7 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
        * Entries are already filtered for private depots, so calculations are the same
        */
       const value = this.core.activedepot.value.depot.config.private ?
-        (this.activedepot.config.stock[fueltype].ase.totalActive - this.activedepot.config.stock[fueltype].ase.used) :
+        (this.activedepot.config.stock[fueltype]) :
         (this.stock.qty[fueltype].ase);
 
       /**
@@ -455,7 +455,7 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
              * Check if it's a private depot
              */
             if (this.core.activedepot.value.depot.config.private) {
-              this.activedepot.config.stock[fueltype].ase.used += this.order.fuel[fueltype].qty;
+              this.activedepot.config.stock[fueltype] -= this.order.fuel[fueltype].qty;
               batchaction.update(this.configService.configDoc(this.core.currentOmc.value.Id), this.activedepot.config);
             } else {
               this.stock.qty[fueltype].ase -= this.order.fuel[fueltype].qty;

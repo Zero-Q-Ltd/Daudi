@@ -1,8 +1,14 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { AngularFirestore } from '@angular/fire/firestore';
 import { FormControl, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material';
-import { Entry } from 'app/models/Daudi/fuel/Entry';
+import { DepotConfig, emptyDepotConfig } from 'app/models/Daudi/depot/DepotConfig';
+import { EmptyEntryDraw, Entry, EntryDraw } from 'app/models/Daudi/fuel/Entry';
+import { deepCopy } from 'app/models/utils/deepCopy';
+import { toObject } from 'app/models/utils/SnapshotUtils';
 import { CoreService } from 'app/services/core/core.service';
+import { DepotService } from 'app/services/core/depot.service';
+import { EntriesService } from 'app/services/entries.service';
 import { ReplaySubject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { Depot } from '../../../../../../models/Daudi/depot/Depot';
@@ -15,13 +21,15 @@ import { FuelType } from '../../../../../../models/Daudi/fuel/FuelType';
 })
 export class TransferComponent implements OnInit, OnDestroy {
     privateDepots: Depot[] = [];
-    selectedDepot: Depot;
+    selectedDepot: { depot: Depot, config: DepotConfig };
     comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
     qtyToDraw = 0;
     depotControl: FormControl = new FormControl({}, [Validators.required]);
     validEntryForms = false;
     validTotals = false;
-    selectedEntries: Entry[] = [];
+    selectedEntries: (Entry & EntryDraw)[] = [];
+    loadingDepotConfig = false;
+    saving = false;
     qtyToDrawControl: FormControl = new FormControl({
         value: 0,
         disabled: true
@@ -32,6 +40,9 @@ export class TransferComponent implements OnInit, OnDestroy {
 
     constructor(
         @Inject(MAT_DIALOG_DATA) public fuelType: FuelType,
+        private db: AngularFirestore,
+        private entriesService: EntriesService,
+        private depotService: DepotService,
         private core: CoreService) {
         this.core.depots.pipe(takeUntil(this.comopnentDestroyed)).subscribe(depots => {
             /**
@@ -42,8 +53,15 @@ export class TransferComponent implements OnInit, OnDestroy {
         this.depotControl.valueChanges
             .pipe(debounceTime(400),
                 distinctUntilChanged())
-            .subscribe(value => {
-                this.selectedDepot = value;
+            .subscribe((depot: Depot) => {
+                this.loadingDepotConfig = true;
+                this.depotService.depotConfigDoc(this.core.omcId, depot.Id)
+                    .get()
+                    .then(conf => {
+                        const config = toObject(emptyDepotConfig, conf);
+                        this.selectedDepot = { depot, config };
+                        this.loadingDepotConfig = false;
+                    });
                 this.qtyToDrawControl.enable();
             });
     }
@@ -51,7 +69,61 @@ export class TransferComponent implements OnInit, OnDestroy {
     ngOnInit() {
     }
     saveEntryChanges() {
+        this.saving = true;
+        const batchaction = this.db.firestore.batch();
 
+        this.selectedEntries.forEach(tt => {
+            /**
+             * Create another var to avoid mutation of the original values
+             */
+            const t = deepCopy(tt);
+            Object.keys(EmptyEntryDraw).forEach(index => {
+                delete t[index];
+            });
+
+            t.qty.used += tt.qtyDrawn;
+            t.qty.transferred.total += tt.qtyDrawn;
+            t.qty.transferred.transfers.push({
+                directLoad: {
+                    accumulated: {
+                        total: 0,
+                        usable: 0
+                    },
+                    total: 0,
+                },
+                total: tt.qtyDrawn,
+                transferred: null,
+                used: 0
+            });
+            /**
+             * Update each entry independently
+             */
+            batchaction.update(this.entriesService.entryCollection(this.core.currentOmc.value.Id)
+                .doc(t.Id), t);
+        });
+        /**
+         * Update the destination depot quantities
+         */
+        this.selectedDepot.config.stock[this.fuelType] += this.qtyToDrawControl.value;
+        if (this.selectedDepot.config.initialised) {
+            batchaction.update(this.depotService.depotConfigDoc(this.core.omcId, this.selectedDepot.depot.Id), this.selectedDepot.config);
+        } else {
+            this.selectedDepot.config.initialised = false;
+            batchaction.set(this.depotService.depotConfigDoc(this.core.omcId, this.selectedDepot.depot.Id), this.selectedDepot.config);
+        }
+        /**
+         * Update the originating depot quantities
+         */
+        const tempDepotVal = deepCopy(this.core.activedepot.value.config);
+        tempDepotVal.stock[this.fuelType] -= this.qtyToDrawControl.value;
+        batchaction.update(this.depotService.depotConfigDoc(this.core.omcId, tempDepotVal.Id), tempDepotVal);
+        /**
+         * submit... Phew... I know
+         * But finally, we're here
+         */
+        batchaction.commit().then(res => {
+            this.saving = false;
+        });
     }
 
     ngOnDestroy(): void {
