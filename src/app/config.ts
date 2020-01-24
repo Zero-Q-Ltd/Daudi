@@ -5,7 +5,7 @@ function makeAppConfig() {
   const AppConfig = {
     brand: 'DAUDI 4.0.0',
     user: 'Zero-Q',
-    year: '2019',
+    year: '2020',
     layoutBoxed: false,               // true, false
     navCollapsed: true,              // true, false
     navBehind: false,                 // true, false

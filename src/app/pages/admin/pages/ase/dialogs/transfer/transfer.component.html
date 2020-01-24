@@ -12,7 +12,10 @@
     <mat-form-field>
         <input [formControl]="qtyToDrawControl" matInput placeholder="Enter ASE amount">
     </mat-form-field>
-    <div *ngIf="qtyToDrawControl.valid && selectedDepot">
+
+    <mat-spinner *ngIf="loadingDepotConfig"></mat-spinner>
+
+    <div *ngIf="qtyToDrawControl.valid && selectedDepot && !loadingDepotConfig">
         <app-entry-selector [fuelType]='fuelType' [qtyToDraw]="+qtyToDrawControl.value"
             (selectedEntries)="selectedEntries = $event" (validTotals)="validTotals = $event"
             (validEntryForms)="validEntryForms = $event">
@@ -23,5 +26,10 @@
 <mat-dialog-actions align="end">
     <button mat-raised-button mat-dialog-close>Cancel</button>
     <button mat-raised-button color="primary" [disabled]="!validEntryForms || !qtyToDrawControl.valid || !validTotals"
-        (click)="saveEntryChanges()" cdkFocusInitial>Transfer</button>
+        (click)="saveEntryChanges()" cdkFocusInitial>
+        Transfer
+    </button>
+
+    <mat-progress-spinner *ngIf="saving">
+    </mat-progress-spinner>
 </mat-dialog-actions>

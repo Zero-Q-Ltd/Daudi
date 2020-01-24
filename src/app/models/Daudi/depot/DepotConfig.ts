@@ -1,8 +1,7 @@
-import {deepCopy} from '../../utils/deepCopy';
-import {AssociatedUser, EmptyAssociatedUser} from '../admin/AssociatedUser';
-import {FuelType} from '../fuel/FuelType';
-import {DepotPrice} from './DepotPrice';
-import {DepotStock, EmptyDepotQty} from './DepotStock';
+import { deepCopy } from '../../utils/deepCopy';
+import { AssociatedUser, EmptyAssociatedUser } from '../admin/AssociatedUser';
+import { FuelType } from '../fuel/FuelType';
+import { DepotPrice } from './DepotPrice';
 
 export interface DepotConfig {
   /**
@@ -18,11 +17,12 @@ export interface DepotConfig {
   price: {
     [key in FuelType]: DepotPrice;
   };
+  initialised: boolean;
   hospitality: {
     amnt: number;
   };
   stock: {
-    [key in FuelType]: DepotStock;
+    [key in FuelType]: number;
   };
 }
 
@@ -35,14 +35,15 @@ export const emptyDepotConfig: DepotConfig = {
   depotId: null,
   Id: null,
   QbId: null,
+  initialised: false,
   CompanyRep: {
     name: null,
     phone: null
   },
   stock: {
-    ago: deepCopy<DepotStock>(EmptyDepotQty),
-    pms: deepCopy<DepotStock>(EmptyDepotQty),
-    ik: deepCopy<DepotStock>(EmptyDepotQty)
+    ago: 0,
+    pms: 0,
+    ik: 0
   },
   hospitality: {
     amnt: 0

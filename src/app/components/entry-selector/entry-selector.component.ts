@@ -71,9 +71,11 @@ export class EntrySelectorComponent implements OnInit, OnDestroy, OnChanges {
 
     const _selectedEntries = [];
     this.drwanQtyControls.forEach((control, index) => {
+      this.entries.data[index].qtyDrawn = 0;
       /**
        * calculate the correct remaining amount before deducting the entered amount
        */
+
       this.entries.data[index].qtyRemaining =
         this.entries.data[index].qty.total - this.entries.data[index].qty.transferred.total - this.entries.data[index].qty.directLoad.total;
       /**
@@ -90,6 +92,11 @@ export class EntrySelectorComponent implements OnInit, OnDestroy, OnChanges {
          */
         this.entries.data[index].qtyRemaining -= control.value || 0;
         this.totalEntryDraw += control.value || 0;
+        /**
+         * Set the qty drawn
+         */
+        this.entries.data[index].qtyDrawn = +control.value;
+
         /**
          * Set the remaining amount status of the fuel
          */
