@@ -1,8 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-
-import { AdminComponent } from './admin.component';
 import { AseComponent } from './pages/ase/ase.component';
+import { CompanyManagementComponent } from './pages/company-management/company-management.component';
 import { CustomerManagementComponent } from './pages/customer-management/customer-management.component';
 import { DepotManagementComponent } from './pages/depot-management/depot-management.component';
 import { EntriesComponent } from './pages/entries/entries.component';
@@ -28,11 +27,8 @@ const routes: Routes = [
     component: DepotManagementComponent
   },
   {
-    /**
-     * @todo add route for company-management component
-     */
     path: 'company-management',
-    component: DepotManagementComponent
+    component: CompanyManagementComponent
   },
   {
     path: 'customer-management',

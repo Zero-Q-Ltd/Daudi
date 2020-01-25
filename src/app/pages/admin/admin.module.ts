@@ -18,6 +18,7 @@ import {PaymentsComponent} from './pages/payments/payments.component';
 import {SmsLogsComponent} from './pages/sms-logs/sms-logs.component';
 import {UserLevelsComponent} from './pages/user-levels/user-levels.component';
 import {UserManagementComponent} from './pages/user-management/user-management.component';
+import { CompanyManagementComponent } from './pages/company-management/company-management.component';
 
 @NgModule({
   declarations: [
@@ -36,6 +37,7 @@ import {UserManagementComponent} from './pages/user-management/user-management.c
     UserLevelsComponent,
     UserManagementComponent,
     CreatePaymentComponent,
+    CompanyManagementComponent,
   ],
   imports: [
     CommonModule,
