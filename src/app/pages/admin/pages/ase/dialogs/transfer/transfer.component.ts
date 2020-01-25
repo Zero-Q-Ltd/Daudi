@@ -11,7 +11,7 @@ import { CoreService } from 'app/services/core/core.service';
 import { DepotService } from 'app/services/core/depot.service';
 import { EntriesService } from 'app/services/entries.service';
 import { ReplaySubject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
+import { debounceTime, delay, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { Depot } from '../../../../../../models/Daudi/depot/Depot';
 import { FuelType } from '../../../../../../models/Daudi/fuel/FuelType';
 
@@ -58,7 +58,13 @@ export class TransferComponent implements OnInit, OnDestroy {
                 this.loadingDepotConfig = true;
                 this.depotService.depotConfigDoc(this.core.omcId, depot.Id)
                     .get()
-                    .then(conf => {
+                    .then(async conf => {
+                        /**
+                         * sleep so that the loader does not appear as a glitch in case the value is loaded very fast,
+                         *  which will happen more often than not
+                         */
+                        await delay(1000);
+
                         const config = toObject(emptyDepotConfig, conf);
                         this.selectedDepot = { depot, config };
                         this.loadingDepotConfig = false;
