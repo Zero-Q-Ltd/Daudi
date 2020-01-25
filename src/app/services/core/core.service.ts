@@ -1,27 +1,27 @@
-import {Injectable} from '@angular/core';
-import {AngularFirestore} from '@angular/fire/firestore';
-import {DaudiCustomer, emptyDaudiCustomer} from 'app/models/Daudi/customer/Customer';
-import {Depot, emptydepot} from 'app/models/Daudi/depot/Depot';
-import {DepotConfig, emptyDepotConfig} from 'app/models/Daudi/depot/DepotConfig';
-import {emptyEntry, Entry} from 'app/models/Daudi/fuel/Entry';
-import {FuelNamesArray} from 'app/models/Daudi/fuel/FuelType';
-import {AdminConfig, emptyConfig} from 'app/models/Daudi/omc/Config';
-import {emptyomc, OMC} from 'app/models/Daudi/omc/OMC';
-import {EmptyOMCStock, OMCStock} from 'app/models/Daudi/omc/Stock';
-import {emptyorder, Order} from 'app/models/Daudi/order/Order';
-import {OrderStageIds, OrderStages} from 'app/models/Daudi/order/OrderStages';
-import {toArray, toObject} from 'app/models/utils/SnapshotUtils';
+import { Injectable } from '@angular/core';
+import { AngularFirestore } from '@angular/fire/firestore';
+import { DaudiCustomer, emptyDaudiCustomer } from 'app/models/Daudi/customer/Customer';
+import { Depot, emptydepot } from 'app/models/Daudi/depot/Depot';
+import { DepotConfig, emptyDepotConfig } from 'app/models/Daudi/depot/DepotConfig';
+import { emptyEntry, Entry } from 'app/models/Daudi/fuel/Entry';
+import { FuelNamesArray } from 'app/models/Daudi/fuel/FuelType';
+import { AdminConfig, emptyConfig } from 'app/models/Daudi/omc/Config';
+import { emptyomc, OMC } from 'app/models/Daudi/omc/OMC';
+import { EmptyOMCStock, OMCStock } from 'app/models/Daudi/omc/Stock';
+import { emptyorder, Order } from 'app/models/Daudi/order/Order';
+import { OrderStageIds, OrderStages } from 'app/models/Daudi/order/OrderStages';
+import { toArray, toObject } from 'app/models/utils/SnapshotUtils';
 import * as moment from 'moment';
-import {BehaviorSubject} from 'rxjs';
-import {distinctUntilChanged, skipWhile} from 'rxjs/operators';
-import {CustomerService} from '../customers.service';
-import {EntriesService} from '../entries.service';
-import {OrdersService} from '../orders.service';
-import {AdminConfigService} from './admin-config.service';
-import {AdminService} from './admin.service';
-import {DepotService} from './depot.service';
-import {OmcService} from './omc.service';
-import {StocksService} from './stocks.service';
+import { BehaviorSubject } from 'rxjs';
+import { distinctUntilChanged, skipWhile } from 'rxjs/operators';
+import { CustomerService } from '../customers.service';
+import { EntriesService } from '../entries.service';
+import { OrdersService } from '../orders.service';
+import { AdminConfigService } from './admin-config.service';
+import { AdminService } from './admin.service';
+import { DepotService } from './depot.service';
+import { OmcService } from './omc.service';
+import { StocksService } from './stocks.service';
 
 @Injectable({
   providedIn: 'root'
@@ -30,18 +30,18 @@ import {StocksService} from './stocks.service';
  * This singleton keeps all the variables needed by the app to run and automatically keeps and manages the subscriptions
  */
 export class CoreService {
-  adminConfig: BehaviorSubject<AdminConfig> = new BehaviorSubject<AdminConfig>({...emptyConfig});
+  adminConfig: BehaviorSubject<AdminConfig> = new BehaviorSubject<AdminConfig>({ ...emptyConfig });
   depots: BehaviorSubject<Depot[]> = new BehaviorSubject([]);
   customers: BehaviorSubject<DaudiCustomer[]> = new BehaviorSubject<DaudiCustomer[]>([]);
   omcs: BehaviorSubject<OMC[]> = new BehaviorSubject<OMC[]>([]);
-  stock: BehaviorSubject<OMCStock> = new BehaviorSubject<OMCStock>({...EmptyOMCStock});
+  stock: BehaviorSubject<OMCStock> = new BehaviorSubject<OMCStock>({ ...EmptyOMCStock });
   currentOmc: BehaviorSubject<OMC> = new BehaviorSubject<OMC>(emptyomc);
   /**
    * Be careful when subscribing to this value because it will always emit a value
    */
   activedepot: BehaviorSubject<{ depot: Depot, config: DepotConfig }> = new BehaviorSubject({
-    depot: {...emptydepot},
-    config: {...emptyDepotConfig}
+    depot: { ...emptydepot },
+    config: { ...emptyDepotConfig }
   });
   /**
    * this keeps a local copy of all the subscriptions within this service
@@ -64,22 +64,22 @@ export class CoreService {
     ago: BehaviorSubject<Entry[]>,
     ik: BehaviorSubject<Entry[]>,
   } = {
-    pms: new BehaviorSubject([]),
-    ago: new BehaviorSubject([]),
-    ik: new BehaviorSubject([])
-  };
+      pms: new BehaviorSubject([]),
+      ago: new BehaviorSubject([]),
+      ik: new BehaviorSubject([])
+    };
 
   fueltypesArray = FuelNamesArray;
   orders: {
     [key in OrderStages]: BehaviorSubject<Order[]>
   } = {
-    1: new BehaviorSubject<Order[]>([]),
-    2: new BehaviorSubject<Order[]>([]),
-    3: new BehaviorSubject<Order[]>([]),
-    4: new BehaviorSubject<Order[]>([]),
-    5: new BehaviorSubject<Order[]>([]),
-    6: new BehaviorSubject<Order[]>([])
-  };
+      1: new BehaviorSubject<Order[]>([]),
+      2: new BehaviorSubject<Order[]>([]),
+      3: new BehaviorSubject<Order[]>([]),
+      4: new BehaviorSubject<Order[]>([]),
+      5: new BehaviorSubject<Order[]>([]),
+      6: new BehaviorSubject<Order[]>([])
+    };
   queuedorders = new BehaviorSubject([]);
   omcId: string;
 
@@ -233,11 +233,11 @@ export class CoreService {
           if (t.exists) {
             const config: DepotConfig = toObject(emptyDepotConfig, t);
             console.log('changing to:', depot.Name, config.depotId, config.Id);
-            this.activedepot.next({depot, config});
+            this.activedepot.next({ depot, config });
             this.loaders.depotConfig.next(false);
           } else {
             console.log('this depot doesnt have a valid config');
-            this.activedepot.next({depot, config: {...emptyDepotConfig}});
+            this.activedepot.next({ depot, config: { ...emptyDepotConfig } });
             this.loaders.depotConfig.next(false);
           }
         })
@@ -327,9 +327,16 @@ export class CoreService {
   fetchActiveEntries() {
     this.loaders.entries.next(true);
     this.fueltypesArray.forEach(fuelType => {
-      this.subscriptions.set('entries', this.entriesService.entryCollection(this.omcId)
+      let queryvalue = this.entriesService.entryCollection(this.omcId)
         .where('active', '==', true)
-        .where('fuelType', '==', fuelType)
+        .where('fuelType', '==', fuelType);
+      /**
+       * Filter by depot if its a privtae depot
+       */
+      if (this.activedepot.value.depot.config.private) {
+        queryvalue = queryvalue.where('depot.Id', '==', this.activedepot.value.depot.Id);
+      }
+      this.subscriptions.set('entries', queryvalue
         .onSnapshot(data => {
           this.loaders.entries.next(false);
           this.depotEntries[fuelType].next(toArray(emptyEntry, data));

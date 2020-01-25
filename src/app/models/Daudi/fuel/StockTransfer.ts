@@ -1,6 +1,6 @@
-import {StockQty} from './StockQty';
+import { StockQty } from './StockQty';
 
 export interface StockTransfer {
   total: number;
-  transfers: StockQty[];
+  transfers: (StockQty & { depotId: string; })[];
 }
