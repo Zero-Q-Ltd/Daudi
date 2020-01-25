@@ -1,6 +1,6 @@
-import {Injectable} from '@angular/core';
-import {AngularFirestore} from '@angular/fire/firestore';
-import {Entry} from 'app/models/Daudi/fuel/Entry';
+import { Injectable } from '@angular/core';
+import { AngularFirestore } from '@angular/fire/firestore';
+import { Entry } from 'app/models/Daudi/fuel/Entry';
 
 @Injectable({
   providedIn: 'root'

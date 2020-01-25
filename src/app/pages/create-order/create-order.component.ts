@@ -1,23 +1,23 @@
-import {Component, OnDestroy} from '@angular/core';
-import {MatDialog} from '@angular/material';
-import {ActivatedRoute, Router} from '@angular/router';
-import {MapsComponent} from 'app/components/maps/maps.component';
-import {AdminService} from 'app/services/core/admin.service';
-import {CoreService} from 'app/services/core/core.service';
-import {CustomerService} from 'app/services/customers.service';
-import {OrdersService} from 'app/services/orders.service';
-import {firestore} from 'firebase';
+import { Component, OnDestroy } from '@angular/core';
+import { MatDialog } from '@angular/material';
+import { ActivatedRoute, Router } from '@angular/router';
+import { MapsComponent } from 'app/components/maps/maps.component';
+import { AdminService } from 'app/services/core/admin.service';
+import { CoreService } from 'app/services/core/core.service';
+import { CustomerService } from 'app/services/customers.service';
+import { OrdersService } from 'app/services/orders.service';
+import { firestore } from 'firebase';
 // import our interface
-import {combineLatest, ReplaySubject} from 'rxjs';
-import {skipWhile, takeUntil} from 'rxjs/operators';
-import {DaudiCustomer} from '../../models/Daudi/customer/Customer';
-import {Depot, emptydepot} from '../../models/Daudi/depot/Depot';
-import {DepotConfig, emptyDepotConfig} from '../../models/Daudi/depot/DepotConfig';
-import {FuelNamesArray} from '../../models/Daudi/fuel/FuelType';
-import {AdminConfig, emptyConfig} from '../../models/Daudi/omc/Config';
-import {emptyorder, Order} from '../../models/Daudi/order/Order';
-import {NotificationService} from '../../shared/services/notification.service';
-import {ConfirmDepotComponent} from './components/confirm-depot/confirm-depot.component';
+import { combineLatest, ReplaySubject } from 'rxjs';
+import { skipWhile, takeUntil } from 'rxjs/operators';
+import { DaudiCustomer } from '../../models/Daudi/customer/Customer';
+import { Depot, emptydepot } from '../../models/Daudi/depot/Depot';
+import { DepotConfig, emptyDepotConfig } from '../../models/Daudi/depot/DepotConfig';
+import { FuelNamesArray } from '../../models/Daudi/fuel/FuelType';
+import { AdminConfig, emptyConfig } from '../../models/Daudi/omc/Config';
+import { emptyorder, Order } from '../../models/Daudi/order/Order';
+import { NotificationService } from '../../shared/services/notification.service';
+import { ConfirmDepotComponent } from './components/confirm-depot/confirm-depot.component';
 
 @Component({
   selector: 'create-order',
@@ -38,8 +38,8 @@ export class CreateOrderComponent implements OnDestroy {
    */
   subscriptions: Map<string, any> = new Map<string, any>();
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
-  activedepot: { depot: Depot, config: DepotConfig } = {depot: {...emptydepot}, config: {...emptyDepotConfig}};
-  omcConfig: AdminConfig = {...emptyConfig};
+  activedepot: { depot: Depot, config: DepotConfig } = { depot: { ...emptydepot }, config: { ...emptyDepotConfig } };
+  omcConfig: AdminConfig = { ...emptyConfig };
   kraModified = false;
   validContactForm = false;
   validCalculationForm = false;
@@ -47,7 +47,7 @@ export class CreateOrderComponent implements OnDestroy {
 
   position = 'before';
   position1 = 'above';
-  temporder: Order = {...emptyorder};
+  temporder: Order = { ...emptyorder };
   tempsellingprices = {
     pms: 0,
     ago: 0,
@@ -81,7 +81,7 @@ export class CreateOrderComponent implements OnDestroy {
       this.activedepot = res[1];
       this.omcConfig = res[2];
 
-      if (this.router.url === '/admin/create-order') {
+      if (this.router.url === '/create-order') {
         console.log('New Order');
         /**
          * Initialise the order with an Id
@@ -278,9 +278,9 @@ export class CreateOrderComponent implements OnDestroy {
 
   createorder(redirect) {
     if (this.newOrder) {
-      this.orderservice.createOrder({omcId: this.core.currentOmc.value.Id, order: this.temporder});
+      this.orderservice.createOrder({ omcId: this.core.currentOmc.value.Id, order: this.temporder });
     } else {
-      this.orderservice.approveOrder({omcId: this.core.currentOmc.value.Id, order: this.temporder});
+      this.orderservice.approveOrder({ omcId: this.core.currentOmc.value.Id, order: this.temporder });
     }
     if (redirect) {
       /**
@@ -288,7 +288,7 @@ export class CreateOrderComponent implements OnDestroy {
        */
       this.router.navigate(['admin/orders-table/1']);
     } else {
-      this.temporder = {...emptyorder};
+      this.temporder = { ...emptyorder };
     }
     this.notificationService.notify({
       duration: 2000,

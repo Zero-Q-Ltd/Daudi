@@ -4,13 +4,14 @@ import { FormControl, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material';
 import { DepotConfig, emptyDepotConfig } from 'app/models/Daudi/depot/DepotConfig';
 import { EmptyEntryDraw, Entry, EntryDraw } from 'app/models/Daudi/fuel/Entry';
+import { MyTimestamp } from 'app/models/firestore/firestoreTypes';
 import { deepCopy } from 'app/models/utils/deepCopy';
 import { toObject } from 'app/models/utils/SnapshotUtils';
 import { CoreService } from 'app/services/core/core.service';
 import { DepotService } from 'app/services/core/depot.service';
 import { EntriesService } from 'app/services/entries.service';
 import { ReplaySubject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
+import { debounceTime, delay, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { Depot } from '../../../../../../models/Daudi/depot/Depot';
 import { FuelType } from '../../../../../../models/Daudi/fuel/FuelType';
 
@@ -57,7 +58,13 @@ export class TransferComponent implements OnInit, OnDestroy {
                 this.loadingDepotConfig = true;
                 this.depotService.depotConfigDoc(this.core.omcId, depot.Id)
                     .get()
-                    .then(conf => {
+                    .then(async conf => {
+                        /**
+                         * sleep so that the loader does not appear as a glitch in case the value is loaded very fast,
+                         *  which will happen more often than not
+                         */
+                        await delay(1000);
+
                         const config = toObject(emptyDepotConfig, conf);
                         this.selectedDepot = { depot, config };
                         this.loadingDepotConfig = false;
@@ -80,26 +87,49 @@ export class TransferComponent implements OnInit, OnDestroy {
             Object.keys(EmptyEntryDraw).forEach(index => {
                 delete t[index];
             });
-
+            const newEntryId = this.core.createId();
             t.qty.used += tt.qtyDrawn;
             t.qty.transferred.total += tt.qtyDrawn;
             t.qty.transferred.transfers.push({
-                directLoad: {
-                    accumulated: {
-                        total: 0,
-                        usable: 0
-                    },
-                    total: 0,
-                },
-                total: tt.qtyDrawn,
-                transferred: null,
-                used: 0
+                qty: tt.qtyDrawn,
+                depotId: this.selectedDepot.depot.Id,
+                entryId: newEntryId
             });
             /**
              * Update each entry independently
              */
             batchaction.update(this.entriesService.entryCollection(this.core.currentOmc.value.Id)
                 .doc(t.Id), t);
+            /**
+             * Create a new entry
+             */
+            const newEntry: Entry = {
+                Amount: 0,
+                Id: newEntryId,
+                active: true,
+                date: MyTimestamp.now(),
+                depot: {
+                    name: this.selectedDepot.depot.Name,
+                    Id: this.selectedDepot.depot.Id
+                },
+                entry: tt.entry,
+                fuelType: this.fuelType,
+                price: tt.price,
+                qty: {
+                    directLoad: {
+                        accumulated: {
+                            total: 0,
+                            usable: 0
+                        },
+                        total: 0,
+                    },
+                    total: 0,
+                    transferred: null,
+                    used: 0
+                }
+            };
+            batchaction.set(this.entriesService.entryCollection(this.core.currentOmc.value.Id).doc(newEntryId),
+                newEntry);
         });
         /**
          * Update the destination depot quantities
@@ -117,6 +147,7 @@ export class TransferComponent implements OnInit, OnDestroy {
         const tempDepotVal = deepCopy(this.core.activedepot.value.config);
         tempDepotVal.stock[this.fuelType] -= this.qtyToDrawControl.value;
         batchaction.update(this.depotService.depotConfigDoc(this.core.omcId, tempDepotVal.Id), tempDepotVal);
+
         /**
          * submit... Phew... I know
          * But finally, we're here
