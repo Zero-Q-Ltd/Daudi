@@ -1,13 +1,13 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {FormControl, Validators} from '@angular/forms';
-import {MatDialog} from '@angular/material';
-import {BatchTrucksComponent} from 'app/components/batch-trucks/batch-trucks.component';
-import {Depot} from 'app/models/Daudi/depot/Depot';
-import {AdminService} from 'app/services/core/admin.service';
-import {CoreService} from 'app/services/core/core.service';
-import {DepotService} from 'app/services/core/depot.service';
-import {ReplaySubject} from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormControl, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material';
+import { BatchTrucksComponent } from 'app/components/batch-trucks/batch-trucks.component';
+import { Depot } from 'app/models/Daudi/depot/Depot';
+import { AdminService } from 'app/services/core/admin.service';
+import { CoreService } from 'app/services/core/core.service';
+import { DepotService } from 'app/services/core/depot.service';
+import { ReplaySubject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-admin',
@@ -18,7 +18,8 @@ import {takeUntil} from 'rxjs/operators';
 export class AdminComponent implements OnInit, OnDestroy {
 
   position = 'above';
-  phoneControl: FormControl = new FormControl({value: ''}, [Validators.required, Validators.maxLength(8), Validators.minLength(8)]);
+  phoneControl: FormControl = new FormControl({ value: '' }, [Validators.required, Validators.maxLength(8), Validators.minLength(8)]);
+  activeLink = 'entries';
 
   alldepots: Depot[];
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();

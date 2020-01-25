@@ -1,7 +1,30 @@
 <div class="container-fluid">
-  <!--<span class="text-danger">DUE TO THE SIZE OF THE DATA ON THIS PAGE, REALTIME CAPABILITIES HAVE BEEN DISABLED FOR BETTER RESPONSIVENESS</span>-->
-  <mat-tab-group>
 
+  <nav mat-tab-nav-bar class="container-fluid">
+    <a mat-tab-link (click)="activeLink = 'entries'" [active]="activeLink == 'entries'" routerLink="entries"
+      routerLinkActive #rla="routerLinkActive" [active]="rla.isActive">Entries
+    </a>
+    <a mat-tab-link (click)="activeLink = 'stock'" [active]="activeLink == 'stock'" routerLink="ases" routerLinkActive
+      #rla="routerLinkActive" [active]="rla.isActive">Stock
+    </a>
+    <a mat-tab-link (click)="activeLink = 'depot-management'" [active]="activeLink == 'depot-management'"
+      routerLink="ases" routerLinkActive #rla="routerLinkActive" [active]="rla.isActive">Depot Management
+    </a>
+    <a mat-tab-link (click)="activeLink = 'company-management'" [active]="activeLink == 'company-management'"
+      routerLink="ases" routerLinkActive #rla="routerLinkActive" [active]="rla.isActive">Company Management
+    </a>
+    <a mat-tab-link (click)="activeLink = 'customer-management'" [active]="activeLink == 'customer-management'"
+      routerLink="ases" routerLinkActive #rla="routerLinkActive" [active]="rla.isActive">Customer Management
+    </a>
+    <a mat-tab-link (click)="activeLink = 'sms-logs'" [active]="activeLink == 'sms-logs'" routerLink="sms-logs"
+      routerLinkActive #rla="routerLinkActive" [active]="rla.isActive">SMS Logs
+    </a>
+    <a mat-tab-link (click)="activeLink = 'payments'" [active]="activeLink == 'payments'" routerLink="payments"
+      routerLinkActive #rla="routerLinkActive" [active]="rla.isActive">Payments
+    </a>
+  </nav>
+  <router-outlet></router-outlet>
+  <!-- <mat-tab-group>
     <mat-tab *ngIf="isauthenticated(1)">
       <ng-template mat-tab-label>
         Entries
@@ -77,5 +100,5 @@
         <app-omc-management></app-omc-management>
       </ng-template>
     </mat-tab>
-  </mat-tab-group>
+  </mat-tab-group> -->
 </div>

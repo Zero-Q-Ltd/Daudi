@@ -290,7 +290,6 @@ export class CoreService {
            * reset the array at the postion when data changes
            */
           this.orders[stage].next([]);
-          console.log(Data.docs);
           this.orders[stage].next(toArray(emptyorder, Data));
           this.loaders.orders.next(false);
         });
