@@ -1,14 +1,14 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {AngularFireFunctions} from '@angular/fire/functions';
-import {MatPaginator, MatTableDataSource} from '@angular/material';
-import {CoreService} from 'app/services/core/core.service';
-import {EntriesService} from 'app/services/entries.service';
-import {ReplaySubject} from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
-import {emptyEntry, Entry} from '../../../../models/Daudi/fuel/Entry';
-import {FuelNamesArray, FuelType} from '../../../../models/Daudi/fuel/FuelType';
-import {NotificationService} from '../../../../shared/services/notification.service';
-import {CoreAdminService} from '../../services/core.service';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { AngularFireFunctions } from '@angular/fire/functions';
+import { MatPaginator, MatTableDataSource } from '@angular/material';
+import { CoreService } from 'app/services/core/core.service';
+import { EntriesService } from 'app/services/entries.service';
+import { ReplaySubject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { emptyEntry, Entry } from '../../../../models/Daudi/fuel/Entry';
+import { FuelNamesArray, FuelType } from '../../../../models/Daudi/fuel/FuelType';
+import { NotificationService } from '../../../../shared/services/notification.service';
+import { CoreAdminService } from '../../services/core.service';
 
 @Component({
   selector: 'app-entries',
@@ -23,28 +23,28 @@ export class EntriesComponent implements OnInit {
     ik: new MatTableDataSource<Entry>()
   };
   creatingsync = false;
-  @ViewChild(MatPaginator, {static: true}) pmspaginator: MatPaginator;
-  @ViewChild(MatPaginator, {static: true}) agopaginator: MatPaginator;
-  @ViewChild(MatPaginator, {static: true}) ikpaginator: MatPaginator;
+  @ViewChild(MatPaginator, { static: true }) pmspaginator: MatPaginator;
+  @ViewChild(MatPaginator, { static: true }) agopaginator: MatPaginator;
+  @ViewChild(MatPaginator, { static: true }) ikpaginator: MatPaginator;
   displayedColumns: string[] = ['id', 'date', 'entry', 'totalqty', 'transferred', 'loadedqty', 'availableqty', 'status'];
   loading: {
     pms: boolean,
     ago: boolean,
     ik: boolean
   } = {
-    pms: true,
-    ago: true,
-    ik: true
-  };
+      pms: true,
+      ago: true,
+      ik: true
+    };
   availablefuel: {
     pms: number,
     ago: number,
     ik: number
   } = {
-    pms: 0,
-    ago: 0,
-    ik: 0
-  };
+      pms: 0,
+      ago: 0,
+      ik: 0
+    };
 
   /**
    * this keeps a local copy of all the subscriptions within this service
@@ -117,13 +117,13 @@ export class EntriesComponent implements OnInit {
     this.creatingsync = true;
     this.coreAdmin.syncdb(['BillPayment'])
       .then(res => {
-          this.creatingsync = false;
-          this.notification.notify({
-            alert_type: 'success',
-            body: 'Entries updated',
-            title: 'Success'
-          });
-        },
+        this.creatingsync = false;
+        this.notification.notify({
+          alert_type: 'success',
+          body: 'Entries updated',
+          title: 'Success'
+        });
+      },
         err => {
           console.error(err);
           this.creatingsync = false;
