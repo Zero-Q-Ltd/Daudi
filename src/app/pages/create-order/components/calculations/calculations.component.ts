@@ -4,12 +4,12 @@ import {CoreService} from 'app/services/core/core.service';
 import {FormControl, FormGroup} from 'ngx-strongly-typed-forms';
 import {ReplaySubject} from 'rxjs';
 import {skipWhile, takeUntil} from 'rxjs/operators';
+import {AdminConfig, emptyConfig} from '../../../../models/Daudi/omc/AdminConfig';
 import {EmptyOMCStock, OMCStock} from '../../../../models/Daudi/omc/Stock';
 import {Depot, emptydepot} from './../../../../models/Daudi/depot/Depot';
 import {DepotConfig, emptyDepotConfig} from './../../../../models/Daudi/depot/DepotConfig';
 import {Calculations, FuelCalculation} from './../../../../models/Daudi/forms/Calculations';
 import {FuelNamesArray, FuelType} from './../../../../models/Daudi/fuel/FuelType';
-import {AdminConfig, emptyConfig} from './../../../../models/Daudi/omc/Config';
 import {Order} from './../../../../models/Daudi/order/Order';
 import {NotificationService} from './../../../../shared/services/notification.service';
 

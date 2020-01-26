@@ -5,7 +5,7 @@ import { Depot, emptydepot } from 'app/models/Daudi/depot/Depot';
 import { DepotConfig, emptyDepotConfig } from 'app/models/Daudi/depot/DepotConfig';
 import { emptyEntry, Entry } from 'app/models/Daudi/fuel/Entry';
 import { FuelNamesArray } from 'app/models/Daudi/fuel/FuelType';
-import { AdminConfig, emptyConfig } from 'app/models/Daudi/omc/Config';
+import { AdminConfig, emptyConfig } from 'app/models/Daudi/omc/AdminConfig';
 import { emptyomc, OMC } from 'app/models/Daudi/omc/OMC';
 import { EmptyOMCStock, OMCStock } from 'app/models/Daudi/omc/Stock';
 import { emptyorder, Order } from 'app/models/Daudi/order/Order';

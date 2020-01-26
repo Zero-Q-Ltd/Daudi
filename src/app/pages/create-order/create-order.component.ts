@@ -14,7 +14,7 @@ import { DaudiCustomer } from '../../models/Daudi/customer/Customer';
 import { Depot, emptydepot } from '../../models/Daudi/depot/Depot';
 import { DepotConfig, emptyDepotConfig } from '../../models/Daudi/depot/DepotConfig';
 import { FuelNamesArray } from '../../models/Daudi/fuel/FuelType';
-import { AdminConfig, emptyConfig } from '../../models/Daudi/omc/Config';
+import { AdminConfig, emptyConfig } from '../../models/Daudi/omc/AdminConfig';
 import { emptyorder, Order } from '../../models/Daudi/order/Order';
 import { NotificationService } from '../../shared/services/notification.service';
 import { ConfirmDepotComponent } from './components/confirm-depot/confirm-depot.component';
