@@ -1,23 +1,25 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {AngularFirestore} from '@angular/fire/firestore';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {MatDialog, MatTableDataSource} from '@angular/material';
-import {ConfirmDialogComponent} from 'app/components/confirm-dialog/confirm-dialog.component';
-import {AdminService} from 'app/services/core/admin.service';
-import {CoreService} from 'app/services/core/core.service';
-import {OmcService} from 'app/services/core/omc.service';
-import {PricesService} from 'app/services/prices.service';
-import {BehaviorSubject, ReplaySubject} from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
-import {Admin, emptyadmin} from '../../models/Daudi/admin/Admin';
-import {Depot, emptydepot} from '../../models/Daudi/depot/Depot';
-import {DepotConfig, emptyDepotConfig} from '../../models/Daudi/depot/DepotConfig';
-import {Price} from '../../models/Daudi/depot/Price';
-import {FuelNamesArray, FuelType} from '../../models/Daudi/fuel/FuelType';
-import {AdminConfig, emptyConfig} from '../../models/Daudi/omc/Config';
-import {OMC} from '../../models/Daudi/omc/OMC';
-import {AvgPrice} from '../../models/Daudi/price/AvgPrice';
-import {NotificationService} from '../../shared/services/notification.service';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AngularFirestore } from '@angular/fire/firestore';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatDialog, MatTableDataSource } from '@angular/material';
+import { ConfirmDialogComponent } from 'app/components/confirm-dialog/confirm-dialog.component';
+import { EmptyStockQty } from 'app/models/Daudi/fuel/StockQty';
+import { EmptyOMCStock, OMCStock } from 'app/models/Daudi/omc/Stock';
+import { AdminService } from 'app/services/core/admin.service';
+import { CoreService } from 'app/services/core/core.service';
+import { OmcService } from 'app/services/core/omc.service';
+import { PricesService } from 'app/services/prices.service';
+import { BehaviorSubject, ReplaySubject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { Admin, emptyadmin } from '../../models/Daudi/admin/Admin';
+import { Depot, emptydepot } from '../../models/Daudi/depot/Depot';
+import { DepotConfig, emptyDepotConfig } from '../../models/Daudi/depot/DepotConfig';
+import { Price } from '../../models/Daudi/depot/Price';
+import { FuelNamesArray, FuelType } from '../../models/Daudi/fuel/FuelType';
+import { AdminConfig, emptyConfig } from '../../models/Daudi/omc/AdminConfig';
+import { OMC } from '../../models/Daudi/omc/OMC';
+import { AvgPrice } from '../../models/Daudi/price/AvgPrice';
+import { NotificationService } from '../../shared/services/notification.service';
 
 @Component({
   selector: 'edit-price',
@@ -30,7 +32,7 @@ export class EditPriceComponent implements OnInit, OnDestroy {
   position2 = 'left';
   position3 = 'right';
 
-  activedepot: { depot: Depot, config: DepotConfig } = {depot: {...emptydepot}, config: {...emptyDepotConfig}};
+  activedepot: { depot: Depot, config: DepotConfig } = { depot: { ...emptydepot }, config: { ...emptyDepotConfig } };
   spPricesform: FormGroup = new FormGroup({
     pms: new FormControl('', []),
     ago: new FormControl('', []),
@@ -51,12 +53,12 @@ export class EditPriceComponent implements OnInit, OnDestroy {
   saving = false;
   depotsdataSource = new MatTableDataSource<Depot>();
   priceColumns = ['depot', 'pms_price', 'pms_avgprice', 'ago_price', 'ago_avgprice', 'ik_price', 'ik_avgprice'];
-  userdata: Admin = Object.assign({}, {...emptyadmin});
+  userdata: Admin = Object.assign({}, { ...emptyadmin });
   omcs: OMC[] = [];
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
   selectedOMC: OMC;
 
-  currentOmcConfig: AdminConfig = {...emptyConfig};
+  stock: OMCStock = { ...EmptyOMCStock };
 
   avgprices: {
     [key in FuelType]: {
@@ -65,22 +67,22 @@ export class EditPriceComponent implements OnInit, OnDestroy {
       prices: BehaviorSubject<Price[]>
     }
   } = {
-    pms: {
-      total: new BehaviorSubject<number>(0),
-      avg: new BehaviorSubject<number>(0),
-      prices: new BehaviorSubject<Price[]>([])
-    },
-    ago: {
-      total: new BehaviorSubject<number>(0),
-      avg: new BehaviorSubject<number>(0),
-      prices: new BehaviorSubject<Price[]>([])
-    },
-    ik: {
-      total: new BehaviorSubject<number>(0),
-      avg: new BehaviorSubject<number>(0),
-      prices: new BehaviorSubject<Price[]>([])
-    }
-  };
+      pms: {
+        total: new BehaviorSubject<number>(0),
+        avg: new BehaviorSubject<number>(0),
+        prices: new BehaviorSubject<Price[]>([])
+      },
+      ago: {
+        total: new BehaviorSubject<number>(0),
+        avg: new BehaviorSubject<number>(0),
+        prices: new BehaviorSubject<Price[]>([])
+      },
+      ik: {
+        total: new BehaviorSubject<number>(0),
+        avg: new BehaviorSubject<number>(0),
+        prices: new BehaviorSubject<Price[]>([])
+      }
+    };
 
   constructor(
     private dialog: MatDialog,
@@ -102,10 +104,10 @@ export class EditPriceComponent implements OnInit, OnDestroy {
         this.omcs = value;
       });
 
-    this.core.adminConfig
+    this.core.stock
       .pipe(takeUntil(this.comopnentDestroyed))
-      .subscribe(config => {
-        this.currentOmcConfig = config;
+      .subscribe(stock => {
+        this.stock = stock;
       });
 
     this.core.activedepot

@@ -1,7 +1,7 @@
-import {Injectable} from '@angular/core';
-import {AngularFirestore} from '@angular/fire/firestore';
-import {Admin} from 'app/models/Daudi/admin/Admin';
-import {AdminConfig, emptyConfig} from 'app/models/Daudi/omc/Config';
+import { Injectable } from '@angular/core';
+import { AngularFirestore } from '@angular/fire/firestore';
+import { Admin } from 'app/models/Daudi/admin/Admin';
+import { AdminConfig, emptyConfig } from 'app/models/Daudi/omc/AdminConfig';
 
 @Injectable({
   providedIn: 'root'
@@ -24,7 +24,7 @@ export class AdminConfigService {
   }
 
   initConfig(admin: Admin) {
-    const newConfig: AdminConfig = {...emptyConfig};
+    const newConfig: AdminConfig = { ...emptyConfig };
     this.saveConfig(admin.config.omcId, newConfig);
   }
 

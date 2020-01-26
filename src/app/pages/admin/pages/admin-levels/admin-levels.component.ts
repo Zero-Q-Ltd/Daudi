@@ -1,22 +1,22 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Validators} from '@angular/forms';
-import {MatDialog} from '@angular/material';
-import {ConfirmDialogComponent} from 'app/components/confirm-dialog/confirm-dialog.component';
-import {AdminLevel} from 'app/models/Daudi/admin/AdminLevel';
-import {AdminType, NewAdminType} from 'app/models/Daudi/admin/AdminType';
-import {AdminConfig} from 'app/models/Daudi/omc/Config';
-import {emptyomc, OMC} from 'app/models/Daudi/omc/OMC';
-import {DaudiMeta} from 'app/models/Daudi/universal/Meta';
-import {Metadata} from 'app/models/Daudi/universal/Metadata';
-import {deepCopy} from 'app/models/utils/deepCopy';
-import {AdminConfigService} from 'app/services/core/admin-config.service';
-import {AdminService} from 'app/services/core/admin.service';
-import {CoreService} from 'app/services/core/core.service';
-import {NotificationService} from 'app/shared/services/notification.service';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material';
+import { ConfirmDialogComponent } from 'app/components/confirm-dialog/confirm-dialog.component';
+import { AdminLevel } from 'app/models/Daudi/admin/AdminLevel';
+import { AdminType, NewAdminType } from 'app/models/Daudi/admin/AdminType';
+import { AdminConfig } from 'app/models/Daudi/omc/AdminConfig';
+import { emptyomc, OMC } from 'app/models/Daudi/omc/OMC';
+import { DaudiMeta } from 'app/models/Daudi/universal/Meta';
+import { Metadata } from 'app/models/Daudi/universal/Metadata';
+import { deepCopy } from 'app/models/utils/deepCopy';
+import { AdminConfigService } from 'app/services/core/admin-config.service';
+import { AdminService } from 'app/services/core/admin.service';
+import { CoreService } from 'app/services/core/core.service';
+import { NotificationService } from 'app/shared/services/notification.service';
 import * as firebase from 'firebase';
-import {FormArray, FormBuilder, FormGroup} from 'ngx-strongly-typed-forms';
-import {ReplaySubject} from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
+import { FormArray, FormBuilder, FormGroup } from 'ngx-strongly-typed-forms';
+import { ReplaySubject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-admin-levels',
@@ -67,7 +67,7 @@ export class AdminLevelsComponent implements OnInit, OnDestroy {
       created: meta,
       edited: meta
     };
-    const withMeta: AdminType = Object.assign({}, newtype, {metadata: newMeta});
+    const withMeta: AdminType = Object.assign({}, newtype, { metadata: newMeta });
     // @TODO temporary hack
     // @ts-ignore
     delete (withMeta.level);
