@@ -21,9 +21,6 @@ export interface DepotConfig {
   hospitality: {
     amnt: number;
   };
-  stock: {
-    [key in FuelType]: number;
-  };
 }
 
 const initPrice: DepotPrice = {
@@ -39,11 +36,6 @@ export const emptyDepotConfig: DepotConfig = {
   CompanyRep: {
     name: null,
     phone: null
-  },
-  stock: {
-    ago: 0,
-    pms: 0,
-    ik: 0
   },
   hospitality: {
     amnt: 0

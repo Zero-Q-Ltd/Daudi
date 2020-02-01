@@ -132,9 +132,9 @@ export class TransferComponent implements OnInit, OnDestroy {
                 newEntry);
         });
         /**
-         * Update the destination depot quantities
+         *@todo Update the destination depot quantities
          */
-        this.selectedDepot.config.stock[this.fuelType] += this.qtyToDrawControl.value;
+        //this.selectedDepot.config.stock[this.fuelType] += this.qtyToDrawControl.value;
         if (this.selectedDepot.config.initialised) {
             batchaction.update(this.depotService.depotConfigDoc(this.core.omcId, this.selectedDepot.depot.Id), this.selectedDepot.config);
         } else {
@@ -145,7 +145,7 @@ export class TransferComponent implements OnInit, OnDestroy {
          * Update the originating depot quantities
          */
         const tempDepotVal = deepCopy(this.core.activedepot.value.config);
-        tempDepotVal.stock[this.fuelType] -= this.qtyToDrawControl.value;
+        //tempDepotVal.stock[this.fuelType] -= this.qtyToDrawControl.value;
         batchaction.update(this.depotService.depotConfigDoc(this.core.omcId, tempDepotVal.Id), tempDepotVal);
 
         /**

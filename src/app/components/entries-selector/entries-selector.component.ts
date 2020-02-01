@@ -150,9 +150,7 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
        * Check if its a private depot as calculations will use the local depot values
        * Entries are already filtered for private depots, so calculations are the same
        */
-      const value = this.core.activedepot.value.depot.config.private ?
-        (this.activedepot.config.stock[fueltype]) :
-        (this.stock.qty[fueltype].ase);
+      const value = this.stock.qty[fueltype].ase
 
       /**
        * check if there is enough ASE for that fuel
@@ -450,17 +448,9 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
             };
             batchaction.update(this.entriesService.entryCollection(this.core.currentOmc.value.Id)
               .doc(this.depotEntries[fueltype][0].Id), this.depotEntries[fueltype][0]);
-            /**
-             * Update Global ASE values
-             * Check if it's a private depot
-             */
-            if (this.core.activedepot.value.depot.config.private) {
-              this.activedepot.config.stock[fueltype] -= this.order.fuel[fueltype].qty;
-              batchaction.update(this.configService.configDoc(this.core.currentOmc.value.Id), this.activedepot.config);
-            } else {
-              this.stock.qty[fueltype].ase -= this.order.fuel[fueltype].qty;
-              batchaction.update(this.stockService.stockDoc(this.core.currentOmc.value.Id, this.core.activedepot.value.depot.Id), this.stock);
-            }
+            this.stock.qty[fueltype].ase -= this.order.fuel[fueltype].qty;
+            batchaction.update(this.stockService.stockDoc(this.core.currentOmc.value.Id, this.core.activedepot.value.depot.Id), this.stock);
+
           }
         }
         batchaction.update(this.ordersservice.ordersCollection(this.core.currentOmc.value.Id).doc(this.orderId), this.order);
