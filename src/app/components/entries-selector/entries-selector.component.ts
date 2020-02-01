@@ -14,7 +14,7 @@ import { Depot, emptydepot } from '../../models/Daudi/depot/Depot';
 import { DepotConfig, emptyDepotConfig } from '../../models/Daudi/depot/DepotConfig';
 import { Entry } from '../../models/Daudi/fuel/Entry';
 import { FuelNamesArray, FuelType } from '../../models/Daudi/fuel/FuelType';
-import { EmptyOMCStock, OMCStock } from '../../models/Daudi/omc/Stock';
+import { EmptyOMCStock, Stock } from '../../models/Daudi/omc/Stock';
 import { GenericTruckStage } from '../../models/Daudi/order/GenericStage';
 import { emptyorder, Order } from '../../models/Daudi/order/Order';
 import { MyTimestamp } from '../../models/firestore/firestoreTypes';
@@ -74,7 +74,7 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
    * this keeps a local copy of all the subscriptions within this service
    */
   subscriptions: Map<string, () => void> = new Map<string, any>();
-  stock: OMCStock = { ...EmptyOMCStock };
+  stock: Stock = { ...EmptyOMCStock };
   activedepot: { depot: Depot, config: DepotConfig } = { depot: { ...emptydepot }, config: { ...emptyDepotConfig } };
 
   constructor(
@@ -459,7 +459,7 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
               batchaction.update(this.configService.configDoc(this.core.currentOmc.value.Id), this.activedepot.config);
             } else {
               this.stock.qty[fueltype].ase -= this.order.fuel[fueltype].qty;
-              batchaction.update(this.stockService.stockDoc(this.core.currentOmc.value.Id), this.stock);
+              batchaction.update(this.stockService.stockDoc(this.core.currentOmc.value.Id, this.core.activedepot.value.depot.Id), this.stock);
             }
           }
         }

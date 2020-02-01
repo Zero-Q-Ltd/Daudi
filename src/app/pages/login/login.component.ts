@@ -1,11 +1,11 @@
-import {Component, OnInit} from '@angular/core';
-import {AngularFireAuth} from '@angular/fire/auth';
-import {Router} from '@angular/router';
-import {AdminService} from 'app/services/core/admin.service';
+import { Component, OnInit } from '@angular/core';
+import { AngularFireAuth } from '@angular/fire/auth';
+import { Router } from '@angular/router';
+import { AdminService } from 'app/services/core/admin.service';
 import * as firebase from 'firebase';
-import {ReplaySubject} from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
-import {NotificationService} from '../../shared/services/notification.service';
+import { ReplaySubject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { NotificationService } from '../../shared/services/notification.service';
 
 @Component({
   selector: 'app-login',
@@ -24,12 +24,12 @@ export class LoginComponent implements OnInit {
       console.log(data);
       if (data) {
         if (data.config.level === 5) {
-          this.router.navigate(['/admin/editprice']);
+          this.router.navigate(['/editprice']);
         } else {
-          this.router.navigate(['/admin']);
+          this.router.navigate(['/']);
         }
       } else {
-        if (router.routerState.snapshot.url !== '/admin/login') {
+        if (router.routerState.snapshot.url !== '/login') {
           this.notification.notify({
             body: 'You are not authenticated to view this page',
             duration: 3000,

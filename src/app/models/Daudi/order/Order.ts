@@ -33,13 +33,15 @@ export interface Order {
       id: string
     }
   };
-  deliveryNote: string;
   error?: {
     status: boolean,
     errorCode: string,
     origin: string,
     timestamp: Date,
     errorDetail: string
+  };
+  deliveryNote: {
+    number: string
   };
   truck: Truck;
   frozen: boolean;

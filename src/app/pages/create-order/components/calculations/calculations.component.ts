@@ -5,7 +5,7 @@ import {FormControl, FormGroup} from 'ngx-strongly-typed-forms';
 import {ReplaySubject} from 'rxjs';
 import {skipWhile, takeUntil} from 'rxjs/operators';
 import {AdminConfig, emptyConfig} from '../../../../models/Daudi/omc/AdminConfig';
-import {EmptyOMCStock, OMCStock} from '../../../../models/Daudi/omc/Stock';
+import {EmptyOMCStock, Stock} from '../../../../models/Daudi/omc/Stock';
 import {Depot, emptydepot} from './../../../../models/Daudi/depot/Depot';
 import {DepotConfig, emptyDepotConfig} from './../../../../models/Daudi/depot/DepotConfig';
 import {Calculations, FuelCalculation} from './../../../../models/Daudi/forms/Calculations';
@@ -28,7 +28,7 @@ export class CalculationsComponent implements OnInit, OnChanges {
   fueltypesArray = FuelNamesArray;
   omcConfig: AdminConfig = {...emptyConfig};
   activedepot: { depot: Depot, config: DepotConfig } = {depot: {...emptydepot}, config: {...emptyDepotConfig}};
-  stock: OMCStock = {...EmptyOMCStock};
+  stock: Stock = {...EmptyOMCStock};
   calculationsForm: FormGroup<Calculations> = new FormGroup<Calculations>({
     pms: new FormGroup<FuelCalculation>({
       price: new FormControl<number>(0, [Validators.required]),

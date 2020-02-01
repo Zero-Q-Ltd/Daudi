@@ -1,8 +1,8 @@
-import {deepCopy} from '../../utils/deepCopy';
-import {FuelType} from '../fuel/FuelType';
-import {emptytaxExempt, TaxExempt} from './TaxExempt';
+import { deepCopy } from '../../utils/deepCopy';
+import { FuelType } from '../fuel/FuelType';
+import { emptytaxExempt, TaxExempt } from './TaxExempt';
 
-export interface OMCStock {
+export interface Stock {
   qty: {
 
     [key in FuelType]: {
@@ -18,7 +18,7 @@ export interface OMCStock {
   };
 }
 
-export const EmptyOMCStock: OMCStock = {
+export const EmptyOMCStock: Stock = {
   qty: {
     ago: {
       allocation: 0,

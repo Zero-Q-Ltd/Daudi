@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatPaginator, MatTableDataSource } from '@angular/material';
-import { EmptyOMCStock, OMCStock } from 'app/models/Daudi/omc/Stock';
+import { EmptyOMCStock, Stock } from 'app/models/Daudi/omc/Stock';
 import { AseService } from 'app/services/ase.service';
 import { CoreService } from 'app/services/core/core.service';
 import { ReplaySubject } from 'rxjs';
@@ -44,7 +44,7 @@ export class AseComponent implements OnInit {
     subscriptions: Map<string, any> = new Map<string, any>();
     comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
     private = true;
-    stock: OMCStock = { ...EmptyOMCStock };
+    stock: Stock = { ...EmptyOMCStock };
 
     constructor(
         private notification: NotificationService,

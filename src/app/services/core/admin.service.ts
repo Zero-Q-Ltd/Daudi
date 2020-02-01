@@ -1,12 +1,12 @@
-import {Injectable} from '@angular/core';
-import {AngularFireAuth} from '@angular/fire/auth';
-import {AngularFirestore} from '@angular/fire/firestore';
-import {Router} from '@angular/router';
-import {Admin, emptyadmin} from 'app/models/Daudi/admin/Admin';
-import {AssociatedUser} from 'app/models/Daudi/admin/AssociatedUser';
-import {MyTimestamp} from 'app/models/firestore/firestoreTypes';
+import { Injectable } from '@angular/core';
+import { AngularFireAuth } from '@angular/fire/auth';
+import { AngularFirestore } from '@angular/fire/firestore';
+import { Router } from '@angular/router';
+import { Admin, emptyadmin } from 'app/models/Daudi/admin/Admin';
+import { AssociatedUser } from 'app/models/Daudi/admin/AssociatedUser';
+import { MyTimestamp } from 'app/models/firestore/firestoreTypes';
 import * as moment from 'moment';
-import {ReplaySubject} from 'rxjs';
+import { ReplaySubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +20,7 @@ export class AdminService {
    * Secondary copy of data to avoid many unnecessary subscriptions
    */
 
-  userdata: Admin = {...emptyadmin};
+  userdata: Admin = { ...emptyadmin };
 
   constructor(private db: AngularFirestore, private afAuth: AngularFireAuth, router: Router) {
     afAuth.authState.subscribe(state => {
@@ -29,9 +29,9 @@ export class AdminService {
       if (state) {
         this.getuser(afAuth.auth.currentUser);
       } else {
-        this.userdata = {...emptyadmin};
-        if (router.routerState.snapshot.url !== '/admin/login') {
-          router.navigate(['/admin/login']);
+        this.userdata = { ...emptyadmin };
+        if (router.routerState.snapshot.url !== '/login') {
+          router.navigate(['/login']);
         }
         this.observableuserdata.next(null);
       }
@@ -90,7 +90,7 @@ export class AdminService {
       .onSnapshot(userdata => {
         if (userdata.exists) {
 
-          const temp: Admin = Object.assign({}, {...emptyadmin}, userdata.data());
+          const temp: Admin = Object.assign({}, { ...emptyadmin }, userdata.data());
           temp.profile.email = user.email;
           temp.profile.name = user.displayName;
           temp.profile.photoURL = user.photoURL;

@@ -1,26 +1,26 @@
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {FormControl} from '@angular/forms';
-import {MatSnackBar} from '@angular/material';
-import {Router} from '@angular/router';
-import {CoreService} from 'app/services/core/core.service';
-import {DepotService} from 'app/services/core/depot.service';
-import {EntriesService} from 'app/services/entries.service';
-import {PricesService} from 'app/services/prices.service';
-import {StatsService} from 'app/services/stats.service';
-import {EChartOption} from 'echarts';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
+import { MatSnackBar } from '@angular/material';
+import { Router } from '@angular/router';
+import { CoreService } from 'app/services/core/core.service';
+import { DepotService } from 'app/services/core/depot.service';
+import { EntriesService } from 'app/services/entries.service';
+import { PricesService } from 'app/services/prices.service';
+import { StatsService } from 'app/services/stats.service';
+import { EChartOption } from 'echarts';
 import 'echarts/theme/macarons.js';
 import * as moment from 'moment';
-import {ReplaySubject} from 'rxjs';
-import {skipWhile, takeUntil} from 'rxjs/operators';
-import {Price} from '../../../models/Daudi/depot/Price';
-import {Entry} from '../../../models/Daudi/fuel/Entry';
-import {FuelNamesArray, FuelType} from '../../../models/Daudi/fuel/FuelType';
-import {emptystat, Stat} from '../../../models/Daudi/stats/Stats';
-import {CalendarRangesComponent} from '../calendar-ranges/calendar-ranges.component';
-import {FuelBoundstats} from '../charts/charts.config';
-import {singleFuelpricestat} from '../charts/prices';
-import {fuelgauge} from '../charts/qty';
-import {saleStats} from '../charts/sales';
+import { ReplaySubject } from 'rxjs';
+import { skipWhile, takeUntil } from 'rxjs/operators';
+import { Price } from '../../../models/Daudi/depot/Price';
+import { Entry } from '../../../models/Daudi/fuel/Entry';
+import { FuelNamesArray, FuelType } from '../../../models/Daudi/fuel/FuelType';
+import { emptystat, Stat } from '../../../models/Daudi/stats/Stats';
+import { CalendarRangesComponent } from '../calendar-ranges/calendar-ranges.component';
+import { FuelBoundstats } from '../charts/charts.config';
+import { singleFuelpricestat } from '../charts/prices';
+import { fuelgauge } from '../charts/qty';
+import { saleStats } from '../charts/sales';
 
 @Component({
   selector: 'app-stats',
@@ -46,12 +46,12 @@ export class StatsComponent implements OnInit, OnDestroy {
 
   fueltypesArray = FuelNamesArray;
   emptystats = {
-    thisweek: {...emptystat},
-    lastweek: {...emptystat},
-    thismonth: {...emptystat},
-    lastmonth: {...emptystat},
-    thisyear: {...emptystat},
-    lastyear: {...emptystat}
+    thisweek: { ...emptystat },
+    lastweek: { ...emptystat },
+    thismonth: { ...emptystat },
+    lastmonth: { ...emptystat },
+    thisyear: { ...emptystat },
+    lastyear: { ...emptystat }
   };
   stats: {
     thisweek: Stat,
@@ -62,7 +62,7 @@ export class StatsComponent implements OnInit, OnDestroy {
     lastyear: Stat
   } = this.emptystats;
   axisdates: { date: Date, pos: number }[] = [];
-  dateControl: FormControl = new FormControl({begin: new Date(moment().subtract(3, 'M').startOf('day').toDate()), end: new Date()});
+  dateControl: FormControl = new FormControl({ begin: new Date(moment().subtract(3, 'M').startOf('day').toDate()), end: new Date() });
   minDate = new Date(2000, 0, 1);
   maxDate = new Date();
 
@@ -111,7 +111,7 @@ export class StatsComponent implements OnInit, OnDestroy {
         /**
          * Load data for the last 1 months by default, dont forget to reset the FormControl every time the depot changes
          */
-        this.dateControl.reset({begin: new Date(moment().subtract(1, 'M').startOf('day').toDate()), end: new Date()});
+        this.dateControl.reset({ begin: new Date(moment().subtract(1, 'M').startOf('day').toDate()), end: new Date() });
         this.fueltypesArray.forEach(fueltype => {
           this.core.depotEntries[fueltype].pipe(takeUntil(this.comopnentDestroyed)).subscribe((batches: Entry[]) => {
             /**
@@ -119,13 +119,13 @@ export class StatsComponent implements OnInit, OnDestroy {
              */
             this.fuelgauge[fueltype].series[0].max = 0;
             this.fuelgauge[fueltype].series[0].data[0].value = 0;
-            this.fuelgauge[fueltype] = {...fuelgauge[fueltype]};
+            this.fuelgauge[fueltype] = { ...fuelgauge[fueltype] };
 
             batches.forEach(batch => {
               /**
                * force change detection in the charts directive
                */
-              this.fuelgauge[fueltype] = {...fuelgauge[fueltype]};
+              this.fuelgauge[fueltype] = { ...fuelgauge[fueltype] };
               // this.fuelgauge[fueltype].series[0].max += Math.round(batch.qty / 1000);
               const available = this.getTotalAvailable(batch);
               this.fuelgauge[fueltype].series[0].data[0].value += Math.round(available / 1000);
@@ -208,7 +208,7 @@ export class StatsComponent implements OnInit, OnDestroy {
         /**
          * remove results from weeks, months, years by filtering
          */
-        this.saleStats = {...saleStats};
+        this.saleStats = { ...saleStats };
         const filteredhistory = saleshistory.docs.map(f => {
           const g = f.data();
           g.id = f.id;
@@ -234,7 +234,7 @@ export class StatsComponent implements OnInit, OnDestroy {
               return true;
             }
           })) {
-            newfilteredhistory[index] = {...emptystat};
+            newfilteredhistory[index] = { ...emptystat };
           }
         });
 
@@ -270,44 +270,44 @@ export class StatsComponent implements OnInit, OnDestroy {
       moment().startOf('day').subtract(dayCount, 'days').toDate(),
       moment().toDate()).orderBy('user.time', 'desc')
       .get().then(pricesinrange => {
-      const prices = pricesinrange.docs.map(f => {
-        const h = f.data();
-        h.id = f.id;
-        return h as Price;
-      });
-      prices.forEach(price => {
-        // this.fuelstats = { ...allfuelstats };
-        // if (this.axisdates.length == 29) {
-        const position = this.axisdates.findIndex(mappeddate => {
-          return moment(price.user.date.toDate()).startOf('day').isSame(mappeddate.date);
+        const prices = pricesinrange.docs.map(f => {
+          const h = f.data();
+          h.id = f.id;
+          return h as Price;
         });
-        // console.log(position, price);
-        // console.log(this.fuelstats[price.fueltytype].series[1]);
+        prices.forEach(price => {
+          // this.fuelstats = { ...allfuelstats };
+          // if (this.axisdates.length == 29) {
+          const position = this.axisdates.findIndex(mappeddate => {
+            return moment(price.user.date.toDate()).startOf('day').isSame(mappeddate.date);
+          });
+          // console.log(position, price);
+          // console.log(this.fuelstats[price.fueltytype].series[1]);
+          /**
+           * only push the data to the respective position, the iterate the sorted data to calculate MA's
+           */
+          // @ts-ignore
+          this.priceStats[price.fueltytype].series[0].data[position].push(price.price);
+          this.priceStats[price.fueltytype] = JSON.parse(JSON.stringify(this.priceStats[price.fueltytype]));
+        });
         /**
-         * only push the data to the respective position, the iterate the sorted data to calculate MA's
+         * MA calculation must be done sequentially, so wait until all the data has been mapped to the right position
          */
-        // @ts-ignore
-        this.priceStats[price.fueltytype].series[0].data[position].push(price.price);
-        this.priceStats[price.fueltytype] = JSON.parse(JSON.stringify(this.priceStats[price.fueltytype]));
-      });
-      /**
-       * MA calculation must be done sequentially, so wait until all the data has been mapped to the right position
-       */
-      this.fueltypesArray.forEach(ftype => {
-        const copy = [];
-        // const copy = JSON.parse(JSON.stringify(this.priceStats[ftype].series[0].data));
-        copy.map((data, pos) => {
-          // console.log(pos, data);
-          // console.log(copy);
-          // this.priceStats[ftype].series[1].data = calculateMA(copy, 5);
-          // this.priceStats[ftype].series[2].data = calculateMA(copy, 10);
-          // this.priceStats[ftype].series[3].data = calculateMA(copy, 20);
-          // this.priceStats[ftype].series[4].data = calculateMA(copy, 30);
+        this.fueltypesArray.forEach(ftype => {
+          const copy = [];
+          // const copy = JSON.parse(JSON.stringify(this.priceStats[ftype].series[0].data));
+          copy.map((data, pos) => {
+            // console.log(pos, data);
+            // console.log(copy);
+            // this.priceStats[ftype].series[1].data = calculateMA(copy, 5);
+            // this.priceStats[ftype].series[2].data = calculateMA(copy, 10);
+            // this.priceStats[ftype].series[3].data = calculateMA(copy, 20);
+            // this.priceStats[ftype].series[4].data = calculateMA(copy, 30);
+          });
+          this.priceStats[ftype] = JSON.parse(JSON.stringify(this.priceStats[ftype]));
         });
-        this.priceStats[ftype] = JSON.parse(JSON.stringify(this.priceStats[ftype]));
+        this.isLoadingPrices = false;
       });
-      this.isLoadingPrices = false;
-    });
 
     /**
      * Unsubcribe to previous subscription if exists

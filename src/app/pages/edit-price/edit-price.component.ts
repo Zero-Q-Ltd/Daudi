@@ -4,7 +4,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatTableDataSource } from '@angular/material';
 import { ConfirmDialogComponent } from 'app/components/confirm-dialog/confirm-dialog.component';
 import { EmptyStockQty } from 'app/models/Daudi/fuel/StockQty';
-import { EmptyOMCStock, OMCStock } from 'app/models/Daudi/omc/Stock';
+import { EmptyOMCStock, Stock } from 'app/models/Daudi/omc/Stock';
 import { AdminService } from 'app/services/core/admin.service';
 import { CoreService } from 'app/services/core/core.service';
 import { OmcService } from 'app/services/core/omc.service';
@@ -58,7 +58,7 @@ export class EditPriceComponent implements OnInit, OnDestroy {
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
   selectedOMC: OMC;
 
-  stock: OMCStock = { ...EmptyOMCStock };
+  stock: Stock = { ...EmptyOMCStock };
 
   avgprices: {
     [key in FuelType]: {
