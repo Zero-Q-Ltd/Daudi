@@ -1,9 +1,8 @@
 import { FuelType } from "../Daudi/fuel/FuelType";
 import { FuelConfig, emptyFuelConfig } from "../Daudi/omc/FuelConfig";
-import { QBOAuthCOnfig } from "./QboAuthConfig";
+import { QBOAuthCOnfig, EmptyQBOAuthCOnfig } from "./QboAuthConfig";
 import { TaxConfig } from "../Daudi/omc/TaxConfig";
 import { deepCopy } from "../utils/deepCopy";
-import { emptyqboAuth } from "../Daudi/omc/Config";
 
 export interface QboCofig {
     sandbox: boolean,
@@ -16,7 +15,7 @@ export interface QboCofig {
 
 export const EmptyQboConfig: QboCofig = {
     sandbox: true,
-    auth: deepCopy<QBOAuthCOnfig>(emptyqboAuth),
+    auth: deepCopy<QBOAuthCOnfig>(EmptyQBOAuthCOnfig),
     fuelconfig: {
         pms: deepCopy<FuelConfig>(emptyFuelConfig),
         ago: deepCopy<FuelConfig>(emptyFuelConfig),
