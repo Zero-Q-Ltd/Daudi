@@ -9,13 +9,14 @@
     </div>-->
   <div>
     <div class="row">
+      {{depotResolution}}
       <div class="col-sm-4"></div>
       <div class="col-sm-4">
         <mat-form-field class="full-width">
           <input [formControl]="dateControl" [max]="maxDate" [min]="minDate" [satDatepicker]="picker" matInput
-                 placeholder="CHOOSE A DATE RANGE">
+            placeholder="CHOOSE A DATE RANGE">
           <sat-datepicker #picker [calendarFooterComponent]="rangesFooter" [closeAfterSelection]="false"
-                          [rangeMode]="true">
+            [rangeMode]="true">
           </sat-datepicker>
           <mat-hint class="date-hint">NB: Bigger Ranges may take sometime to load all the data</mat-hint>
           <sat-datepicker-toggle [for]="picker" matSuffix></sat-datepicker-toggle>
@@ -34,21 +35,19 @@
         <mat-panel-description>
         </mat-panel-description>
       </mat-expansion-panel-header>
-      <div [loading]="isLoadingsalesStats" [options]="saleStats" class="bar-height" echarts
-           theme="macarons"></div>
+      <div [loading]="isLoadingsalesStats" [options]="saleStats" class="bar-height" echarts theme="macarons"></div>
     </mat-expansion-panel>
     <br>
     <mat-expansion-panel>
       <mat-expansion-panel-header>
         <mat-panel-title>
-          Price Candles &nbsp; <b> (Not Real-Time) </b>
+          Price Candle 2020 &nbsp; <b> (Not Real-Time) </b>
         </mat-panel-title>
         <mat-panel-description>
         </mat-panel-description>
       </mat-expansion-panel-header>
       <div *ngFor="let fueltype of fueltypesArray">
-        <div [loading]="isLoadingPrices" [options]="priceStats[fueltype]" class="bar-height " echarts
-             theme="macarons">
+        <div [loading]="isLoadingPrices" [options]="priceStats[fueltype]" class="bar-height " echarts theme="macarons">
         </div>
       </div>
     </mat-expansion-panel>
@@ -56,9 +55,8 @@
   </mat-accordion>
   <div class="row">
     <div *ngFor="let fueltype of fueltypesArray" class="col-sm-4">
-      <div [loading]="isLoadingFuelqty[fueltype]" [options]="fuelgauge[fueltype]"
-           class="gauge-height box box-default"
-           echarts theme="macarons"></div>
+      <div [loading]="isLoadingFuelqty[fueltype]" [options]="fuelgauge[fueltype]" class="gauge-height box box-default"
+        echarts theme="macarons"></div>
     </div>
   </div>
   <div class="row">

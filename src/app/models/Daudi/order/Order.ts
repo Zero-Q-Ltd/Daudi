@@ -1,5 +1,5 @@
 import { deepCopy } from '../../utils/deepCopy';
-import { AssociatedUser } from '../admin/AssociatedUser';
+import { AssociatedUser, EmptyAssociatedUser } from '../admin/AssociatedUser';
 import { CustomerDetail } from '../customer/CustomerDetail';
 import { FuelType } from '../fuel/FuelType';
 import { OrderFuelConfig } from './FuelConfig';
@@ -41,7 +41,7 @@ export interface Order {
     errorDetail: string
   };
   deliveryNote: {
-    number: string
+    value: string
   };
   truck: Truck;
   frozen: boolean;
@@ -60,9 +60,11 @@ export interface Order {
     [stage in TruckStages]: GenericTruckStage;
   };
   seals: {
+    user: AssociatedUser;
     range: string[];
     broken: string[];
   };
+
   printStatus: {
     LoadingOrder: {
       status: boolean;
@@ -135,7 +137,8 @@ export const emptyorder: Order = {
   },
   seals: {
     broken: [],
-    range: []
+    range: [],
+    user: deepCopy(EmptyAssociatedUser)
   },
   truckStageData: {
     0: deepCopy(EmptyGenericTruckStage),
