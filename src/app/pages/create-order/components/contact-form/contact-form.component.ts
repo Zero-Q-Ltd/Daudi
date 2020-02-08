@@ -67,12 +67,12 @@ export class ContactFormComponent implements OnInit, OnChanges {
           Id: null,
           QbId: null,
           contact: [{
-            email: values.email,
-            name: values.name,
+            email: values.email.toLowerCase(),
+            name: values.name.toUpperCase(),
             phone: values.phone
           }],
           krapin: values.kraPin,
-          name: values.name
+          name: values.name.toUpperCase()
         };
         this.initData.customer = detail
         /**
@@ -80,10 +80,10 @@ export class ContactFormComponent implements OnInit, OnChanges {
          * If a seection is made but the company name modified, this is recognised as a new company
          */
         if (this.selectedCustomer_) {
-          if (this.initData.customer.name.toLowerCase() !== this.selectedCustomer_.name.toLowerCase()) {
+          if (this.initData.customer.name !== this.selectedCustomer_.name) {
             console.log("New company", this.initData.customer.name, this.selectedCustomer_.name)
-          } else if (!this.selectedCustomer_.contact.includes(this.initData.customer.contact[0]) || this.selectedCustomer_.krapin !== this.initData.customer.krapin) {
-            console.log("Company modified", this.selectedCustomer_.krapin !== this.initData.customer.krapin)
+          } else if (!this.selectedCustomer_.contact.some(c => isEqual(c, this.initData.customer.contact[0])) || this.selectedCustomer_.krapin !== this.initData.customer.krapin) {
+            console.log("Company modified", this.selectedCustomer_.contact[0], this.initData.customer.contact[0])
           } else {
             console.log("No company changes")
           }

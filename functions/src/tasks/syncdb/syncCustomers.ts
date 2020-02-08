@@ -42,7 +42,6 @@ export function syncCustomers(qbo: QuickBooks, omcId: string) {
                         co
                     );
                 }
-
             });
             return batchwrite.commit();
         });
@@ -58,9 +57,12 @@ function convertToDaudicustomer(
         balance: customer.Balance || 0,
         contact: [{
             email: customer.PrimaryEmailAddr
-                ? customer.PrimaryEmailAddr.Address
+                ? customer.PrimaryEmailAddr.Address.toLowerCase()
                 : '',
-            name: customer.DisplayName,
+            /**
+             * Standardise how names are stored in db
+             */
+            name: customer.DisplayName.toUpperCase(),
             /**
              * Only take the last 9 chars of the string, remove all whitespaces
              */
@@ -71,10 +73,11 @@ function convertToDaudicustomer(
                 : ''
         }],
         Active: customer.Active || false,
-        /**
-         * A firebase id cannot contain '/' hence we use it as the separator
-         */
+
         Id: customer.Id || '',
+        /**
+        * Standardise how names are stored in db
+        */
         name: customer.FullyQualifiedName.toUpperCase(),
         QbId: customer.Id || '',
         krapin: customer.Notes ? customer.Notes.substring(0, 13) : '',
