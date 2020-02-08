@@ -289,7 +289,7 @@ export class CreateOrderComponent implements OnDestroy {
       /**
        * navigate away from the page if the user intends fro it
        */
-      this.router.navigate(['admin/orders-table/1']);
+      this.router.navigate(['orders-table/1']);
     } else {
       this.temporder = { ...emptyorder };
     }
