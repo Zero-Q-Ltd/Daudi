@@ -1,0 +1,124 @@
+[debug] [2020-02-08T02:28:55.481Z] ----------------------------------------------------------------------
+[debug] [2020-02-08T02:28:55.483Z] Command:       /usr/bin/node /home/kisinga/.npm-global/bin/firebase init
+[debug] [2020-02-08T02:28:55.483Z] CLI Version:   7.12.1
+[debug] [2020-02-08T02:28:55.483Z] Platform:      linux
+[debug] [2020-02-08T02:28:55.483Z] Node Version:  v13.7.0
+[debug] [2020-02-08T02:28:55.484Z] Time:          Sat Feb 08 2020 05:28:55 GMT+0300 (GMT+03:00)
+[debug] [2020-02-08T02:28:55.484Z] ----------------------------------------------------------------------
+[debug] [2020-02-08T02:28:55.484Z] 
+[debug] [2020-02-08T02:28:55.492Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2020-02-08T02:28:55.492Z] > authorizing via signed-in user
+[info] 
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  /home/kisinga/Documents/Daudi
+
+[info] 
+=== Project Setup
+[info] 
+[info] First, let's associate this project directory with a Firebase project.
+[info] You can create multiple project aliases by running firebase use --add, 
+[info] but for now we'll just set up a default project.
+[info] 
+[debug] [2020-02-08T02:29:11.494Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2020-02-08T02:29:11.495Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ <request body omitted>
+[debug] [2020-02-08T02:29:11.948Z] <<< HTTP RESPONSE 200
+[debug] [2020-02-08T02:29:11.962Z] >>> HTTP REQUEST GET https://firebase.googleapis.com/v1beta1/projects?pageSize=100  
+ 
+[debug] [2020-02-08T02:29:12.619Z] <<< HTTP RESPONSE 200
+[info] i  Using project daudi-4 (daudi)
+[info] 
+=== Database Setup
+[info] 
+[info] Firebase Realtime Database Rules allow you to define how your data should be
+[info] structured and when your data can be read from and written to.
+[info] 
+[debug] [2020-02-08T02:29:20.744Z] >>> HTTP REQUEST GET https://daudi-4.firebaseio.com/.settings/rules.json  
+ 
+[debug] [2020-02-08T02:29:21.935Z] <<< HTTP RESPONSE 200
+[info] ✔  Database Rules for daudi-4 have been downloaded to database.rules.json.
+[info] Future modifications to database.rules.json will update Database Rules when you run
+[info] firebase deploy.
+[info] 
+=== Firestore Setup
+[debug] [2020-02-08T02:29:21.941Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2020-02-08T02:29:21.942Z] > authorizing via signed-in user
+[debug] [2020-02-08T02:29:21.943Z] [iam] checking project daudi-4 for permissions ["firebase.projects.get"]
+[debug] [2020-02-08T02:29:21.944Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/daudi-4:testIamPermissions  
+
+[debug] [2020-02-08T02:29:23.872Z] <<< HTTP RESPONSE 200
+[info] 
+[info] Firestore Security Rules allow you to define how and when to allow
+[info] requests. You can keep these rules in your project directory
+[info] and publish them with firebase deploy.
+[info] 
+[debug] [2020-02-08T02:29:26.158Z] >>> HTTP REQUEST GET https://firebaserules.googleapis.com/v1/projects/daudi-4/releases?pageSize=10&pageToken=  
+ 
+[debug] [2020-02-08T02:29:27.414Z] <<< HTTP RESPONSE 200
+[debug] [2020-02-08T02:29:27.418Z] Found ruleset: projects/daudi-4/rulesets/8c179760-4fce-43ee-baab-7832514ff2b8
+[debug] [2020-02-08T02:29:27.419Z] >>> HTTP REQUEST GET https://firebaserules.googleapis.com/v1/projects/daudi-4/rulesets/8c179760-4fce-43ee-baab-7832514ff2b8  
+ 
+[debug] [2020-02-08T02:29:28.347Z] <<< HTTP RESPONSE 200
+[info] 
+[info] Firestore indexes allow you to perform complex queries while
+[info] maintaining performance that scales with the size of the result
+[info] set. You can keep index definitions in your project directory
+[info] and publish them with firebase deploy.
+[info] 
+[debug] [2020-02-08T02:29:31.234Z] >>> HTTP REQUEST GET https://firestore.googleapis.com/v1beta2/projects/daudi-4/databases/(default)/collectionGroups/-/indexes  
+ 
+[debug] [2020-02-08T02:29:31.236Z] >>> HTTP REQUEST GET https://firestore.googleapis.com/v1beta2/projects/daudi-4/databases/(default)/collectionGroups/-/fields?filter=indexConfig.usesAncestorConfig=false  
+ 
+[debug] [2020-02-08T02:29:32.487Z] <<< HTTP RESPONSE 200
+[debug] [2020-02-08T02:29:32.545Z] <<< HTTP RESPONSE 200
+[info] 
+=== Functions Setup
+[info] 
+[info] A functions directory will be created in your project with a Node.js
+[info] package pre-configured. Functions can be deployed with firebase deploy.
+[info] 
+[debug] [2020-02-08T02:29:32.577Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2020-02-08T02:29:32.578Z] > authorizing via signed-in user
+[debug] [2020-02-08T02:29:32.578Z] [iam] checking project daudi-4 for permissions ["firebase.projects.get"]
+[debug] [2020-02-08T02:29:32.578Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/daudi-4:testIamPermissions  
+
+[debug] [2020-02-08T02:29:34.198Z] <<< HTTP RESPONSE 200
+[debug] [2020-02-08T02:29:34.200Z] >>> HTTP REQUEST POST https://serviceusage.googleapis.com/v1/projects/daudi-4/services/cloudfunctions.googleapis.com:enable  
+ 
+[debug] [2020-02-08T02:29:34.201Z] >>> HTTP REQUEST POST https://serviceusage.googleapis.com/v1/projects/daudi-4/services/runtimeconfig.googleapis.com:enable  
+ 
+[debug] [2020-02-08T02:29:36.268Z] <<< HTTP RESPONSE 200
+[debug] [2020-02-08T02:29:36.313Z] <<< HTTP RESPONSE 200
+[info] i  Skipping write of functions/package.json
+[info] i  Skipping write of functions/tslint.json
+[info] i  Skipping write of functions/tsconfig.json
+[info] i  Skipping write of functions/src/index.ts
+[info] i  Skipping write of functions/.gitignore
+[info] 
+=== Hosting Setup
+[info] 
+[info] Your public directory is the folder (relative to your project directory) that
+[info] will contain Hosting assets to be uploaded with firebase deploy. If you
+[info] have a build process for your assets, use your build's output directory.
+[info] 
+[debug] [2020-02-08T02:30:14.422Z] >>> HTTP REQUEST GET https://www.gstatic.com/firebasejs/releases.json  
+ 
+[debug] [2020-02-08T02:30:14.820Z] <<< HTTP RESPONSE 200
+[info] ✔  Wrote dist/index.html
+[info] 
+=== Storage Setup
+[info] 
+[info] Firebase Storage Security Rules allow you to define how and when to allow
+[info] uploads and downloads. You can keep these rules in your project directory
+[info] and publish them with firebase deploy.
+[info] 
+[info] 
+=== Emulators Setup
+[info] i  firestore: downloading cloud-firestore-emulator-v1.10.2.jar...
