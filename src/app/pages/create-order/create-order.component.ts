@@ -213,6 +213,9 @@ export class CreateOrderComponent implements OnDestroy {
         name: this.core.activedepot.value.depot.Name
       },
     };
+    /**
+     * The Id is used to identfy a new customer
+     */
     if (!this.temporder.customer.QbId) {
       // check if KRA pin is unique
       /**

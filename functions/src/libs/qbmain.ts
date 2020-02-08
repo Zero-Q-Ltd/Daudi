@@ -14,6 +14,10 @@ import * as _ from "underscore";
 import { QbTypes } from "../models/QbTypes";
 import { QboOrder } from "../models/Qbo/QboOrder";
 import { Payment } from "../models/Qbo/Payment";
+import { Item } from "../models/Qbo/Item";
+import { Employee } from "../models/Qbo/Employee";
+import { Customer } from "../models/Qbo/Customer";
+import { Bill } from "../models/Qbo/Bill";
 
 const version = "2.0.24";
 const APP_CENTER_BASE = "https://appcenter.intuit.com";
@@ -237,7 +241,7 @@ export class QuickBooks {
    * persistent Account
    */
   createAccount(account): Promise<any> {
-    return create("account", account);
+    return create("Account", account);
   }
 
   /**
@@ -247,7 +251,7 @@ export class QuickBooks {
    * persistent Attachable
    */
   createAttachable(attachable): Promise<any> {
-    return create("attachable", attachable);
+    return create("Attachable", attachable);
   }
 
   /**
@@ -256,8 +260,8 @@ export class QuickBooks {
    * @param  {object} bill - The unsaved bill, to be persisted in QuickBooks
    * persistent Bill
    */
-  createBill(bill): Promise<any> {
-    return create("bill", bill);
+  createBill(bill: Bill): Promise<any> {
+    return create("Bill", bill);
   }
 
   /**
@@ -267,7 +271,7 @@ export class QuickBooks {
    * persistent BillPayment
    */
   createBillPayment(billPayment): Promise<any> {
-    return create("billPayment", billPayment);
+    return create("BillPayment", billPayment);
   }
 
   /**
@@ -277,7 +281,7 @@ export class QuickBooks {
    * @param klass
    */
   createClass(klass): Promise<any> {
-    return create("class", klass);
+    return create("Class", klass);
   }
 
   /**
@@ -287,7 +291,7 @@ export class QuickBooks {
    * persistent CreditMemo
    */
   createCreditMemo(creditMemo): Promise<any> {
-    return create("creditMemo", creditMemo);
+    return create("CreditMemo", creditMemo);
   }
 
   /**
@@ -296,8 +300,8 @@ export class QuickBooks {
    * @param  {object} customer - The unsaved customer, to be persisted in QuickBooks
    * persistent Customer
    */
-  createCustomer(customer): Promise<any> {
-    return create("customer", customer);
+  createCustomer(customer: Customer): Promise<any> {
+    return create("Customer", customer);
   }
 
   /**
@@ -307,7 +311,7 @@ export class QuickBooks {
    * persistent Department
    */
   createDepartment(department): Promise<any> {
-    return create("department", department);
+    return create("Department", department);
   }
 
   /**
@@ -317,7 +321,7 @@ export class QuickBooks {
    * persistent Deposit
    */
   createDeposit(deposit): Promise<any> {
-    return create("deposit", deposit);
+    return create("Deposit", deposit);
   }
 
   /**
@@ -326,8 +330,8 @@ export class QuickBooks {
    * @param  {object} employee - The unsaved employee, to be persisted in QuickBooks
    * persistent Employee
    */
-  createEmployee(employee): Promise<any> {
-    return create("employee", employee);
+  createEmployee(employee: Employee): Promise<any> {
+    return create("Employee", employee);
   }
 
   /**
@@ -336,8 +340,8 @@ export class QuickBooks {
    * @param  {object} estimate - The unsaved estimate, to be persisted in QuickBooks
    * persistent Estimate
    */
-  createEstimate(estimate): Promise<any> {
-    return create("estimate", estimate);
+  createEstimate(estimate: QboOrder): Promise<any> {
+    return create("Estimate", estimate);
   }
 
   /**
@@ -347,7 +351,7 @@ export class QuickBooks {
    * persistent Invoice
    */
   createInvoice(invoice: QboOrder): Promise<any> {
-    return create("invoice", invoice);
+    return create("Invoice", invoice);
   }
 
   /**
@@ -356,8 +360,8 @@ export class QuickBooks {
    * @param  {object} item - The unsaved item, to be persisted in QuickBooks
    * persistent Item
    */
-  createItem(item): Promise<any> {
-    return create("item", item);
+  createItem(item: Item): Promise<any> {
+    return create("Item", item);
   }
 
   /**
@@ -367,7 +371,7 @@ export class QuickBooks {
    * persistent JournalCode
    */
   createJournalCode(journalCode): Promise<any> {
-    return create("journalCode", journalCode);
+    return create("JournalCode", journalCode);
   }
 
   /**
@@ -377,7 +381,7 @@ export class QuickBooks {
    * persistent JournalEntry
    */
   createJournalEntry(journalEntry): Promise<any> {
-    return create("journalEntry", journalEntry);
+    return create("JournalEntry", journalEntry);
   }
 
   /**
@@ -387,7 +391,7 @@ export class QuickBooks {
    * persistent Payment
    */
   createPayment(payment: Payment): Promise<any> {
-    return create("payment", payment);
+    return create("Payment", payment);
   }
 
   /**
@@ -397,7 +401,7 @@ export class QuickBooks {
    * persistent PaymentMethod
    */
   createPaymentMethod(paymentMethod): Promise<any> {
-    return create("paymentMethod", paymentMethod);
+    return create("PaymentMethod", paymentMethod);
   }
 
   /**
@@ -407,7 +411,7 @@ export class QuickBooks {
    * persistent Purchase
    */
   createPurchase(purchase): Promise<any> {
-    return create("purchase", purchase);
+    return create("Purchase", purchase);
   }
 
   /**
@@ -417,7 +421,7 @@ export class QuickBooks {
    * persistent PurchaseOrder
    */
   createPurchaseOrder(purchaseOrder): Promise<any> {
-    return create("purchaseOrder", purchaseOrder);
+    return create("PurchaseOrder", purchaseOrder);
   }
 
   /**
@@ -427,7 +431,7 @@ export class QuickBooks {
    * persistent RefundReceipt
    */
   createRefundReceipt(refundReceipt): Promise<any> {
-    return create("refundReceipt", refundReceipt);
+    return create("RefundReceipt", refundReceipt);
   }
 
   /**
@@ -437,7 +441,7 @@ export class QuickBooks {
    * persistent SalesReceipt
    */
   createSalesReceipt(salesReceipt): Promise<any> {
-    return create("salesReceipt", salesReceipt);
+    return create("SalesReceipt", salesReceipt);
   }
 
   /**
@@ -447,7 +451,7 @@ export class QuickBooks {
    * persistent TaxAgency
    */
   createTaxAgency(taxAgency): Promise<any> {
-    return create("taxAgency", taxAgency);
+    return create("TaxAgency", taxAgency);
   }
 
   /**
@@ -457,7 +461,8 @@ export class QuickBooks {
    * persistent TaxService
    */
   createTaxService(taxService): Promise<any> {
-    return create("taxService/taxcode", taxService);
+    return create("TaxService", taxService);
+    // return create("TaxService/taxcode", taxService);
   }
 
   /**
@@ -467,7 +472,7 @@ export class QuickBooks {
    * persistent Term
    */
   createTerm(term): Promise<any> {
-    return create("term", term);
+    return create("Term", term);
   }
 
   /**
@@ -477,7 +482,7 @@ export class QuickBooks {
    * persistent TimeActivity
    */
   createTimeActivity(timeActivity): Promise<any> {
-    return create("timeActivity", timeActivity);
+    return create("TimeActivity", timeActivity);
   }
 
   /**
@@ -487,7 +492,7 @@ export class QuickBooks {
    * persistent Transfer
    */
   createTransfer(transfer): Promise<any> {
-    return create("transfer", transfer);
+    return create("Transfer", transfer);
   }
 
   /**
@@ -497,7 +502,7 @@ export class QuickBooks {
    * persistent Vendor
    */
   createVendor(vendor): Promise<any> {
-    return create("vendor", vendor);
+    return create("Vendor", vendor);
   }
 
   /**
@@ -507,7 +512,7 @@ export class QuickBooks {
    * persistent VendorCredit
    */
   createVendorCredit(vendorCredit): Promise<any> {
-    return create("vendorCredit", vendorCredit);
+    return create("VendorCredit", vendorCredit);
   }
 
 
@@ -517,7 +522,7 @@ export class QuickBooks {
    * @param  {string} Id - The Id of persistent Account
    * persistent Account
    */
-  getAccount(id): Promise<any> {
+  getAccount(id: string): Promise<any> {
     return read("account", id);
   }
 
@@ -527,7 +532,7 @@ export class QuickBooks {
    * @param  {string} Id - The Id of persistent Attachable
    * persistent Attachable
    */
-  getAttachable(id): Promise<any> {
+  getAttachable(id: string): Promise<any> {
     return read("attachable", id);
   }
 
@@ -537,7 +542,7 @@ export class QuickBooks {
    * @param  {string} Id - The Id of persistent Bill
    * persistent Bill
    */
-  getBill(id): Promise<any> {
+  getBill(id: string): Promise<any> {
     return read("bill", id);
   }
 
@@ -547,7 +552,7 @@ export class QuickBooks {
    * @param  {string} Id - The Id of persistent BillPayment
    * persistent BillPayment
    */
-  getBillPayment(id): Promise<any> {
+  getBillPayment(id: string): Promise<any> {
     return read("billPayment", id);
   }
 
@@ -557,7 +562,7 @@ export class QuickBooks {
    * @param  {string} Id - The Id of persistent Class
    * persistent Class
    */
-  getClass(id): Promise<any> {
+  getClass(id: string): Promise<any> {
     return read("class", id);
   }
 
@@ -567,7 +572,7 @@ export class QuickBooks {
    * @param  {string} Id - The Id of persistent CompanyInfo
    * persistent CompanyInfo
    */
-  getCompanyInfo(id): Promise<any> {
+  getCompanyInfo(id: string): Promise<any> {
     return read("companyInfo", id);
   }
 
@@ -577,7 +582,7 @@ export class QuickBooks {
    * @param  {string} Id - The Id of persistent CreditMemo
    * persistent CreditMemo
    */
-  getCreditMemo(id): Promise<any> {
+  getCreditMemo(id: string): Promise<any> {
     return read("creditMemo", id);
   }
 
@@ -587,7 +592,7 @@ export class QuickBooks {
    * @param  {string} Id - The Id of persistent Customer
    * persistent Customer
    */
-  getCustomer(id): Promise<any> {
+  getCustomer(id: string): Promise<any> {
     return read("customer", id);
   }
 
@@ -597,7 +602,7 @@ export class QuickBooks {
    * @param  {string} Id - The Id of persistent Department
    * persistent Department
    */
-  getDepartment(id): Promise<any> {
+  getDepartment(id: string): Promise<any> {
     return read("department", id);
   }
 
@@ -607,7 +612,7 @@ export class QuickBooks {
    * @param  {string} Id - The Id of persistent Deposit
    * persistent Deposit
    */
-  getDeposit(id): Promise<any> {
+  getDeposit(id: string): Promise<any> {
     return read("deposit", id);
   }
 
@@ -617,7 +622,7 @@ export class QuickBooks {
    * @param  {string} Id - The Id of persistent Employee
    * persistent Employee
    */
-  getEmployee(id): Promise<any> {
+  getEmployee(id: string): Promise<any> {
     return read("employee", id);
   }
 
@@ -627,7 +632,7 @@ export class QuickBooks {
    * @param  {string} Id - The Id of persistent Estimate
    * persistent Estimate
    */
-  getEstimate(id): Promise<any> {
+  getEstimate(id: string): Promise<any> {
     return read("estimate", id);
   }
 
@@ -650,7 +655,7 @@ export class QuickBooks {
    * @param  {string} sendTo - optional email address to sent the PDF to. If not provided, address supplied in Estimate.BillEmail.EmailAddress will be used
    * Estimate PDF
    */
-  sendEstimatePdf(id, sendTo): Promise<any> {
+  sendEstimatePdf(id: string, sendTo): Promise<any> {
     let path = "/estimate/" + id + "/send";
     if (sendTo && typeof sendTo !== "function") {
       path += "?sendTo=" + sendTo;
@@ -670,7 +675,7 @@ export class QuickBooks {
    * @param  {string} Id - The Id of persistent Invoice
    * persistent Invoice
    */
-  getInvoice(id): Promise<any> {
+  getInvoice(id: string): Promise<any> {
     return read("invoice", id);
   }
 
@@ -680,7 +685,7 @@ export class QuickBooks {
    * @param  {string} Id - The Id of persistent Invoice
    * Invoice PDF
    */
-  getInvoicePdf(id): Promise<any> {
+  getInvoicePdf(id: string): Promise<any> {
     return read("Invoice", id + "/pdf");
   }
 
@@ -706,7 +711,7 @@ export class QuickBooks {
    * @param  {string} Id - The Id of persistent Item
    * persistent Item
    */
-  getItem(id): Promise<any> {
+  getItem(id: string): Promise<any> {
     return read("item", id);
   }
 
@@ -716,7 +721,7 @@ export class QuickBooks {
    * @param  {string} Id - The Id of persistent JournalCode
    * persistent JournalCode
    */
-  getJournalCode(id): Promise<any> {
+  getJournalCode(id: string): Promise<any> {
     return read("journalCode", id);
   }
 
@@ -726,7 +731,7 @@ export class QuickBooks {
    * @param  {string} Id - The Id of persistent JournalEntry
    * persistent JournalEntry
    */
-  getJournalEntry(id): Promise<any> {
+  getJournalEntry(id: string): Promise<any> {
     return read("journalEntry", id);
   }
 
@@ -736,7 +741,7 @@ export class QuickBooks {
    * @param  {string} Id - The Id of persistent Payment
    * persistent Payment
    */
-  getPayment(id): Promise<any> {
+  getPayment(id: string): Promise<any> {
     return read("payment", id);
   }
 
@@ -746,7 +751,7 @@ export class QuickBooks {
    * @param  {string} Id - The Id of persistent PaymentMethod
    * persistent PaymentMethod
    */
-  getPaymentMethod(id): Promise<any> {
+  getPaymentMethod(id: string): Promise<any> {
     return read("paymentMethod", id);
   }
 
@@ -765,7 +770,7 @@ export class QuickBooks {
    * @param  {string} Id - The Id of persistent Purchase
    * persistent Purchase
    */
-  getPurchase(id): Promise<any> {
+  getPurchase(id: string): Promise<any> {
     return read("purchase", id);
   }
 
@@ -775,7 +780,7 @@ export class QuickBooks {
    * @param  {string} Id - The Id of persistent PurchaseOrder
    * persistent PurchaseOrder
    */
-  getPurchaseOrder(id): Promise<any> {
+  getPurchaseOrder(id: string): Promise<any> {
     return read("purchaseOrder", id);
   }
 
@@ -785,7 +790,7 @@ export class QuickBooks {
    * @param  {string} Id - The Id of persistent RefundReceipt
    * persistent RefundReceipt
    */
-  getRefundReceipt(id): Promise<any> {
+  getRefundReceipt(id: string): Promise<any> {
     return read("refundReceipt", id);
   }
 
@@ -795,7 +800,7 @@ export class QuickBooks {
    * @param  {string} Id - The Id of persistent Reports
    * persistent Reports
    */
-  getReports(id): Promise<any> {
+  getReports(id: string): Promise<any> {
     return read("reports", id);
   }
 
@@ -805,7 +810,7 @@ export class QuickBooks {
    * @param  {string} Id - The Id of persistent SalesReceipt
    * persistent SalesReceipt
    */
-  getSalesReceipt(id): Promise<any> {
+  getSalesReceipt(id: string): Promise<any> {
     return read("salesReceipt", id);
   }
 
@@ -815,7 +820,7 @@ export class QuickBooks {
    * @param  {string} Id - The Id of persistent SalesReceipt
    * SalesReceipt PDF
    */
-  getSalesReceiptPdf(id): Promise<any> {
+  getSalesReceiptPdf(id: string): Promise<any> {
     return read("salesReceipt", id + "/pdf");
   }
 
@@ -848,7 +853,7 @@ export class QuickBooks {
    * @param  {string} Id - The Id of persistent TaxAgency
    * persistent TaxAgency
    */
-  getTaxAgency(id): Promise<any> {
+  getTaxAgency(id: string): Promise<any> {
     return read("taxAgency", id);
   }
 
@@ -858,7 +863,7 @@ export class QuickBooks {
    * @param  {string} Id - The Id of persistent TaxCode
    * persistent TaxCode
    */
-  getTaxCode(id): Promise<any> {
+  getTaxCode(id: string): Promise<any> {
     return read("taxCode", id);
   }
 
@@ -868,7 +873,7 @@ export class QuickBooks {
    * @param  {string} Id - The Id of persistent TaxRate
    * persistent TaxRate
    */
-  getTaxRate(id): Promise<any> {
+  getTaxRate(id: string): Promise<any> {
     return read("taxRate", id);
   }
 
@@ -878,7 +883,7 @@ export class QuickBooks {
    * @param  {string} Id - The Id of persistent Term
    * persistent Term
    */
-  getTerm(id): Promise<any> {
+  getTerm(id: string): Promise<any> {
     return read("term", id);
   }
 
@@ -888,7 +893,7 @@ export class QuickBooks {
    * @param  {string} Id - The Id of persistent TimeActivity
    * persistent TimeActivity
    */
-  getTimeActivity(id): Promise<any> {
+  getTimeActivity(id: string): Promise<any> {
     return read("timeActivity", id);
   }
 
@@ -898,7 +903,7 @@ export class QuickBooks {
    * @param  {string} Id - The Id of persistent Term
    * persistent Transfer
    */
-  getTransfer(id): Promise<any> {
+  getTransfer(id: string): Promise<any> {
     return read("transfer", id);
   }
 
@@ -908,7 +913,7 @@ export class QuickBooks {
    * @param  {string} Id - The Id of persistent Vendor
    * persistent Vendor
    */
-  getVendor(id): Promise<any> {
+  getVendor(id: string): Promise<any> {
     return read("vendor", id);
   }
 
@@ -918,7 +923,7 @@ export class QuickBooks {
    * @param  {string} Id - The Id of persistent VendorCredit
    * persistent VendorCredit
    */
-  getVendorCredit(id): Promise<any> {
+  getVendorCredit(id: string): Promise<any> {
     return read("vendorCredit", id);
   }
 
@@ -930,7 +935,7 @@ export class QuickBooks {
    * persistent Account
    */
   updateAccount(account): Promise<any> {
-    return update("account", account);
+    return update("Account", account);
   }
 
   /**
@@ -940,7 +945,7 @@ export class QuickBooks {
    * persistent Attachable
    */
   updateAttachable(attachable): Promise<any> {
-    return update("attachable", attachable);
+    return update("Attachable", attachable);
   }
 
   /**
@@ -950,7 +955,7 @@ export class QuickBooks {
    * persistent Bill
    */
   updateBill(bill): Promise<any> {
-    return update("bill", bill);
+    return update("Bill", bill);
   }
 
   /**
@@ -960,7 +965,7 @@ export class QuickBooks {
    * persistent BillPayment
    */
   updateBillPayment(billPayment): Promise<any> {
-    return update("billPayment", billPayment);
+    return update("BillPayment", billPayment);
   }
 
   /**
@@ -970,7 +975,7 @@ export class QuickBooks {
    * persistent Class
    */
   updateClass(klass): Promise<any> {
-    return update("class", klass);
+    return update("Class", klass);
   }
 
   /**
@@ -980,7 +985,7 @@ export class QuickBooks {
    * persistent CompanyInfo
    */
   updateCompanyInfo(companyInfo): Promise<any> {
-    return update("companyInfo", companyInfo);
+    return update("CompanyInfo", companyInfo);
   }
 
   /**
@@ -990,7 +995,7 @@ export class QuickBooks {
    * persistent CreditMemo
    */
   updateCreditMemo(creditMemo): Promise<any> {
-    return update("creditMemo", creditMemo);
+    return update("CreditMemo", creditMemo);
   }
 
   /**
@@ -1000,7 +1005,7 @@ export class QuickBooks {
    * persistent Customer
    */
   updateCustomer(customer): Promise<any> {
-    return update("customer", customer);
+    return update("Customer", customer);
   }
 
   /**
@@ -1010,7 +1015,7 @@ export class QuickBooks {
    * persistent Department
    */
   updateDepartment(department): Promise<any> {
-    return update("department", department);
+    return update("Department", department);
   }
 
   /**
@@ -1020,7 +1025,7 @@ export class QuickBooks {
    * persistent Deposit
    */
   updateDeposit(deposit): Promise<any> {
-    return update("deposit", deposit);
+    return update("Deposit", deposit);
   }
 
   /**
@@ -1030,7 +1035,7 @@ export class QuickBooks {
    * persistent Employee
    */
   updateEmployee(employee): Promise<any> {
-    return update("employee", employee);
+    return update("Employee", employee);
   }
 
   /**
@@ -1040,7 +1045,7 @@ export class QuickBooks {
    * persistent Estimate
    */
   updateEstimate(estimate): Promise<any> {
-    return update("estimate", estimate);
+    return update("Estimate", estimate);
   }
 
   /**
@@ -1050,7 +1055,7 @@ export class QuickBooks {
    * persistent Invoice
    */
   updateInvoice(invoice: QboOrder): Promise<any> {
-    return update("invoice", invoice);
+    return update("Invoice", invoice);
   }
 
   /**
@@ -1060,7 +1065,7 @@ export class QuickBooks {
    * persistent Item
    */
   updateItem(item): Promise<any> {
-    return update("item", item);
+    return update("Item", item);
   }
 
   /**
@@ -1070,7 +1075,7 @@ export class QuickBooks {
    * persistent JournalCode
    */
   updateJournalCode(journalCode): Promise<any> {
-    return update("journalCode", journalCode);
+    return update("JournalCode", journalCode);
   }
 
   /**
@@ -1080,7 +1085,7 @@ export class QuickBooks {
    * persistent JournalEntry
    */
   updateJournalEntry(journalEntry): Promise<any> {
-    return update("journalEntry", journalEntry);
+    return update("JournalEntry", journalEntry);
   }
 
   /**
@@ -1090,7 +1095,7 @@ export class QuickBooks {
    * persistent Payment
    */
   updatePayment(payment: Payment): Promise<any> {
-    return update("payment", payment);
+    return update("Payment", payment);
   }
 
   /**
@@ -1100,7 +1105,7 @@ export class QuickBooks {
    * persistent PaymentMethod
    */
   updatePaymentMethod(paymentMethod): Promise<any> {
-    return update("paymentMethod", paymentMethod);
+    return update("PaymentMethod", paymentMethod);
   }
 
   /**
@@ -1110,7 +1115,7 @@ export class QuickBooks {
    * persistent Preferences
    */
   updatePreferences(preferences): Promise<any> {
-    return update("preferences", preferences);
+    return update("Preferences", preferences);
   }
 
   /**
@@ -1120,7 +1125,7 @@ export class QuickBooks {
    * persistent Purchase
    */
   updatePurchase(purchase): Promise<any> {
-    return update("purchase", purchase);
+    return update("Purchase", purchase);
   }
 
   /**
@@ -1130,7 +1135,7 @@ export class QuickBooks {
    * persistent PurchaseOrder
    */
   updatePurchaseOrder(purchaseOrder): Promise<any> {
-    return update("purchaseOrder", purchaseOrder);
+    return update("PurchaseOrder", purchaseOrder);
   }
 
   /**
@@ -1140,7 +1145,7 @@ export class QuickBooks {
    * persistent RefundReceipt
    */
   updateRefundReceipt(refundReceipt): Promise<any> {
-    return update("refundReceipt", refundReceipt);
+    return update("RefundReceipt", refundReceipt);
   }
 
   /**
@@ -1150,7 +1155,7 @@ export class QuickBooks {
    * persistent SalesReceipt
    */
   updateSalesReceipt(salesReceipt): Promise<any> {
-    return update("salesReceipt", salesReceipt);
+    return update("SalesReceipt", salesReceipt);
   }
 
   /**
@@ -1160,7 +1165,7 @@ export class QuickBooks {
    * persistent TaxAgency
    */
   updateTaxAgency(taxAgency): Promise<any> {
-    return update("taxAgency", taxAgency);
+    return update("TaxAgency", taxAgency);
   }
 
   /**
@@ -1170,7 +1175,7 @@ export class QuickBooks {
    * persistent TaxCode
    */
   updateTaxCode(taxCode): Promise<any> {
-    return update("taxCode", taxCode);
+    return update("TaxCode", taxCode);
   }
 
   /**
@@ -1180,7 +1185,7 @@ export class QuickBooks {
    * persistent TaxRate
    */
   updateTaxRate(taxRate): Promise<any> {
-    return update("taxRate", taxRate);
+    return update("TaxRate", taxRate);
   }
 
   /**
@@ -1190,7 +1195,7 @@ export class QuickBooks {
    * persistent Term
    */
   updateTerm(term): Promise<any> {
-    return update("term", term);
+    return update("Term", term);
   }
 
   /**
@@ -1200,7 +1205,7 @@ export class QuickBooks {
    * persistent TimeActivity
    */
   updateTimeActivity(timeActivity): Promise<any> {
-    return update("timeActivity", timeActivity);
+    return update("TimeActivity", timeActivity);
   }
 
   /**
@@ -1210,7 +1215,7 @@ export class QuickBooks {
    * persistent Transfer
    */
   updateTransfer(transfer): Promise<any> {
-    return update("transfer", transfer);
+    return update("Transfer", transfer);
   }
 
   /**
@@ -1220,7 +1225,7 @@ export class QuickBooks {
    * persistent Vendor
    */
   updateVendor(vendor): Promise<any> {
-    return update("vendor", vendor);
+    return update("Vendor", vendor);
   }
 
   /**
@@ -1230,7 +1235,7 @@ export class QuickBooks {
    * persistent VendorCredit
    */
   updateVendorCredit(vendorCredit): Promise<any> {
-    return update("vendorCredit", vendorCredit);
+    return update("VendorCredit", vendorCredit);
   }
 
   /**
@@ -1240,7 +1245,7 @@ export class QuickBooks {
    * persistent ExchangeRate
    */
   updateExchangeRate(exchangeRate): Promise<any> {
-    return update("exchangerate", exchangeRate);
+    return update("ExchangeRate", exchangeRate);
   }
 
 
@@ -1251,7 +1256,7 @@ export class QuickBooks {
    * status of the persistent Attachable
    */
   delete_Attachable(idOrEntity): Promise<any> {
-    return delete_("attachable", idOrEntity);
+    return delete_("Attachable", idOrEntity);
   }
 
   /**
@@ -1261,7 +1266,7 @@ export class QuickBooks {
    * status of the persistent Bill
    */
   delete_Bill(idOrEntity): Promise<any> {
-    return delete_("bill", idOrEntity);
+    return delete_("Bill", idOrEntity);
   }
 
   /**
@@ -1271,7 +1276,7 @@ export class QuickBooks {
    * status of the persistent BillPayment
    */
   delete_BillPayment(idOrEntity): Promise<any> {
-    return delete_("billPayment", idOrEntity);
+    return delete_("BillPayment", idOrEntity);
   }
 
   /**
@@ -1281,7 +1286,7 @@ export class QuickBooks {
    * status of the persistent CreditMemo
    */
   delete_CreditMemo(idOrEntity): Promise<any> {
-    return delete_("creditMemo", idOrEntity);
+    return delete_("CreditMemo", idOrEntity);
   }
 
   /**
@@ -1291,7 +1296,7 @@ export class QuickBooks {
    * status of the persistent Deposit
    */
   delete_Deposit(idOrEntity): Promise<any> {
-    return delete_("deposit", idOrEntity);
+    return delete_("Deposit", idOrEntity);
   }
 
   /**
@@ -1301,7 +1306,7 @@ export class QuickBooks {
    * status of the persistent Estimate
    */
   delete_Estimate(idOrEntity): Promise<any> {
-    return delete_("estimate", idOrEntity);
+    return delete_("Estimate", idOrEntity);
   }
 
   /**
@@ -1311,7 +1316,7 @@ export class QuickBooks {
    * status of the persistent Invoice
    */
   delete_Invoice(idOrEntity): Promise<any> {
-    return delete_("invoice", idOrEntity);
+    return delete_("Invoice", idOrEntity);
   }
 
   /**
@@ -1321,7 +1326,7 @@ export class QuickBooks {
    * status of the persistent JournalCode
    */
   delete_JournalCode(idOrEntity): Promise<any> {
-    return delete_("journalCode", idOrEntity);
+    return delete_("JournalCode", idOrEntity);
   }
 
   /**
@@ -1331,7 +1336,7 @@ export class QuickBooks {
    * status of the persistent JournalEntry
    */
   delete_JournalEntry(idOrEntity): Promise<any> {
-    return delete_("journalEntry", idOrEntity);
+    return delete_("JournalEntry", idOrEntity);
   }
 
   /**
@@ -1341,7 +1346,7 @@ export class QuickBooks {
    * status of the persistent Payment
    */
   delete_Payment(idOrEntity): Promise<any> {
-    return delete_("payment", idOrEntity);
+    return delete_("Payment", idOrEntity);
   }
 
   /**
@@ -1351,7 +1356,7 @@ export class QuickBooks {
    * status of the persistent Purchase
    */
   delete_Purchase(idOrEntity): Promise<any> {
-    return delete_("purchase", idOrEntity);
+    return delete_("Purchase", idOrEntity);
   }
 
   /**
@@ -1361,7 +1366,7 @@ export class QuickBooks {
    * status of the persistent PurchaseOrder
    */
   delete_PurchaseOrder(idOrEntity): Promise<any> {
-    return delete_("purchaseOrder", idOrEntity);
+    return delete_("PurchaseOrder", idOrEntity);
   }
 
   /**
@@ -1371,7 +1376,7 @@ export class QuickBooks {
    * status of the persistent RefundReceipt
    */
   delete_RefundReceipt(idOrEntity): Promise<any> {
-    return delete_("refundReceipt", idOrEntity);
+    return delete_("RefundReceipt", idOrEntity);
   }
 
   /**
@@ -1381,7 +1386,7 @@ export class QuickBooks {
    * status of the persistent SalesReceipt
    */
   delete_SalesReceipt(idOrEntity): Promise<any> {
-    return delete_("salesReceipt", idOrEntity);
+    return delete_("SalesReceipt", idOrEntity);
   }
 
   /**
@@ -1391,7 +1396,7 @@ export class QuickBooks {
    * status of the persistent TimeActivity
    */
   delete_TimeActivity(idOrEntity): Promise<any> {
-    return delete_("timeActivity", idOrEntity);
+    return delete_("TimeActivity", idOrEntity);
   }
 
   /**
@@ -1401,7 +1406,7 @@ export class QuickBooks {
    * status of the persistent Transfer
    */
   delete_Transfer(idOrEntity): Promise<any> {
-    return delete_("transfer", idOrEntity);
+    return delete_("Transfer", idOrEntity);
   }
 
   /**
@@ -1411,7 +1416,7 @@ export class QuickBooks {
    * status of the persistent VendorCredit
    */
   delete_VendorCredit(idOrEntity): Promise<any> {
-    return delete_("vendorCredit", idOrEntity);
+    return delete_("VendorCredit", idOrEntity);
   }
 
 
@@ -2121,12 +2126,12 @@ function unwrap(entityName) {
 }
 
 // **********************  CRUD Api **********************
-function create(entityName /*: QbTypes*/, entity): Promise<any> {
+function create(entityName: QbTypes, entity): Promise<any> {
   const url = "/" + entityName.toLowerCase();
   return request("post", { url: url }, entity);
 }
 
-function read(entityName, id): Promise<any> {
+function read(entityName, id: string): Promise<any> {
   let url = "/" + entityName.toLowerCase();
   if (id) {
     url = url + "/" + id;
@@ -2134,7 +2139,7 @@ function read(entityName, id): Promise<any> {
   return request("get", { url: url }, unwrap(entityName));
 }
 
-function update(entityName, entity): Promise<any> {
+function update(entityName: QbTypes, entity): Promise<any> {
   if (debug) {
     console.log(`updating ${entityName}`);
     // console.log(entity);
@@ -2142,7 +2147,7 @@ function update(entityName, entity): Promise<any> {
   }
 
   if (!entity.Id || !entity.SyncToken) {
-    if (entityName !== "exchangerate") {
+    if (entityName !== "ExchangeRate") {
       throw new Error(entityName + " must contain Id and Synctoken fields: " +
         util.inspect(entity, { showHidden: false, depth: null }));
     }
@@ -2159,7 +2164,7 @@ function update(entityName, entity): Promise<any> {
   return request("post", opts, entity);
 }
 
-function delete_(entityName, idOrEntity): Promise<any> {
+function delete_(entityName: QbTypes, idOrEntity): Promise<any> {
   const url = "/" + entityName.toLowerCase() + "?operation=delete";
   if (_.isObject(idOrEntity)) {
     return request("post", { url: url }, idOrEntity);

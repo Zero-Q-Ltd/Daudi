@@ -40,7 +40,7 @@ export class ContactFormComponent implements OnInit, OnChanges {
   loadingcustomers = false;
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
   subscriptions: Map<string, any> = new Map<string, any>();
-  newcustomer: boolean
+
   contactForm: FormGroup<OrderContactForm> = new FormGroup<OrderContactForm>({
     kraPin: new FormControl<string>('', [Validators.required]),
     email: new FormControl<string>('', [Validators.required, Validators.email]),
@@ -83,8 +83,12 @@ export class ContactFormComponent implements OnInit, OnChanges {
           if (this.initData.customer.name !== this.selectedCustomer_.name) {
             console.log("New company", this.initData.customer.name, this.selectedCustomer_.name)
           } else if (!this.selectedCustomer_.contact.some(c => isEqual(c, this.initData.customer.contact[0])) || this.selectedCustomer_.krapin !== this.initData.customer.krapin) {
-            console.log("Company modified", this.selectedCustomer_.contact[0], this.initData.customer.contact[0])
+            this.initData.customer.QbId = this.selectedCustomer_.QbId
+            this.initData.customer.Id = this.selectedCustomer_.Id
+            console.log("Company modified")
           } else {
+            this.initData.customer.QbId = this.selectedCustomer_.QbId
+            this.initData.customer.Id = this.selectedCustomer_.Id
             console.log("No company changes")
           }
         } else {
