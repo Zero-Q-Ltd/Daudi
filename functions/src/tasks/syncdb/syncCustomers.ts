@@ -18,37 +18,29 @@ export function syncCustomers(qbo: QuickBooks, omcId: string) {
         return getallcustomers(omcId).then(existingcustomers => {
             const customersarray = existingcustomers.docs.map(doc => doc.data() as DaudiCustomer) || [];
             allcustomers.forEach(customer => {
-                /**
-                 * Overwrite sandbox customers that conflict id with live, but ignore sandbox customers that conflict with live
-                 */
-                if (customersarray.find(comp => comp.QbId === customer.Id)) {
-                    console.log('ignoring conflicting company');
-                    return;
+                let co = convertToDaudicustomer(customer, qbo.companyid);
+                if (customersarray.find(company => company.QbId === customer.Id)) {
+                    console.log('updating customer');
+                    batchwrite.update(
+                        firestore()
+                            .collection("omc")
+                            .doc(omcId)
+                            .collection(`customers`)
+                            .doc(co.Id),
+                        co
+                    );
                 } else {
-                    let co = convertToDaudicustomer(customer, qbo.companyid);
-                    if (customersarray.find(company => company.QbId === customer.Id)) {
-                        console.log('updating customer');
-                        batchwrite.update(
-                            firestore()
-                                .collection("omc")
-                                .doc(omcId)
-                                .collection(`customers`)
-                                .doc(co.Id),
-                            co
-                        );
-                    } else {
-                        co = { ...emptyDaudiCustomer, ...co };
-                        console.log('creating company');
-                        // console.log(co);
-                        batchwrite.set(
-                            firestore()
-                                .collection("omc")
-                                .doc(omcId)
-                                .collection(`customers`)
-                                .doc(co.Id),
-                            co
-                        );
-                    }
+                    co = { ...emptyDaudiCustomer, ...co };
+                    console.log('creating company');
+                    // console.log(co);
+                    batchwrite.set(
+                        firestore()
+                            .collection("omc")
+                            .doc(omcId)
+                            .collection(`customers`)
+                            .doc(co.Id),
+                        co
+                    );
                 }
             });
             return batchwrite.commit();
@@ -65,9 +57,12 @@ function convertToDaudicustomer(
         balance: customer.Balance || 0,
         contact: [{
             email: customer.PrimaryEmailAddr
-                ? customer.PrimaryEmailAddr.Address
+                ? customer.PrimaryEmailAddr.Address.toLowerCase()
                 : '',
-            name: customer.DisplayName,
+            /**
+             * Standardise how names are stored in db
+             */
+            name: customer.DisplayName.toUpperCase(),
             /**
              * Only take the last 9 chars of the string, remove all whitespaces
              */
@@ -78,10 +73,11 @@ function convertToDaudicustomer(
                 : ''
         }],
         Active: customer.Active || false,
-        /**
-         * A firebase id cannot contain '/' hence we use it as the separator
-         */
+
         Id: customer.Id || '',
+        /**
+        * Standardise how names are stored in db
+        */
         name: customer.FullyQualifiedName.toUpperCase(),
         QbId: customer.Id || '',
         krapin: customer.Notes ? customer.Notes.substring(0, 13) : '',
