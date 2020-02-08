@@ -17,7 +17,7 @@ export function sendsms(smsdata: SMS, smsid: string) {
   return Promise.all(smsdata.contact.map(contact => {
     return sendMessage(
       "+254" + contact.phone,
-      `${smsdata.greeting} ${smsdata.company.name} ${smsdata.msg}`
+      `${smsdata.greeting} ${capitalizeFirstLetter(smsdata.company.name.toLowerCase)} ${smsdata.msg}`
     ).then(result => {
       return admin
         .firestore()
@@ -28,7 +28,9 @@ export function sendsms(smsdata: SMS, smsid: string) {
   }))
 
 }
-
+function capitalizeFirstLetter(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
 function sendMessage(to: string, message: string) {
   // Build the post string from an}e${    let post_data = querystring.stringify({
   const post_data = querystring.stringify({
