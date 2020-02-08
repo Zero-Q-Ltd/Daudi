@@ -18,38 +18,31 @@ export function syncCustomers(qbo: QuickBooks, omcId: string) {
         return getallcustomers(omcId).then(existingcustomers => {
             const customersarray = existingcustomers.docs.map(doc => doc.data() as DaudiCustomer) || [];
             allcustomers.forEach(customer => {
-                /**
-                 * Overwrite sandbox customers that conflict id with live, but ignore sandbox customers that conflict with live
-                 */
-                if (customersarray.find(comp => comp.QbId === customer.Id)) {
-                    console.log('ignoring conflicting company');
-                    return;
+                let co = convertToDaudicustomer(customer, qbo.companyid);
+                if (customersarray.find(company => company.QbId === customer.Id)) {
+                    console.log('updating customer');
+                    batchwrite.update(
+                        firestore()
+                            .collection("omc")
+                            .doc(omcId)
+                            .collection(`customers`)
+                            .doc(co.Id),
+                        co
+                    );
                 } else {
-                    let co = convertToDaudicustomer(customer, qbo.companyid);
-                    if (customersarray.find(company => company.QbId === customer.Id)) {
-                        console.log('updating customer');
-                        batchwrite.update(
-                            firestore()
-                                .collection("omc")
-                                .doc(omcId)
-                                .collection(`customers`)
-                                .doc(co.Id),
-                            co
-                        );
-                    } else {
-                        co = { ...emptyDaudiCustomer, ...co };
-                        console.log('creating company');
-                        // console.log(co);
-                        batchwrite.set(
-                            firestore()
-                                .collection("omc")
-                                .doc(omcId)
-                                .collection(`customers`)
-                                .doc(co.Id),
-                            co
-                        );
-                    }
+                    co = { ...emptyDaudiCustomer, ...co };
+                    console.log('creating company');
+                    // console.log(co);
+                    batchwrite.set(
+                        firestore()
+                            .collection("omc")
+                            .doc(omcId)
+                            .collection(`customers`)
+                            .doc(co.Id),
+                        co
+                    );
                 }
+
             });
             return batchwrite.commit();
         });
