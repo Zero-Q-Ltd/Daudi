@@ -9,7 +9,6 @@ import { MyTimestamp } from './models/firestore/firestoreTypes';
 import { creteOrder, updateOrder } from './tasks/crud/daudi/Order';
 import { updateCustomer } from './tasks/crud/qbo/customer/update';
 import { createQboOrder } from './tasks/crud/qbo/Order/create';
-import { createQbo } from './tasks/sharedqb';
 import { sendsms } from './tasks/sms/sms';
 import { ordersms } from './tasks/sms/smscompose';
 import { processSync } from './tasks/syncdb/processSync';
@@ -41,8 +40,7 @@ exports.createEstimate = functions.https.onCall((data: OrderCreate, context) => 
   console.log(data)
   return ReadAndInstantiate(data.omcId).then((result) => {
     console.log(result.qbo)
-    const est = new createQboOrder(data.order, result.config)
-    return result.qbo.createEstimate(est.formulate()).then((createResult) => {
+    return result.qbo.createEstimate(new createQboOrder(data.order, result.config).QboOrder).then((createResult) => {
       /**
        * Only send sn SMS when estimate creation is complete
        * Make the two processes run parallel so that none is blocking
@@ -60,8 +58,7 @@ exports.createInvoice = functions.https.onCall((data: OrderCreate, context) => {
   console.log(data)
   return ReadAndInstantiate(data.omcId).then((result) => {
     console.log(result.qbo)
-    const inv = new createQboOrder(data.order, result.config)
-    return result.qbo.createInvoice(inv.formulate()).then((createResult) => {
+    return result.qbo.createInvoice(new createQboOrder(data.order, result.config).QboOrder).then((createResult) => {
       /**
        * Only send sn SMS when invoice creation is complete
        * Make the two processes run parallel so that none is blocking

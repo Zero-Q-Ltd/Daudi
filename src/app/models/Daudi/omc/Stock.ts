@@ -13,9 +13,7 @@ export interface Stock {
       ase: number
     }
   };
-  taxExempt: {
-    [subKey in FuelType]: TaxExempt
-  };
+
 }
 
 export const EmptyOMCStock: Stock = {
@@ -33,9 +31,24 @@ export const EmptyOMCStock: Stock = {
       ase: 0
     }
   },
-  taxExempt: {
-    ago: deepCopy<TaxExempt>(emptytaxExempt),
-    ik: deepCopy<TaxExempt>(emptytaxExempt),
-    pms: deepCopy<TaxExempt>(emptytaxExempt)
-  },
 };
+export function newStock(): Stock {
+  return {
+    ...{
+      qty: {
+        ago: {
+          allocation: 0,
+          ase: 0
+        },
+        ik: {
+          allocation: 0,
+          ase: 0
+        },
+        pms: {
+          allocation: 0,
+          ase: 0
+        }
+      },
+    }
+  }
+}

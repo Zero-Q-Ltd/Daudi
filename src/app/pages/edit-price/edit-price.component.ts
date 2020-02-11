@@ -1,58 +1,56 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/firestore';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialog, MatTableDataSource } from '@angular/material';
-import { ConfirmDialogComponent } from 'app/components/confirm-dialog/confirm-dialog.component';
-import { EmptyStockQty } from 'app/models/Daudi/fuel/StockQty';
-import { EmptyOMCStock, Stock } from 'app/models/Daudi/omc/Stock';
-import { AdminService } from 'app/services/core/admin.service';
-import { CoreService } from 'app/services/core/core.service';
-import { OmcService } from 'app/services/core/omc.service';
-import { PricesService } from 'app/services/prices.service';
-import { BehaviorSubject, ReplaySubject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
-import { Admin, emptyadmin } from '../../models/Daudi/admin/Admin';
-import { Depot, emptydepot } from '../../models/Daudi/depot/Depot';
-import { DepotConfig, emptyDepotConfig } from '../../models/Daudi/depot/DepotConfig';
-import { Price } from '../../models/Daudi/depot/Price';
-import { FuelNamesArray, FuelType } from '../../models/Daudi/fuel/FuelType';
-import { AdminConfig, emptyConfig } from '../../models/Daudi/omc/AdminConfig';
-import { OMC } from '../../models/Daudi/omc/OMC';
-import { AvgPrice } from '../../models/Daudi/price/AvgPrice';
-import { NotificationService } from '../../shared/services/notification.service';
+import { Component, OnDestroy, OnInit } from "@angular/core";
+import { AngularFirestore } from "@angular/fire/firestore";
+import { FormControl, FormGroup, Validators } from "@angular/forms";
+import { MatDialog, MatTableDataSource } from "@angular/material";
+import { ConfirmDialogComponent } from "app/components/confirm-dialog/confirm-dialog.component";
+import { EmptyOMCStock, Stock } from "app/models/Daudi/omc/Stock";
+import { AdminService } from "app/services/core/admin.service";
+import { CoreService } from "app/services/core/core.service";
+import { OmcService } from "app/services/core/omc.service";
+import { PricesService } from "app/services/prices.service";
+import { ReplaySubject } from "rxjs";
+import { takeUntil } from "rxjs/operators";
+import { Admin, emptyadmin } from "../../models/Daudi/admin/Admin";
+import { Depot, emptydepot } from "../../models/Daudi/depot/Depot";
+import { DepotConfig, emptyDepotConfig } from "../../models/Daudi/depot/DepotConfig";
+import { Price } from "../../models/Daudi/depot/Price";
+import { FuelNamesArray, FuelType } from "../../models/Daudi/fuel/FuelType";
+import { OMC } from "../../models/Daudi/omc/OMC";
+import { AvgPrice } from "../../models/Daudi/price/AvgPrice";
+import { NotificationService } from "../../shared/services/notification.service";
 
 @Component({
   selector: 'edit-price',
-  templateUrl: './edit-price.component.html',
-  styleUrls: ['./edit-price.component.scss']
+  templateUrl: "./edit-price.component.html",
+  styleUrls: ["./edit-price.component.scss"]
 })
 
 export class EditPriceComponent implements OnInit, OnDestroy {
-  position = 'above';
-  position2 = 'left';
-  position3 = 'right';
+  position = "above";
+  position2 = "left";
+  position3 = "right";
 
   activedepot: { depot: Depot, config: DepotConfig } = { depot: { ...emptydepot }, config: { ...emptyDepotConfig } };
   spPricesform: FormGroup = new FormGroup({
-    pms: new FormControl('', []),
-    ago: new FormControl('', []),
-    ik: new FormControl('', [])
+    pms: new FormControl("", []),
+    ago: new FormControl("", []),
+    ik: new FormControl("", [])
   });
 
   avgpricesform: FormGroup = new FormGroup({
-    pms: new FormControl('', [Validators.required, Validators.min(40)]),
-    ago: new FormControl('', [Validators.required, Validators.min(40)]),
-    ik: new FormControl('', [Validators.required, Validators.min(40)]),
+    pms: new FormControl("", [Validators.required, Validators.min(40)]),
+    ago: new FormControl("", [Validators.required, Validators.min(40)]),
+    ik: new FormControl("", [Validators.required, Validators.min(40)]),
   });
   taxconfigform: FormGroup = new FormGroup({
-    pms: new FormControl('', []),
-    ago: new FormControl('', []),
-    ik: new FormControl('', [])
+    pms: new FormControl("", [Validators.required, Validators.min(20)]),
+    ago: new FormControl("", [Validators.required, Validators.min(20)]),
+    ik: new FormControl("", [Validators.required, Validators.min(20)])
   });
   fueltypesArray = FuelNamesArray;
   saving = false;
   depotsdataSource = new MatTableDataSource<Depot>();
-  priceColumns = ['depot', 'pms_price', 'pms_avgprice', 'ago_price', 'ago_avgprice', 'ik_price', 'ik_avgprice'];
+  priceColumns = ["depot", "pms_price", "pms_avgprice", "ago_price", "ago_avgprice", "ik_price", "ik_avgprice"];
   userdata: Admin = Object.assign({}, { ...emptyadmin });
   omcs: OMC[] = [];
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
@@ -62,25 +60,25 @@ export class EditPriceComponent implements OnInit, OnDestroy {
 
   avgprices: {
     [key in FuelType]: {
-      total: BehaviorSubject<number>,
-      avg: BehaviorSubject<number>,
-      prices: BehaviorSubject<Price[]>
+      total: number,
+      avg: number,
+      prices: Price[]
     }
   } = {
       pms: {
-        total: new BehaviorSubject<number>(0),
-        avg: new BehaviorSubject<number>(0),
-        prices: new BehaviorSubject<Price[]>([])
+        total: 0,
+        avg: 0,
+        prices: []
       },
       ago: {
-        total: new BehaviorSubject<number>(0),
-        avg: new BehaviorSubject<number>(0),
-        prices: new BehaviorSubject<Price[]>([])
+        total: 0,
+        avg: 0,
+        prices: []
       },
       ik: {
-        total: new BehaviorSubject<number>(0),
-        avg: new BehaviorSubject<number>(0),
-        prices: new BehaviorSubject<Price[]>([])
+        total: 0,
+        avg: 0,
+        prices: []
       }
     };
 
@@ -108,6 +106,11 @@ export class EditPriceComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.comopnentDestroyed))
       .subscribe(stock => {
         this.stock = stock;
+        this.taxconfigform.setValue({
+          pms: stock.taxExempt.pms,
+          ago: stock.taxExempt.ago,
+          ik: stock.taxExempt.ik
+        })
       });
 
     this.core.activedepot
@@ -118,7 +121,7 @@ export class EditPriceComponent implements OnInit, OnDestroy {
         // this.spPricesform.controls.ago.setValidators(Validators.compose([Validators.min(this.activedepot.minpriceconfig.ago.price)]));
         // this.spPricesform.controls.ik.setValidators(Validators.compose([Validators.min(this.activedepot.minpriceconfig.ik.price)]));
         this.activedepot = depot;
-        this.taxconfigform.disable();
+        // this.taxconfigform.disable();
         // this.fueltypesArray.forEach(fueltyp => {
         //   this.avgprices[fueltyp].total
         //     .pipe(takeUntil(this.comopnentDestroyed))
@@ -157,7 +160,7 @@ export class EditPriceComponent implements OnInit, OnDestroy {
       this.saving = true;
       const dialogRef = this.dialog.open(ConfirmDialogComponent,
         {
-          role: 'dialog',
+          role: "dialog",
           data: `Are you sure you want to set ${this.spPricesform.controls[fueltype].value} as the current ${fueltype} price in ${this.activedepot.depot.Name}?`
         });
       dialogRef.afterClosed()
@@ -188,8 +191,8 @@ export class EditPriceComponent implements OnInit, OnDestroy {
             this.saving = false;
             this.notificationService.notify({
               body: `Changes discarded`,
-              title: '',
-              alert_type: 'warning'
+              title: "",
+              alert_type: "warning"
             });
           }
         });
@@ -203,7 +206,7 @@ export class EditPriceComponent implements OnInit, OnDestroy {
       this.saving = false;
       return this.notificationService.notify({
         body: `Please select OMC first`,
-        alert_type: 'error',
+        alert_type: "error",
         title: `Error`
       });
     } else {
@@ -224,7 +227,7 @@ export class EditPriceComponent implements OnInit, OnDestroy {
           this.notificationService.notify({
             body: `${fueltype} in ${this.activedepot.depot.Name} Added`,
             title: `Success`,
-            alert_type: 'success'
+            alert_type: "success"
           });
         });
         // this.firestore
@@ -232,7 +235,7 @@ export class EditPriceComponent implements OnInit, OnDestroy {
         this.saving = false;
         this.notificationService.notify({
           body: `Ivalid ${fueltype} Price`,
-          alert_type: 'error',
+          alert_type: "error",
           title: `Error`
         });
       }
@@ -245,7 +248,7 @@ export class EditPriceComponent implements OnInit, OnDestroy {
       this.saving = false;
       this.notificationService.notify({
         body: `${price.fueltytype} in ${this.activedepot.depot.Name} Deleted`,
-        alert_type: 'success',
+        alert_type: "success",
         title: `Success`
       });
     });
