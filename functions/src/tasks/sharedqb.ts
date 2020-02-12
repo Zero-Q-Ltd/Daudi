@@ -1,10 +1,9 @@
+import { firestore } from "firebase-admin";
 import * as moment from "moment";
 import { QbApiConfig, QuickBooks } from "../libs/qbmain"; // quickbooks sdk
-import { firestore } from "firebase-admin";
-import { QboCofig } from "../models/Cloud/QboEnvironment";
 import { AuthConfig } from "../models/Cloud/QboAuthConfig";
-import { configCollection, updateConfig } from "./crud/daudi/QboConfig";
-import { OAuthClient } from 'intuit-oauth';
+import { QboCofig } from "../models/Cloud/QboEnvironment";
+import { updateConfig } from "./crud/daudi/QboConfig";
 
 export function createQbo(omcId: string, config: QboCofig, useSandbox: boolean): Promise<QuickBooks> {
   const apiconfig: QbApiConfig = {
@@ -17,18 +16,13 @@ export function createQbo(omcId: string, config: QboCofig, useSandbox: boolean):
     token: config.auth.authConfig.accessToken,
     useSandbox
   }
-  const client = new OAuthClient({
-    clientId: '<Enter your clientId>',
-    clientSecret: '<Enter your clientSecret>',
-    environment: 'sandbox',
-    redirectUri: '<http://localhost:8000/callback>'
-  });
 
   const qbo = new QuickBooks(apiconfig);
   /**
    * Access tokens expire after an hour
    */
-  if (moment().isAfter(moment(config.auth.authConfig.createdAt).add(1, 'hour'))) {
+  // if (moment().isAfter(moment(config.auth.authConfig.createdAt).add(1, 'hour'))) {
+  if (true) {
     console.log("expired token");
     // console.log(apiconfig);
     return qbo.refreshAccesstoken().then(result => {
