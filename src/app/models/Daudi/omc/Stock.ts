@@ -1,6 +1,6 @@
-import { FuelType } from '../fuel/FuelType';
-import { TaxExempt, emptytaxExempt } from './TaxExempt';
-import { deepCopy } from '../../../../../functions/src/models/utils/deepCopy';
+import { deepCopy } from "../../../../../functions/src/models/utils/deepCopy";
+import { FuelType } from "../fuel/FuelType";
+import { emptytaxExempt, TaxExempt } from "./TaxExempt";
 
 export interface Stock {
   qty: {
@@ -62,5 +62,5 @@ export function newStock(): Stock {
       ik: deepCopy<TaxExempt>(emptytaxExempt),
       pms: deepCopy<TaxExempt>(emptytaxExempt)
     },
-  }
+  };
 }
