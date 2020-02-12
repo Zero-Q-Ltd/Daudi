@@ -29,11 +29,8 @@ export const emptyqboAuth: QBOAuthCOnfig = {
   clientSecret: '',
   webhooksVerifier: '',
   authConfig: {
-    previousDCT: MyTimestamp.fromDate(new Date()),
     accessToken: '',
     refreshToken: '',
-    accesstokenExpiry: MyTimestamp.fromDate(new Date()),
-    refreshtokenExpiry: MyTimestamp.fromDate(new Date()),
     createdAt: MyTimestamp.fromDate(new Date())
   }
 };

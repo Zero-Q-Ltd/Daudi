@@ -19,6 +19,7 @@ import { sendsms } from './tasks/sms/sms';
 import { ordersms } from './tasks/sms/smscompose';
 import { processSync } from './tasks/syncdb/processSync';
 import { validorderupdate } from './validators/orderupdate';
+import { createQbo } from "./tasks/sharedqb";
 
 admin.initializeApp(functions.config().firebase);
 admin.firestore().settings({ timestampsInSnapshots: true });

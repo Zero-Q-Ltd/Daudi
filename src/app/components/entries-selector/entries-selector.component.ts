@@ -449,7 +449,11 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
             batchaction.update(this.entriesService.entryCollection(this.core.currentOmc.value.Id)
               .doc(this.depotEntries[fueltype][0].Id), this.depotEntries[fueltype][0]);
             this.stock.qty[fueltype].ase -= this.order.fuel[fueltype].qty;
-            batchaction.update(this.stockService.stockDoc(this.core.currentOmc.value.Id, this.core.activedepot.value.depot.Id), this.stock);
+            batchaction.update(
+              this.stockService.stockDoc(
+                this.core.currentOmc.value.Id,
+                this.core.activedepot.value.depot.Id,
+                this.core.activedepot.value.depot.config.private), this.stock);
 
           }
         }

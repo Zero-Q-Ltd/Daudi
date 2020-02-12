@@ -120,7 +120,7 @@ export class CoreService {
     this.activedepot.pipe(skipWhile(t => !t.depot.Id)).subscribe((t) => {
       this.getOrdersPipeline(t.depot.Id);
       this.fetchActiveEntries();
-      this.getStocks(t.depot.Id, t.depot.config.private);
+      this.getStocks();
     });
   }
 
@@ -142,13 +142,18 @@ export class CoreService {
    * @param depotId 
    * @param private Whether 
    */
-  getStocks(depotId: string, kpc: boolean) {
+  getStocks() {
     this.loaders.stock.next(true);
-    this.subscriptions.set("stock", this.stockService.stockDoc(this.omcId, depotId)
-      .onSnapshot(t => {
-        this.stock.next(toObject(EmptyOMCStock, t));
-        this.loaders.stock.next(false);
-      }));
+    this.subscriptions.set("stock",
+      this.stockService.stockDoc(
+        this.currentOmc.value.Id,
+        this.activedepot.value.depot.Id,
+        this.activedepot.value.depot.config.private
+      )
+        .onSnapshot(t => {
+          this.stock.next(toObject(EmptyOMCStock, t));
+          this.loaders.stock.next(false);
+        }));
   }
 
   /**
