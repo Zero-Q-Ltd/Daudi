@@ -70,8 +70,19 @@ export class EntriesComponent implements OnInit {
           /**
            * Create a subscrition for 1000 batches history
            */
-          const subscription = this.entriesService.entryCollection(this.core.currentOmc.value.Id)
+
+          let queryvalue = this.entriesService.entryCollection(this.core.omcId)
+            .where("active", "==", true)
             .where('fuelType', '==', fueltype)
+          /**
+           * Filter by depot if its a privtae depot
+           */
+          if (this.core.activedepot.value.depot.config.private) {
+            queryvalue = queryvalue.where("depot.Id", "==", this.core.activedepot.value.depot.Id);
+          } else {
+            queryvalue = queryvalue.where("depot.Id", "==", null);
+          }
+          const subscription = queryvalue
             .limit(100)
             .onSnapshot(snapshot => {
               this.loading[fueltype] = false;

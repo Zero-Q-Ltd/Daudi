@@ -343,6 +343,8 @@ export class CoreService {
        */
       if (this.activedepot.value.depot.config.private) {
         queryvalue = queryvalue.where("depot.Id", "==", this.activedepot.value.depot.Id);
+      } else {
+        queryvalue = queryvalue.where("depot.Id", "==", null);
       }
       this.subscriptions.set("entries", queryvalue
         .onSnapshot(data => {
