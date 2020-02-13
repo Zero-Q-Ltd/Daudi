@@ -1,16 +1,18 @@
 import { Component, Inject, OnInit } from "@angular/core";
 import { AngularFirestore } from "@angular/fire/firestore";
-import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material";
+import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material";
 import { Entry, EntryDraw } from "app/models/Daudi/fuel/Entry";
 import { FuelNamesArray, FuelType } from "app/models/Daudi/fuel/FuelType";
 import { newStock, Stock } from "app/models/Daudi/omc/Stock";
 import { emptyorder, Order } from "app/models/Daudi/order/Order";
 import { deepCopy } from "app/models/utils/deepCopy";
+import { AdminService } from "app/services/core/admin.service";
 import { CoreService } from "app/services/core/core.service";
+import { StocksService } from "app/services/core/stocks.service";
+import { EntriesService } from "app/services/entries.service";
 import { OrdersService } from "app/services/orders.service";
 import { NotificationService } from "app/shared/services/notification.service";
-import { EntriesService } from 'app/services/entries.service';
-import { StocksService } from 'app/services/core/stocks.service';
+import * as moment from "moment";
 
 @Component({
   templateUrl: "./entry-assign.component.html",
@@ -59,7 +61,8 @@ export class EntryAssignComponent implements OnInit {
     private ordersservice: OrdersService,
     private db: AngularFirestore,
     private stockService: StocksService,
-    private entriesService: EntriesService
+    private entriesService: EntriesService,
+    private adminservice: AdminService
   ) {
     this.core.stock.subscribe(stock => {
       this.stock = stock;
@@ -113,7 +116,7 @@ export class EntryAssignComponent implements OnInit {
     this.saving = true;
     const batchaction = this.db.firestore.batch();
     let batchesNumberError = false;
-    const temporder = deepCopy(this.order)
+    const temporder = deepCopy(this.order);
 
     const tempStock = this.stock;
     FuelNamesArray.forEach(fuel => {
@@ -123,7 +126,7 @@ export class EntryAssignComponent implements OnInit {
       /**
        * Update stock quantities
        */
-      tempStock.qty[fuel].ase -= this.order.fuel[fuel].qty
+      tempStock.qty[fuel].ase -= this.order.fuel[fuel].qty;
       /**
        * Update entries
        */
@@ -139,8 +142,16 @@ export class EntryAssignComponent implements OnInit {
           observed: 0,
           qty: entry.qtyDrawn
         };
-        temporder.stage = 4
-        temporder.truck.stage = 1
+        temporder.stage = 4;
+        temporder.truck.stage = 1;
+        temporder.truckStageData[1] = {
+          expiry: [{
+            expiry: moment().add(45, "minutes").toDate(),
+            timeCreated: moment().toDate(),
+            user: this.adminservice.createUserObject()
+          }],
+          user: this.adminservice.createUserObject()
+        };
         /**
          * Update the relevant entries
          */
@@ -176,7 +187,7 @@ export class EntryAssignComponent implements OnInit {
           body: `Truck Approved`
         });
         this.dialogRef.close();
-      })
+      });
     }
   }
 

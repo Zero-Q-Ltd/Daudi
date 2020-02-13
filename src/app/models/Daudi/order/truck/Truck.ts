@@ -5,7 +5,7 @@ import { TruckStages } from './TruckStages';
 
 export interface Expiry {
   timeCreated: Date;
-  expiry: MyTimestamp;
+  expiry: Date;
   user: AssociatedUser;
 }
 

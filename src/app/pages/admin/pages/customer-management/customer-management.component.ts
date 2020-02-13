@@ -1,19 +1,19 @@
-import {SelectionModel} from '@angular/cdk/collections';
-import {Component, Inject, OnDestroy, OnInit, Optional, ViewChild} from '@angular/core';
-import {AngularFireFunctions} from '@angular/fire/functions';
-import {MAT_DIALOG_DATA, MatDialog, MatDialogRef, MatPaginator, MatSnackBar, MatSort, MatTableDataSource} from '@angular/material';
-import {SendMsgComponent} from 'app/components/send-msg/send-msg.component';
-import {AdminService} from 'app/services/core/admin.service';
-import {CoreService} from 'app/services/core/core.service';
-import {CustomerService} from 'app/services/customers.service';
-import {ReplaySubject} from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
-import {DaudiCustomer} from '../../../../models/Daudi/customer/Customer';
-import {SMS} from '../../../../models/Daudi/sms/sms';
-import {MyTimestamp} from '../../../../models/firestore/firestoreTypes';
-import {NotificationService} from '../../../../shared/services/notification.service';
-import {CoreAdminService} from '../../services/core.service';
-import {CompanyMembersComponent} from '../company-members/company-members.component';
+import { SelectionModel } from '@angular/cdk/collections';
+import { Component, Inject, OnDestroy, OnInit, Optional, ViewChild } from '@angular/core';
+import { AngularFireFunctions } from '@angular/fire/functions';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef, MatPaginator, MatSnackBar, MatSort, MatTableDataSource } from '@angular/material';
+import { SendMsgComponent } from 'app/components/send-msg/send-msg.component';
+import { AdminService } from 'app/services/core/admin.service';
+import { CoreService } from 'app/services/core/core.service';
+import { CustomerService } from 'app/services/customers.service';
+import { ReplaySubject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { DaudiCustomer } from '../../../../models/Daudi/customer/Customer';
+import { SMS } from '../../../../models/Daudi/sms/sms';
+import { MyTimestamp } from '../../../../models/firestore/firestoreTypes';
+import { NotificationService } from '../../../../shared/services/notification.service';
+import { CoreAdminService } from '../../services/core.service';
+import { CompanyMembersComponent } from '../company-members/company-members.component';
 
 @Component({
   selector: 'customer-management',
@@ -26,8 +26,8 @@ export class CustomerManagementComponent implements OnInit, OnDestroy {
   dialogProperties: object = {};
   displayedColumns: string[] = ['select', 'QbId', 'name', 'email', 'phone', 'krapin', 'balance'];
   companiesdatasource = new MatTableDataSource<DaudiCustomer>();
-  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
-  @ViewChild(MatSort, {static: true}) sort: MatSort;
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
   creatingsync = false;
   selection = new SelectionModel<DaudiCustomer>(true, []);
   loadingcompanies = true;
@@ -183,7 +183,7 @@ export class CustomerManagementComponent implements OnInit, OnDestroy {
         if (snapshot.empty) {
           company.kraverified = {
             status: true,
-            user: this.adminservice.createuserobject()
+            user: this.adminservice.createUserObject()
           };
           this.customerservice.updateCustomer(company, this.core.currentOmc.value.Id).then(() => {
             this.savingcompany = false;
@@ -210,7 +210,7 @@ export class CustomerManagementComponent implements OnInit, OnDestroy {
     if (company.kraverified.status === undefined) {
       company.kraverified = {
         status: true,
-        user: this.adminservice.createuserobject()
+        user: this.adminservice.createUserObject()
       };
     } else {
       company.kraverified.status = !company.kraverified;
@@ -219,7 +219,7 @@ export class CustomerManagementComponent implements OnInit, OnDestroy {
     // company.verifiedByUser = this.authService.getUser().displayName;
     // update company
     // this.updateCompanies(company.$key, company)
-    this.snackBar.open('Company details updated!', 'Emkay Now ', {duration: 4000});
+    this.snackBar.open('Company details updated!', 'Emkay Now ', { duration: 4000 });
 
   }
 
@@ -227,6 +227,6 @@ export class CustomerManagementComponent implements OnInit, OnDestroy {
     console.log(company);
     // update company
     // this.updateCompanies(company.$key, company)
-    this.snackBar.open('Company details updated!', 'Emkay Now ', {duration: 4000});
+    this.snackBar.open('Company details updated!', 'Emkay Now ', { duration: 4000 });
   }
 }

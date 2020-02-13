@@ -203,9 +203,9 @@ export class CreateOrderComponent implements OnDestroy {
     this.temporder.origin = 'backend';
     this.temporder.QbConfig.departmentId = this.activedepot.config.QbId;
     console.log(this.temporder);
-    this.temporder.customer.krapin = this.temporder.customer.krapin.toLocaleUpperCase();
+    this.temporder.customer.krapin = this.temporder.customer.krapin.toUpperCase();
     this.temporder.orderStageData['1'] = {
-      user: this.adminservice.createuserobject(),
+      user: this.adminservice.createUserObject(),
     };
     this.temporder.config = {
       depot: {

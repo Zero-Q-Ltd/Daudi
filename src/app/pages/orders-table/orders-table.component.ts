@@ -227,7 +227,7 @@ export class OrdersTableComponent implements OnInit, OnDestroy {
       if (result) {
         order.stage = 6;
         order.orderStageData["6"] = {} as any;
-        order.orderStageData["6"].user = this.adminservice.createuserobject();
+        order.orderStageData["6"].user = this.adminservice.createUserObject();
         // order.stagedata["6"].data = { reason: result };
 
         this.orderservice.updateorder(order.Id, this.core.currentOmc.value.Id, order).then(result => {

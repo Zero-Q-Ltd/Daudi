@@ -169,7 +169,7 @@ export class EditPriceComponent implements OnInit, OnDestroy {
           if (result) {
             const batchaction = this.db.firestore.batch();
             const tempprice: Price = {
-              user: this.adminservice.createuserobject(),
+              user: this.adminservice.createUserObject(),
               price: this.spPricesform.controls[fueltype].value,
               fueltytype: fueltype,
               depotId: this.activedepot.depot.Id,
@@ -214,7 +214,7 @@ export class EditPriceComponent implements OnInit, OnDestroy {
 
         const batchaction = this.db.firestore.batch();
         const tempprice: AvgPrice = {
-          user: this.adminservice.createuserobject(),
+          user: this.adminservice.createUserObject(),
           price: this.avgpricesform.controls[fueltype].value,
           fueltytype: fueltype,
           Id: null,

@@ -328,12 +328,12 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
 
     if (!HasError) {
       const data: GenericTruckStage = {
-        user: this.adminservice.createuserobject(),
+        user: this.adminservice.createUserObject(),
         expiry: [
           {
             timeCreated: new Date(),
-            expiry: MyTimestamp.fromDate(moment().add(45, "minutes").toDate()),
-            user: this.adminservice.createuserobject()
+            expiry: moment().add(45, "minutes").toDate(),
+            user: this.adminservice.createUserObject()
           }],
       };
       this.order.stage = 4;
