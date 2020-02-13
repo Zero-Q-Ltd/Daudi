@@ -14,6 +14,7 @@ import { ReplaySubject } from 'rxjs';
 import { debounceTime, delay, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { Depot } from '../../../../../../models/Daudi/depot/Depot';
 import { FuelType } from '../../../../../../models/Daudi/fuel/FuelType';
+import { StocksService } from 'app/services/core/stocks.service';
 
 @Component({
     selector: 'app-transfer',
@@ -44,6 +45,7 @@ export class TransferComponent implements OnInit, OnDestroy {
         private db: AngularFirestore,
         private entriesService: EntriesService,
         private depotService: DepotService,
+        private stockService: StocksService,
         private core: CoreService) {
         this.core.depots.pipe(takeUntil(this.comopnentDestroyed)).subscribe(depots => {
             /**
@@ -131,10 +133,8 @@ export class TransferComponent implements OnInit, OnDestroy {
             batchaction.set(this.entriesService.entryCollection(this.core.currentOmc.value.Id).doc(newEntryId),
                 newEntry);
         });
-        /**
-         *@todo Update the destination depot quantities
-         */
-        //this.selectedDepot.config.stock[this.fuelType] += this.qtyToDrawControl.value;
+
+        // this.selectedDepot.config.stock[this.fuelType] += this.qtyToDrawControl.value;
         if (this.selectedDepot.config.initialised) {
             batchaction.update(this.depotService.depotConfigDoc(this.core.omcId, this.selectedDepot.depot.Id), this.selectedDepot.config);
         } else {
@@ -145,9 +145,20 @@ export class TransferComponent implements OnInit, OnDestroy {
          * Update the originating depot quantities
          */
         const tempDepotVal = deepCopy(this.core.activedepot.value.config);
-        //tempDepotVal.stock[this.fuelType] -= this.qtyToDrawControl.value;
+
+        // tempDepotVal.stock[this.fuelType] -= this.qtyToDrawControl.value;
         batchaction.update(this.depotService.depotConfigDoc(this.core.omcId, tempDepotVal.Id), tempDepotVal);
 
+        /**
+         * Update Ase quantities in the originating depot
+         * We are sure that the oriogin is a KPc depot
+         */
+        const tempStockVal = deepCopy(this.core.stock);
+        batchaction.update(
+            this.stockService.stockDoc(this.core.omcId,
+                this.core.activedepot.value.depot.Id,
+                this.core.activedepot.value.depot.config.private)
+            , tempStockVal);
         /**
          * submit... Phew... I know
          * But finally, we're here
