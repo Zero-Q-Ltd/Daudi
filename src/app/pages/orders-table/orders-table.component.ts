@@ -20,6 +20,7 @@ import { Truck } from "../../models/Daudi/order/truck/Truck";
 import { SMS } from "../../models/Daudi/sms/sms";
 import { MyTimestamp } from "../../models/firestore/firestoreTypes";
 import { NotificationService } from "../../shared/services/notification.service";
+import { ConfirmDialogComponent } from 'app/components/confirm-dialog/confirm-dialog.component';
 
 const EXCEL_TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
 const EXCEL_EXTENSION = ".xlsx";
@@ -54,7 +55,7 @@ export class OrdersTableComponent implements OnInit, OnDestroy {
   position3 = "below";
   ordersdataSource = new MatTableDataSource<Order>();
   stage = 0;
-  ordercolumns = ["Id", "Company", "Contact", "Time", "User", "Phone", "PMS", "AGO", "IK", "Total", "Action"];
+  ordercolumns = ["Id", "Company", "Contact", "Time", "User", "Phone", "PMS", "AGO", "IK", "Total", "Action", 'Frozen'];
   loadingtruck = true;
   clickedtruck: Truck;
   expandedElement = null;
@@ -150,6 +151,30 @@ export class OrdersTableComponent implements OnInit, OnDestroy {
       role: "dialog",
       data: sms,
       height: "auto"
+    });
+  }
+
+  /**
+   *
+   * @param truck
+   */
+  freezeOrder(order: Order) {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent,
+      {
+        role: 'dialog',
+        data: order.frozen ? 'Are you sure you want to restore to normal?' : 'Freeze this Order? This will disable any modifications'
+      });
+    dialogRef.afterClosed().pipe(takeUntil(this.comopnentDestroyed)).subscribe(result => {
+      if (result) {
+        this.orderservice.updateorder(order.Id, this.core.currentOmc.value.Id, order).then(value => {
+          this.notification.notify({
+            body: 'Saved',
+            alert_type: 'success',
+            title: 'Success',
+            duration: 2000
+          });
+        });
+      }
     });
   }
 
