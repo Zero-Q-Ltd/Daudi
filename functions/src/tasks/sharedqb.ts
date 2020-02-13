@@ -21,8 +21,8 @@ export function createQbo(omcId: string, config: QboCofig, useSandbox: boolean):
   /**
    * Access tokens expire after an hour
    */
-  // if (moment().isAfter(moment(config.auth.authConfig.createdAt).add(1, 'hour'))) {
-  if (true) {
+  if (moment().isAfter(moment(config.auth.authConfig.createdAt).add(1, 'hour'))) {
+    // if (true) {
     console.log("expired token");
     // console.log(apiconfig);
     return qbo.refreshAccesstoken().then(result => {

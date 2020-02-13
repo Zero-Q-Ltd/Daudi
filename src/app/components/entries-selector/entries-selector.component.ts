@@ -331,7 +331,7 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
         user: this.adminservice.createuserobject(),
         expiry: [
           {
-            timeCreated: MyTimestamp.now(),
+            timeCreated: new Date(),
             expiry: MyTimestamp.fromDate(moment().add(45, 'minutes').toDate()),
             user: this.adminservice.createuserobject()
           }],

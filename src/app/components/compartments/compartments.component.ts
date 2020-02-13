@@ -1,16 +1,16 @@
-import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
-import {FormControl, Validators} from '@angular/forms';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material'; // added dialog data
-import {ReplaySubject} from 'rxjs';
-import {FuelNamesArray, FuelType} from '../../models/Daudi/fuel/FuelType';
-import {EmptyGenericTruckStage} from '../../models/Daudi/order/GenericStage';
-import {Order} from '../../models/Daudi/order/Order';
-import {deepCopy} from '../../models/utils/deepCopy';
-import {AdminService} from '../../services/core/admin.service';
-import {DepotService} from '../../services/core/depot.service';
-import {OrdersService} from '../../services/orders.service';
-import {NotificationService} from '../../shared/services/notification.service';
-import {OrderDetailsComponent} from '../order-details/order-details.component';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { FormControl, Validators } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material'; // added dialog data
+import { ReplaySubject } from 'rxjs';
+import { FuelNamesArray, FuelType } from '../../models/Daudi/fuel/FuelType';
+import { EmptyGenericTruckStage } from '../../models/Daudi/order/GenericStage';
+import { Order } from '../../models/Daudi/order/Order';
+import { deepCopy } from '../../models/utils/deepCopy';
+import { AdminService } from '../../services/core/admin.service';
+import { DepotService } from '../../services/core/depot.service';
+import { OrdersService } from '../../services/orders.service';
+import { NotificationService } from '../../shared/services/notification.service';
+import { OrderDetailsComponent } from '../order-details/order-details.component';
 
 @Component({
   selector: 'compartments',
@@ -38,10 +38,10 @@ export class CompartmentsComponent implements OnInit, OnDestroy {
   temporaryQuantities: {
     [key in FuelType]: number
   } = {
-    ago: 0,
-    ik: 0,
-    pms: 0
-  };
+      ago: 0,
+      ik: 0,
+      pms: 0
+    };
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
   /**
    * We dont want to mutate the original order data sent from the table
@@ -134,14 +134,18 @@ export class CompartmentsComponent implements OnInit, OnDestroy {
     if (errorcheck) {
       return false;
     } else {
-      this.order.truckStageData[0] = {...EmptyGenericTruckStage};
-      this.order.truckStageData[0].expiry[0].user = this.adminservice.createuserobject();
+      this.order.truckStageData[0] = { ...EmptyGenericTruckStage };
+      this.order.truckStageData[0].expiry[0] = {
+        expiry: null,
+        user: this.adminservice.createuserobject(),
+        timeCreated: null
+      };
       this.order.truck.truckdetail.numberplate = this.order.truck.truckdetail.numberplate ? this.order.truck.truckdetail.numberplate.toUpperCase() : null;
       this.order.truck.driverdetail.name = this.order.truck.driverdetail.name ? this.order.truck.driverdetail.name.toUpperCase() : null;
 
       this.order.truck.stage = 0;
       this.order.loaded = true;
-      return this.dialogRef.close({order: this.order, truck: this.order.truck});
+      return this.dialogRef.close({ order: this.order, truck: this.order.truck });
     }
   }
 

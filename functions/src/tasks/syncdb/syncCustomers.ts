@@ -18,7 +18,7 @@ export function syncCustomers(qbo: QuickBooks, omcId: string) {
         return getallcustomers(omcId).then(existingcustomers => {
             const customersarray = existingcustomers.docs.map(doc => doc.data() as DaudiCustomer) || [];
             allcustomers.forEach(customer => {
-                let co = convertToDaudicustomer(customer, qbo.companyid);
+                let co = convertToDaudicustomer(customer);
                 if (customersarray.find(company => company.QbId === customer.Id)) {
                     console.log('updating customer');
                     batchwrite.update(
@@ -50,7 +50,6 @@ export function syncCustomers(qbo: QuickBooks, omcId: string) {
 
 function convertToDaudicustomer(
     customer: Customer,
-    companyid: string
 ): DaudiCustomer {
     let daudicompany: DaudiCustomer;
     daudicompany = {

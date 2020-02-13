@@ -1,9 +1,9 @@
-import {MyTimestamp} from '../../../firestore/firestoreTypes';
-import {AssociatedUser} from '../../admin/AssociatedUser';
-import {Compartment} from './Compartment';
+import { MyTimestamp } from '../../../firestore/firestoreTypes';
+import { AssociatedUser } from '../../admin/AssociatedUser';
+import { Compartment } from './Compartment';
 
 export interface Expiry {
-  timeCreated: MyTimestamp;
+  timeCreated: Date;
   expiry: MyTimestamp;
   user: AssociatedUser;
 }

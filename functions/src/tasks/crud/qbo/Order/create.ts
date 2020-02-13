@@ -102,7 +102,7 @@ export class createQboOrder {
             TxnTaxDetail: {
                 TotalTax: order.fuel.pms.priceconfig.taxAmnt + order.fuel.ago.priceconfig.taxAmnt + order.fuel.ik.priceconfig.taxAmnt,
                 TxnTaxCodeRef: {
-                    value: "TAX"
+                    value: this.config.taxConfig.taxCode.Id
                 },
                 TaxLine: [{
                     Amount: (order.fuel.pms.priceconfig.taxAmnt + order.fuel.ago.priceconfig.taxAmnt + order.fuel.ik.priceconfig.taxAmnt),

@@ -25,7 +25,7 @@ export function updateConfig(omcId: string, config: QboCofig) {
     return configCollection(omcId)
         .update(config)
 }
-export function ReadAndInstantiate(omcId) {
+export function ReadAndInstantiate(omcId): Promise<{ config: QboCofig, qbo: QuickBooks }> {
     return new Promise<{ config: QboCofig, qbo: QuickBooks }>((resolve, reject) => {
         return readQboConfig(omcId).then(async snapshot => {
             const config = toObject(EmptyQboConfig, snapshot)

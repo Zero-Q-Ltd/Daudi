@@ -39,6 +39,8 @@ function markAsRunning(eventID: string) {
  */
 exports.createEstimate = functions.https.onCall((data: OrderCreate, context) => {
   console.log(data)
+  return creteOrder(data.order, data.omcId)
+
   return ReadAndInstantiate(data.omcId).then((result) => {
     console.log(result.qbo)
     return result.qbo.createEstimate(new createQboOrder(data.order, result.config).QboOrder).then((createResult) => {

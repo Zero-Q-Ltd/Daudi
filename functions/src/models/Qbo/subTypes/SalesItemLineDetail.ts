@@ -1,5 +1,5 @@
-import {TaxCodeRef} from "./TaxCodeRef";
-import {ItemRef} from "./ItemRef";
+import { TaxCodeRef } from "./TaxCodeRef";
+import { ItemRef } from "./ItemRef";
 
 export interface SalesItemLineDetail {
     TaxCodeRef: TaxCodeRef;
