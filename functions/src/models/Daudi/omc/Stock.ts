@@ -1,6 +1,6 @@
-import { deepCopy } from '../../utils/deepCopy';
-import { FuelType } from '../fuel/FuelType';
-import { emptytaxExempt, TaxExempt } from './TaxExempt';
+import { deepCopy } from "../../../../../functions/src/models/utils/deepCopy";
+import { FuelType } from "../fuel/FuelType";
+import { emptytaxExempt, TaxExempt } from "./TaxExempt";
 
 export interface Stock {
   qty: {
@@ -18,24 +18,28 @@ export interface Stock {
   };
 }
 
-export const newStock(): Stock = {
-  qty: {
-    ago: {
-      allocation: 0,
-        ase: 0
+export function newStock(): Stock {
+  return {
+    ...{
+      qty: {
+        ago: {
+          allocation: 0,
+          ase: 0
+        },
+        ik: {
+          allocation: 0,
+          ase: 0
+        },
+        pms: {
+          allocation: 0,
+          ase: 0
+        }
+      },
     },
-    ik: {
-      allocation: 0,
-        ase: 0
-    },
-    pms: {
-      allocation: 0,
-        ase: 0
-    }
-  },
-  taxExempt: {
-    ago: deepCopy<TaxExempt>(emptytaxExempt),
+    taxExempt: {
+      ago: deepCopy<TaxExempt>(emptytaxExempt),
       ik: deepCopy<TaxExempt>(emptytaxExempt),
-        pms: deepCopy<TaxExempt>(emptytaxExempt)
-  },
-};
+      pms: deepCopy<TaxExempt>(emptytaxExempt)
+    },
+  };
+}

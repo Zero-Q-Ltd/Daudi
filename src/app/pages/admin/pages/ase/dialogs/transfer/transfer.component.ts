@@ -16,7 +16,7 @@ import { ReplaySubject } from "rxjs";
 import { debounceTime, delay, distinctUntilChanged, takeUntil } from "rxjs/operators";
 import { Depot } from "../../../../../../models/Daudi/depot/Depot";
 import { FuelType } from "../../../../../../models/Daudi/fuel/FuelType";
-import { newAse, ASE } from 'app/models/Daudi/fuel/ASE';
+import { ASE } from 'app/models/Daudi/fuel/ASE';
 import { AseService } from 'app/services/ase.service';
 
 @Component({
@@ -155,7 +155,7 @@ export class TransferComponent implements OnInit, OnDestroy {
          * We are sure that the oriogin is a KPc depot
          */
         const tempStockVal = deepCopy(this.core.stock.value);
-        tempStockVal.qty[this.fuelType].ase -= this.qtyToDrawControl.value;
+        tempStockVal.qty[this.fuelType].ase -= Number(this.qtyToDrawControl.value);
         batchaction.update(
             this.stockService.stockDoc(this.core.omcId,
                 this.core.activedepot.value.depot.Id,
@@ -166,12 +166,15 @@ export class TransferComponent implements OnInit, OnDestroy {
          * Create an ase for the destination depot
          * Every transfer has only one ASE, irrespective of how many entries have been chosen
          */
-        const emptyAse: ASE = {
+        const newAse: ASE = {
             qty: this.qtyToDrawControl.value,
             Amount: null,
             Id: this.core.createId(),
             active: true,
-            ase: null,
+            ase: {
+                QbId: null,
+                qty: this.qtyToDrawControl.value
+            },
             date: new MyTimestamp(0, 0),
             depot: {
                 name: this.selectedDepot.depot.Name,
@@ -181,14 +184,14 @@ export class TransferComponent implements OnInit, OnDestroy {
             price: null
         }
 
-        batchaction.update(this.aseService.ASECollection(this.core.omcId).doc(emptyAse.Id), emptyAse);
+        batchaction.set(this.aseService.ASECollection(this.core.omcId).doc(newAse.Id), newAse);
 
         /**
          * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
          * Update stock quantities in the destination depot
          */
         const tempStock = deepCopy(this.selectedDepot.stock);
-        tempStock.qty[this.fuelType].ase += this.qtyToDrawControl.value;
+        tempStock.qty[this.fuelType].ase += Number(this.qtyToDrawControl.value);
         if (this.selectedDepot.config.initialised) {
             batchaction.update(this.stockService.stockDoc(this.core.omcId, this.selectedDepot.depot.Id, true), tempStock);
         } else {

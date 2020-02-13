@@ -21,7 +21,7 @@ export interface Order {
      */
     departmentId: string,
   };
-  stage: number;
+  stage: (typeof OrderStages)[keyof typeof OrderStages];
   origin: string;
   notifications: {
     sms: boolean,

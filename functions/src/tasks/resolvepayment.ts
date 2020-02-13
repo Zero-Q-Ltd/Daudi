@@ -235,7 +235,7 @@ export function resolveIpn(ipndetail: EquityBulk, ipnid: string): Promise<any> {
     }
 
     function getTransactionId(value: LineItems): string {
-        const inv = value.LinkedTxn.find(value1 => value1.TxnType === "QboOrder")
+        const inv = value.LinkedTxn.find(value1 => value1.TxnType === "Invoice")
         if (inv) {
             return inv.TxnId
         } else {
