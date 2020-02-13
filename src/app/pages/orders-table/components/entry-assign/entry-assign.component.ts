@@ -10,6 +10,7 @@ import { CoreService } from "app/services/core/core.service";
 import { OrdersService } from "app/services/orders.service";
 import { NotificationService } from "app/shared/services/notification.service";
 import { EntriesService } from 'app/services/entries.service';
+import { StocksService } from 'app/services/core/stocks.service';
 
 @Component({
   templateUrl: "./entry-assign.component.html",
@@ -57,6 +58,7 @@ export class EntryAssignComponent implements OnInit {
     private notification: NotificationService,
     private ordersservice: OrdersService,
     private db: AngularFirestore,
+    private stockService: StocksService,
     private entriesService: EntriesService
   ) {
     this.core.stock.subscribe(stock => {
@@ -111,24 +113,34 @@ export class EntryAssignComponent implements OnInit {
     this.saving = true;
     const batchaction = this.db.firestore.batch();
     let batchesNumberError = false;
+    const temporder = deepCopy(this.order)
+
+    const tempStock = this.stock;
     FuelNamesArray.forEach(fuel => {
       if (this.selectedEntries[fuel].length > 1) {
         batchesNumberError = true;
       }
+      /**
+       * Update stock quantities
+       */
+      tempStock.qty[fuel].ase -= this.order.fuel[fuel].qty
+      /**
+       * Update entries
+       */
       this.selectedEntries[fuel].forEach((entry, index) => {
         const tempEntry: Entry = deepCopy(entry);
         tempEntry.qty.directLoad.total += entry.qtyDrawn;
         tempEntry.qty.used += entry.qtyDrawn;
         tempEntry.active = entry.resultStatus;
 
-        this.order.fuel[fuel].entries[index] = {
+        temporder.fuel[fuel].entries[index] = {
           Id: entry.Id,
           Name: entry.entry.name,
           observed: 0,
           qty: entry.qtyDrawn
         };
-        this.order.stage = 4
-        this.order.truck.stage = 1
+        temporder.stage = 4
+        temporder.truck.stage = 1
         /**
          * Update the relevant entries
          */
@@ -146,7 +158,17 @@ export class EntryAssignComponent implements OnInit {
       });
       return;
     } else {
-      batchaction.update(this.ordersservice.ordersCollection(this.core.currentOmc.value.Id).doc(this.orderId), this.order);
+      /**
+       * Update the order
+       */
+      batchaction.update(this.ordersservice.ordersCollection(this.core.currentOmc.value.Id).doc(this.orderId), temporder);
+      /**
+       * Update stock quantities
+       */
+      batchaction.update(this.stockService.stockDoc(this.core.currentOmc.value.Id,
+        this.core.activedepot.value.depot.Id,
+        this.core.activedepot.value.depot.config.private), tempStock);
+
       batchaction.commit().then(() => {
         this.notification.notify({
           alert_type: "success",
