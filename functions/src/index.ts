@@ -20,6 +20,9 @@ import { ordersms } from './tasks/sms/smscompose';
 import { processSync } from './tasks/syncdb/processSync';
 import { validorderupdate } from './validators/orderupdate';
 import { createQbo } from "./tasks/sharedqb";
+import { EquityBulk } from "./models/ipn/EquityBulk";
+import { paymentFcm } from "./tasks/FCM/paymentFcm";
+import { resolveIpn } from "./tasks/resolvepayment";
 
 admin.initializeApp(functions.config().firebase);
 admin.firestore().settings({ timestampsInSnapshots: true });
@@ -258,3 +261,79 @@ exports.onUserStatusChanged = functions.database
       });
     }
   });
+
+exports.ipnsandbox_db = functions.firestore
+  .document("/sandboxpayments/{ipnid}")
+  .onCreate((snap, context) => {
+    // console.log(snap);
+    // A new customer has been updated
+    const eventID = context.eventId;
+    if (isAlreadyRunning(eventID)) {
+      console.log(
+        "Ignore it because it is already running (eventId):",
+        eventID
+      );
+      return true;
+    }
+    markAsRunning(eventID);
+    const ipn = snap.data() as EquityBulk;
+    return resolveIpn(ipn, context.params.ipnid).then(() => {
+      ipn.daudiFields.status = 2;
+      return paymentFcm(ipn);
+    });
+  });
+exports.ipnprod_db = functions.firestore
+  .document("/prodpayments/{ipnid}")
+  .onCreate((snap, context) => {
+    // console.log(snap);
+    // A new customer has been updated
+    const eventID = context.eventId;
+    if (isAlreadyRunning(eventID)) {
+      console.log(
+        "Ignore it because it is already running (eventId):",
+        eventID
+      );
+      return true;
+    } else {
+      markAsRunning(eventID);
+      const ipn = snap.data() as EquityBulk;
+      return resolveIpn(ipn, context.params.ipnid).then(() => {
+        ipn.daudiFields.status = 2;
+        return paymentFcm(ipn);
+      });
+    }
+  });
+
+/**
+* a way for the client app to execute a cloud function directly
+*/
+
+exports.ipnsandboxcallable = functions.https.onCall((data, context) => {
+  const ipn = data as EquityBulk;
+  console.log(data);
+  return resolveIpn(ipn, ipn.billNumber.toString()).then(() => {
+    /**
+     * force the fcm to send a payment received msg, because otherwise the new ipn data wont be known
+     * unless we make a db read before sending, which at this point is unneccessary
+     */
+    ipn.daudiFields.status = 2;
+    return paymentFcm(ipn);
+  });
+});
+
+/**
+ * a way for the client app to execute a cloud function directly
+ */
+
+exports.ipnprodcallable = functions.https.onCall((data, context) => {
+  const ipn = data as EquityBulk;
+  console.log(data);
+  return resolveIpn(ipn, ipn.billNumber.toString()).then(() => {
+    /**
+     * force the fcm to send a payment received msg, because otherwise the new ipn data wont be known
+     * unless we make a db read before sending, which at this point is unneccessary
+     */
+    ipn.daudiFields.status = 2;
+    return paymentFcm(ipn);
+  });
+});

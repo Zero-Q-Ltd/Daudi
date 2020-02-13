@@ -63,6 +63,8 @@ export interface QboOrder {
   PrivateNote?: string
   DepartmentRef?: ReferenceType,
   ClassRef: ReferenceType,
+  Balance?: number;
+
 }
 
 
