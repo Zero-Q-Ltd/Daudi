@@ -1,5 +1,3 @@
-import {StockLoadDetail} from './StockLoadDetail';
-import {StockTransfer} from './StockTransfer';
 
 export interface StockQty {
   /**
@@ -14,11 +12,23 @@ export interface StockQty {
   /**
    * Quantity transferred to private depots
    */
-  transferred: StockTransfer;
+  transferred: {
+    total: number;
+    transfers: { depotId: string; entryId: string, qty: number }[];
+  };
   /**
-   * Qty loaded directly at KPC
+   * Qty loaded(drawn) directly at a depot
    */
-  directLoad: StockLoadDetail;
+  directLoad: {
+    /**
+     * Total qty that has been loaded
+     */
+    total: number;
+    /**
+     * quantities accumulate over time as a result of Observed vs Actual Quantities when loading at the depot
+     */
+    accumulated: number;
+  }
 }
 
 export const EmptyStockQty: StockQty = {
@@ -26,10 +36,7 @@ export const EmptyStockQty: StockQty = {
   used: 0,
   directLoad: {
     total: 0,
-    accumulated: {
-      total: 0,
-      usable: 0
-    }
+    accumulated: 0
   },
   transferred: {
     total: 0,

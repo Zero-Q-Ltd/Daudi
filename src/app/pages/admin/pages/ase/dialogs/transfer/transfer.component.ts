@@ -131,10 +131,7 @@ export class TransferComponent implements OnInit, OnDestroy {
                 price: tt.price,
                 qty: {
                     directLoad: {
-                        accumulated: {
-                            total: 0,
-                            usable: 0
-                        },
+                        accumulated: 0,
                         total: 0,
                     },
                     total: tt.qtyDrawn,

@@ -2,81 +2,63 @@
   <div *ngIf="!activedepot.depot.config.private">
     <span class="color-pms">
       PMS:<span matTooltip="PMS Available ASE">
-        {{stock.qty.pms.ase.totalActive - stock.qty.pms.ase.used}}
+        {{stock.qty.pms.ase}}
       </span>
     </span>{{order.fuel.pms.qty}}
     <span class="color-ago">AGO:
       <span matTooltip="AGO Available ASE">
-        {{stock.qty.ago.ase.totalActive - stock.qty.ago.ase.used}}</span>
+        {{stock.qty.ago.ase }}</span>
     </span> {{order.fuel.ago.qty}}
     <span class="color-ik">IK:
       <span matTooltip="IK Available ASE">
-        {{stock.qty.ik.ase.totalActive - stock.qty.ik.ase.used}}</span>
-    </span> {{order.fuel.ik.qty}}
-  </div>
-  <div *ngIf="activedepot.depot.config.private">
-    <span class="color-pms">
-      PMS:<span matTooltip="PMS Available ASE">
-        {{activedepot.config.stock.pms.ase.totalActive - activedepot.config.stock.pms.ase.used }}
-      </span>
-    </span>{{order.fuel.pms.qty}}
-    <span class="color-ago">AGO:
-      <span matTooltip="AGO Available ASE">
-        {{activedepot.config.stock.ago.ase.totalActive - activedepot.config.stock.ago.ase.used }}
-      </span>
-    </span> {{order.fuel.ago.qty}}
-    <span class="color-ik">IK:
-      <span matTooltip="IK Available ASE">
-        {{activedepot.config.stock.ik.ase.totalActive - activedepot.config.stock.ik.ase.used }}
-      </span>
+        {{stock.qty.ik.ase }}</span>
     </span> {{order.fuel.ik.qty}}
   </div>
 </h2>
 <mat-dialog-content *ngIf="donecalculating">
   <table class="table table-stripped">
     <thead class="thead-primary">
-    <tr>
-      <th> Entry #</th>
-      <th> Entry Qty</th>
-      <th> Loaded Qty</th>
-      <th> Transferred Qty</th>
-      <th> Available Qty</th>
-      <th> Qty to be Drawn</th>
-      <th> New Entry Qty</th>
-      <th> New Entry Status</th>
-    </tr>
+      <tr>
+        <th> Entry #</th>
+        <th> Entry Qty</th>
+        <th> Loaded Qty</th>
+        <th> Transferred Qty</th>
+        <th> Available Qty</th>
+        <th> Qty to be Drawn</th>
+        <th> New Entry Qty</th>
+        <th> New Entry Status</th>
+      </tr>
     </thead>
 
-    <tbody *ngFor="let fueltype of fueltypesArray"
-           [ngClass]="{ 'mat-elevation-z4' :  order.fuel[fueltype].qty > 0} ">
-    <tr *ngFor="let entry of depotEntries[fueltype];let i = index">
-      <td><span class="color-{{fueltype}}">{{entry.entry.name}}</span></td>
-      <td>{{entry.qty.total}}</td>
-      <td>{{entry.qty.directLoad.total}}</td>
-      <td>{{entry.qty.transferred.total}}</td>
-      <td>{{entry.qty.total - entry.qty.used}}</td>
-      <td>
-        {{drawnEntry[fueltype][i]?.name === entry.entry.name ?
+    <tbody *ngFor="let fueltype of fueltypesArray" [ngClass]="{ 'mat-elevation-z4' :  order.fuel[fueltype].qty > 0} ">
+      <tr *ngFor="let entry of depotEntries[fueltype];let i = index">
+        <td><span class="color-{{fueltype}}">{{entry.entry.name}}</span></td>
+        <td>{{entry.qty.total}}</td>
+        <td>{{entry.qty.directLoad.total}}</td>
+        <td>{{entry.qty.transferred.total}}</td>
+        <td>{{entry.qty.total - entry.qty.used}}</td>
+        <td>
+          {{drawnEntry[fueltype][i]?.name === entry.entry.name ?
         drawnEntry[fueltype][i].qtydrawn : 0 }}
-      </td>
-      <td>
-        {{(drawnEntry[fueltype][i]?.name === entry.entry.name ?
+        </td>
+        <td>
+          {{(drawnEntry[fueltype][i]?.name === entry.entry.name ?
         drawnEntry[fueltype][i].remainqty : 0) }}
-      </td>
-      <td>
-        <button
-          *ngIf="drawnEntry[fueltype][i] && (drawnEntry[fueltype][i].name === entry.entry.name ) && drawnEntry[fueltype][i].resultstatus else inactive"
-          class="btn btn-outline-success btn-sm">
-          Active
-        </button>
-        <ng-template #inactive>
-          <button class="btn btn-outline-danger btn-sm">
-            Inactive
+        </td>
+        <td>
+          <button
+            *ngIf="drawnEntry[fueltype][i] && (drawnEntry[fueltype][i].name === entry.entry.name ) && drawnEntry[fueltype][i].resultstatus else inactive"
+            class="btn btn-outline-success btn-sm">
+            Active
           </button>
-        </ng-template>
+          <ng-template #inactive>
+            <button class="btn btn-outline-danger btn-sm">
+              Inactive
+            </button>
+          </ng-template>
 
-      </td>
-    </tr>
+        </td>
+      </tr>
     </tbody>
   </table>
 
@@ -91,6 +73,6 @@
   </button>
   <mat-spinner *ngIf='saving || !donecalculating || fetchingEntries' [diameter]="27"></mat-spinner>
   <button (click)="approvetruck()" [disabled]="saving || !donecalculating" class="float-right" color="primary"
-          mat-stroked-button>APPROVE
+    mat-stroked-button>APPROVE
   </button>
 </div>

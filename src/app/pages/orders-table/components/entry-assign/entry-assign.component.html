@@ -1,1 +1,36 @@
-<p>entry-assign works!</p>
+<div>
+    <h2 mat-dialog-title>Truck for {{order.customer.name}}
+        <span class="color-pms">
+            PMS:<span matTooltip="PMS Available ASE">
+                {{stock.qty.pms.ase}}
+            </span>
+        </span>{{order.fuel.pms.qty}}
+        <span class="color-ago">AGO:
+            <span matTooltip="AGO Available ASE">
+                {{stock.qty.ago.ase }}</span>
+        </span> {{order.fuel.ago.qty}}
+        <span class="color-ik">IK:
+            <span matTooltip="IK Available ASE">
+                {{stock.qty.ik.ase }}</span>
+        </span> {{order.fuel.ik.qty}}
+    </h2>
+</div>
+
+<div *ngFor="let fuel of fueltypesArray">
+    <!-- Only show selection for non-zero fuels -->
+    <div *ngIf="order.fuel[fuel].qty > 0">
+        <app-entry-selector [fuelType]='fuel' [qtyToDraw]="order.fuel[fuel].qty"
+            (selectedEntries)="selectedEntries[fuel] = $event" (validTotals)="toggleTotalsvalidity(fuel, $event)"
+            (validEntryForms)="toggleFormValidity(fuel, $event)">
+        </app-entry-selector>
+    </div>
+</div>
+<mat-dialog-actions align="end">
+    <button mat-raised-button mat-dialog-close>Cancel</button>
+    <button mat-raised-button color="primary" [disabled]="!validAllTotals || !validAllForms"
+        (click)="saveEntryChanges()" cdkFocusInitial>
+        Approve
+    </button>
+    <mat-progress-spinner *ngIf="saving">
+    </mat-progress-spinner>
+</mat-dialog-actions>

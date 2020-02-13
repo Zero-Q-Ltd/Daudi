@@ -377,10 +377,7 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
              */
             this.depotEntries[fueltype][0].qty.directLoad = {
               total: this.depotEntries[fueltype][0].qty.total,
-              accumulated: {
-                usable: 0,
-                total: this.depotEntries[fueltype][0].qty.directLoad.accumulated.total
-              },
+              accumulated: 0
             };
             /**
              * Add the qty drawn to the used amount value of the ASE
@@ -409,10 +406,7 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
             this.depotEntries[fueltype][secondDrawnId].active = active;
             this.depotEntries[fueltype][secondDrawnId].qty.directLoad = {
               total: this.depotEntries[fueltype][secondDrawnId].qty.directLoad.total + this.drawnEntry[fueltype][1].qtydrawn,
-              accumulated: {
-                usable: 0,
-                total: this.depotEntries[fueltype][secondDrawnId].qty.directLoad.accumulated.total
-              },
+              accumulated: 0
             };
             /**
              * Add the qty drawn to the used amount value of the ASE
@@ -441,10 +435,7 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
 
             this.depotEntries[fueltype][0].qty.directLoad = {
               total: this.depotEntries[fueltype][0].qty.total + this.drawnEntry[fueltype][0].qtydrawn,
-              accumulated: {
-                usable: 0,
-                total: this.depotEntries[fueltype][0].qty.directLoad.accumulated.total
-              },
+              accumulated: 0
             };
             batchaction.update(this.entriesService.entryCollection(this.core.currentOmc.value.Id)
               .doc(this.depotEntries[fueltype][0].Id), this.depotEntries[fueltype][0]);
