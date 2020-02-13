@@ -4,7 +4,7 @@ import { AngularFirestore } from "@angular/fire/firestore";
 import { MatDialog, MatPaginator, MatSort, MatTableDataSource } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
 import { ColumnsCustomizerComponent } from "app/components/columns-customizer/columns-customizer.component";
-import { CompartmentsComponent } from "app/components/compartments/compartments.component";
+import { CompartmentsComponent } from "app/pages/orders-table/components/compartments/compartments.component";
 import { ReasonComponent } from "app/components/reason/reason.component";
 import { SendMsgComponent } from "app/components/send-msg/send-msg.component";
 import { ComponentCommunicationService } from "app/services/component-communication.service";
