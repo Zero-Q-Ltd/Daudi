@@ -53,7 +53,7 @@ export class createQboOrder {
                                     },
                                     Qty: order.fuel[fuel].qty,
                                     TaxCodeRef: {
-                                        value: "TAX"
+                                        value: this.config.taxConfig.taxCode.Id
                                     },
                                     UnitPrice: order.fuel[fuel].priceconfig.nonTaxprice
                                 }
@@ -70,7 +70,7 @@ export class createQboOrder {
                                     },
                                     Qty: order.fuel[fuel].qty,
                                     TaxCodeRef: {
-                                        value: "NON"
+                                        value: this.config.taxConfig.taxCode.Id
                                     },
                                     UnitPrice: 0
                                 }
@@ -101,9 +101,9 @@ export class createQboOrder {
             },
             TxnTaxDetail: {
                 TotalTax: order.fuel.pms.priceconfig.taxAmnt + order.fuel.ago.priceconfig.taxAmnt + order.fuel.ik.priceconfig.taxAmnt,
-                TxnTaxCodeRef: {
-                    value: this.config.taxConfig.taxCode.Id
-                },
+                // TxnTaxCodeRef: {
+                //     value: this.config.taxConfig.taxCode.Id
+                // },
                 TaxLine: [{
                     Amount: (order.fuel.pms.priceconfig.taxAmnt + order.fuel.ago.priceconfig.taxAmnt + order.fuel.ik.priceconfig.taxAmnt),
                     DetailType: "TaxLineDetail",
@@ -130,4 +130,75 @@ export class createQboOrder {
         console.log("Est", newEstimate)
         return newEstimate;
     }
+}
+let t = {
+    CustomField:
+        [{
+            DefinitionId: '1',
+            Name: 'Customer ID',
+            StringValue: '1',
+            Type: 'StringType'
+        }],
+    EmailStatus: 'NeedToSend',
+    CustomerRef: { value: '1' },
+    BillEmail: { Address: 'info@zero-q.com' },
+    TxnTaxDetail:
+    {
+        TotalTax: 3778,
+        TaxLine:
+            [{
+                Amount: 3778,
+                DetailType: 'TaxLineDetail',
+                TaxLineDetail:
+                {
+                    NetAmountTaxable: 88722,
+                    PercentBased: false,
+                    TaxPercent: 8,
+                    TaxRateRef: { value: '3' }
+                }
+            }]
+    },
+    domain: 'QBO',
+    TxnStatus: 'Pending',
+    PrintStatus: 'NeedToPrint',
+    ClassRef: { name: 'Eldoret', value: '1' },
+    Line:
+        [{
+            Amount: 88722,
+            DetailType: 'GroupLineDetail',
+            Description: 'VAT-Exempt : 41.5 \t Taxable Amount: 88722 \t VAT Total : 3778 \t',
+            Id: '5',
+            GroupLineDetail:
+            {
+                Quantity: 1000,
+                GroupItemRef: { name: 'pms', value: '5' },
+                Line:
+                    [{
+                        Amount: 88722,
+                        Description: '',
+                        DetailType: 'SalesItemLineDetail',
+                        Id: '3',
+                        SalesItemLineDetail:
+                        {
+                            ItemRef: { name: 'pms', value: '3' },
+                            Qty: 1000,
+                            TaxCodeRef: { value: 'TAX' },
+                            UnitPrice: 88.722
+                        }
+                    },
+                    {
+                        Amount: 0,
+                        Description: '',
+                        DetailType: 'SalesItemLineDetail',
+                        Id: '4',
+                        SalesItemLineDetail:
+                        {
+                            ItemRef: { name: 'pms', value: '4' },
+                            Qty: 1000,
+                            TaxCodeRef: { value: 'TAX' },
+                            UnitPrice: 0
+                        }
+                    }]
+            }
+        }]
 }

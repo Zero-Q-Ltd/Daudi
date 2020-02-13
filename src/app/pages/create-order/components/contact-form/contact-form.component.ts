@@ -67,6 +67,7 @@ export class ContactFormComponent implements OnInit, OnChanges {
     private customerService: CustomerService,
     private core: CoreService
   ) {
+
     this.contactForm.valueChanges
       .pipe(
         takeUntil(this.comopnentDestroyed),
@@ -136,10 +137,11 @@ export class ContactFormComponent implements OnInit, OnChanges {
       });
   }
 
-  companyselect(selectedcompany: DaudiCustomer) {
+  companyselect(selectedcompany: DaudiCustomer | CustomerDetail) {
     /**
      * Silently update the related values
      */
+    console.log(selectedcompany)
     this.contactForm.controls.kraPin.setValue(selectedcompany.krapin, {
       emitEvent: false
     });
@@ -172,34 +174,10 @@ export class ContactFormComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: any) {
-    if (!this.newOrder) {
+    if (!this.newOrder && this.initData.customer.Id) {
       this.contactForm.disable();
-      this.contactForm.controls.companyName.setValue(
-        this.initData.customer.name,
-        { emitEvent: false }
-      );
-      this.contactForm.controls.kraPin.setValue(this.initData.customer.krapin, {
-        emitEvent: false
-      });
-      /**
-       * Check if the contact array has values, as the initialization data which may trigger a change detection is empty
-       */
-      if (this.initData.customer.contact.length > 0) {
-        this.contactForm.controls.email.setValue(
-          this.initData.customer.contact[0].email,
-          { emitEvent: false }
-        );
-        this.contactForm.controls.name.setValue(
-          this.initData.customer.contact[0].name,
-          { emitEvent: false }
-        );
-        this.contactForm.controls.phone.setValue(
-          this.initData.customer.contact[0].phone,
-          { emitEvent: false }
-        );
-      }
+      this.companyselect(this.initData.customer)
     }
-    this.contactForm.updateValueAndValidity();
   }
 
   ngOnInit() { }

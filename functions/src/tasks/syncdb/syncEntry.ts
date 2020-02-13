@@ -104,7 +104,9 @@ export function syncEntry(omcId: string, fuelConfig: { [key in FuelType]: FuelCo
 
             }
         }
-    }))
+    })).then(res => {
+        return batch.commit()
+    })
 }
 
 function covertBillToEntry(convertedBill: Bill, fueltype: FuelType, LineitemIndex: number): Entry {
