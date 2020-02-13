@@ -18,27 +18,6 @@ export interface Stock {
   };
 }
 
-export const EmptyOMCStock: Stock = {
-  qty: {
-    ago: {
-      allocation: 0,
-      ase: 0
-    },
-    ik: {
-      allocation: 0,
-      ase: 0
-    },
-    pms: {
-      allocation: 0,
-      ase: 0
-    }
-  },
-  taxExempt: {
-    ago: deepCopy<TaxExempt>(emptytaxExempt),
-    ik: deepCopy<TaxExempt>(emptytaxExempt),
-    pms: deepCopy<TaxExempt>(emptytaxExempt)
-  },
-};
 export function newStock(): Stock {
   return {
     ...{

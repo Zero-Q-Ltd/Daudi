@@ -1,29 +1,32 @@
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/firestore';
-import { FormControl, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA } from '@angular/material';
-import { DepotConfig, emptyDepotConfig } from 'app/models/Daudi/depot/DepotConfig';
-import { EmptyEntryDraw, Entry, EntryDraw } from 'app/models/Daudi/fuel/Entry';
-import { MyTimestamp } from 'app/models/firestore/firestoreTypes';
-import { deepCopy } from 'app/models/utils/deepCopy';
-import { toObject } from 'app/models/utils/SnapshotUtils';
-import { CoreService } from 'app/services/core/core.service';
-import { DepotService } from 'app/services/core/depot.service';
-import { EntriesService } from 'app/services/entries.service';
-import { ReplaySubject } from 'rxjs';
-import { debounceTime, delay, distinctUntilChanged, takeUntil } from 'rxjs/operators';
-import { Depot } from '../../../../../../models/Daudi/depot/Depot';
-import { FuelType } from '../../../../../../models/Daudi/fuel/FuelType';
-import { StocksService } from 'app/services/core/stocks.service';
+import { Component, Inject, OnDestroy, OnInit } from "@angular/core";
+import { AngularFirestore } from "@angular/fire/firestore";
+import { FormControl, Validators } from "@angular/forms";
+import { MAT_DIALOG_DATA } from "@angular/material";
+import { DepotConfig, emptyDepotConfig } from "app/models/Daudi/depot/DepotConfig";
+import { EmptyEntryDraw, Entry, EntryDraw } from "app/models/Daudi/fuel/Entry";
+import { Stock, newStock } from "app/models/Daudi/omc/Stock";
+import { MyTimestamp } from "app/models/firestore/firestoreTypes";
+import { deepCopy } from "app/models/utils/deepCopy";
+import { toObject } from "app/models/utils/SnapshotUtils";
+import { CoreService } from "app/services/core/core.service";
+import { DepotService } from "app/services/core/depot.service";
+import { StocksService } from "app/services/core/stocks.service";
+import { EntriesService } from "app/services/entries.service";
+import { ReplaySubject } from "rxjs";
+import { debounceTime, delay, distinctUntilChanged, takeUntil } from "rxjs/operators";
+import { Depot } from "../../../../../../models/Daudi/depot/Depot";
+import { FuelType } from "../../../../../../models/Daudi/fuel/FuelType";
+import { newAse, ASE } from 'app/models/Daudi/fuel/ASE';
+import { AseService } from 'app/services/ase.service';
 
 @Component({
-    selector: 'app-transfer',
-    templateUrl: './transfer.component.html',
-    styleUrls: ['./transfer.component.scss']
+    selector: "app-transfer",
+    templateUrl: "./transfer.component.html",
+    styleUrls: ["./transfer.component.scss"]
 })
 export class TransferComponent implements OnInit, OnDestroy {
     privateDepots: Depot[] = [];
-    selectedDepot: { depot: Depot, config: DepotConfig };
+    selectedDepot: { depot: Depot, config: DepotConfig, stock: Stock };
     comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
     qtyToDraw = 0;
     depotControl: FormControl = new FormControl({}, [Validators.required]);
@@ -38,7 +41,7 @@ export class TransferComponent implements OnInit, OnDestroy {
     },
         [Validators.required, Validators.min(1000),
         Validators.max(1000000),
-        Validators.pattern('^[1-9]\\d*$')]);
+        Validators.pattern("^[1-9]\\d*$")]);
 
     constructor(
         @Inject(MAT_DIALOG_DATA) public fuelType: FuelType,
@@ -46,6 +49,7 @@ export class TransferComponent implements OnInit, OnDestroy {
         private entriesService: EntriesService,
         private depotService: DepotService,
         private stockService: StocksService,
+        private aseService: AseService,
         private core: CoreService) {
         this.core.depots.pipe(takeUntil(this.comopnentDestroyed)).subscribe(depots => {
             /**
@@ -58,9 +62,14 @@ export class TransferComponent implements OnInit, OnDestroy {
                 distinctUntilChanged())
             .subscribe((depot: Depot) => {
                 this.loadingDepotConfig = true;
-                this.depotService.depotConfigDoc(this.core.omcId, depot.Id)
-                    .get()
-                    .then(async conf => {
+                Promise.all([
+                    this.depotService.depotConfigDoc(this.core.omcId, depot.Id).get(),
+                    this.stockService.stockDoc(
+                        this.core.currentOmc.value.Id,
+                        depot.Id,
+                        depot.config.private
+                    ).get()])
+                    .then(async ([conf, stck]) => {
                         /**
                          * sleep so that the loader does not appear as a glitch in case the value is loaded very fast,
                          *  which will happen more often than not
@@ -68,7 +77,8 @@ export class TransferComponent implements OnInit, OnDestroy {
                         await delay(1000);
 
                         const config = toObject(emptyDepotConfig, conf);
-                        this.selectedDepot = { depot, config };
+                        const stock = toObject(newStock(), stck);
+                        this.selectedDepot = { depot, config, stock };
                         this.loadingDepotConfig = false;
                     });
                 this.qtyToDrawControl.enable();
@@ -83,6 +93,7 @@ export class TransferComponent implements OnInit, OnDestroy {
 
         this.selectedEntries.forEach(tt => {
             /**
+             * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
              * Create another var to avoid mutation of the original values
              */
             const t = deepCopy(tt);
@@ -103,7 +114,8 @@ export class TransferComponent implements OnInit, OnDestroy {
             batchaction.update(this.entriesService.entryCollection(this.core.currentOmc.value.Id)
                 .doc(t.Id), t);
             /**
-             * Create a new entry
+             * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+             * For each selected entry create a child entry
              */
             const newEntry: Entry = {
                 Amount: 0,
@@ -125,8 +137,11 @@ export class TransferComponent implements OnInit, OnDestroy {
                         },
                         total: 0,
                     },
-                    total: 0,
-                    transferred: null,
+                    total: tt.qtyDrawn,
+                    transferred: {
+                        total: 0,
+                        transfers: []
+                    },
                     used: 0
                 }
             };
@@ -134,31 +149,51 @@ export class TransferComponent implements OnInit, OnDestroy {
                 newEntry);
         });
 
-        // this.selectedDepot.config.stock[this.fuelType] += this.qtyToDrawControl.value;
-        if (this.selectedDepot.config.initialised) {
-            batchaction.update(this.depotService.depotConfigDoc(this.core.omcId, this.selectedDepot.depot.Id), this.selectedDepot.config);
-        } else {
-            this.selectedDepot.config.initialised = false;
-            batchaction.set(this.depotService.depotConfigDoc(this.core.omcId, this.selectedDepot.depot.Id), this.selectedDepot.config);
-        }
         /**
-         * Update the originating depot quantities
-         */
-        const tempDepotVal = deepCopy(this.core.activedepot.value.config);
-
-        // tempDepotVal.stock[this.fuelType] -= this.qtyToDrawControl.value;
-        batchaction.update(this.depotService.depotConfigDoc(this.core.omcId, tempDepotVal.Id), tempDepotVal);
-
-        /**
+         * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
          * Update Ase quantities in the originating depot
          * We are sure that the oriogin is a KPc depot
          */
-        const tempStockVal = deepCopy(this.core.stock);
+        const tempStockVal = deepCopy(this.core.stock.value);
+        tempStockVal.qty[this.fuelType].ase -= this.qtyToDrawControl.value;
         batchaction.update(
             this.stockService.stockDoc(this.core.omcId,
                 this.core.activedepot.value.depot.Id,
                 this.core.activedepot.value.depot.config.private)
             , tempStockVal);
+        /**
+         * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         * Create an ase for the destination depot
+         * Every transfer has only one ASE, irrespective of how many entries have been chosen
+         */
+        const emptyAse: ASE = {
+            qty: this.qtyToDrawControl.value,
+            Amount: null,
+            Id: this.core.createId(),
+            active: true,
+            ase: null,
+            date: new MyTimestamp(0, 0),
+            depot: {
+                name: this.selectedDepot.depot.Name,
+                Id: this.selectedDepot.depot.Id
+            },
+            fuelType: this.fuelType,
+            price: null
+        }
+
+        batchaction.update(this.aseService.ASECollection(this.core.omcId).doc(emptyAse.Id), emptyAse);
+
+        /**
+         * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         * Update stock quantities in the destination depot
+         */
+        const tempStock = deepCopy(this.selectedDepot.stock);
+        tempStock.qty[this.fuelType].ase += this.qtyToDrawControl.value;
+        if (this.selectedDepot.config.initialised) {
+            batchaction.update(this.stockService.stockDoc(this.core.omcId, this.selectedDepot.depot.Id, true), tempStock);
+        } else {
+            batchaction.set(this.stockService.stockDoc(this.core.omcId, this.selectedDepot.depot.Id, true), tempStock);
+        }
         /**
          * submit... Phew... I know
          * But finally, we're here

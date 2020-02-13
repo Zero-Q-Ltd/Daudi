@@ -2,7 +2,7 @@ import { firestore } from "firebase-admin";
 import { ASE } from "../../models/Daudi/fuel/ASE";
 import { FuelNamesArray, FuelType } from "../../models/Daudi/fuel/FuelType";
 import { FuelConfig } from "../../models/Daudi/omc/FuelConfig";
-import { EmptyOMCStock, Stock } from "../../models/Daudi/omc/Stock";
+import { newStock(), Stock } from "../../models/Daudi/omc/Stock";
 import { Bill } from "../../models/Qbo/Bill";
 import { readStock, stockCollection } from "../crud/daudi/Stock";
 
@@ -83,7 +83,7 @@ export function syncAse(omcId: string, fuelConfig: { [key in FuelType]: FuelConf
         }
     })).then(async () => {
         return await readStock(omcId).then(snapshot => {
-            const stockObject: Stock = { ...EmptyOMCStock, ...snapshot.data() }
+            const stockObject: Stock = { ...newStock(), ...snapshot.data() }
             FuelNamesArray.forEach(fueltype => {
                 stockObject.qty[fueltype].ase += totalAdded[fueltype]
             })

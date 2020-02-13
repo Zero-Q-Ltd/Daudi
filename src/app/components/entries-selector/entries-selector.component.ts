@@ -14,7 +14,7 @@ import { Depot, emptydepot } from '../../models/Daudi/depot/Depot';
 import { DepotConfig, emptyDepotConfig } from '../../models/Daudi/depot/DepotConfig';
 import { Entry } from '../../models/Daudi/fuel/Entry';
 import { FuelNamesArray, FuelType } from '../../models/Daudi/fuel/FuelType';
-import { EmptyOMCStock, Stock } from '../../models/Daudi/omc/Stock';
+import { Stock, newStock } from '../../models/Daudi/omc/Stock';
 import { GenericTruckStage } from '../../models/Daudi/order/GenericStage';
 import { emptyorder, Order } from '../../models/Daudi/order/Order';
 import { MyTimestamp } from '../../models/firestore/firestoreTypes';
@@ -74,7 +74,7 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
    * this keeps a local copy of all the subscriptions within this service
    */
   subscriptions: Map<string, () => void> = new Map<string, any>();
-  stock: Stock = { ...EmptyOMCStock };
+  stock: Stock = { ...newStock() };
   activedepot: { depot: Depot, config: DepotConfig } = { depot: { ...emptydepot }, config: { ...emptyDepotConfig } };
 
   constructor(

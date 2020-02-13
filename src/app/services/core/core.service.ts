@@ -7,7 +7,7 @@ import { emptyEntry, Entry } from "app/models/Daudi/fuel/Entry";
 import { FuelNamesArray } from "app/models/Daudi/fuel/FuelType";
 import { AdminConfig, emptyConfig } from "app/models/Daudi/omc/AdminConfig";
 import { emptyomc, OMC } from "app/models/Daudi/omc/OMC";
-import { EmptyOMCStock, Stock } from "app/models/Daudi/omc/Stock";
+import { newStock, Stock } from "app/models/Daudi/omc/Stock";
 import { emptyorder, Order } from "app/models/Daudi/order/Order";
 import { OrderStageIds, OrderStages } from "app/models/Daudi/order/OrderStages";
 import { toArray, toObject } from "app/models/utils/SnapshotUtils";
@@ -34,7 +34,7 @@ export class CoreService {
   depots: BehaviorSubject<Depot[]> = new BehaviorSubject([]);
   customers: BehaviorSubject<DaudiCustomer[]> = new BehaviorSubject<DaudiCustomer[]>([]);
   omcs: BehaviorSubject<OMC[]> = new BehaviorSubject<OMC[]>([]);
-  stock: BehaviorSubject<Stock> = new BehaviorSubject<Stock>({ ...EmptyOMCStock });
+  stock: BehaviorSubject<Stock> = new BehaviorSubject<Stock>({ ...newStock() });
   currentOmc: BehaviorSubject<OMC> = new BehaviorSubject<OMC>(emptyomc);
   /**
    * Be careful when subscribing to this value because it will always emit a value
@@ -151,7 +151,8 @@ export class CoreService {
         this.activedepot.value.depot.config.private
       )
         .onSnapshot(t => {
-          this.stock.next(toObject(EmptyOMCStock, t));
+          console.log(t.data())
+          this.stock.next(toObject(newStock(), t));
           this.loaders.stock.next(false);
         }));
   }
@@ -337,7 +338,7 @@ export class CoreService {
     this.fueltypesArray.forEach(fuelType => {
       let queryvalue = this.entriesService.entryCollection(this.omcId)
         .where("active", "==", true)
-        .where("fuelType", "==", fuelType);
+        .where("fuelType", "==", fuelType)
       /**
        * Filter by depot if its a privtae depot
        */
