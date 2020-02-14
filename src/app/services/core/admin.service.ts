@@ -73,7 +73,7 @@ export class AdminService {
   /**
    * Creates a user object for use within orders and trucks
    */
-  createuserobject(): AssociatedUser {
+  createUserObject(): AssociatedUser {
     return {
       name: this.userdata.profile.name,
       adminId: this.userdata.Id,

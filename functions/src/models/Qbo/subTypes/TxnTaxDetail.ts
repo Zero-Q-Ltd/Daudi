@@ -1,7 +1,7 @@
-import {TaxLine} from "./TaxLine";
+import { TaxLine } from "./TaxLine";
 
 export interface TxnTaxDetail {
-    TxnTaxCodeRef: {
+    TxnTaxCodeRef?: {
         value: string;
     };
     TotalTax?: number;

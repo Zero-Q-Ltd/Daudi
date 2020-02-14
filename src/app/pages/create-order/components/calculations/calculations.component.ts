@@ -1,17 +1,17 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output} from '@angular/core';
-import {Validators} from '@angular/forms';
-import {CoreService} from 'app/services/core/core.service';
-import {FormControl, FormGroup} from 'ngx-strongly-typed-forms';
-import {ReplaySubject} from 'rxjs';
-import {skipWhile, takeUntil} from 'rxjs/operators';
-import {AdminConfig, emptyConfig} from '../../../../models/Daudi/omc/AdminConfig';
-import {EmptyOMCStock, Stock} from '../../../../models/Daudi/omc/Stock';
-import {Depot, emptydepot} from './../../../../models/Daudi/depot/Depot';
-import {DepotConfig, emptyDepotConfig} from './../../../../models/Daudi/depot/DepotConfig';
-import {Calculations, FuelCalculation} from './../../../../models/Daudi/forms/Calculations';
-import {FuelNamesArray, FuelType} from './../../../../models/Daudi/fuel/FuelType';
-import {Order} from './../../../../models/Daudi/order/Order';
-import {NotificationService} from './../../../../shared/services/notification.service';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
+import { Validators } from '@angular/forms';
+import { CoreService } from 'app/services/core/core.service';
+import { FormControl, FormGroup } from 'ngx-strongly-typed-forms';
+import { ReplaySubject } from 'rxjs';
+import { skipWhile, takeUntil } from 'rxjs/operators';
+import { AdminConfig, emptyConfig } from '../../../../models/Daudi/omc/AdminConfig';
+import { newStock, Stock } from '../../../../models/Daudi/omc/Stock';
+import { Depot, emptydepot } from './../../../../models/Daudi/depot/Depot';
+import { DepotConfig, emptyDepotConfig } from './../../../../models/Daudi/depot/DepotConfig';
+import { Calculations, FuelCalculation } from './../../../../models/Daudi/forms/Calculations';
+import { FuelNamesArray, FuelType } from './../../../../models/Daudi/fuel/FuelType';
+import { Order } from './../../../../models/Daudi/order/Order';
+import { NotificationService } from './../../../../shared/services/notification.service';
 
 @Component({
   selector: 'app-calculations',
@@ -26,9 +26,9 @@ export class CalculationsComponent implements OnInit, OnChanges {
   @Output() formValid = new EventEmitter<boolean>();
 
   fueltypesArray = FuelNamesArray;
-  omcConfig: AdminConfig = {...emptyConfig};
-  activedepot: { depot: Depot, config: DepotConfig } = {depot: {...emptydepot}, config: {...emptyDepotConfig}};
-  stock: Stock = {...EmptyOMCStock};
+  omcConfig: AdminConfig = { ...emptyConfig };
+  activedepot: { depot: Depot, config: DepotConfig } = { depot: { ...emptydepot }, config: { ...emptyDepotConfig } };
+  stock: Stock = { ...newStock() };
   calculationsForm: FormGroup<Calculations> = new FormGroup<Calculations>({
     pms: new FormGroup<FuelCalculation>({
       price: new FormControl<number>(0, [Validators.required]),
@@ -163,10 +163,10 @@ export class CalculationsComponent implements OnInit, OnChanges {
        * DOnt overwrite value for order approval
        */
       if (this.newOrder) {
-        this.calculationsForm.get([fueltype, 'price']).setValue(tempPrice, {emitEvent: false});
+        this.calculationsForm.get([fueltype, 'price']).setValue(tempPrice, { emitEvent: false });
       } else {
-        this.calculationsForm.get([fueltype, 'price']).setValue(this.initData.fuel[fueltype].priceconfig.price, {emitEvent: false});
-        this.calculationsForm.get([fueltype, 'qty']).setValue(this.initData.fuel[fueltype].qty, {emitEvent: false});
+        this.calculationsForm.get([fueltype, 'price']).setValue(this.initData.fuel[fueltype].priceconfig.price, { emitEvent: false });
+        this.calculationsForm.get([fueltype, 'qty']).setValue(this.initData.fuel[fueltype].qty, { emitEvent: false });
       }
       /**
        * update calculations as well
@@ -201,7 +201,7 @@ export class CalculationsComponent implements OnInit, OnChanges {
     const pricewithoutvat = Number(((priceinclusivevat + (0.08 * this.initData.fuel[fueltype].priceconfig.nonTax)) / 1.08).toFixed(decimalResolution));
     const amountdeducted = priceinclusivevat - pricewithoutvat;
     const taxablePrice = Number((pricewithoutvat - this.initData.fuel[fueltype].priceconfig.nonTax).toFixed(decimalResolution));
-    return {pricewithoutvat, amountdeducted, taxablePrice};
+    return { pricewithoutvat, amountdeducted, taxablePrice };
   }
 
   ngOnDestroy(): void {

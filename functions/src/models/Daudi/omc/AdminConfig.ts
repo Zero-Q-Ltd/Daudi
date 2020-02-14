@@ -1,9 +1,9 @@
-import {QBOAuthCOnfig} from '../../Cloud/QboAuthConfig';
-import {MyTimestamp} from '../../firestore/firestoreTypes';
-import {deepCopy} from '../../utils/deepCopy';
-import {AdminType} from '../admin/AdminType';
-import {DaudiMeta} from '../universal/Meta';
-import {Metadata} from '../universal/Metadata';
+import { QBOAuthCOnfig } from '../../Cloud/QboAuthConfig';
+import { MyTimestamp } from '../../firestore/firestoreTypes';
+import { deepCopy } from '../../utils/deepCopy';
+import { AdminType } from '../admin/AdminType';
+import { DaudiMeta } from '../universal/Meta';
+import { Metadata } from '../universal/Metadata';
 
 export interface AdminConfig {
   adminTypes: Array<AdminType>;
@@ -29,12 +29,9 @@ export const emptyqboAuth: QBOAuthCOnfig = {
   clientSecret: '',
   webhooksVerifier: '',
   authConfig: {
-    previousDCT: MyTimestamp.fromDate(new Date()),
     accessToken: '',
     refreshToken: '',
-    accesstokenExpiry: MyTimestamp.fromDate(new Date()),
-    refreshtokenExpiry: MyTimestamp.fromDate(new Date()),
-    time: MyTimestamp.fromDate(new Date())
+    createdAt: MyTimestamp.fromDate(new Date())
   }
 };
 

@@ -1,20 +1,20 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatPaginator, MatTableDataSource } from '@angular/material';
-import { EmptyOMCStock, Stock } from 'app/models/Daudi/omc/Stock';
+import { newStock, Stock } from 'app/models/Daudi/omc/Stock';
 import { AseService } from 'app/services/ase.service';
 import { CoreService } from 'app/services/core/core.service';
 import { ReplaySubject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { ASE, emptyASEs } from '../../../../models/Daudi/fuel/ASE';
+import { ASE, newAse } from '../../../../models/Daudi/fuel/ASE';
 import { FuelNamesArray, FuelType } from '../../../../models/Daudi/fuel/FuelType';
 import { NotificationService } from '../../../../shared/services/notification.service';
 import { CoreAdminService } from '../../services/core.service';
 import { TransferComponent } from './dialogs/transfer/transfer.component';
 
 @Component({
-    selector: 'app-ase',
-    templateUrl: './ase.component.html',
-    styleUrls: ['./ase.component.scss']
+    selector: "app-ase",
+    templateUrl: "./ase.component.html",
+    styleUrls: ["./ase.component.scss"]
 })
 export class AseComponent implements OnInit {
     fueltypesArray = FuelNamesArray;
@@ -27,7 +27,7 @@ export class AseComponent implements OnInit {
     @ViewChild(MatPaginator, { static: true }) pmspaginator: MatPaginator;
     @ViewChild(MatPaginator, { static: true }) agopaginator: MatPaginator;
     @ViewChild(MatPaginator, { static: true }) ikpaginator: MatPaginator;
-    displayedColumns: string[] = ['daudiId', 'date', 'id', 'totalqty'];
+    displayedColumns: string[] = ["daudiId", "date", "id", "totalqty"];
     loading: {
         pms: boolean,
         ago: boolean,
@@ -44,7 +44,7 @@ export class AseComponent implements OnInit {
     subscriptions: Map<string, any> = new Map<string, any>();
     comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
     private = true;
-    stock: Stock = { ...EmptyOMCStock };
+    stock: Stock = { ...newStock() };
 
     constructor(
         private notification: NotificationService,
@@ -68,13 +68,26 @@ export class AseComponent implements OnInit {
                 this.private = depotdata.depot.config.private;
                 this.fueltypesArray.forEach((fueltype: FuelType) => {
                     /**
-                     * Create a subscrition for 1000 batches history
+                     * Create a subscrition for 100 batches history
                      */
-                    const subscription = this.aseService.getASEs(this.core.currentOmc.value.Id, fueltype).limit(100)
+                    let queryvalue = this.aseService.ASECollection(this.core.currentOmc.value.Id)
+                        // .where("active", "==", true)
+                        .where("fuelType", "==", fueltype)
+                        .orderBy('active', 'desc')
+                    /**
+                     * Filter by depot if its a privtae depot
+                     */
+                    if (this.core.activedepot.value.depot.config.private) {
+                        queryvalue = queryvalue.where("depot.Id", "==", this.core.activedepot.value.depot.Id);
+                    } else {
+                        queryvalue = queryvalue.where("depot.Id", "==", null);
+                    }
+
+                    const subscription = queryvalue.limit(100)
                         .onSnapshot(snapshot => {
                             this.loading[fueltype] = false;
                             this.datasource[fueltype].data = snapshot.docs.map(ase => {
-                                const value: ASE = Object.assign({}, emptyASEs, ase.data()) as any;
+                                const value: ASE = Object.assign({}, newAse(), ase.data()) as any;
                                 value.Id = ase.id;
                                 return value;
                             });
@@ -98,32 +111,32 @@ export class AseComponent implements OnInit {
 
     trasfer(fuelType: FuelType) {
         const dialogRef = this.dialog.open(TransferComponent, {
-            role: 'dialog',
+            role: "dialog",
             data: fuelType,
-            height: 'auto',
-            width: '75%%',
+            height: "auto",
+            width: "75%%",
         });
 
     }
 
     syncdb() {
         this.creatingsync = true;
-        this.coreAdmin.syncdb(['BillPayment'])
+        this.coreAdmin.syncdb(["BillPayment"])
             .then(res => {
                 this.creatingsync = false;
                 this.notification.notify({
-                    alert_type: 'success',
-                    body: 'Entries updated',
-                    title: 'Success'
+                    alert_type: "success",
+                    body: "Entries updated",
+                    title: "Success"
                 });
             },
                 err => {
                     console.error(err);
                     this.creatingsync = false;
                     this.notification.notify({
-                        alert_type: 'error',
-                        body: 'Error Syncronising',
-                        title: 'Error'
+                        alert_type: "error",
+                        body: "Error Syncronising",
+                        title: "Error"
                     });
                 });
     }

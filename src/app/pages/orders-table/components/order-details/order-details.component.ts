@@ -1,10 +1,10 @@
 // import { BatchSelectorComponent } from './../batch-selector/batch-selector.component';
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {AngularFirestore} from '@angular/fire/firestore';
-import {MatDialog} from '@angular/material'; // added dialog data receive
-import {ReplaySubject} from 'rxjs';
-import {Truck} from '../../models/Daudi/order/truck/Truck';
-import {NotificationService} from '../../shared/services/notification.service';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { AngularFirestore } from '@angular/fire/firestore';
+import { MatDialog } from '@angular/material'; // added dialog data receive
+import { ReplaySubject } from 'rxjs';
+import { Truck } from '../../../../models/Daudi/order/truck/Truck';
+import { NotificationService } from '../../../../shared/services/notification.service';
 
 @Component({
   selector: 'order-details',
@@ -27,8 +27,8 @@ export class OrderDetailsComponent implements OnInit, OnDestroy {
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
 
   constructor(private dialog: MatDialog,
-              private db: AngularFirestore,
-              private notificationService: NotificationService) {
+    private db: AngularFirestore,
+    private notificationService: NotificationService) {
     if (!this.truck) {
       return;
     }

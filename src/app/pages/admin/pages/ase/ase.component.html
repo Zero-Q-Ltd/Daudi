@@ -16,9 +16,9 @@
             <mat-form-field appearance="legacy">
               <input (keyup)="filterbatches(fueltype, $event.target.value)" matInput placeholder="Filter">
               <button (click)='syncdb()' *ngIf='!creatingsync' mat-icon-button matSuffix type="button">
-                                <span class="nav-icon nav-dot material-icons kra-save" matTooltip="Update">
-                                    autorenew
-                                </span>
+                <span class="nav-icon nav-dot material-icons kra-save" matTooltip="Update">
+                  autorenew
+                </span>
               </button>
               <mat-spinner *ngIf='creatingsync' [diameter]="19" matSuffix></mat-spinner>
             </mat-form-field>
@@ -44,13 +44,13 @@
 
             <ng-container matColumnDef="id">
               <th *matHeaderCellDef mat-header-cell> ASE ID</th>
-              <td *matCellDef="let ase" mat-cell> {{ase.ase.id}}</td>
+              <td *matCellDef="let ase" mat-cell> {{ase.ase.QbId}}</td>
             </ng-container>
 
             <!-- Cost Column -->
             <ng-container matColumnDef="totalqty">
               <th *matHeaderCellDef mat-header-cell> Total ASE Qty</th>
-              <td *matCellDef="let ase" mat-cell>{{ase.qty.total}}</td>
+              <td *matCellDef="let ase" mat-cell>{{ase.qty}}</td>
             </ng-container>
 
             <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>

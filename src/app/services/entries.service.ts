@@ -15,7 +15,7 @@ export class EntriesService {
   entryCollection(omcId: string) {
     return this.db.firestore.collection('omc')
       .doc(omcId)
-      .collection('entries');
+      .collection('entries')
   }
 
   updateEntry(omcId: string, entry: Entry) {

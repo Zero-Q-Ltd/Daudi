@@ -17,16 +17,16 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BatchTrucksComponent } from './components/batch-trucks/batch-trucks.component';
 import { ColumnsCustomizerComponent } from './components/columns-customizer/columns-customizer.component';
-import { CompartmentsComponent } from './components/compartments/compartments.component';
+import { CompartmentsComponent } from './pages/orders-table/components/compartments/compartments.component';
 import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
 import { EntriesSelectorComponent } from './components/entries-selector/entries-selector.component';
 import { EntrySelectorComponent } from './components/entry-selector/entry-selector.component';
 import { MapsComponent } from './components/maps/maps.component';
-import { OrderDetailsComponent } from './components/order-details/order-details.component';
+import { OrderDetailsComponent } from './pages/orders-table/components/order-details/order-details.component';
 import { PriceComparisonComponent } from './components/price-comparison/price-comparison.component';
 import { ReasonComponent } from './components/reason/reason.component';
 import { SendMsgComponent } from './components/send-msg/send-msg.component';
-import { TruckDetailsComponent } from './components/truck-details/truck-details.component';
+import { TruckDetailsComponent } from './pages/orders-table/components/truck-details/truck-details.component';
 import { UsersGuard } from './guards/users.guard';
 import { AppCustomizerComponent } from './layout/customizer/customizer.component';
 import { ToggleQuickviewDirective } from './layout/customizer/toggle-quickview.directive';
@@ -67,6 +67,7 @@ import { OrdersService } from './services/orders.service';
 import { PricesService } from './services/prices.service';
 import { NotificationComponent } from './shared/components/notification/notification.component';
 import { SharedModule } from './shared/shared.module';
+import { EntryAssignComponent } from './pages/orders-table/components/entry-assign/entry-assign.component';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyD6abjtAtMf2kK7YEtgpyKqT_EPkHqjYXo',
@@ -160,6 +161,7 @@ const firebaseConfig = {
     PriceComparisonComponent,
     TransferComponent,
     EntrySelectorComponent,
+    EntryAssignComponent,
 
   ],
   providers: [
@@ -191,7 +193,8 @@ const firebaseConfig = {
     CompartmentsComponent,
     CalendarRangesComponent,
     TransferComponent,
-    EntrySelectorComponent
+    EntrySelectorComponent,
+    EntryAssignComponent
   ]
 })
 export class AppModule {

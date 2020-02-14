@@ -12,25 +12,26 @@ import { QboOrder } from "../../../../models/Qbo/QboOrder";
 
 
 export class createQboOrder {
+    QboOrder: QboOrder
     constructor(private orderdata: Order, private config: QboCofig) {
         /**
          * format the timestamp again as it loses it when it doesnt directly go to the database
          */
         orderdata.orderStageData["1"].user.date = moment().toDate() as any;
-
+        this.QboOrder = this.formulate(orderdata)
     }
 
-    syncfueltypes(): Array<any> {
+    private syncfueltypes(order: Order): Array<any> {
         const values: Array<Line> = [];
         FuelNamesArray.forEach(fuel => {
-            if (this.orderdata.fuel[fuel].qty > 0) {
+            if (order.fuel[fuel].qty > 0) {
                 values.push({
-                    Amount: this.orderdata.fuel[fuel].priceconfig.nonTaxprice * this.orderdata.fuel[fuel].qty,
+                    Amount: order.fuel[fuel].priceconfig.nonTaxprice * order.fuel[fuel].qty,
                     DetailType: LineDetailType.GroupLineDetail,
-                    Description: `VAT-Exempt : ${this.orderdata.fuel[fuel].priceconfig.nonTax} \t Taxable Amount: ${this.orderdata.fuel[fuel].priceconfig.taxableAmnt} \t VAT Total : ${this.orderdata.fuel[fuel].priceconfig.taxAmnt} \t`,
+                    Description: `VAT-Exempt : ${order.fuel[fuel].priceconfig.nonTax} \t Taxable Amount: ${order.fuel[fuel].priceconfig.taxableAmnt} \t VAT Total : ${order.fuel[fuel].priceconfig.taxAmnt} \t`,
                     Id: this.config.fuelconfig[fuel].groupId,
                     GroupLineDetail: {
-                        Quantity: this.orderdata.fuel[fuel].qty,
+                        Quantity: order.fuel[fuel].qty,
                         GroupItemRef: {
                             name: fuel,
                             value: this.config.fuelconfig[fuel].groupId
@@ -41,7 +42,7 @@ export class createQboOrder {
                              * The entry component doesnt have an amount attached to it
                              */
                             {
-                                Amount: this.orderdata.fuel[fuel].priceconfig.nonTaxprice * this.orderdata.fuel[fuel].qty,
+                                Amount: order.fuel[fuel].priceconfig.nonTaxprice * order.fuel[fuel].qty,
                                 Description: "",
                                 DetailType: LineDetailType.SalesItemLineDetail,
                                 Id: this.config.fuelconfig[fuel].aseId,
@@ -50,11 +51,11 @@ export class createQboOrder {
                                         name: fuel,
                                         value: this.config.fuelconfig[fuel].aseId
                                     },
-                                    Qty: this.orderdata.fuel[fuel].qty,
+                                    Qty: order.fuel[fuel].qty,
                                     TaxCodeRef: {
-                                        value: "TAX"
+                                        value: this.config.taxConfig.taxCode.Id
                                     },
-                                    UnitPrice: this.orderdata.fuel[fuel].priceconfig.nonTaxprice
+                                    UnitPrice: order.fuel[fuel].priceconfig.nonTaxprice
                                 }
                             },
                             {
@@ -67,9 +68,9 @@ export class createQboOrder {
                                         name: fuel,
                                         value: this.config.fuelconfig[fuel].entryId
                                     },
-                                    Qty: this.orderdata.fuel[fuel].qty,
+                                    Qty: order.fuel[fuel].qty,
                                     TaxCodeRef: {
-                                        value: "NON"
+                                        value: this.config.taxConfig.taxCode.Id
                                     },
                                     UnitPrice: 0
                                 }
@@ -83,31 +84,31 @@ export class createQboOrder {
         return values;
     }
 
-    formulate(): QboOrder {
+    private formulate(order: Order): QboOrder {
         const newEstimate: QboOrder = {
             CustomField: [{
                 DefinitionId: "1",
                 Name: "Customer ID",
-                StringValue: this.orderdata.customer.QbId,
+                StringValue: order.customer.QbId,
                 Type: "StringType"
             }],
             EmailStatus: EmailStatus.NeedToSend,
             CustomerRef: {
-                value: this.orderdata.customer.QbId
+                value: order.customer.QbId
             },
             BillEmail: {
-                Address: this.orderdata.customer.contact[0].email
+                Address: order.customer.contact[0].email
             },
             TxnTaxDetail: {
-                TotalTax: this.orderdata.fuel.pms.priceconfig.taxAmnt + this.orderdata.fuel.ago.priceconfig.taxAmnt + this.orderdata.fuel.ik.priceconfig.taxAmnt,
-                TxnTaxCodeRef: {
-                    value: this.config.taxConfig.taxCode.Id
-                },
+                TotalTax: order.fuel.pms.priceconfig.taxAmnt + order.fuel.ago.priceconfig.taxAmnt + order.fuel.ik.priceconfig.taxAmnt,
+                // TxnTaxCodeRef: {
+                //     value: this.config.taxConfig.taxCode.Id
+                // },
                 TaxLine: [{
-                    Amount: (this.orderdata.fuel.pms.priceconfig.taxAmnt + this.orderdata.fuel.ago.priceconfig.taxAmnt + this.orderdata.fuel.ik.priceconfig.taxAmnt),
+                    Amount: (order.fuel.pms.priceconfig.taxAmnt + order.fuel.ago.priceconfig.taxAmnt + order.fuel.ik.priceconfig.taxAmnt),
                     DetailType: "TaxLineDetail",
                     TaxLineDetail: {
-                        NetAmountTaxable: this.orderdata.fuel.pms.priceconfig.taxableAmnt + this.orderdata.fuel.ago.priceconfig.taxableAmnt + this.orderdata.fuel.ik.priceconfig.taxableAmnt,
+                        NetAmountTaxable: order.fuel.pms.priceconfig.taxableAmnt + order.fuel.ago.priceconfig.taxableAmnt + order.fuel.ik.priceconfig.taxableAmnt,
                         PercentBased: false,
                         TaxPercent: 8,
                         TaxRateRef: {
@@ -121,12 +122,83 @@ export class createQboOrder {
             PrintStatus: PrintStatus.NeedToPrint,
 
             ClassRef: {
-                name: this.orderdata.config.depot.name,
-                value: this.orderdata.QbConfig.departmentId
+                name: order.config.depot.name,
+                value: order.QbConfig.departmentId
             },
-            Line: this.syncfueltypes()
+            Line: this.syncfueltypes(order)
         };
-
+        console.log("Est", newEstimate)
         return newEstimate;
     }
+}
+let t = {
+    CustomField:
+        [{
+            DefinitionId: '1',
+            Name: 'Customer ID',
+            StringValue: '1',
+            Type: 'StringType'
+        }],
+    EmailStatus: 'NeedToSend',
+    CustomerRef: { value: '1' },
+    BillEmail: { Address: 'info@zero-q.com' },
+    TxnTaxDetail:
+    {
+        TotalTax: 3778,
+        TaxLine:
+            [{
+                Amount: 3778,
+                DetailType: 'TaxLineDetail',
+                TaxLineDetail:
+                {
+                    NetAmountTaxable: 88722,
+                    PercentBased: false,
+                    TaxPercent: 8,
+                    TaxRateRef: { value: '3' }
+                }
+            }]
+    },
+    domain: 'QBO',
+    TxnStatus: 'Pending',
+    PrintStatus: 'NeedToPrint',
+    ClassRef: { name: 'Eldoret', value: '1' },
+    Line:
+        [{
+            Amount: 88722,
+            DetailType: 'GroupLineDetail',
+            Description: 'VAT-Exempt : 41.5 \t Taxable Amount: 88722 \t VAT Total : 3778 \t',
+            Id: '5',
+            GroupLineDetail:
+            {
+                Quantity: 1000,
+                GroupItemRef: { name: 'pms', value: '5' },
+                Line:
+                    [{
+                        Amount: 88722,
+                        Description: '',
+                        DetailType: 'SalesItemLineDetail',
+                        Id: '3',
+                        SalesItemLineDetail:
+                        {
+                            ItemRef: { name: 'pms', value: '3' },
+                            Qty: 1000,
+                            TaxCodeRef: { value: 'TAX' },
+                            UnitPrice: 88.722
+                        }
+                    },
+                    {
+                        Amount: 0,
+                        Description: '',
+                        DetailType: 'SalesItemLineDetail',
+                        Id: '4',
+                        SalesItemLineDetail:
+                        {
+                            ItemRef: { name: 'pms', value: '4' },
+                            Qty: 1000,
+                            TaxCodeRef: { value: 'TAX' },
+                            UnitPrice: 0
+                        }
+                    }]
+            }
+        }]
 }

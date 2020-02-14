@@ -21,7 +21,7 @@ import { Bill } from "../models/Qbo/Bill";
 
 const version = "2.0.24";
 const APP_CENTER_BASE = "https://appcenter.intuit.com";
-const V3_endpoint_BASE_URL = "https://sandbox-quickbooks.api.intuit.com/v3/company/";
+const V3_endpoint_BASE_URL = "https://quickbooks.api.intuit.com/v3/company/";
 const QUERY_OPERATORS = ["=", "IN", "<", ">", "<=", ">=", "LIKE"];
 const RECONNECT_URL = APP_CENTER_BASE + "/api/v1/connection/reconnect";
 const DISCONNECT_URL = APP_CENTER_BASE + "/api/v1/connection/disconnect";
@@ -2324,12 +2324,12 @@ function request(verb: string, options: any, entity): Promise<any> {
   }
   return new Promise(function (resolve, reject) {
     // if (!token) reject('null token')
-    requester(opts, function (err, res, body) {
+    requester(opts, (err, res, body) => {
       if (debug) {
         console.log("invoking endpoint: " + url);
-        console.log(entity || "");
+        console.log(util.inspect(entity, false, null, false /* enable colors */) || "");
         // console.log(opts)
-        console.log(JSON.stringify(body, null, 2));
+        console.log(util.inspect(body, false, null, false /* enable colors */));
       }
       if (err ||
         res.statusCode >= 300 ||

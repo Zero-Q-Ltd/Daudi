@@ -2,7 +2,7 @@ import { firestore } from "firebase-admin";
 import { ASE } from "../../models/Daudi/fuel/ASE";
 import { FuelNamesArray, FuelType } from "../../models/Daudi/fuel/FuelType";
 import { FuelConfig } from "../../models/Daudi/omc/FuelConfig";
-import { EmptyOMCStock, Stock } from "../../models/Daudi/omc/Stock";
+import { newStock, Stock } from "../../models/Daudi/omc/Stock";
 import { Bill } from "../../models/Qbo/Bill";
 import { readStock, stockCollection } from "../crud/daudi/Stock";
 
@@ -75,7 +75,7 @@ export function syncAse(omcId: string, fuelConfig: { [key in FuelType]: FuelConf
          */
         if (fetchedbatch.empty) {
             console.log("creating new ASE");
-            totalAdded[item.fueltype] += convertedASE.qty.total
+            totalAdded[item.fueltype] += convertedASE.qty
             return batch.set(directory.doc(), convertedASE);
         } else {
             console.log("ASE exists")
@@ -83,7 +83,7 @@ export function syncAse(omcId: string, fuelConfig: { [key in FuelType]: FuelConf
         }
     })).then(async () => {
         return await readStock(omcId).then(snapshot => {
-            const stockObject: Stock = { ...EmptyOMCStock, ...snapshot.data() }
+            const stockObject: Stock = { ...newStock(), ...snapshot.data() }
             FuelNamesArray.forEach(fueltype => {
                 stockObject.qty[fueltype].ase += totalAdded[fueltype]
             })
@@ -111,21 +111,7 @@ function covertBillToASE(convertedBill: Bill, fueltype: FuelType, LineitemIndex:
         },
         Id: null,
         price: 0,
-        qty: {
-            directLoad: {
-                accumulated: {
-                    total: 0,
-                    usable: 0
-                },
-                total: 0
-            },
-            total: ASEQty,
-            transferred: {
-                total: 0,
-                transfers: []
-            },
-            used: 0
-        },
+        qty: ASEQty,
         active: true,
         fuelType: fueltype,
         date: firestore.Timestamp.fromDate(new Date())

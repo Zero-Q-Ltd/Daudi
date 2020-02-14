@@ -1,24 +1,24 @@
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/firestore';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
-import { AdminConfigService } from 'app/services/core/admin-config.service';
-import { AdminService } from 'app/services/core/admin.service';
+import { Component, Inject, OnDestroy, OnInit } from "@angular/core";
+import { AngularFirestore } from "@angular/fire/firestore";
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material";
+import { AdminConfigService } from "app/services/core/admin-config.service";
+import { AdminService } from "app/services/core/admin.service";
+import { StocksService } from "app/services/core/stocks.service";
+import { EntriesService } from "app/services/entries.service";
+import * as moment from "moment";
+import { ReplaySubject } from "rxjs";
+import { takeUntil } from "rxjs/operators";
+import { Depot, emptydepot } from "../../models/Daudi/depot/Depot";
+import { DepotConfig, emptyDepotConfig } from "../../models/Daudi/depot/DepotConfig";
+import { Entry } from "../../models/Daudi/fuel/Entry";
+import { FuelNamesArray, FuelType } from "../../models/Daudi/fuel/FuelType";
+import { newStock, Stock } from "../../models/Daudi/omc/Stock";
+import { GenericTruckStage } from "../../models/Daudi/order/GenericStage";
+import { emptyorder, Order } from "../../models/Daudi/order/Order";
+import { MyTimestamp } from "../../models/firestore/firestoreTypes";
+import { NotificationService } from "../../shared/services/notification.service";
 import { CoreService } from 'app/services/core/core.service';
-import { StocksService } from 'app/services/core/stocks.service';
-import { EntriesService } from 'app/services/entries.service';
 import { OrdersService } from 'app/services/orders.service';
-import * as moment from 'moment';
-import { ReplaySubject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
-import { Depot, emptydepot } from '../../models/Daudi/depot/Depot';
-import { DepotConfig, emptyDepotConfig } from '../../models/Daudi/depot/DepotConfig';
-import { Entry } from '../../models/Daudi/fuel/Entry';
-import { FuelNamesArray, FuelType } from '../../models/Daudi/fuel/FuelType';
-import { EmptyOMCStock, Stock } from '../../models/Daudi/omc/Stock';
-import { GenericTruckStage } from '../../models/Daudi/order/GenericStage';
-import { emptyorder, Order } from '../../models/Daudi/order/Order';
-import { MyTimestamp } from '../../models/firestore/firestoreTypes';
-import { NotificationService } from '../../shared/services/notification.service';
 
 interface EntryContent {
   id: string;
@@ -33,9 +33,9 @@ interface EntryContent {
 }
 
 @Component({
-  selector: 'app-entries-selector',
-  templateUrl: './entries-selector.component.html',
-  styleUrls: ['./entries-selector.component.scss']
+  selector: "app-entries-selector",
+  templateUrl: "./entries-selector.component.html",
+  styleUrls: ["./entries-selector.component.scss"]
 })
 
 export class EntriesSelectorComponent implements OnInit, OnDestroy {
@@ -48,7 +48,7 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
       ago: [],
       ik: []
     };
-  displayedColumns: string[] = ['id', 'batch', 'totalqty', 'accumulated', 'loadedqty', 'availableqty', 'drawnqty', 'remainingqty', 'status'];
+  displayedColumns: string[] = ["id", "batch", "totalqty", "accumulated", "loadedqty", "availableqty", "drawnqty", "remainingqty", "status"];
 
   drawnEntry: {
     [key in FuelType]: EntryContent[]
@@ -74,7 +74,7 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
    * this keeps a local copy of all the subscriptions within this service
    */
   subscriptions: Map<string, () => void> = new Map<string, any>();
-  stock: Stock = { ...EmptyOMCStock };
+  stock: Stock = { ...newStock() };
   activedepot: { depot: Depot, config: DepotConfig } = { depot: { ...emptydepot }, config: { ...emptyDepotConfig } };
 
   constructor(
@@ -150,7 +150,7 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
        * Check if its a private depot as calculations will use the local depot values
        * Entries are already filtered for private depots, so calculations are the same
        */
-      const value = this.stock.qty[fueltype].ase
+      const value = this.stock.qty[fueltype].ase;
 
       /**
        * check if there is enough ASE for that fuel
@@ -316,7 +316,7 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
         this.dialogRef.disableClose = false;
         HasError = true;
         return this.notification.notify({
-          alert_type: 'error',
+          alert_type: "error",
           title: `Error`,
           body: this.fuelerror[fueltype].errorString,
           duration: 6000
@@ -328,12 +328,12 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
 
     if (!HasError) {
       const data: GenericTruckStage = {
-        user: this.adminservice.createuserobject(),
+        user: this.adminservice.createUserObject(),
         expiry: [
           {
-            timeCreated: MyTimestamp.now(),
-            expiry: MyTimestamp.fromDate(moment().add(45, 'minutes').toDate()),
-            user: this.adminservice.createuserobject()
+            timeCreated: new Date(),
+            expiry: moment().add(45, "minutes").toDate(),
+            user: this.adminservice.createUserObject()
           }],
       };
       this.order.stage = 4;
@@ -342,7 +342,7 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
 
       this.order.orderStageData[4].user = data[0].user;
 
-      this.order.truckStageData['1'] = data;
+      this.order.truckStageData["1"] = data;
 
       const batchaction = this.db.firestore.batch();
       batchaction.update(this.ordersservice.ordersCollection(this.core.currentOmc.value.Id).doc(this.orderId), this.order);
@@ -377,10 +377,7 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
              */
             this.depotEntries[fueltype][0].qty.directLoad = {
               total: this.depotEntries[fueltype][0].qty.total,
-              accumulated: {
-                usable: 0,
-                total: this.depotEntries[fueltype][0].qty.directLoad.accumulated.total
-              },
+              accumulated: 0
             };
             /**
              * Add the qty drawn to the used amount value of the ASE
@@ -409,10 +406,7 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
             this.depotEntries[fueltype][secondDrawnId].active = active;
             this.depotEntries[fueltype][secondDrawnId].qty.directLoad = {
               total: this.depotEntries[fueltype][secondDrawnId].qty.directLoad.total + this.drawnEntry[fueltype][1].qtydrawn,
-              accumulated: {
-                usable: 0,
-                total: this.depotEntries[fueltype][secondDrawnId].qty.directLoad.accumulated.total
-              },
+              accumulated: 0
             };
             /**
              * Add the qty drawn to the used amount value of the ASE
@@ -441,15 +435,16 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
 
             this.depotEntries[fueltype][0].qty.directLoad = {
               total: this.depotEntries[fueltype][0].qty.total + this.drawnEntry[fueltype][0].qtydrawn,
-              accumulated: {
-                usable: 0,
-                total: this.depotEntries[fueltype][0].qty.directLoad.accumulated.total
-              },
+              accumulated: 0
             };
             batchaction.update(this.entriesService.entryCollection(this.core.currentOmc.value.Id)
               .doc(this.depotEntries[fueltype][0].Id), this.depotEntries[fueltype][0]);
             this.stock.qty[fueltype].ase -= this.order.fuel[fueltype].qty;
-            batchaction.update(this.stockService.stockDoc(this.core.currentOmc.value.Id, this.core.activedepot.value.depot.Id), this.stock);
+            batchaction.update(
+              this.stockService.stockDoc(
+                this.core.currentOmc.value.Id,
+                this.core.activedepot.value.depot.Id,
+                this.core.activedepot.value.depot.config.private), this.stock);
 
           }
         }
@@ -458,8 +453,8 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
       });
       batchaction.commit().then(value => {
         this.notification.notify({
-          alert_type: 'success',
-          title: 'Success',
+          alert_type: "success",
+          title: "Success",
           body: `Truck Approved`
         });
         this.dialogRef.close();

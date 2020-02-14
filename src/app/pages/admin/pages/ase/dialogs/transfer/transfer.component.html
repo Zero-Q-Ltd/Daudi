@@ -10,7 +10,7 @@
         </mat-select>
     </mat-form-field>
     <mat-form-field>
-        <input [formControl]="qtyToDrawControl" matInput placeholder="Enter ASE amount">
+        <input [formControl]="qtyToDrawControl" matInput placeholder="Enter ASE amount to transfer">
     </mat-form-field>
 
     <mat-spinner *ngIf="loadingDepotConfig"></mat-spinner>
@@ -24,12 +24,13 @@
 
 </div>
 <mat-dialog-actions align="end">
+    <span>{{selectedDepot?.depot.Name}} New {{fuelType}} Quantity
+        {{selectedDepot?.stock.qty[fuelType].ase + (+qtyToDrawControl.value)}} </span>
     <button mat-raised-button mat-dialog-close>Cancel</button>
     <button mat-raised-button color="primary" [disabled]="!validEntryForms || !qtyToDrawControl.valid || !validTotals"
         (click)="saveEntryChanges()" cdkFocusInitial>
         Transfer
     </button>
-
     <mat-progress-spinner *ngIf="saving">
     </mat-progress-spinner>
 </mat-dialog-actions>

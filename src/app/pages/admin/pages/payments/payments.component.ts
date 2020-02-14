@@ -1,14 +1,14 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {AngularFireFunctions} from '@angular/fire/functions';
-import {MatDialog, MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
-import {AdminService} from 'app/services/core/admin.service';
-import {PaymentsService} from 'app/services/payments.service';
-import {ReplaySubject} from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
-import {DaudiCustomer} from '../../../../models/Daudi/customer/Customer';
-import {EquityBulk} from '../../../../models/ipn/EquityBulk';
-import {CreatePaymentComponent} from '../../components/create-payment/create-payment.component';
-import {CustomerManagementComponent} from '../customer-management/customer-management.component';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AngularFireFunctions } from '@angular/fire/functions';
+import { MatDialog, MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
+import { AdminService } from 'app/services/core/admin.service';
+import { PaymentsService } from 'app/services/payments.service';
+import { ReplaySubject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { DaudiCustomer } from '../../../../models/Daudi/customer/Customer';
+import { EquityBulk } from '../../../../models/ipn/EquityBulk';
+import { CreatePaymentComponent } from '../../components/create-payment/create-payment.component';
+import { CustomerManagementComponent } from '../customer-management/customer-management.component';
 
 @Component({
   selector: 'app-payments',
@@ -17,8 +17,8 @@ import {CustomerManagementComponent} from '../customer-management/customer-manag
 })
 export class PaymentsComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = ['bank', 'mode', 'bankref', 'amount', 'name', 'phone'];
-  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
-  @ViewChild(MatSort, {static: true}) sort: MatSort;
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
   unprocesseddatasource = new MatTableDataSource<EquityBulk>();
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
 
@@ -51,7 +51,7 @@ export class PaymentsComponent implements OnInit, OnDestroy {
       if (result) {
         payment.billNumber = result[0].Id;
         payment.daudiFields.status = 48;
-        payment.daudiFields.approvedby = this.adminservice.createuserobject();
+        payment.daudiFields.approvedby = this.adminservice.createUserObject();
         this.functions.httpsCallable('ipnCallable')(payment)
           .pipe(takeUntil(this.comopnentDestroyed))
           .subscribe(res => {

@@ -8,6 +8,7 @@ import { CoreService } from 'app/services/core/core.service';
 import { DepotService } from 'app/services/core/depot.service';
 import { ReplaySubject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { NavLinks } from './admin-routes';
 
 @Component({
   selector: 'app-admin',
@@ -21,6 +22,15 @@ export class AdminComponent implements OnInit, OnDestroy {
   phoneControl: FormControl = new FormControl({ value: '' }, [Validators.required, Validators.maxLength(8), Validators.minLength(8)]);
   activeLink = 'entries';
 
+  navLinks = NavLinks.map(t => {
+    const splitUrl = t.path.split("|")
+    const tt = {
+      link: splitUrl[0],
+      label: splitUrl[1],
+      icon: splitUrl[2]
+    };
+    return tt;
+  })
   alldepots: Depot[];
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
 
@@ -29,7 +39,6 @@ export class AdminComponent implements OnInit, OnDestroy {
     private dialog: MatDialog,
     private core: CoreService,
     private depotsservice: DepotService) {
-
     this.core.depots.pipe(takeUntil(this.comopnentDestroyed)).subscribe(depots => {
       this.alldepots = depots;
     });

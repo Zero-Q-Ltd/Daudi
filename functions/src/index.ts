@@ -1,25 +1,28 @@
 import * as admin from "firebase-admin";
 import * as functions from 'firebase-functions';
+import * as requester from "request";
 import { QuickBooks } from './libs/qbmain';
 import { CompanySync } from "./models/Cloud/CompanySync";
 import { OrderCreate } from './models/Cloud/OrderCreate';
-import { DaudiCustomer, emptyDaudiCustomer } from './models/Daudi/customer/Customer';
+import { EmptyQboConfig } from "./models/Cloud/QboEnvironment";
+import { emptyDaudiCustomer } from './models/Daudi/customer/Customer';
+import { Order } from "./models/Daudi/order/Order";
 import { SMS } from './models/Daudi/sms/sms';
 import { MyTimestamp } from './models/firestore/firestoreTypes';
+import { QboOrder } from "./models/Qbo/QboOrder";
+import { toObject } from "./models/utils/SnapshotUtils";
 import { creteOrder, updateOrder } from './tasks/crud/daudi/Order';
+import { ReadAndInstantiate, readQboConfig } from "./tasks/crud/daudi/QboConfig";
 import { updateCustomer } from './tasks/crud/qbo/customer/update';
 import { createQboOrder } from './tasks/crud/qbo/Order/create';
-import { createQbo } from './tasks/sharedqb';
 import { sendsms } from './tasks/sms/sms';
 import { ordersms } from './tasks/sms/smscompose';
 import { processSync } from './tasks/syncdb/processSync';
 import { validorderupdate } from './validators/orderupdate';
-import { readQboConfig, ReadAndInstantiate } from "./tasks/crud/daudi/QboConfig";
-import { toArray, toObject } from "./models/utils/SnapshotUtils";
-import { EmptyQboConfig, QboCofig } from "./models/Cloud/QboEnvironment";
-import { QboOrder } from "./models/Qbo/QboOrder";
-import { Order } from "./models/Daudi/order/Order";
-import * as requester from "request";
+import { createQbo } from "./tasks/sharedqb";
+import { EquityBulk } from "./models/ipn/EquityBulk";
+import { paymentFcm } from "./tasks/FCM/paymentFcm";
+import { resolveIpn } from "./tasks/resolvepayment";
 
 admin.initializeApp(functions.config().firebase);
 admin.firestore().settings({ timestampsInSnapshots: true });
@@ -39,10 +42,11 @@ function markAsRunning(eventID: string) {
  */
 exports.createEstimate = functions.https.onCall((data: OrderCreate, context) => {
   console.log(data)
+  // return creteOrder(data.order, data.omcId)
+
   return ReadAndInstantiate(data.omcId).then((result) => {
     console.log(result.qbo)
-    const est = new createQboOrder(data.order, result.config)
-    return result.qbo.createEstimate(est.formulate()).then((createResult) => {
+    return result.qbo.createEstimate(new createQboOrder(data.order, result.config).QboOrder).then((createResult) => {
       /**
        * Only send sn SMS when estimate creation is complete
        * Make the two processes run parallel so that none is blocking
@@ -60,8 +64,7 @@ exports.createInvoice = functions.https.onCall((data: OrderCreate, context) => {
   console.log(data)
   return ReadAndInstantiate(data.omcId).then((result) => {
     console.log(result.qbo)
-    const inv = new createQboOrder(data.order, result.config)
-    return result.qbo.createInvoice(inv.formulate()).then((createResult) => {
+    return result.qbo.createInvoice(new createQboOrder(data.order, result.config).QboOrder).then((createResult) => {
       /**
        * Only send sn SMS when invoice creation is complete
        * Make the two processes run parallel so that none is blocking
@@ -258,3 +261,79 @@ exports.onUserStatusChanged = functions.database
       });
     }
   });
+
+exports.ipnsandbox_db = functions.firestore
+  .document("/sandboxpayments/{ipnid}")
+  .onCreate((snap, context) => {
+    // console.log(snap);
+    // A new customer has been updated
+    const eventID = context.eventId;
+    if (isAlreadyRunning(eventID)) {
+      console.log(
+        "Ignore it because it is already running (eventId):",
+        eventID
+      );
+      return true;
+    }
+    markAsRunning(eventID);
+    const ipn = snap.data() as EquityBulk;
+    return resolveIpn(ipn, context.params.ipnid).then(() => {
+      ipn.daudiFields.status = 2;
+      return paymentFcm(ipn);
+    });
+  });
+exports.ipnprod_db = functions.firestore
+  .document("/prodpayments/{ipnid}")
+  .onCreate((snap, context) => {
+    // console.log(snap);
+    // A new customer has been updated
+    const eventID = context.eventId;
+    if (isAlreadyRunning(eventID)) {
+      console.log(
+        "Ignore it because it is already running (eventId):",
+        eventID
+      );
+      return true;
+    } else {
+      markAsRunning(eventID);
+      const ipn = snap.data() as EquityBulk;
+      return resolveIpn(ipn, context.params.ipnid).then(() => {
+        ipn.daudiFields.status = 2;
+        return paymentFcm(ipn);
+      });
+    }
+  });
+
+/**
+* a way for the client app to execute a cloud function directly
+*/
+
+exports.ipnsandboxcallable = functions.https.onCall((data, context) => {
+  const ipn = data as EquityBulk;
+  console.log(data);
+  return resolveIpn(ipn, ipn.billNumber.toString()).then(() => {
+    /**
+     * force the fcm to send a payment received msg, because otherwise the new ipn data wont be known
+     * unless we make a db read before sending, which at this point is unneccessary
+     */
+    ipn.daudiFields.status = 2;
+    return paymentFcm(ipn);
+  });
+});
+
+/**
+ * a way for the client app to execute a cloud function directly
+ */
+
+exports.ipnprodcallable = functions.https.onCall((data, context) => {
+  const ipn = data as EquityBulk;
+  console.log(data);
+  return resolveIpn(ipn, ipn.billNumber.toString()).then(() => {
+    /**
+     * force the fcm to send a payment received msg, because otherwise the new ipn data wont be known
+     * unless we make a db read before sending, which at this point is unneccessary
+     */
+    ipn.daudiFields.status = 2;
+    return paymentFcm(ipn);
+  });
+});

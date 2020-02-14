@@ -1,17 +1,18 @@
-import {Component, EventEmitter, OnDestroy, OnInit} from '@angular/core';
-import {AngularFirestore} from '@angular/fire/firestore';
-import {MatDialog} from '@angular/material';
-import {ComponentCommunicationService} from 'app/services/component-communication.service';
-import {CoreService} from 'app/services/core/core.service';
-import {OrdersService} from 'app/services/orders.service';
+import { Component, EventEmitter, OnDestroy, OnInit } from '@angular/core';
+import { AngularFirestore } from '@angular/fire/firestore';
+import { MatDialog } from '@angular/material';
+import { ComponentCommunicationService } from 'app/services/component-communication.service';
+import { CoreService } from 'app/services/core/core.service';
+import { OrdersService } from 'app/services/orders.service';
 import * as moment from 'moment';
-import {Options} from 'ng5-slider';
-import {ReplaySubject} from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
-import {Order} from '../../models/Daudi/order/Order';
-import {NotificationService} from '../../shared/services/notification.service';
-import {ConfirmDialogComponent} from '../confirm-dialog/confirm-dialog.component';
-import {EntriesSelectorComponent} from '../entries-selector/entries-selector.component';
+import { Options } from 'ng5-slider';
+import { ReplaySubject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { Order } from '../../../../models/Daudi/order/Order';
+import { NotificationService } from '../../../../shared/services/notification.service';
+import { ConfirmDialogComponent } from '../../../../components/confirm-dialog/confirm-dialog.component';
+import { EntriesSelectorComponent } from '../../../../components/entries-selector/entries-selector.component';
+import { EntryAssignComponent } from '../entry-assign/entry-assign.component';
 
 @Component({
   selector: 'truck-details',
@@ -137,29 +138,6 @@ export class TruckDetailsComponent implements OnInit, OnDestroy {
     return MyTimestamp.toDate() < moment().toDate();
   }
 
-  /**
-   *
-   * @param truck
-   */
-  freezeOrder() {
-    const dialogRef = this.dialog.open(ConfirmDialogComponent,
-      {
-        role: 'dialog',
-        data: this.order.frozen ? 'Are you sure you want to restore to normal?' : 'Freeze this Order? This will disable any modifications'
-      });
-    dialogRef.afterClosed().pipe(takeUntil(this.comopnentDestroyed)).subscribe(result => {
-      if (result) {
-        this.orderservice.updateorder(this.order.Id, this.core.currentOmc.value.Id, this.order).then(value => {
-          this.notification.notify({
-            body: 'Saved',
-            alert_type: 'success',
-            title: 'Success',
-            duration: 2000
-          });
-        });
-      }
-    });
-  }
 
   resolvetime(MyTimestamp) {
     if (MyTimestamp) {
@@ -200,7 +178,7 @@ export class TruckDetailsComponent implements OnInit, OnDestroy {
   }
 
   approveTruck() {
-    const dialogRef = this.dialog.open(EntriesSelectorComponent, {
+    const dialogRef = this.dialog.open(EntryAssignComponent, {
       role: 'dialog',
       data: this.order.Id,
       width: '80%'

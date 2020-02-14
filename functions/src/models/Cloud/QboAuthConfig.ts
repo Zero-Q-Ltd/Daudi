@@ -16,10 +16,7 @@ export const EmptyQBOAuthCOnfig: QBOAuthCOnfig = {
     authConfig: null,
 }
 export interface AuthConfig {
-    previousDCT: MyTimestamp;
     accessToken: string;
     refreshToken: string;
-    accesstokenExpiry: MyTimestamp;
-    refreshtokenExpiry: MyTimestamp;
-    time: MyTimestamp;
+    createdAt: MyTimestamp;
 }
