@@ -3,20 +3,19 @@ import * as moment from "moment";
 import { LineItems, Payment } from "../models/Qbo/Payment";
 import { QboOrder } from "../models/Qbo/QboOrder";
 import { createQbo } from "./sharedqb";
-import { DaudiPayment, paymentStatus, PaymentErrorCodes } from "../models/ipn/DaudiPayment";
+import { DaudiPayment, paymentStatus, PaymentErrorCodes } from "../models/payment/DaudiPayment";
 import { QuickBooks } from "../libs/qbmain";
 import { GenericStage } from "../models/Daudi/order/GenericStage";
 import { PaymentDoc } from "./crud/daudi/Paymnet";
 import { orderDoc } from "./crud/daudi/Order";
 
 export function resolvePayment(payment: DaudiPayment, qbo: QuickBooks, omcId: string): Promise<any> {
-    // console.log(ipndetail);
-    const proddbstring = "prodpayments";
-    const sandboxdbstring = "sandboxpayments";
-    const customerid = payment.transaction.billNumber;
+    console.log(payment);
+    const customerId = payment.transaction.billNumber;
 
     if (payment.daudiFields.status === 0) {
         return new Promise(resolve => {
+            console.log("Ignoring payment lacking customerId")
             resolve(true);
         });
     } else {
@@ -25,11 +24,11 @@ export function resolvePayment(payment: DaudiPayment, qbo: QuickBooks, omcId: st
          */
         return qbo
             .findInvoices([
-                { field: "CustomerRef", value: customerid, operator: "=" },
+                { field: "CustomerRef", value: customerId, operator: "=" },
                 { field: "Balance", value: "0", operator: ">" },
                 { asc: "MetaData.CreateTime" }
             ])
-            .then(async invoicesresult => {
+            .then(invoicesresult => {
                 /**
                  * initialize the array in case empty
                  */
@@ -40,9 +39,14 @@ export function resolvePayment(payment: DaudiPayment, qbo: QuickBooks, omcId: st
                  */
                 let applicableInvoicesTotal = 0;
 
-                const applicableInvoices: Array<QboOrder> = allpendinginvoices.filter(invoice => {
+                const applicableInvoices: Array<QboOrder> = allpendinginvoices.filter((invoice, index) => {
                     if (applicableInvoicesTotal <= Number(payment.transaction.amount)) {
                         applicableInvoicesTotal += invoice.Balance;
+                        return true
+                    } else if (index === 0) {
+                        /**
+                         * Apply if there's only one invoice
+                         */
                         return true
                     } else {
                         return false
@@ -67,7 +71,7 @@ export function resolvePayment(payment: DaudiPayment, qbo: QuickBooks, omcId: st
                     const qboPayment: Payment = {
                         PaymentRefNum: payment.transaction.reference,
                         CustomerRef: {
-                            value: customerid,
+                            value: customerId,
                             name: payment.depositedBy.name
                         },
                         /**
@@ -111,52 +115,53 @@ export function resolvePayment(payment: DaudiPayment, qbo: QuickBooks, omcId: st
                         }),
                         TotalAmt: Number(payment.transaction.amount)
                     };
-                    const paymentResult = await qbo.createPayment(qboPayment).then(res => res.Payment.Line)
-                    if (!paymentResult) {
-                        console.error("Payment not sucessful");
-                        payment.daudiFields.status = paymentStatus.error
-                        payment.daudiFields.errordetail = {
-                            code: PaymentErrorCodes["Error Consolidating with Quickbooks"],
-                            error: "Unknown error details"
-                        }
-                        return PaymentDoc(omcId, payment.Id).update(payment)
-                    }
-                    const batch = firestore().batch();
-                    /**
-                     * Loop through the payment results and conditionally move the orders to paid in Daudi
-                     */
-                    invoiceValues.forEach(val => {
-                        const stagedata: GenericStage = {
-                            user: {
-                                name: "QBO",
-                                date: moment().toDate(),
-                                adminId: null
+                    return qbo.createPayment(qboPayment).then(res => {
+                        const paymentResult = res.Payment.Line
+                        if (!paymentResult) {
+                            console.error("Payment not sucessful");
+                            payment.daudiFields.status = paymentStatus.error
+                            payment.daudiFields.errordetail = {
+                                code: PaymentErrorCodes["Error Consolidating with Quickbooks"],
+                                error: "Unknown error details"
                             }
-                        };
-                        /**
-                         * Only update the stage if the order has been fully paid
-                         * Connect this payment to the applied invoices within DAUDI
-                         */
-                        if (val.amountPaid === val.amountPaid) {
-                            batch.update(orderDoc(val.orderId, omcId), {
-                                stage: 3,
-                                [`stagedata.${3}`]: stagedata,
-                                [`paymentDetail.${payment.Id}`]: val.amountPaid
-                            })
-                        } else {
-                            batch.update(orderDoc(val.orderId, omcId), {
-                                [`paymentDetail.${payment.Id}`]: val.amountPaid
-                            })
+                            return PaymentDoc(omcId, payment.Id).update(payment)
                         }
+                        const batch = firestore().batch() as any
+                        /**
+                         * Loop through the payment results and conditionally move the orders to paid in Daudi
+                         */
+                        invoiceValues.forEach(val => {
+                            const stagedata: GenericStage = {
+                                user: {
+                                    name: "QBO",
+                                    date: moment().toDate(),
+                                    adminId: null
+                                }
+                            };
+                            /**
+                             * Only update the stage if the order has been fully paid
+                             * Connect this payment to the applied invoices within DAUDI
+                             */
+                            if (val.amountPaid === val.amountPaid) {
+                                batch.update(orderDoc(val.orderId, omcId), {
+                                    stage: 3,
+                                    [`stagedata.${3}`]: stagedata,
+                                    [`paymentDetail.${payment.Id}`]: val.amountPaid
+                                })
+                            } else {
+                                batch.update(orderDoc(val.orderId, omcId), {
+                                    [`paymentDetail.${payment.Id}`]: val.amountPaid
+                                })
+                            }
+                        })
+                        return batch.commit()
                     })
-                    return batch.commit()
-
                 } else {
                     const unappliedPayment: Payment = {
 
                         PaymentRefNum: payment.transaction.reference,
                         CustomerRef: {
-                            value: customerid,
+                            value: customerId,
                             name: payment.depositedBy.name
                         },
                         Line: [],

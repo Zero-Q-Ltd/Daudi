@@ -1,30 +1,24 @@
 import * as admin from "firebase-admin";
 import * as functions from 'firebase-functions';
-import * as requester from "request";
-import { QuickBooks } from './libs/qbmain';
 import { CompanySync } from "./models/Cloud/CompanySync";
 import { OrderCreate } from './models/Cloud/OrderCreate';
-import { EmptyQboConfig } from "./models/Cloud/QboEnvironment";
 import { emptyDaudiCustomer } from './models/Daudi/customer/Customer';
 import { Order } from "./models/Daudi/order/Order";
 import { SMS } from './models/Daudi/sms/sms';
 import { MyTimestamp } from './models/firestore/firestoreTypes';
+import { DaudiPayment, emptyPayment } from "./models/payment/DaudiPayment";
 import { QboOrder } from "./models/Qbo/QboOrder";
 import { toObject } from "./models/utils/SnapshotUtils";
 import { creteOrder, updateOrder } from './tasks/crud/daudi/Order';
-import { ReadAndInstantiate, readQboConfig } from "./tasks/crud/daudi/QboConfig";
+import { PaymentDoc } from "./tasks/crud/daudi/Paymnet";
+import { ReadAndInstantiate } from "./tasks/crud/daudi/QboConfig";
 import { updateCustomer } from './tasks/crud/qbo/customer/update';
 import { createQboOrder } from './tasks/crud/qbo/Order/create';
+import { resolvePayment } from "./tasks/resolvepayment";
 import { sendsms } from './tasks/sms/sms';
 import { ordersms } from './tasks/sms/smscompose';
 import { processSync } from './tasks/syncdb/processSync';
 import { validorderupdate } from './validators/orderupdate';
-import { createQbo } from "./tasks/sharedqb";
-import { EquityBulk } from "./models/ipn/EquityBulk";
-import { paymentFcm } from "./tasks/FCM/paymentFcm";
-import { resolvePayment } from "./tasks/resolvepayment";
-import { DaudiPayment, emptyPayment } from "./models/ipn/DaudiPayment";
-import { PaymentDoc } from "./tasks/crud/daudi/Paymnet";
 
 admin.initializeApp(functions.config().firebase);
 admin.firestore().settings({ timestampsInSnapshots: true });
@@ -275,3 +269,20 @@ exports.paymentClientInit = functions.https.onCall((data: { paymentId: string, o
     })
 
 });
+
+/**
+ * Payment NOtification endpoint
+ */
+
+// exports.paymentClientInit = functions.https.onRequest((req, res) => {
+//   console.log(data);
+//   return PaymentDoc(data.omcId, data.paymentId)
+//     .get()
+//     .then(res => {
+//       const payment = toObject(emptyPayment(), res)
+//       return ReadAndInstantiate(data.omcId).then((result) => {
+//         return resolvePayment(payment, result.qbo, data.omcId)
+//       })
+//     })
+
+// });
