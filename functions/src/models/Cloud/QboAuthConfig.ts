@@ -1,4 +1,3 @@
-import { MyTimestamp } from "../firestore/firestoreTypes";
 
 
 export interface QBOAuthCOnfig {
@@ -18,5 +17,5 @@ export const EmptyQBOAuthCOnfig: QBOAuthCOnfig = {
 export interface AuthConfig {
     accessToken: string;
     refreshToken: string;
-    createdAt: MyTimestamp;
+    createdAt: Date;
 }

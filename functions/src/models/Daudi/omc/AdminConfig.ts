@@ -15,7 +15,7 @@ export interface AdminConfig {
  */
 const happy: DaudiMeta = {
   adminId: 'oSGSG2uCQJd3SqpZf6TXObrbDo73',
-  date: MyTimestamp.fromDate(new Date('Aug 29, 2019'))
+  date: new Date('Aug 29, 2019')
 };
 
 const InfoMetadata: Metadata = {
@@ -31,7 +31,7 @@ export const emptyqboAuth: QBOAuthCOnfig = {
   authConfig: {
     accessToken: '',
     refreshToken: '',
-    createdAt: MyTimestamp.fromDate(new Date())
+    createdAt: new Date()
   }
 };
 

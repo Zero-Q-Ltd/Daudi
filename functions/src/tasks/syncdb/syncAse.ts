@@ -114,7 +114,7 @@ function covertBillToASE(convertedBill: Bill, fueltype: FuelType, LineitemIndex:
         qty: ASEQty,
         active: true,
         fuelType: fueltype,
-        date: firestore.Timestamp.fromDate(new Date())
+        date: new Date()
     };
     console.log("converted bill to ASE", fueltype, JSON.stringify(newASE));
     return newASE;

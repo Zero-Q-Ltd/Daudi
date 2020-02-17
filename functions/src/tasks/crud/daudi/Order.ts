@@ -3,19 +3,19 @@ import { Order } from "../../../models/Daudi/order/Order";
 
 
 export function creteOrder(order: Order, omcId: string) {
-    return admin.firestore()
-        .collection("omc")
-        .doc(omcId)
-        .collection("orders")
-        .doc(order.Id)
+    return orderDoc(order.Id, omcId)
         .set(order);
 }
 
 export function updateOrder(order: Order, omcId: string) {
+    return orderDoc(order.Id, omcId)
+        .update(order)
+}
+
+export function orderDoc(orderId: string, omcId: string) {
     return admin.firestore()
         .collection("omc")
         .doc(omcId)
         .collection("orders")
-        .doc(order.Id)
-        .update(order)
+        .doc(orderId)
 }

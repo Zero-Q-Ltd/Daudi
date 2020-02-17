@@ -131,10 +131,7 @@ function covertBillToEntry(convertedBill: Bill, fueltype: FuelType, LineitemInde
         qty: {
             directLoad: {
                 total: 0,
-                accumulated: {
-                    total: 0,
-                    usable: 0
-                }
+                accumulated: 0
             },
             total: entryQty,
             transferred: {
@@ -145,7 +142,7 @@ function covertBillToEntry(convertedBill: Bill, fueltype: FuelType, LineitemInde
         },
         active: true,
         fuelType: fueltype,
-        date: firestore.Timestamp.fromDate(new Date())
+        date: new Date()
     };
     console.log("converted bill to Entry", fueltype, JSON.stringify(newEntry));
     return newEntry;

@@ -30,7 +30,7 @@ export function createQbo(omcId: string, config: QboCofig, useSandbox: boolean):
       const dbobject: AuthConfig = {
         accessToken: newtokens.access_token,
         refreshToken: newtokens.refresh_token,
-        createdAt: firestore.Timestamp.now(),
+        createdAt: new Date(),
       };
 
       //Replace the object values we're using with the new ones

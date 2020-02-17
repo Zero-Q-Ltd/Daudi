@@ -1,6 +1,6 @@
-import { deepCopy } from "../../../../../functions/src/models/utils/deepCopy";
 import { FuelType } from "../fuel/FuelType";
 import { emptytaxExempt, TaxExempt } from "./TaxExempt";
+import { deepCopy } from "../../utils/deepCopy";
 
 export interface Stock {
   qty: {
