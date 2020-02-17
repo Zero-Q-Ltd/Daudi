@@ -50,9 +50,13 @@ export interface Order {
     [key in FuelType]: OrderFuelConfig
   };
   /**
-   * @todo Connect payment detail to every order
+   * Keeps a reference to the payments
+   * The key is the paymentId and the value is the amount from the payment applied to this order
+   * This makes multi-directional query to happen, both by orderId and paymentId
    */
-  paymentDetail?: null;
+  paymentDetail: {
+    [key: string]: number
+  };
   orderStageData: {
     [key in OrderStages]: GenericStage;
   };

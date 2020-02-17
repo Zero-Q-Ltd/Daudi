@@ -1,11 +1,11 @@
-import {MyTimestamp} from '../../firestore/firestoreTypes';
+import { MyTimestamp } from '../../firestore/firestoreTypes';
 
 export interface DaudiMeta {
-  date: MyTimestamp;
+  date: Date;
   adminId: string;
 }
 
 export const emptyMeta: DaudiMeta = {
   adminId: null,
-  date: MyTimestamp.now()
+  date: new Date()
 };
