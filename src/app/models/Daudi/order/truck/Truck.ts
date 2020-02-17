@@ -1,7 +1,6 @@
-import { MyTimestamp } from '../../../firestore/firestoreTypes';
-import { AssociatedUser } from '../../admin/AssociatedUser';
-import { Compartment } from './Compartment';
-import { TruckStages } from './TruckStages';
+import { AssociatedUser } from "../../admin/AssociatedUser";
+import { Compartment } from "./Compartment";
+import { TruckStages } from "./TruckStages";
 
 export interface Expiry {
   timeCreated: Date;
@@ -28,7 +27,7 @@ export interface Truck {
   truckdetail: {
     numberplate: string;
   };
-  compartments: Array<Compartment>;
+  compartments: Compartment[];
 }
 
 export const emptytruck: Truck = {

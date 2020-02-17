@@ -131,10 +131,7 @@ function covertBillToEntry(convertedBill: Bill, fueltype: FuelType, LineitemInde
         qty: {
             directLoad: {
                 total: 0,
-                accumulated: {
-                    total: 0,
-                    usable: 0
-                }
+                accumulated: 0
             },
             total: entryQty,
             transferred: {

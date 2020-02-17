@@ -31,7 +31,7 @@ export const emptyqboAuth: QBOAuthCOnfig = {
   authConfig: {
     accessToken: '',
     refreshToken: '',
-    createdAt: MyTimestamp.fromDate(new Date())
+    createdAt: new Date()
   }
 };
 

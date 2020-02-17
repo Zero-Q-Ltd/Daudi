@@ -22,7 +22,8 @@ import { validorderupdate } from './validators/orderupdate';
 import { createQbo } from "./tasks/sharedqb";
 import { EquityBulk } from "./models/ipn/EquityBulk";
 import { paymentFcm } from "./tasks/FCM/paymentFcm";
-import { resolveIpn } from "./tasks/resolvepayment";
+import { resolvePayment } from "./tasks/resolvepayment";
+import { DaudiPayment } from "./models/ipn/DaudiPayment";
 
 admin.initializeApp(functions.config().firebase);
 admin.firestore().settings({ timestampsInSnapshots: true });
@@ -42,10 +43,8 @@ function markAsRunning(eventID: string) {
  */
 exports.createEstimate = functions.https.onCall((data: OrderCreate, context) => {
   console.log(data)
-  // return creteOrder(data.order, data.omcId)
-
   return ReadAndInstantiate(data.omcId).then((result) => {
-    console.log(result.qbo)
+    // console.log(result.qbo)
     return result.qbo.createEstimate(new createQboOrder(data.order, result.config).QboOrder).then((createResult) => {
       /**
        * Only send sn SMS when estimate creation is complete
@@ -63,7 +62,7 @@ exports.createEstimate = functions.https.onCall((data: OrderCreate, context) => 
 exports.createInvoice = functions.https.onCall((data: OrderCreate, context) => {
   console.log(data)
   return ReadAndInstantiate(data.omcId).then((result) => {
-    console.log(result.qbo)
+    // console.log(result.qbo)
     return result.qbo.createInvoice(new createQboOrder(data.order, result.config).QboOrder).then((createResult) => {
       /**
        * Only send sn SMS when invoice creation is complete
@@ -75,40 +74,6 @@ exports.createInvoice = functions.https.onCall((data: OrderCreate, context) => {
       return Promise.all([ordersms(data.order, data.omcId), validorderupdate(data.order, data.omcId), updateOrder(data.order, data.omcId)]);
     })
   })
-})
-
-exports.testSms = functions.https.onCall(() => {
-  const opts = {
-    method: "post",
-    url: "https://ujumbesms.co.ke/api/messaging",
-    headers: {
-      "X-Authorization": "YWI0YTkzMzUxYTJjYWFjYmU5Zjk2Y2ZkZmZlMDU4",
-      "email": "kisinga@zero-q.com",
-      Accept: "application/json",
-    },
-    json: true,
-    body: {
-      "data": [
-        {
-          "message_bag": {
-            "numbers": "0702604380",
-            "message": "Testing test",
-            "sender": "SnowPharm"
-          }
-        }
-      ]
-
-    }
-  };
-  return new Promise(function (resolve, reject) {
-    // if (!token) reject('null token')
-    requester(opts, function (err, res, body) {
-      console.log(JSON.stringify(body, null, 2));
-
-      resolve(body);
-
-    });
-  });
 })
 
 
@@ -150,6 +115,7 @@ exports.customerUpdated = functions.firestore
 //   console.log(data);
 //   return createCustomer(company);
 // });
+
 /**
  * Listens to when an sms object has been created in the database and contacts the 3rd party bulk SMS provider
  * @todo Add a callback for when the SMS is successfully sent and possibly when it's read
@@ -169,6 +135,10 @@ exports.smscreated = functions.firestore
     markAsRunning(eventID);
     return sendsms(data.data() as SMS, context.params.smsID);
   });
+
+/**
+ * Listens to order changes and applies a myriad of different possible actioins
+ */
 exports.orderUpdated = functions.firestore
   .document("/omc/{omcId}/orders/{orderId}")
   .onUpdate((data, context) => {
@@ -216,15 +186,15 @@ exports.orderUpdated = functions.firestore
 
 exports.requestsync = functions.https.onCall((data: CompanySync, _) => {
   console.log(data)
-  return readQboConfig(data.omcId).then(snapshot => {
-    const config = toObject(EmptyQboConfig, snapshot)
-    return createQbo(data.omcId, config, true)
-      .then((qbo: QuickBooks) => {
-        return processSync(data.sync, qbo, data.omcId, config);
-      });
+  return ReadAndInstantiate(data.omcId).then((result) => {
+    // console.log(result.qbo)
+    return processSync(data.sync, result.qbo, data.omcId, result.config);
   })
 })
 
+/**
+ * Combines RTDB with cloud firestore to provide realtime updates for presence detection
+ */
 exports.onUserStatusChanged = functions.database
   .ref("/admins/{uid}")
   .onUpdate((change, context) => {
@@ -262,28 +232,13 @@ exports.onUserStatusChanged = functions.database
     }
   });
 
-exports.ipnsandbox_db = functions.firestore
-  .document("/sandboxpayments/{ipnid}")
-  .onCreate((snap, context) => {
-    // console.log(snap);
-    // A new customer has been updated
-    const eventID = context.eventId;
-    if (isAlreadyRunning(eventID)) {
-      console.log(
-        "Ignore it because it is already running (eventId):",
-        eventID
-      );
-      return true;
-    }
-    markAsRunning(eventID);
-    const ipn = snap.data() as EquityBulk;
-    return resolveIpn(ipn, context.params.ipnid).then(() => {
-      ipn.daudiFields.status = 2;
-      return paymentFcm(ipn);
-    });
-  });
-exports.ipnprod_db = functions.firestore
-  .document("/prodpayments/{ipnid}")
+/**
+ * This is the base for all payments
+ * Irrespective of the souce of payment, a document is written to the db
+ * This initiates QBo ops and records any resulting errors
+ */
+exports.dbPayment = functions.firestore
+  .document("/omc/{omcId}/payments/{paymentId}")
   .onCreate((snap, context) => {
     // console.log(snap);
     // A new customer has been updated
@@ -296,44 +251,14 @@ exports.ipnprod_db = functions.firestore
       return true;
     } else {
       markAsRunning(eventID);
-      const ipn = snap.data() as EquityBulk;
-      return resolveIpn(ipn, context.params.ipnid).then(() => {
+      const ipn = snap.data() as DaudiPayment;
+      return ReadAndInstantiate(context.params.omcId).then((result) => {
+
+      })
+      return resolvePayment(ipn, context.params.ipnid).then(() => {
         ipn.daudiFields.status = 2;
         return paymentFcm(ipn);
       });
     }
   });
 
-/**
-* a way for the client app to execute a cloud function directly
-*/
-
-exports.ipnsandboxcallable = functions.https.onCall((data, context) => {
-  const ipn = data as EquityBulk;
-  console.log(data);
-  return resolveIpn(ipn, ipn.billNumber.toString()).then(() => {
-    /**
-     * force the fcm to send a payment received msg, because otherwise the new ipn data wont be known
-     * unless we make a db read before sending, which at this point is unneccessary
-     */
-    ipn.daudiFields.status = 2;
-    return paymentFcm(ipn);
-  });
-});
-
-/**
- * a way for the client app to execute a cloud function directly
- */
-
-exports.ipnprodcallable = functions.https.onCall((data, context) => {
-  const ipn = data as EquityBulk;
-  console.log(data);
-  return resolveIpn(ipn, ipn.billNumber.toString()).then(() => {
-    /**
-     * force the fcm to send a payment received msg, because otherwise the new ipn data wont be known
-     * unless we make a db read before sending, which at this point is unneccessary
-     */
-    ipn.daudiFields.status = 2;
-    return paymentFcm(ipn);
-  });
-});
