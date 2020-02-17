@@ -34,5 +34,5 @@ export const emptyEntry: Entry = {
     Id: null
   },
   active: false,
-  date: new MyTimestamp(0, 0)
+  date: null
 };

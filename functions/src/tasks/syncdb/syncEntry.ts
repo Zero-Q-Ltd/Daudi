@@ -142,7 +142,7 @@ function covertBillToEntry(convertedBill: Bill, fueltype: FuelType, LineitemInde
         },
         active: true,
         fuelType: fueltype,
-        date: firestore.Timestamp.fromDate(new Date())
+        date: new Date()
     };
     console.log("converted bill to Entry", fueltype, JSON.stringify(newEntry));
     return newEntry;

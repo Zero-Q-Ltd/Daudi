@@ -26,7 +26,7 @@ export function newAse(): ASE {
         Id: null
       },
       active: false,
-      date: new MyTimestamp(0, 0)
+      date: null
     }
   };
 }
