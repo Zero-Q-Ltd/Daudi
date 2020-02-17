@@ -23,7 +23,8 @@ import { createQbo } from "./tasks/sharedqb";
 import { EquityBulk } from "./models/ipn/EquityBulk";
 import { paymentFcm } from "./tasks/FCM/paymentFcm";
 import { resolvePayment } from "./tasks/resolvepayment";
-import { DaudiPayment } from "./models/ipn/DaudiPayment";
+import { DaudiPayment, emptyPayment } from "./models/ipn/DaudiPayment";
+import { PaymentDoc } from "./tasks/crud/daudi/Paymnet";
 
 admin.initializeApp(functions.config().firebase);
 admin.firestore().settings({ timestampsInSnapshots: true });
@@ -258,3 +259,19 @@ exports.dbPayment = functions.firestore
     }
   });
 
+/**
+ * a way for the client app to re initiate a payment trigger
+ */
+
+exports.paymentClientInit = functions.https.onCall((data: { paymentId: string, omcId: string }, context) => {
+  console.log(data);
+  return PaymentDoc(data.omcId, data.paymentId)
+    .get()
+    .then(res => {
+      const payment = toObject(emptyPayment(), res)
+      return ReadAndInstantiate(data.omcId).then((result) => {
+        return resolvePayment(payment, result.qbo, data.omcId)
+      })
+    })
+
+});

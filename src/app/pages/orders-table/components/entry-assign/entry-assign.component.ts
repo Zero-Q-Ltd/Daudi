@@ -150,6 +150,9 @@ export class EntryAssignComponent implements OnInit {
             timeCreated: moment().toDate(),
             user: this.adminservice.createUserObject()
           }],
+          Additions: 0,
+          totalApproxTime: 0,
+          totalExpiredTime: 0,
           user: this.adminservice.createUserObject()
         };
         /**

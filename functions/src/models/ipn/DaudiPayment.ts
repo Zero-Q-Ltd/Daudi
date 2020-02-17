@@ -44,4 +44,38 @@ export enum paymentStatus {
 
 export enum PaymentErrorCodes {
     "Error Consolidating with Quickbooks"
-} 
+}
+
+
+export function emptyPayment(): DaudiPayment {
+    return {
+        Id: null,
+        bank: {
+            account: null,
+            bank: null,
+            reference: null,
+            transactionType: null
+        },
+        daudiFields: {
+            approvedby: null,
+            errordetail: null,
+            sandbox: true,
+            status: null
+        },
+        depositedBy: {
+            mobileNumer: null,
+            name: null,
+            reference: null,
+        },
+        transaction: {
+            additionalInfo: null,
+            amount: null,
+            billNumber: null,
+            date: null,
+            paymentMode: null,
+            reference: null,
+            servedBy: null,
+            till: null
+        }
+    }
+}

@@ -335,6 +335,9 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
             expiry: moment().add(45, "minutes").toDate(),
             user: this.adminservice.createUserObject()
           }],
+        Additions: 0,
+        totalApproxTime: 0,
+        totalExpiredTime: 0
       };
       this.order.stage = 4;
       this.order.truck.stage = 1;
