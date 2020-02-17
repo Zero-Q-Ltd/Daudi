@@ -251,14 +251,10 @@ exports.dbPayment = functions.firestore
       return true;
     } else {
       markAsRunning(eventID);
-      const ipn = snap.data() as DaudiPayment;
+      const payment = snap.data() as DaudiPayment;
       return ReadAndInstantiate(context.params.omcId).then((result) => {
-
+        return resolvePayment(payment, result.qbo, context.params.omcId)
       })
-      return resolvePayment(ipn, context.params.ipnid).then(() => {
-        ipn.daudiFields.status = 2;
-        return paymentFcm(ipn);
-      });
     }
   });
 
