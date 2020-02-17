@@ -112,6 +112,7 @@ export const emptyorder: Order = {
     QbId: null,
     krapin: null
   },
+  paymentDetail: {},
   QbConfig: {
     EstimateId: null,
     InvoiceId: null,

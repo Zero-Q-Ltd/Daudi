@@ -29,7 +29,7 @@ export function ReadAndInstantiate(omcId): Promise<{ config: QboCofig, qbo: Quic
     return new Promise<{ config: QboCofig, qbo: QuickBooks }>((resolve, reject) => {
         return readQboConfig(omcId).then(async snapshot => {
             const config = toObject(EmptyQboConfig, snapshot)
-            const qbo = await createQbo({ omcId, config, useSandbox: config.sandbox })
+            const qbo = await createQbo(omcId, config, config.sandbox)
             resolve({ config, qbo })
         }).catch(e => {
             reject(e)
