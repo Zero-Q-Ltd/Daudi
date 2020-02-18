@@ -6,7 +6,7 @@ import { toObject } from '../../../models/utils/SnapshotUtils';
 import { QuickBooks } from '../../../libs/qbmain';
 
 
-export function PaymentDoc(omcId: string, paymentId: string) {
+export function paymentDoc(omcId: string, paymentId: string) {
     return firestore()
         .collection("omc")
         .doc(omcId)

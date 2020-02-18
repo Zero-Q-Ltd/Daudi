@@ -23,17 +23,6 @@ const InfoMetadata: Metadata = {
   edited: happy
 };
 
-export const emptyqboAuth: QBOAuthCOnfig = {
-  companyId: 0,
-  clientId: '',
-  clientSecret: '',
-  webhooksVerifier: '',
-  authConfig: {
-    accessToken: '',
-    refreshToken: '',
-    createdAt: new Date()
-  }
-};
 
 export const emptyConfig: AdminConfig = {
   /**

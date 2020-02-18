@@ -60,7 +60,7 @@ export class AdminLevelsComponent implements OnInit, OnDestroy {
     const newtype: NewAdminType = this.newadminform.getRawValue();
     const meta: DaudiMeta = {
       adminId: this.adminService.userdata.Id,
-      date: firebase.firestore.Timestamp.now()
+      date: new Date()
     };
 
     const newMeta: Metadata = {
@@ -68,7 +68,9 @@ export class AdminLevelsComponent implements OnInit, OnDestroy {
       edited: meta
     };
     const withMeta: AdminType = Object.assign({}, newtype, { metadata: newMeta });
-    // @TODO temporary hack
+    /**
+     * @todo temporary hack
+     */
     // @ts-ignore
     delete (withMeta.level);
     // this.tempcompany.adminTypes.splice(newtype.level, 0, withMeta);

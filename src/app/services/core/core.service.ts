@@ -100,9 +100,6 @@ export class CoreService {
         this.subscriptions.set("configSubscription", this.adminConfigService.configDoc(admin.config.omcId)
           .onSnapshot(t => {
             const config = toObject(emptyConfig, t);
-            // this.duplicate(admin.config.omcId, "configs", "admin", { adminTypes: config.adminTypes });
-            // this.duplicate(admin.config.omcId, "values", "config", { adminTypes: t.data().adminTypes });
-
             this.omcId = admin.config.omcId;
             this.adminConfig.next(config);
             /**

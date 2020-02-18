@@ -279,7 +279,7 @@ export class StatsComponent implements OnInit, OnDestroy {
           // this.fuelstats = { ...allfuelstats };
           // if (this.axisdates.length == 29) {
           const position = this.axisdates.findIndex(mappeddate => {
-            return moment(price.user.date.toDate()).startOf('day').isSame(mappeddate.date);
+            return moment(price.user.date).startOf('day').isSame(mappeddate.date);
           });
           // console.log(position, price);
           // console.log(this.fuelstats[price.fueltytype].series[1]);

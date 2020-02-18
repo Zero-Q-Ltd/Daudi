@@ -13,9 +13,13 @@ export function updateOrder(order: Order, omcId: string) {
 }
 
 export function orderDoc(orderId: string, omcId: string) {
+    return orderCollection(omcId)
+        .doc(orderId)
+}
+
+export function orderCollection(omcId: string) {
     return admin.firestore()
         .collection("omc")
         .doc(omcId)
         .collection("orders")
-        .doc(orderId)
 }

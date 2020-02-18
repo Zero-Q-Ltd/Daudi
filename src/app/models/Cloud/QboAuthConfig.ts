@@ -1,4 +1,4 @@
-import {MyTimestamp} from '../firestore/firestoreTypes';
+import { MyTimestamp } from '../firestore/firestoreTypes';
 
 export interface QBOAuthCOnfig {
   companyId: number;
@@ -14,5 +14,5 @@ export interface AuthConfig {
   refreshToken: string;
   accesstokenExpiry: MyTimestamp;
   refreshtokenExpiry: MyTimestamp;
-  time: MyTimestamp;
+  time: Date;
 }

@@ -10,7 +10,7 @@ import { DaudiPayment, emptyPayment } from "./models/payment/DaudiPayment";
 import { QboOrder } from "./models/Qbo/QboOrder";
 import { toObject } from "./models/utils/SnapshotUtils";
 import { creteOrder, updateOrder } from './tasks/crud/daudi/Order';
-import { PaymentDoc } from "./tasks/crud/daudi/Paymnet";
+import { paymentDoc } from "./tasks/crud/daudi/Paymnet";
 import { ReadAndInstantiate } from "./tasks/crud/daudi/QboConfig";
 import { updateCustomer } from './tasks/crud/qbo/customer/update';
 import { createQboOrder } from './tasks/crud/qbo/Order/create';
@@ -259,7 +259,7 @@ exports.dbPayment = functions.firestore
 
 exports.paymentClientInit = functions.https.onCall((data: { paymentId: string, omcId: string }, context) => {
   console.log(data);
-  return PaymentDoc(data.omcId, data.paymentId)
+  return paymentDoc(data.omcId, data.paymentId)
     .get()
     .then(res => {
       const payment = toObject(emptyPayment(), res)
