@@ -1,4 +1,3 @@
-import { MyTimestamp } from '../../firestore/firestoreTypes';
 
 export interface DaudiMeta {
   date: Date;

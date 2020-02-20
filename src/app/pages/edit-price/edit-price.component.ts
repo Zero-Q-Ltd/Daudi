@@ -20,6 +20,7 @@ import { AvgPrice } from "../../models/Daudi/price/AvgPrice";
 import { NotificationService } from "../../shared/services/notification.service";
 import { DepotService } from 'app/services/core/depot.service';
 import { TaxPrice } from 'app/models/Daudi/price/TaxPrice';
+import { StocksService } from 'app/services/core/stocks.service';
 
 @Component({
   selector: 'edit-price',
@@ -98,6 +99,7 @@ export class EditPriceComponent implements OnInit, OnDestroy {
     private priceservice: PricesService,
     private core: CoreService,
     private depotService: DepotService,
+    private stockService: StocksService,
     private omcservice: OmcService) {
 
     this.core.depots
@@ -297,44 +299,42 @@ export class EditPriceComponent implements OnInit, OnDestroy {
   }
   addTaxPrice(fueltype: FuelType) {
     this.saving = true;
-    console.log(this.avgpricesform.value);
-    if (!this.selectedOMC) {
+
+    if (this.taxconfigform.controls[fueltype].valid) {
+
+      const batch = this.db.firestore.batch();
+      const tempprice: TaxPrice = {
+        user: this.adminservice.createUserObject(),
+        price: +this.taxconfigform.controls[fueltype].value,
+        fueltytype: fueltype,
+        Id: this.core.createId(),
+      };
+
+      this.stock.taxExempt[fueltype] = {
+        amount: +this.taxconfigform.controls[fueltype].value,
+        user: this.adminservice.createUserObject(),
+      }
+      batch.update(this.stockService.stockDoc(
+        this.core.currentOmc.value.Id, this.activedepot.depot.Id, this.activedepot.depot.config.private), this.stock);
+
+      batch.set(this.priceservice.TaxCollection(this.core.omcId).doc(tempprice.Id), tempprice);
+      batch.commit().then(res => {
+        this.saving = false;
+        this.notificationService.notify({
+          body: `${fueltype} in ${this.activedepot.depot.Name} successfully changed`,
+          title: `Success`,
+          alert_type: "success"
+        });
+      });
+    } else {
       this.saving = false;
-      return this.notificationService.notify({
-        body: `Please select OMC first`,
+      this.notificationService.notify({
+        body: `Ivalid ${fueltype} Price`,
         alert_type: "error",
         title: `Error`
       });
-    } else {
-      if (this.avgpricesform.controls[fueltype].valid) {
-
-        const batchaction = this.db.firestore.batch();
-        const tempprice: TaxPrice = {
-          user: this.adminservice.createUserObject(),
-          price: this.avgpricesform.controls[fueltype].value,
-          fueltytype: fueltype,
-          Id: this.core.createId(),
-        };
-        batchaction.set(this.priceservice.createavgprice(this.core.currentOmc.value.Id), tempprice);
-
-        batchaction.commit().then(res => {
-          this.saving = false;
-          this.notificationService.notify({
-            body: `${fueltype} in ${this.activedepot.depot.Name} Added`,
-            title: `Success`,
-            alert_type: "success"
-          });
-        });
-        // this.firestore
-      } else {
-        this.saving = false;
-        this.notificationService.notify({
-          body: `Ivalid ${fueltype} Price`,
-          alert_type: "error",
-          title: `Error`
-        });
-      }
     }
+
   }
 
   deleteavg(price: Price) {

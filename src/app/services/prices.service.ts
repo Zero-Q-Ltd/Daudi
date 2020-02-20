@@ -38,6 +38,11 @@ export class PricesService {
       .doc(omcId)
       .collection(`minPrices`);
   }
+  TaxCollection(omcId: string) {
+    return this.db.firestore.collection('omc')
+      .doc(omcId)
+      .collection(`taxExcemptPrices`);
+  }
 
   getAvgpricesrange(omcId: string, depotId: string, fueltye: FuelType, start, stop?) {
     let query = this.avgPricesCollection(omcId)
