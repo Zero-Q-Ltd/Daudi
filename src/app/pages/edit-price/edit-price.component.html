@@ -17,7 +17,7 @@
               <span [matTooltipPosition]="position2" class="nav-icon nav-dot material-icons color-{{pricetype}}"
                 matPrefix matTooltip='{{pricetype}}'>local_gas_station</span>
               <mat-spinner *ngIf='saving' [diameter]="19" matPrefix></mat-spinner>
-              <button hidden mat-icon-button matSuffix type="button">
+              <button (click)='addTaxPrice(pricetype)' [disabled]="saving" mat-icon-button matSuffix type="button">
                 <span [matTooltipPosition]="position" class="nav-icon nav-dot material-icons color-{{pricetype}}"
                   matTooltip="Set Price">check_circle</span>
               </button>

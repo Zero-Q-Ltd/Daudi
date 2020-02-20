@@ -19,6 +19,7 @@ import { OMC } from "../../models/Daudi/omc/OMC";
 import { AvgPrice } from "../../models/Daudi/price/AvgPrice";
 import { NotificationService } from "../../shared/services/notification.service";
 import { DepotService } from 'app/services/core/depot.service';
+import { TaxPrice } from 'app/models/Daudi/price/TaxPrice';
 
 @Component({
   selector: 'edit-price',
@@ -272,6 +273,47 @@ export class EditPriceComponent implements OnInit, OnDestroy {
           Id: this.core.createId(),
           depotId: this.activedepot.depot.Id,
           omcId: this.selectedOMC.Id
+        };
+        batchaction.set(this.priceservice.avgPricesCollection(this.core.currentOmc.value.Id).doc(tempprice.Id), tempprice);
+
+        batchaction.commit().then(res => {
+          this.saving = false;
+          this.notificationService.notify({
+            body: `${fueltype} in ${this.activedepot.depot.Name} Added`,
+            title: `Success`,
+            alert_type: "success"
+          });
+        });
+        // this.firestore
+      } else {
+        this.saving = false;
+        this.notificationService.notify({
+          body: `Ivalid ${fueltype} Price`,
+          alert_type: "error",
+          title: `Error`
+        });
+      }
+    }
+  }
+  addTaxPrice(fueltype: FuelType) {
+    this.saving = true;
+    console.log(this.avgpricesform.value);
+    if (!this.selectedOMC) {
+      this.saving = false;
+      return this.notificationService.notify({
+        body: `Please select OMC first`,
+        alert_type: "error",
+        title: `Error`
+      });
+    } else {
+      if (this.avgpricesform.controls[fueltype].valid) {
+
+        const batchaction = this.db.firestore.batch();
+        const tempprice: TaxPrice = {
+          user: this.adminservice.createUserObject(),
+          price: this.avgpricesform.controls[fueltype].value,
+          fueltytype: fueltype,
+          Id: this.core.createId(),
         };
         batchaction.set(this.priceservice.createavgprice(this.core.currentOmc.value.Id), tempprice);
 
