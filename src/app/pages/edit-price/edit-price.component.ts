@@ -155,7 +155,7 @@ export class EditPriceComponent implements OnInit, OnDestroy {
     return omc ? omc.name : undefined;
   }
 
-  addprice(fueltype: FuelType) {
+  saveSP(fueltype: FuelType) {
 
     if (this.spPricesform.controls[fueltype].valid) {
       this.saving = true;
@@ -203,6 +203,54 @@ export class EditPriceComponent implements OnInit, OnDestroy {
     }
   }
 
+  saveMinSp(fueltype: FuelType) {
+
+    if (this.minpricesForm.controls[fueltype].valid) {
+      this.saving = true;
+      const dialogRef = this.dialog.open(ConfirmDialogComponent,
+        {
+          role: "dialog",
+          data: `Are you sure you want to set ${this.spPricesform.controls[fueltype].value} as the current ${fueltype} price in ${this.activedepot.depot.Name}?`
+        });
+      dialogRef.afterClosed()
+        .pipe(takeUntil(this.comopnentDestroyed))
+        .subscribe(result => {
+          if (result) {
+            const batch = this.db.firestore.batch();
+            const tempPrice: Price = {
+              user: this.adminservice.createUserObject(),
+              price: +this.minpricesForm.controls[fueltype].value,
+              fueltytype: fueltype,
+              depotId: this.activedepot.depot.Id,
+              Id: this.core.createId()
+            };
+            batch.set(this.priceservice.minPriceCollection(this.core.omcId).doc(tempPrice.Id), tempPrice);
+            this.activedepot.config.price[fueltype] = {
+              minPrice: +this.minpricesForm.controls[fueltype].value,
+              price: this.activedepot.config.price[fueltype].price,
+              user: this.adminservice.createUserObject()
+            }
+            batch.update(this.depotService.depotConfigDoc(this.core.omcId, this.activedepot.depot.Id), this.activedepot.config);
+            batch.commit().then(res => {
+              this.saving = false;
+              this.notificationService.notify({
+                body: `${fueltype} in ${this.activedepot.depot.Name} successfully changed`,
+                title: `Success`,
+                alert_type: "success"
+              });
+            });
+          } else {
+            this.saving = false;
+            this.notificationService.notify({
+              body: `Changes discarded`,
+              title: "",
+              alert_type: "warning"
+            });
+          }
+        });
+    }
+  }
+
   addavgprice(fueltype: FuelType) {
     this.saving = true;
     console.log(this.avgpricesform.value);
@@ -221,7 +269,8 @@ export class EditPriceComponent implements OnInit, OnDestroy {
           user: this.adminservice.createUserObject(),
           price: this.avgpricesform.controls[fueltype].value,
           fueltytype: fueltype,
-          Id: null,
+          Id: this.core.createId(),
+          depotId: this.activedepot.depot.Id,
           omcId: this.selectedOMC.Id
         };
         batchaction.set(this.priceservice.createavgprice(this.core.currentOmc.value.Id), tempprice);

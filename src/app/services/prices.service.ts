@@ -12,15 +12,10 @@ export class PricesService {
 
   }
 
-  createavgprice(omcId: string) {
-    return this.avgPricesCollection(omcId)
-      .doc();
-  }
-
   avgPricesCollection(omcId: string) {
     return this.db.firestore.collection('omc')
       .doc(omcId)
-      .collection(`avgprice`);
+      .collection(`avgPrices`);
   }
 
   deleteavgprice(omcId: string, avgId: string) {
@@ -37,6 +32,11 @@ export class PricesService {
     return this.db.firestore.collection('omc')
       .doc(omcId)
       .collection(`prices`);
+  }
+  minPriceCollection(omcId: string) {
+    return this.db.firestore.collection('omc')
+      .doc(omcId)
+      .collection(`minPrices`);
   }
 
   getAvgpricesrange(omcId: string, depotId: string, fueltye: FuelType, start, stop?) {
