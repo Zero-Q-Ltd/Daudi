@@ -5,6 +5,34 @@
 
   <br>
   <mat-card *ngIf='activedepot'>
+    <mat-card-title>Tax Exempt</mat-card-title>
+    <mat-card-content>
+      <form [formGroup]="taxconfigform">
+        <div class="" fxLayout fxLayout.xs="column" fxLayoutAlign="center" fxLayoutGap="10px" fxLayoutGap.xs="0">
+          <div *ngFor='let pricetype of fueltypesArray' class="mat-elevation-z2" fxFlex>
+            <span class="color-{{pricetype}}">{{pricetype | uppercase}}</span>
+            <mat-form-field class="full-width">
+              <input formControlName="{{pricetype}}" matInput name='{{pricetype}}Price'
+                placeholder="{{stock.taxExempt[pricetype].amount}}" required type="number">
+              <span [matTooltipPosition]="position2" class="nav-icon nav-dot material-icons color-{{pricetype}}"
+                matPrefix matTooltip='{{pricetype}}'>local_gas_station</span>
+              <mat-spinner *ngIf='saving' [diameter]="19" matPrefix></mat-spinner>
+              <button hidden mat-icon-button matSuffix type="button">
+                <span [matTooltipPosition]="position" class="nav-icon nav-dot material-icons color-{{pricetype}}"
+                  matTooltip="Set Price">check_circle</span>
+              </button>
+              <mat-hint *ngIf='!saving' align="start">
+                <i>Last Edited
+                  on </i> {{stock.taxExempt[pricetype].MetaData?.LastUpdatedTime}}
+              </mat-hint>
+              <mat-error>
+                this field is <strong>Required</strong>
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+      </form>
+    </mat-card-content>
     <mat-card-title>Current Prices</mat-card-title>
     <mat-card-content>
       <form [formGroup]="spPricesform">
@@ -34,37 +62,38 @@
           </div>
         </div>
       </form>
-
     </mat-card-content>
-    <mat-card-title>Tax Exempt</mat-card-title>
+    <mat-card-title>Minimum Prices</mat-card-title>
     <mat-card-content>
-      <form [formGroup]="taxconfigform">
+      <form [formGroup]="spPricesform">
+
         <div class="" fxLayout fxLayout.xs="column" fxLayoutAlign="center" fxLayoutGap="10px" fxLayoutGap.xs="0">
           <div *ngFor='let pricetype of fueltypesArray' class="mat-elevation-z2" fxFlex>
             <span class="color-{{pricetype}}">{{pricetype | uppercase}}</span>
             <mat-form-field class="full-width">
               <input formControlName="{{pricetype}}" matInput name='{{pricetype}}Price'
-                placeholder="{{stock.taxExempt[pricetype].amount}}" required type="number">
+                placeholder="{{activedepot.config.price[pricetype].price }}" required type="number">
               <span [matTooltipPosition]="position2" class="nav-icon nav-dot material-icons color-{{pricetype}}"
                 matPrefix matTooltip='{{pricetype}}'>local_gas_station</span>
               <mat-spinner *ngIf='saving' [diameter]="19" matPrefix></mat-spinner>
-              <button hidden mat-icon-button matSuffix type="button">
+              <button (click)='addprice(pricetype)' [disabled]="saving" mat-icon-button matSuffix type="button">
                 <span [matTooltipPosition]="position" class="nav-icon nav-dot material-icons color-{{pricetype}}"
                   matTooltip="Set Price">check_circle</span>
               </button>
               <mat-hint *ngIf='!saving' align="start">
-                <i>Last Edited
-                  on </i> {{stock.taxExempt[pricetype].MetaData?.LastUpdatedTime}}
+                <i> Last edited by {{activedepot.config.price[pricetype].user?.name || 'Never Edited'}}
+                  |
+                  {{activedepot.config.price[pricetype].user?.time?.toDate() | date: 'short'}}</i>
               </mat-hint>
               <mat-error>
-                this field is <strong>Required</strong>
+                Min price is <strong>{{activedepot.config.price[pricetype].minPrice }}</strong>
               </mat-error>
             </mat-form-field>
           </div>
         </div>
       </form>
-
     </mat-card-content>
+
     <br>
     <mat-card-title>Average Prices</mat-card-title>
     <mat-card-content>

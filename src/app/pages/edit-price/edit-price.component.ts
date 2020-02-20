@@ -18,6 +18,7 @@ import { FuelNamesArray, FuelType } from "../../models/Daudi/fuel/FuelType";
 import { OMC } from "../../models/Daudi/omc/OMC";
 import { AvgPrice } from "../../models/Daudi/price/AvgPrice";
 import { NotificationService } from "../../shared/services/notification.service";
+import { DepotService } from 'app/services/core/depot.service';
 
 @Component({
   selector: 'edit-price',
@@ -38,6 +39,12 @@ export class EditPriceComponent implements OnInit, OnDestroy {
   });
 
   avgpricesform: FormGroup = new FormGroup({
+    pms: new FormControl("", [Validators.required, Validators.min(40)]),
+    ago: new FormControl("", [Validators.required, Validators.min(40)]),
+    ik: new FormControl("", [Validators.required, Validators.min(40)]),
+  });
+
+  minpricesForm: FormGroup = new FormGroup({
     pms: new FormControl("", [Validators.required, Validators.min(40)]),
     ago: new FormControl("", [Validators.required, Validators.min(40)]),
     ik: new FormControl("", [Validators.required, Validators.min(40)]),
@@ -89,6 +96,7 @@ export class EditPriceComponent implements OnInit, OnDestroy {
     private adminservice: AdminService,
     private priceservice: PricesService,
     private core: CoreService,
+    private depotService: DepotService,
     private omcservice: OmcService) {
 
     this.core.depots
@@ -116,24 +124,17 @@ export class EditPriceComponent implements OnInit, OnDestroy {
     this.core.activedepot
       .pipe(takeUntil(this.comopnentDestroyed))
       .subscribe(depot => {
-        // this.activedepot = depot;
-        // this.spPricesform.controls.pms.setValidators(Validators.compose([Validators.min(this.activedepot.minpriceconfig.pms.price)]));
-        // this.spPricesform.controls.ago.setValidators(Validators.compose([Validators.min(this.activedepot.minpriceconfig.ago.price)]));
-        // this.spPricesform.controls.ik.setValidators(Validators.compose([Validators.min(this.activedepot.minpriceconfig.ik.price)]));
         this.activedepot = depot;
-        // this.taxconfigform.disable();
-        // this.fueltypesArray.forEach(fueltyp => {
-        //   this.avgprices[fueltyp].total
-        //     .pipe(takeUntil(this.comopnentDestroyed))
-        //     .subscribe(total => {
-        //       this.avgprices[fueltyp].total = total;
-        //     });
-        //   this.avgprices[fueltyp].prices
-        //     .pipe(takeUntil(this.comopnentDestroyed))
-        //     .subscribe(prices => {
-        //       this.avgprices[fueltyp].prices = prices;
-        //     });
-        // });
+        this.fueltypesArray.forEach(fueltyp => {
+          this.spPricesform.controls[fueltyp]
+            .setValidators(Validators.compose([Validators.min(this.activedepot.config.price[fueltyp].minPrice)]));
+          console.log(this.avgpricesform[fueltyp])
+          // this.avgpricesform[fueltyp].valuechanges
+          //   .pipe(takeUntil(this.comopnentDestroyed))
+          //   .subscribe(total => {
+          //     // this.avgprices[fueltyp].total = total;
+          //   });
+        });
 
       });
   }
@@ -167,26 +168,29 @@ export class EditPriceComponent implements OnInit, OnDestroy {
         .pipe(takeUntil(this.comopnentDestroyed))
         .subscribe(result => {
           if (result) {
-            const batchaction = this.db.firestore.batch();
-            const tempprice: Price = {
+            const batch = this.db.firestore.batch();
+            const tempPrice: Price = {
               user: this.adminservice.createUserObject(),
-              price: this.spPricesform.controls[fueltype].value,
+              price: +this.spPricesform.controls[fueltype].value,
               fueltytype: fueltype,
               depotId: this.activedepot.depot.Id,
-              Id: null
+              Id: this.core.createId()
             };
-            // batchaction.set(this.priceservice.createprice(), tempprice);
-            // this.activedepot.price[fueltype].price = tempprice.price;
-            // this.activedepot.price[fueltype].user = tempprice.user;
-            // batchaction.update(this.depotservice.updatedepot(), this.activedepot);
-            // batchaction.commit().then(res => {
-            //   this.saving = false;
-            //   this.notificationService.notify({
-            //     body: `${fueltype} in ${this.activedepot.Name} successfully changed`,
-            //     title: `Success`,
-            //     alert_type: "success"
-            //   });
-            // });
+            batch.set(this.priceservice.priceCollection(this.core.omcId).doc(tempPrice.Id), tempPrice);
+            this.activedepot.config.price[fueltype] = {
+              minPrice: this.activedepot.config.price[fueltype].minPrice,
+              price: +this.spPricesform.controls[fueltype].value,
+              user: this.adminservice.createUserObject()
+            }
+            batch.update(this.depotService.depotConfigDoc(this.core.omcId, this.activedepot.depot.Id), this.activedepot.config);
+            batch.commit().then(res => {
+              this.saving = false;
+              this.notificationService.notify({
+                body: `${fueltype} in ${this.activedepot.depot.Name} successfully changed`,
+                title: `Success`,
+                alert_type: "success"
+              });
+            });
           } else {
             this.saving = false;
             this.notificationService.notify({

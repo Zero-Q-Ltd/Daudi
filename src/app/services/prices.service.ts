@@ -1,6 +1,6 @@
-import {Injectable} from '@angular/core';
-import {AngularFirestore} from '@angular/fire/firestore';
-import {FuelType} from 'app/models/Daudi/fuel/FuelType';
+import { Injectable } from '@angular/core';
+import { AngularFirestore } from '@angular/fire/firestore';
+import { FuelType } from 'app/models/Daudi/fuel/FuelType';
 import * as moment from 'moment';
 
 @Injectable({
@@ -36,7 +36,7 @@ export class PricesService {
   priceCollection(omcId: string) {
     return this.db.firestore.collection('omc')
       .doc(omcId)
-      .collection(`price`);
+      .collection(`prices`);
   }
 
   getAvgpricesrange(omcId: string, depotId: string, fueltye: FuelType, start, stop?) {
@@ -50,8 +50,4 @@ export class PricesService {
     return query;
   }
 
-  createprice(omcId: string) {
-    return this.priceCollection(omcId)
-      .doc(this.db.createId());
-  }
 }
