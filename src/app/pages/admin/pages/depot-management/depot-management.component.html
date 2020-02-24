@@ -31,7 +31,7 @@
       <mat-expansion-panel *ngFor="let depot of alldepots">
         <mat-expansion-panel-header>
           <mat-panel-title>
-            <span [ngClass]="{ 'color-danger' : depot.sandbox}">{{depot.Name}}</span>
+            <span [ngClass]="{ 'color-prmary' : depot.config.private}">{{depot.Name}}</span>
           </mat-panel-title>
           <mat-panel-description>
 
@@ -40,16 +40,14 @@
         <mat-card>
           <mat-card-title>Person in Charge</mat-card-title>
           <mat-form-field>
-            <input #personname [(value)]="depot.Contact.name" aria-label="Person name" matInput
-                   name="personname"
-                   placeholder="Name" type="text">
+            <input #personname [(ngModel)]="depot.Contact.name" aria-label="Person name" matInput name="personname"
+              placeholder="Name" type="text">
             <mat-icon matPrefix> perm_identity</mat-icon>
             <span matPrefix> &nbsp; </span>
           </mat-form-field>
           <mat-form-field>
-            <input #personname [(value)]="activedepot.Contact.phone" aria-label="Person phone" disabled
-                   matInput
-                   name="personphone" placeholder="Phone" type="text">
+            <input #personname [(ngModel)]="activedepot.Contact.phone" aria-label="Person phone" disabled matInput
+              name="personphone" placeholder="Phone" type="text">
             <mat-icon matPrefix> phone</mat-icon>
             <span matPrefix> &nbsp; +254 &nbsp;</span>
 
@@ -61,7 +59,7 @@
 
             <mat-form-field>
               <input [(ngModel)]="activedepot.Name" matInput minlength="2" name="depotname" name="name"
-                     placeholder="Depot Name" required type="text">
+                placeholder="Depot Name" required type="text">
             </mat-form-field>
             <!-- <mat-form-field (click)="openmaps()">
               <input #depotlocation aria-label="Company Location" matInput name="depotlocation"

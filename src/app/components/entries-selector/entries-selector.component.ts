@@ -1,6 +1,5 @@
 import { Component, Inject, OnDestroy, OnInit } from "@angular/core";
 import { AngularFirestore } from "@angular/fire/firestore";
-import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material";
 import { AdminConfigService } from "app/services/core/admin-config.service";
 import { AdminService } from "app/services/core/admin.service";
 import { StocksService } from "app/services/core/stocks.service";
@@ -19,6 +18,7 @@ import { MyTimestamp } from "../../models/firestore/firestoreTypes";
 import { NotificationService } from "../../shared/services/notification.service";
 import { CoreService } from 'app/services/core/core.service';
 import { OrdersService } from 'app/services/orders.service';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 interface EntryContent {
   id: string;

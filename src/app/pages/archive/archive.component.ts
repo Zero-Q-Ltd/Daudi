@@ -1,9 +1,10 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {FormControl} from '@angular/forms';
-import {MatDialog, MatSnackBar} from '@angular/material';
-import {ReplaySubject} from 'rxjs';
-import {emptyorder} from '../../models/Daudi/order/Order';
-import {emptytruck} from '../../models/Daudi/order/truck/Truck';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
+import { ReplaySubject } from 'rxjs';
+import { emptyorder } from '../../models/Daudi/order/Order';
+import { emptytruck } from '../../models/Daudi/order/truck/Truck';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-archive',
@@ -46,11 +47,11 @@ export class ArchiveComponent implements OnInit, OnDestroy {
   changedatamodel(index: number) {
     switch (index) {
       case 0:
-        this.dataobject = {...emptyorder};
+        this.dataobject = { ...emptyorder };
         this.initvalues();
         break;
       case 1:
-        this.dataobject = {...emptytruck};
+        this.dataobject = { ...emptytruck };
         this.initvalues();
         break;
     }

@@ -6,7 +6,7 @@
       </div>
       <div>
         <mat-form-field appearance="legacy">
-          <input (keyup)="filtercompanies($event.target.value)" matInput placeholder="Filter">
+          <input (keyup)="filtercompanies(typedValue)" [(ngModel)]="typedValue" matInput placeholder="Filter">
           <button (click)='syncdb()' *ngIf='!creatingsync' mat-icon-button matSuffix type="button">
             <span class="nav-icon nav-dot material-icons kra-save" matTooltip="Update">
               autorenew
@@ -22,14 +22,13 @@
           <ng-container matColumnDef="select">
             <th *matHeaderCellDef mat-header-cell>
               <mat-checkbox (change)="$event ? masterToggle() : null"
-                            [checked]="selection.hasValue() && isAllSelected()"
-                            [indeterminate]="selection.hasValue() && !isAllSelected()">
+                [checked]="selection.hasValue() && isAllSelected()"
+                [indeterminate]="selection.hasValue() && !isAllSelected()">
               </mat-checkbox>
             </th>
             <td *matCellDef="let row" mat-cell>
-              <mat-checkbox (change)="$event ? selection.toggle(row) : null"
-                            (click)="$event.stopPropagation()"
-                            [checked]="selection.isSelected(row)">
+              <mat-checkbox (change)="$event ? selection.toggle(row) : null" (click)="$event.stopPropagation()"
+                [checked]="selection.isSelected(row)">
               </mat-checkbox>
             </td>
           </ng-container>
@@ -40,8 +39,7 @@
           <!-- Name Column -->
           <ng-container matColumnDef="name">
             <th *matHeaderCellDef mat-header-cell mat-sort-header> Company Name</th>
-            <td *matCellDef="let company" [ngClass]="{ 'color-danger' : !company.Active  } "
-                mat-cell> {{company.name}}
+            <td *matCellDef="let company" [ngClass]="{ 'color-danger' : !company.Active  } " mat-cell> {{company.name}}
             </td>
           </ng-container>
           <!-- Email Column -->
@@ -59,12 +57,10 @@
             <th *matHeaderCellDef mat-header-cell mat-sort-header> KRA PIN</th>
             <td *matCellDef="let company" mat-cell>
               <mat-form-field class="half-width">
-                <input [(ngModel)]="company.krapin" [disabled]="company.kraverified.status" matInput
-                       required>
+                <input [(ngModel)]="company.krapin" [disabled]="company.kraverified.status" matInput required>
                 <mat-spinner *ngIf='savingcompany' [diameter]="19" matSuffix></mat-spinner>
-                <button (click)='approvecompany(company)'
-                        [hidden]="savingcompany || company.kraverified.status"
-                        mat-icon-button matSuffix type="button">
+                <button (click)='approvecompany(company)' [hidden]="savingcompany || company.kraverified.status"
+                  mat-icon-button matSuffix type="button">
                   <span class="nav-icon nav-dot material-icons kra-save" matTooltip="Update">check_circle</span>
                 </button>
                 <mat-hint *ngIf='!savingcompany' align="start">
@@ -82,8 +78,7 @@
           <ng-container matColumnDef="balance">
             <th *matHeaderCellDef mat-header-cell mat-sort-header>Balance</th>
             <td *matCellDef="let company"
-                [ngClass]="{ 'color-danger' : company.balance > 0 , 'color-success' :   company.balance < 0} "
-                mat-cell>
+              [ngClass]="{ 'color-danger' : company.balance > 0 , 'color-success' :   company.balance < 0} " mat-cell>
               {{company.balance | number}}
             </td>
           </ng-container>
@@ -104,8 +99,7 @@
         </button>
       </div>
       <div class="col-md-10">
-        <mat-paginator [pageSizeOptions]="[10, 20, 50, 100]" [pageSize]="10"
-                       showFirstLastButtons></mat-paginator>
+        <mat-paginator [pageSizeOptions]="[10, 20, 50, 100]" [pageSize]="10" showFirstLastButtons></mat-paginator>
       </div>
     </div>
   </mat-card-content>

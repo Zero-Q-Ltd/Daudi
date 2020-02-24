@@ -43,13 +43,13 @@
     </thead>
     <tbody>
       <tr
-        [ngClass]="{ 'color-danger' : order.truck.stage == 1 && expired(order.truckStageData[1].expiry[0]?.date) ,
-                       'color-success' : order.truck.stage == 1 && !expired(order.truckStageData['1'].expiry[0]?.date)} ">
+        [ngClass]="{ 'color-danger' : order.truck.stage == 1 && expired(order.truckStageData[1].expiry[0]?.expiry) ,
+                       'color-success' : order.truck.stage == 1 && !expired(order.truckStageData['1'].expiry[0]?.expiry)} ">
         <td class="order-stage">Processing</td>
         <td>
           <span *ngIf="order.truck.stage == 1 else completed">
             <span *ngIf="order.printStatus.LoadingOrder; else not_printed">
-              {{resolvetime(order.truckStageData["1"].expiry[0]?.date)}}
+              {{resolvetime(order.truckStageData["1"].expiry[0]?.expiry)}}
             </span>
             <ng-template #not_printed>
               Not Printed
@@ -69,7 +69,7 @@
         </td>
         <td>
           <span *ngIf="order.truck.stage > 1">
-            {{timespent(order.truckStageData["1"].user.time, order.truckStageData["2"].user.time)}}
+            {{timespent(order.truckStageData["1"].user.date, order.truckStageData["2"].user.date)}}
           </span>
         </td>
         <td>
@@ -78,20 +78,21 @@
           </span>
         </td>
         <td class="custom-slider">
-          <ng5-slider
-            *ngIf="order.truck.stage > 1 && calculateaccuracy(order.truckStageData['1'].expiry, order.truckStageData['1'].user.time, order.truckStageData['2'].user.time, 1 )"
-            [manualRefresh]="manualRefresh" [options]="slider" [value]="accuracycolors[1].percentage"></ng5-slider>
+          <!-- <ng5-slider
+            *ngIf="order.truck.stage > 1 && calculateaccuracy(order.truckStageData['1'].expiry, order.truckStageData['1'].user.date, order.truckStageData['2'].user.date, 1 )"
+            [manualRefresh]="manualRefresh" [options]="slider" [value]="accuracycolors[1].percentage">
+          </ng5-slider> -->
         </td>
         <td>{{order.truckStageData["1"].user?.name}}</td>
         <td></td>
       </tr>
       <tr
-        [ngClass]="{ 'color-danger' : order.truck.stage == 2 && expired(order.truckStageData['2'].expiry[0]?.date) ,
-                       'color-success' : order.truck.stage == 2 && !expired(order.truckStageData['2'].expiry[0]?.date)} ">
+        [ngClass]="{ 'color-danger' : order.truck.stage == 2 && expired(order.truckStageData['2'].expiry[0]?.expiry) ,
+                       'color-success' : order.truck.stage == 2 && !expired(order.truckStageData['2'].expiry[0]?.expiry)} ">
         <td class="order-stage">Queued</td>
         <td>
           <span *ngIf="order.truck.stage == 2">
-            {{resolvetime(order.truckStageData["2"].expiry[0]?.date)}}
+            {{resolvetime(order.truckStageData["2"].expiry[0]?.expiry)}}
           </span>
           <span *ngIf="order.truck.stage > 2" class="color-success">
             Completed
@@ -99,34 +100,36 @@
         </td>
         <td>{{calculatetotaltime(order.truckStageData["2"].expiry)}}</td>
         <td>
-          <span *ngIf="order.truck.stage > 2">
-            {{timespent(order.truckStageData["2"].user.time, order.truckStageData["3"].user.time)}}
-          </span>
+          <!-- <span *ngIf="order.truck.stage > 2">
+            {{timespent(order.truckStageData["2"].user.date, order.truckStageData["3"].user.date)}}
+          </span> -->
         </td>
         <td>
-          <span *ngIf="order.truck.stage > 1">
+          <!-- <span *ngIf="order.truck.stage > 1">
             {{order.truckStageData["2"].expiry?.length - 1}}
-          </span>
+          </span> -->
         </td>
         <td class="custom-slider">
-          <ng5-slider
-            *ngIf="order.truck.stage > 2 && calculateaccuracy(order.truckStageData['2'].expiry, order.truckStageData['2'].user.time, order.truckStageData['3'].user.time, 2 )"
-            [manualRefresh]="manualRefresh" [options]="slider" [value]="accuracycolors[2].percentage"></ng5-slider>
+          <!-- <ng5-slider
+            *ngIf="order.truck.stage > 2 && calculateaccuracy(order.truckStageData['2'].expiry, order.truckStageData['2'].user.date, order.truckStageData['3'].user.date, 2 )"
+            [manualRefresh]="manualRefresh" [options]="slider" [value]="accuracycolors[2].percentage">
+          </ng5-slider> -->
         </td>
         <td>{{order.truckStageData["2"].user?.name}}</td>
         <td rowspan="2" style="vertical-align : middle;text-align:center;font-weight: bold;background-color: lightgray">
-          <span *ngIf="order.truck.stage == 4">
-            {{timespent(order.truckStageData['2'].user.time, order.truckStageData['4'].user.time)}}
-          </span>
+          <!-- <span *ngIf="order.truck.stage == 4">
+            {{timespent(order.truckStageData['2'].user.date, order.truckStageData['4'].user.date)}}
+          </span> -->
         </td>
       </tr>
-      <tr
+      <!-- <tr
         [ngClass]="{ 'color-danger' : order.truck.stage == 3 && expired(order.truckStageData['3'].expiry[0]?.date) ,
-                       'color-success' : order.truck.stage == 3 && !expired(order.truckStageData['3'].expiry[0]?.date)} ">
+                       'color-success' : order.truck.stage == 3 && !expired(order.truckStageData['3'].expiry[0]?.date)} "> -->
+      <tr>
         <td class="order-stage">Loading</td>
         <td>
           <span *ngIf="order.truck.stage == 3">
-            {{resolvetime(order.truckStageData["3"].expiry[0]?.date)}}
+            {{resolvetime(order.truckStageData["3"].expiry[0]?.expiry)}}
           </span>
           <span *ngIf="order.truck.stage > 3" class="color-success">
             Completed
@@ -134,19 +137,21 @@
         </td>
         <td>{{calculatetotaltime(order.truckStageData["3"].expiry)}}</td>
         <td>
-          <span *ngIf="order.truck.stage > 3">
-            {{timespent(order.truckStageData["3"].user.time, order.truckStageData["4"].user.time)}}
-          </span>
+          <!-- <span *ngIf="order.truck.stage > 3">
+            {{timespent(order.truckStageData["3"].user.date, order.truckStageData["4"].user.date)}}
+          </span> -->
         </td>
         <td>
-          <span *ngIf="order.truck.stage > 2">
+          <!-- <span *ngIf="order.truck.stage > 2">
             {{order.truckStageData["3"].expiry?.length - 1}}
-          </span>
+          </span> -->
         </td>
         <td class="custom-slider">
-          <ng5-slider
-            *ngIf="order.truck.stage > 3 && calculateaccuracy(order.truckStageData['3'].expiry, order.truckStageData['3'].user.time, order.truckStageData['4'].user.time, 3 )"
-            [manualRefresh]="manualRefresh" [options]="slider" [value]="accuracycolors[3].percentage"></ng5-slider>
+          <!-- <ng5-slider
+            *ngIf="order.truck.stage > 3 && calculateaccuracy(order.truckStageData['3'].expiry, order.truckStageData['3'].user.date, 
+            order.truckStageData['4'].user.date, 3 )"
+            [manualRefresh]="manualRefresh" [options]="slider" [value]="accuracycolors[3].percentage">
+          </ng5-slider> -->
         </td>
         <td>{{order.truckStageData["3"].user?.name}}</td>
       </tr>
@@ -154,14 +159,14 @@
     </tbody>
   </table>
   <div *ngIf="order.truck?.stage > 0" class="full-div">
-    <span [matTooltipPosition]="position3" class="order-stage" matTooltip="Exit Time">
+    <span class="order-stage" matTooltip="Exit Time">
       <i class="fa fa-clock-o color-primary"></i>:
-      {{order.truckStageData["4"].user?.time?.toDate()| date: 'short'}}</span>
-    <span [matTooltipPosition]="position3" class="order-stage" matTooltip="Seals Range">
-      <i class="fa fa-folder-o color-primary"></i>: {{order.truckStageData["4"].data?.seals.range}}</span>
-    <span [matTooltipPosition]="position3" class="order-stage" matTooltip="Broken Seals">
-      <i class="fa fa-folder-open-o color-primary"></i>: {{order.truckStageData["4"].data?.seals.broken}}</span>
-    <span [matTooltipPosition]="position3" class="order-stage" matTooltip="Completed By">
+      {{order.truckStageData["4"].user?.date | date: 'short'}}</span>
+    <span class="order-stage" matTooltip="Seals Range">
+      <i class="fa fa-folder-o color-primary"></i>: {{order.seals.range}}</span>
+    <span class="order-stage" matTooltip="Broken Seals">
+      <i class="fa fa-folder-open-o color-primary"></i>: {{order.seals.broken}}</span>
+    <span class="order-stage" matTooltip="Completed By">
       <i class="fa fa-user color-primary"></i>: {{order.truckStageData["3"].user?.name}}</span>
   </div>
   <br>

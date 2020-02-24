@@ -23,7 +23,7 @@
               </button>
               <mat-hint *ngIf='!saving' align="start">
                 <i>Last Edited
-                  on </i> {{stock.taxExempt[pricetype].MetaData?.LastUpdatedTime}}
+                  on </i> {{stock.taxExempt[pricetype].user.date}}
               </mat-hint>
               <mat-error>
                 this field is <strong>Required</strong>
@@ -53,7 +53,7 @@
               <mat-hint *ngIf='!saving' align="start">
                 <i> Last edited by {{activedepot.config.price[pricetype].user?.name || 'Never Edited'}}
                   |
-                  {{activedepot.config.price[pricetype].user?.date?.toDate() | date: 'short'}}</i>
+                  {{activedepot.config.price[pricetype].user?.date | date: 'short'}}</i>
               </mat-hint>
               <mat-error>
                 Min is <strong> 40 </strong>
@@ -84,7 +84,7 @@
               <mat-hint *ngIf='!saving' align="start">
                 <i> Last edited by {{activedepot.config.price[pricetype].user?.name || 'Never Edited'}}
                   |
-                  {{activedepot.config.price[pricetype].user?.date?.toDate() | date: 'short'}}</i>
+                  {{activedepot.config.price[pricetype].user?.date | date: 'short'}}</i>
               </mat-hint>
               <mat-error>
                 Min price is <strong>{{activedepot.config.price[pricetype].minPrice }}</strong>
@@ -125,7 +125,7 @@
               </button>
               <mat-hint align="start">
                 <i> Last edited by {{avgprices[pricetype].prices[0]?.user.name || 'Never Edited'}} |
-                  {{avgprices[pricetype].prices[0]?.user?.date?.toDate() | date: 'short'}}</i>
+                  {{avgprices[pricetype].prices[0]?.user?.date | date: 'short'}}</i>
               </mat-hint>
             </mat-form-field>
 
@@ -148,7 +148,7 @@
                   </td>
                   <td>
                     <small>
-                      {{values.user.time?.toDate() | date: 'shortTime' }}
+                      {{values.user.date | date: 'shortTime' }}
                     </small>
                   </td>
                   <td class="pull-right">

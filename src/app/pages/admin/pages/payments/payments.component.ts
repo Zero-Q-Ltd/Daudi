@@ -1,6 +1,5 @@
 import { Component, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import { AngularFireFunctions } from "@angular/fire/functions";
-import { MatDialog, MatPaginator, MatSort, MatTableDataSource } from "@angular/material";
 import { DaudiPayment } from "app/models/payment/DaudiPayment";
 import { AdminService } from "app/services/core/admin.service";
 import { PaymentsService } from "app/services/payments.service";
@@ -9,6 +8,10 @@ import { takeUntil } from "rxjs/operators";
 import { DaudiCustomer } from "../../../../models/Daudi/customer/Customer";
 import { CreatePaymentComponent } from "../../components/create-payment/create-payment.component";
 import { CustomerManagementComponent } from "../customer-management/customer-management.component";
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: "app-payments",

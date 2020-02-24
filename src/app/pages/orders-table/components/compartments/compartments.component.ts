@@ -1,6 +1,5 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material'; // added dialog data
 import { ReplaySubject } from 'rxjs';
 import { FuelNamesArray, FuelType } from '../../../../models/Daudi/fuel/FuelType';
 import { EmptyGenericTruckStage } from '../../../../models/Daudi/order/GenericStage';
@@ -11,6 +10,8 @@ import { DepotService } from '../../../../services/core/depot.service';
 import { OrdersService } from '../../../../services/orders.service';
 import { NotificationService } from '../../../../shared/services/notification.service';
 import { OrderDetailsComponent } from '../order-details/order-details.component';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { TooltipPosition } from '@angular/material/tooltip';
 
 @Component({
   selector: 'compartments',
@@ -18,8 +19,8 @@ import { OrderDetailsComponent } from '../order-details/order-details.component'
   styleUrls: ['./compartments.component.scss']
 })
 export class CompartmentsComponent implements OnInit, OnDestroy {
-  position = 'left';
-  position2 = 'above';
+  position: TooltipPosition = 'left';
+  position2: TooltipPosition = 'above';
   saving = false;
   // @Input() order: Order;
   mask = [/^[kK]+$/i, /^[a-zA-Z]+$/i, /^[a-zA-Z]+$/i, ' ', /\d/, /\d/, /\d/, /^[a-zA-Z]+$/i];

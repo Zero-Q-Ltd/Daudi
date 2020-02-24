@@ -1,12 +1,16 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { AngularFirestore } from "@angular/fire/firestore";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
-import { MatDialog, MatTableDataSource } from "@angular/material";
+import { MatDialog } from "@angular/material/dialog";
+import { MatTableDataSource } from "@angular/material/table";
 import { ConfirmDialogComponent } from "app/components/confirm-dialog/confirm-dialog.component";
 import { newStock, Stock } from "app/models/Daudi/omc/Stock";
+import { TaxPrice } from "app/models/Daudi/price/TaxPrice";
 import { AdminService } from "app/services/core/admin.service";
 import { CoreService } from "app/services/core/core.service";
+import { DepotService } from "app/services/core/depot.service";
 import { OmcService } from "app/services/core/omc.service";
+import { StocksService } from "app/services/core/stocks.service";
 import { PricesService } from "app/services/prices.service";
 import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
@@ -18,20 +22,18 @@ import { FuelNamesArray, FuelType } from "../../models/Daudi/fuel/FuelType";
 import { OMC } from "../../models/Daudi/omc/OMC";
 import { AvgPrice } from "../../models/Daudi/price/AvgPrice";
 import { NotificationService } from "../../shared/services/notification.service";
-import { DepotService } from 'app/services/core/depot.service';
-import { TaxPrice } from 'app/models/Daudi/price/TaxPrice';
-import { StocksService } from 'app/services/core/stocks.service';
+import { TooltipPosition } from '@angular/material/tooltip';
 
 @Component({
-  selector: 'edit-price',
+  selector: "edit-price",
   templateUrl: "./edit-price.component.html",
   styleUrls: ["./edit-price.component.scss"]
 })
 
 export class EditPriceComponent implements OnInit, OnDestroy {
-  position = "above";
-  position2 = "left";
-  position3 = "right";
+  position: TooltipPosition = "above";
+  position2: TooltipPosition = "left";
+  position3: TooltipPosition = "right";
 
   activedepot: { depot: Depot, config: DepotConfig } = { depot: { ...emptydepot }, config: { ...emptyDepotConfig } };
   spPricesform: FormGroup = new FormGroup({
@@ -71,7 +73,7 @@ export class EditPriceComponent implements OnInit, OnDestroy {
     [key in FuelType]: {
       total: number,
       avg: number,
-      prices: Price[]
+      prices: AvgPrice[]
     }
   } = {
       pms: {

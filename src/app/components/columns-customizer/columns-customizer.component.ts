@@ -1,8 +1,8 @@
-import {FlatTreeControl} from '@angular/cdk/tree';
-import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
-import {MAT_DIALOG_DATA} from '@angular/material';
-import {MatTreeFlatDataSource, MatTreeFlattener} from '@angular/material/tree';
-import {Observable, of as observableOf, ReplaySubject} from 'rxjs';
+import { FlatTreeControl } from '@angular/cdk/tree';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
+import { Observable, of as observableOf, ReplaySubject } from 'rxjs';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 export class ColNode {
   children: ColNode[];

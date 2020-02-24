@@ -6,11 +6,10 @@ import {
   OnInit,
   Output
 } from "@angular/core";
-import { Validators } from "@angular/forms";
+import { Validators, FormGroup, FormControl, FormBuilder } from "@angular/forms";
 import { CoreService } from "app/services/core/core.service";
 import { CustomerService } from "app/services/customers.service";
 import { isEqual } from "lodash";
-import { FormBuilder, FormControl, FormGroup } from "ngx-strongly-typed-forms";
 import { ReplaySubject, Subject } from "rxjs";
 import { delay, takeUntil } from "rxjs/operators";
 import { CustomerDetail } from "../../../../models/Daudi/customer/CustomerDetail";
@@ -48,15 +47,15 @@ export class ContactFormComponent implements OnInit, OnChanges {
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
   subscriptions: Map<string, any> = new Map<string, any>();
 
-  contactForm: FormGroup<OrderContactForm> = new FormGroup<OrderContactForm>({
-    kraPin: new FormControl<string>("", [Validators.required]),
-    email: new FormControl<string>("", [Validators.required, Validators.email]),
-    companyName: new FormControl<string>("", [Validators.required]),
-    name: new FormControl<string>("", [
+  contactForm: FormGroup = new FormGroup({
+    kraPin: new FormControl("", [Validators.required]),
+    email: new FormControl("", [Validators.required, Validators.email]),
+    companyName: new FormControl("", [Validators.required]),
+    name: new FormControl("", [
       Validators.required,
       Validators.minLength(4)
     ]),
-    phone: new FormControl<string>("", [
+    phone: new FormControl("", [
       Validators.required,
       Validators.pattern("[0-9].{8}")
     ])

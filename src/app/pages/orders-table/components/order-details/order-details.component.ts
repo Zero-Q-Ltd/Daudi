@@ -1,10 +1,11 @@
 // import { BatchSelectorComponent } from './../batch-selector/batch-selector.component';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { MatDialog } from '@angular/material'; // added dialog data receive
 import { ReplaySubject } from 'rxjs';
 import { Truck } from '../../../../models/Daudi/order/truck/Truck';
 import { NotificationService } from '../../../../shared/services/notification.service';
+import { MatDialog } from '@angular/material/dialog';
+import { TooltipPosition } from '@angular/material/tooltip';
 
 @Component({
   selector: 'order-details',
@@ -13,9 +14,9 @@ import { NotificationService } from '../../../../shared/services/notification.se
 })
 export class OrderDetailsComponent implements OnInit, OnDestroy {
 
-  position = 'right';
-  position1 = 'left';
-  position2 = 'above';
+  position: TooltipPosition = 'right';
+  position1: TooltipPosition = 'left';
+  position2: TooltipPosition = 'above';
 
   displayedColumns = ['Id', 'Company', 'Contact', 'Time', 'Phone', 'PMS', 'AGO', 'IK', 'Total', 'Action', 'Status'];
   @Input() truck: Truck;

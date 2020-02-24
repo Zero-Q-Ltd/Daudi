@@ -1,6 +1,6 @@
 import { Component, EventEmitter, OnDestroy, OnInit } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { ComponentCommunicationService } from 'app/services/component-communication.service';
 import { CoreService } from 'app/services/core/core.service';
 import { OrdersService } from 'app/services/orders.service';
@@ -8,11 +8,11 @@ import * as moment from 'moment';
 import { Options } from 'ng5-slider';
 import { ReplaySubject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { ConfirmDialogComponent } from '../../../../components/confirm-dialog/confirm-dialog.component';
 import { Order } from '../../../../models/Daudi/order/Order';
 import { NotificationService } from '../../../../shared/services/notification.service';
-import { ConfirmDialogComponent } from '../../../../components/confirm-dialog/confirm-dialog.component';
-import { EntriesSelectorComponent } from '../../../../components/entries-selector/entries-selector.component';
 import { EntryAssignComponent } from '../entry-assign/entry-assign.component';
+import { TooltipPosition } from '@angular/material/tooltip';
 
 @Component({
   selector: 'truck-details',
@@ -21,12 +21,12 @@ import { EntryAssignComponent } from '../entry-assign/entry-assign.component';
 })
 export class TruckDetailsComponent implements OnInit, OnDestroy {
   order: Order;
-  position = 'above';
+  position: TooltipPosition = 'above';
 
   dialogProperties: object = {};
-  position1 = 'before';
-  position2 = 'after';
-  position3 = 'below';
+  position1: TooltipPosition = 'before';
+  position2: TooltipPosition = 'after';
+  position3: TooltipPosition = 'below';
   accuracycolors = {
     1: {
       percentage: 0

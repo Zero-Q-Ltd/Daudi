@@ -8,7 +8,7 @@
         </div>
         <div class="ot-header">
           <mat-form-field appearance="legacy">
-            <input (keyup)="filterorders($event.target.value)" matInput placeholder="Filter">
+            <input (keyup)="filterorders(typedValue)" [(ngModel)]="typedValue" matInput placeholder="Filter">
           </mat-form-field>
         </div>
         <div class="ot-container">
@@ -64,8 +64,7 @@
             <!-- PMS Column -->
             <ng-container matColumnDef="PMS">
               <th *matHeaderCellDef mat-header-cell mat-sort-header>
-                <mat-icon [matTooltipPosition]="position" class="nav-icon nav-dot material-icons color-pms" matPrefix
-                  matTooltip="PMS">local_gas_station
+                <mat-icon class="nav-icon nav-dot material-icons color-pms" matPrefix matTooltip="PMS">local_gas_station
                 </mat-icon>
               </th>
               <td *matCellDef="let order " mat-cell> {{order.fuel.pms.qty}}
@@ -77,8 +76,7 @@
             <!-- AGO Column -->
             <ng-container matColumnDef="AGO">
               <th *matHeaderCellDef mat-header-cell mat-sort-header>
-                <mat-icon [matTooltipPosition]="position" class="nav-icon nav-dot material-icons color-ago" matPrefix
-                  matTooltip="AGO">local_gas_station
+                <mat-icon class="nav-icon nav-dot material-icons color-ago" matPrefix matTooltip="AGO">local_gas_station
                 </mat-icon>
               </th>
               <td *matCellDef="let order " mat-cell> {{order.fuel.ago.qty}}
@@ -90,8 +88,7 @@
             <!-- IK Column -->
             <ng-container matColumnDef="IK">
               <th *matHeaderCellDef mat-header-cell mat-sort-header>
-                <mat-icon [matTooltipPosition]="position" class="nav-icon nav-dot material-icons color-ik" matPrefix
-                  matTooltip="IK">local_gas_station
+                <mat-icon class="nav-icon nav-dot material-icons color-ik" matPrefix matTooltip="IK">local_gas_station
                 </mat-icon>
               </th>
               <td *matCellDef="let order " mat-cell> {{order.fuel.ik.qty}}
@@ -124,18 +121,15 @@
                 <span [ngSwitch]="order.stage">
                   <span *ngSwitchCase='1'>
                     <button (click)="deleteorder(order)" class="mat-button" mat-button>
-                      <span [matTooltipPosition]="position" class="nav-icon nav-dot material-icons color-danger"
-                        matTooltip="Delete">delete_sweep</span>
+                      <span class="nav-icon nav-dot material-icons color-danger" matTooltip="Delete">delete_sweep</span>
                     </button>
                     <button (click)="approveOrder(order)" class="mat-button" mat-button>
-                      <span [matTooltipPosition]="position" class="nav-icon nav-dot material-icons color-primary"
-                        matTooltip="Approve">check_box</span>
+                      <span class="nav-icon nav-dot material-icons color-primary" matTooltip="Approve">check_box</span>
                     </button>
                   </span>
                   <span *ngSwitchCase='2'>
                     <button (click)="deleteorder(order)" *ngIf="isauthenticated(1)" class="mat-button" mat-button>
-                      <span [matTooltipPosition]="position" class="nav-icon nav-dot material-icons color-danger"
-                        matTooltip="Delete">delete_sweep</span>
+                      <span class="nav-icon nav-dot material-icons color-danger" matTooltip="Delete">delete_sweep</span>
                     </button>
                   </span>
                   <span *ngSwitchCase='3'>
@@ -147,8 +141,8 @@
                   </span>
                   <span *ngSwitchCase=6>
                     <button (click)="restoreOrder(order)" class="mat-button" mat-button>
-                      <span *ngIf="!order.QbId" [matTooltipPosition]="position"
-                        class="nav-icon nav-dot material-icons color-success" matTooltip="Restore">restore
+                      <span *ngIf="!order.QbId" class="nav-icon nav-dot material-icons color-success"
+                        matTooltip="Restore">restore
                       </span>
                       <span *ngIf="order.QbId">Voided</span>
                     </button>
@@ -156,10 +150,10 @@
                   <span *ngSwitchDefault>
                     <span [ngSwitch]="order.loaded">
                       <!-- confirm checkfully loaded -->
-                      <i *ngSwitchCase="true" [matTooltipPosition]="position" aria-hidden="true"
-                        class="fa fa-battery-quater blue-icon" matTooltip="Unloaded"></i>
-                      <i *ngSwitchDefault [matTooltipPosition]="position" aria-hidden="true"
-                        class="fa fa-battery-quater blue-icon" matTooltip="Unloaded"></i>
+                      <i *ngSwitchCase="true" aria-hidden="true" class="fa fa-battery-quater blue-icon"
+                        matTooltip="Unloaded"></i>
+                      <i *ngSwitchDefault aria-hidden="true" class="fa fa-battery-quater blue-icon"
+                        matTooltip="Unloaded"></i>
                     </span>
                   </span>
                 </span>

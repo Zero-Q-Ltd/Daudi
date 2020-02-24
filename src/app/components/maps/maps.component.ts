@@ -1,8 +1,8 @@
-import {MapsAPILoader} from '@agm/core';
-import {Component, ElementRef, Inject, NgZone, OnInit, Optional, ViewChild} from '@angular/core';
-import {FormControl} from '@angular/forms';
-import {MAT_DIALOG_DATA} from '@angular/material'; // added dialog data receive
-import {MyGeoPoint} from '../../models/firestore/firestoreTypes';
+import { MapsAPILoader } from '@agm/core';
+import { Component, ElementRef, Inject, NgZone, OnInit, Optional, ViewChild } from '@angular/core';
+import { FormControl } from '@angular/forms';
+import { MyGeoPoint } from '../../models/firestore/firestoreTypes';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 // import * as maps from 'googlemaps';
 
@@ -19,7 +19,7 @@ export class MapsComponent implements OnInit {
   public zoom: number;
   public draggable: boolean;
 
-  @ViewChild('search', {static: true})
+  @ViewChild('search', { static: true })
   public searchElementRef: ElementRef;
   points: marker[] = [
     {
@@ -43,7 +43,7 @@ export class MapsComponent implements OnInit {
   // zoom: number = 7;
 
   constructor(private mapsAPILoader: MapsAPILoader,
-              private ngZone: NgZone, @Optional() @Inject(MAT_DIALOG_DATA) private data?: object) {
+    private ngZone: NgZone, @Optional() @Inject(MAT_DIALOG_DATA) private data?: object) {
     // if (data && data.points) {
 
     // }
