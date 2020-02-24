@@ -188,9 +188,9 @@
       <ul class="list-unstyled float-right">
         <li>
           <br>
-          <!-- <button [matMenuTriggerFor]="menu" class="btn btn-lg" mat-button
-            style="background-image: {{currentuser.profile.photoURL}}"> -->
-          <button [matMenuTriggerFor]="menu" class="btn btn-lg" mat-button>
+          <button [matMenuTriggerFor]="menu" class="btn btn-lg" mat-button
+            [style.background-image]="currentuser.profile.photoURL">
+            <!-- <button [matMenuTriggerFor]="menu" class="btn btn-lg" mat-button> -->
             <!--<img *ngIf="isLoggedIn" src={{firestore.userdata.data.photoURL}} alt="" class="rounded img30_30">-->
             <i *ngIf="connectionStatus" class="fa fa-caret-down color-yellow"></i>
             <i *ngIf="!connectionStatus" class="fa fa-caret-down color-red"></i>

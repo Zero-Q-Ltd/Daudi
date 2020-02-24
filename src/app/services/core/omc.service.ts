@@ -1,5 +1,5 @@
-import {Injectable} from '@angular/core';
-import {AngularFirestore} from '@angular/fire/firestore';
+import { Injectable } from '@angular/core';
+import { AngularFirestore } from '@angular/fire/firestore';
 
 @Injectable({
   providedIn: 'root'
@@ -7,7 +7,7 @@ import {AngularFirestore} from '@angular/fire/firestore';
 export class OmcService {
 
   constructor(
-    private db: AngularFirestore,) {
+    private db: AngularFirestore, ) {
   }
 
   omcCollection() {

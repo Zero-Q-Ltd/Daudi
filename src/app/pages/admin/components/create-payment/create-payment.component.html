@@ -1,4 +1,15 @@
-<p>create-payment works!</p>
+<mat-form-field>
+    <mat-label>Customer ID</mat-label>
+    <input matInput [(ngModel)]="payment.transaction.billNumber">
+</mat-form-field>
+<mat-form-field>
+    <mat-label>Payment ID</mat-label>
+    <input matInput [(ngModel)]="payment.Id">
+</mat-form-field>
+<mat-form-field>
+    <mat-label>Amount</mat-label>
+    <input matInput type="number" [(ngModel)]="payment.transaction.amount">
+</mat-form-field>
 <button mat-mini-fab (click)="createPayment()">
     <mat-icon>add</mat-icon>
 </button>
