@@ -21,7 +21,9 @@
             </ng-container>
             <!-- Company Column -->
             <ng-container matColumnDef="Company">
-              <th *matHeaderCellDef mat-header-cell mat-sort-header>Designation</th>
+              <th *matHeaderCellDef mat-header-cell mat-sort-header>
+                COMPANY NAME
+              </th>
               <td *matCellDef="let order" mat-cell>
                 <small>{{order.customer.QbId}}</small>
                 | {{order.customer.name}}

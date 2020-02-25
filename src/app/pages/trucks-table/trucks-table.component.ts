@@ -42,7 +42,7 @@ import { TooltipPosition } from '@angular/material/tooltip';
 })
 export class TrucksTableComponent implements OnInit {
   position: TooltipPosition = "above"; // for tooltip
-  expandedElement
+  expandedElement;
   orders: any[];
   dialogProperties: object = {};
   dialogsections: number[] = [];
@@ -51,12 +51,12 @@ export class TrucksTableComponent implements OnInit {
 
   trucksdataSource = new MatTableDataSource<Truck>();
 
-  truckcolumns = ["truckId", "time", "Print Status", "Phone", "orderCompanyName", "driverName", "driverId", "truckReg", "pmsQty", "agoQty", "ikQty"];
+  truckcolumns = ["truckId", "orderCompanyName", "time", "Print Status", "Phone", "driverName", "driverId", "truckReg", "pmsQty", "agoQty", "ikQty"];
 
   temporder = {};
   loadingtrucks = true;
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
-  typedValue: string
+  typedValue: string;
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;

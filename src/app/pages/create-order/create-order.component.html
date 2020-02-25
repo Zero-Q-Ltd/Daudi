@@ -8,7 +8,7 @@
 
       </div>
       <div fxFlex="row">
-        <app-contact-form (formValid)="validContactForm = $any($event)" [newOrder]="newOrder">
+        <app-contact-form (formValid)="validContactForm = $any($event)" [(initData)]="temporder" [newOrder]="newOrder">
         </app-contact-form>
         <app-calculations (formValid)="validCalculationForm = $any($event)" [(initData)]="temporder"
           [newOrder]="newOrder">

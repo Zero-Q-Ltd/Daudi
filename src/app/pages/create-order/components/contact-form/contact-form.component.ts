@@ -27,7 +27,7 @@ export class ContactFormComponent implements OnInit, OnChanges {
 
   @Input() newOrder: boolean;
 
-  @Output() modifiedOrder = new EventEmitter<Order>();
+  @Output() initDataChange = new EventEmitter<Order>();
   @Output() formValid = new EventEmitter<boolean>();
   /**
    * Emits whenever a compay is selected from the dropdown
@@ -129,6 +129,8 @@ export class ContactFormComponent implements OnInit, OnChanges {
           this.formValid.emit(true);
         }
       });
+    this.initDataChange.emit(this.initData);
+
     this.core.loaders.customers
       .pipe(takeUntil(this.comopnentDestroyed))
       .subscribe(value => {
@@ -140,7 +142,7 @@ export class ContactFormComponent implements OnInit, OnChanges {
     /**
      * Silently update the related values
      */
-    console.log(selectedcompany)
+    console.log(selectedcompany);
     this.contactForm.controls.kraPin.setValue(selectedcompany.krapin, {
       emitEvent: false
     });
@@ -168,14 +170,14 @@ export class ContactFormComponent implements OnInit, OnChanges {
     this.selectedCustomer_ = detail;
     // const kraModified = this.initData ? this.initData.customer.krapin === values.kraPin : false;
     this.initData.customer = detail;
-    // this.formValid.emit(this.contactForm.valid);
-    // this.modifiedOrder.emit(this.initData);
+    this.formValid.emit(this.contactForm.valid);
+    this.initDataChange.emit(this.initData);
   }
 
   ngOnChanges(changes: any) {
     if (!this.newOrder && this.initData.customer.Id) {
       this.contactForm.disable();
-      this.companyselect(this.initData.customer)
+      this.companyselect(this.initData.customer);
     }
   }
 
