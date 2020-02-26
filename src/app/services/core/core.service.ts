@@ -39,7 +39,7 @@ export class CoreService {
   /**
    * Be careful when subscribing to this value because it will always emit a value
    */
-  activedepot: BehaviorSubject<{ depot: Depot, config: DepotConfig }> = new BehaviorSubject({
+  activedepot: BehaviorSubject<{ depot: Depot, config: DepotConfig; }> = new BehaviorSubject({
     depot: { ...emptydepot },
     config: { ...emptyDepotConfig }
   });
@@ -148,7 +148,7 @@ export class CoreService {
         this.activedepot.value.depot.config.private
       )
         .onSnapshot(t => {
-          console.log(t.data())
+          console.log(t.data());
           this.stock.next(toObject(newStock(), t));
           this.loaders.stock.next(false);
         }));
@@ -335,7 +335,7 @@ export class CoreService {
     this.fueltypesArray.forEach(fuelType => {
       let queryvalue = this.entriesService.entryCollection(this.omcId)
         .where("active", "==", true)
-        .where("fuelType", "==", fuelType)
+        .where("fuelType", "==", fuelType);
       /**
        * Filter by depot if its a privtae depot
        */

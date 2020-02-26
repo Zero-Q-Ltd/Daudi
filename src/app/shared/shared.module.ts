@@ -9,7 +9,6 @@ import { TextMaskModule } from 'angular2-text-mask';
 import { PipeModuleModule } from 'app/pipe-module/pipe-module.module';
 import { Ng5SliderModule } from 'ng5-slider';
 import { NgxEchartsModule } from 'ngx-echarts';
-import { CommonPipe } from './pipes/common.pipe';
 import { SlimScrollDirective } from './slim-scroll.directive';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
@@ -37,6 +36,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatChipsModule } from '@angular/material/chips';
+import { ParseDatePipe } from './pipes/parse-date.pipe';
 
 @NgModule({
   imports: [
@@ -125,10 +125,11 @@ import { MatChipsModule } from '@angular/material/chips';
       MatInputModule,
       MatSelectModule,
       NgxEchartsModule,
+      ParseDatePipe,
     ]
   ,
   providers: [],
-  declarations: [CommonPipe, SlimScrollDirective]
+  declarations: [SlimScrollDirective, ParseDatePipe]
 })
 export class SharedModule {
 }
