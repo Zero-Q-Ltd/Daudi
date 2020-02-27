@@ -4,7 +4,7 @@ import { FuelNamesArray, FuelType } from "../../models/Daudi/fuel/FuelType";
 import { FuelConfig } from "../../models/Daudi/omc/FuelConfig";
 import { newStock, Stock } from "../../models/Daudi/omc/Stock";
 import { Bill } from "../../models/Qbo/Bill";
-import { readStock, kpcStockCollection } from "../crud/daudi/Stock";
+import { kpcStockCollection } from "../crud/daudi/Stock";
 
 /**
  * 
@@ -82,7 +82,7 @@ export function syncAse(omcId: string, fuelConfig: { [key in FuelType]: FuelConf
             return Promise.resolve();
         }
     })).then(async () => {
-        return await readStock(omcId).then(snapshot => {
+        return await kpcStockCollection(omcId).get().then(snapshot => {
             const stockObject: Stock = { ...newStock(), ...snapshot.data() };
             FuelNamesArray.forEach(fueltype => {
                 stockObject.qty[fueltype].ase += totalAdded[fueltype];

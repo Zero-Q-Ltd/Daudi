@@ -7,6 +7,10 @@ import { readStock, kpcStockCollection } from "../tasks/crud/daudi/Stock";
 import { Stock, newStock } from "../models/Daudi/omc/Stock";
 import { FuelNamesArray } from "../models/Daudi/fuel/FuelType";
 import { firestore } from "firebase-admin";
+import { readDepot } from "../tasks/crud/daudi/depot";
+import { toObject } from "../models/utils/SnapshotUtils";
+import { emptydepot, Depot } from "../models/Daudi/depot/Depot";
+import { emptyEntry } from "../models/Daudi/fuel/Entry";
 
 export function validOrderUpdate(order: Order, omcId: string) {
     switch (order.stage) {
@@ -44,15 +48,20 @@ export function validTruckUpdate(order: Order, omcId: string) {
          */
         case 4:
             const batch = firestore().batch();
-
-            return editStats(order, "paid");
+            return readDepot(order.config.depot.id)
+                .then(depotData => {
+                    const depot = toObject(emptydepot, depotData);
+                    return Promise.all([adjustASE(omcId, order, depot, batch), adjustEntries(omcId, order, batch)]).then(() => {
+                        return batch.commit();
+                    });
+                });
         default:
             return true;
     }
 }
 
-async function adjustASE(omcId: string, order: Order, batch: FirebaseFirestore.WriteBatch) {
-    return await readStock(omcId).then(snapshot => {
+async function adjustASE(omcId: string, order: Order, depot: Depot, batch: FirebaseFirestore.WriteBatch) {
+    return await readStock(omcId, depot.Id, depot.config.private).then(snapshot => {
         const stockObject: Stock = { ...newStock(), ...snapshot.data() };
         FuelNamesArray.forEach(fueltype => {
             /**
@@ -61,8 +70,7 @@ async function adjustASE(omcId: string, order: Order, batch: FirebaseFirestore.W
             const qtyToAdjust = order.fuel[fueltype].entries.reduce((a, b) => a + (b.qty - b.observed), 0);
             stockObject.qty[fueltype].ase += qtyToAdjust;
         });
-        batch.set(kpcStockCollection(omcId), stockObject);
-        return batch.commit();
+        return batch.update(kpcStockCollection(omcId), stockObject);
     });
 }
 async function adjustEntries(omcId: string, order: Order, batch: FirebaseFirestore.WriteBatch) {
@@ -70,4 +78,37 @@ async function adjustEntries(omcId: string, order: Order, batch: FirebaseFiresto
         .collection("omc")
         .doc(omcId)
         .collection("entries");
+
+    //read the entries
+    const reads: { qtyToAdjust: number, readPromise: Promise<any>; }[] = [];
+    FuelNamesArray.forEach(fueltype => {
+        /**
+         * Creae a read promise for each entry in each fuel type
+         */
+        order.fuel[fueltype].entries.forEach(entry => {
+            reads.push({
+                qtyToAdjust: entry.qty - entry.observed,
+                readPromise: directory.doc(entry.Id).get()
+            });
+        });
+    });
+    return Promise.all(reads.map(t => t.readPromise)).then(results => {
+        /**
+         * @todo needs further testing
+         * @dangerous assume that promise resolution order is maintainde and use promise index to resolve original qty 
+         */
+        results.forEach((readResult, index) => {
+            const entry = toObject(emptyEntry, readResult);
+            /**
+             * Deduct the difference from the qty used
+             */
+            entry.qty.used -= reads[index].qtyToAdjust;
+            /**
+             * Add this qty to the total observed for stats
+             */
+            entry.qty.directLoad.accumulated += reads[index].qtyToAdjust;
+            batch.update(directory.doc(entry.Id), entry);
+            return;
+        });
+    });
 }
