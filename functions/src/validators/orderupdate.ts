@@ -59,6 +59,9 @@ export function validTruckUpdate(order: Order, omcId: string) {
                         console.log('Fuels Stocks Adjustment submissions complete, moving order');
 
                         order.stage = 5;
+                        order.orderStageData[5] = {
+                            user: order.truckStageData[4].user,
+                        };
                         batch.update(orderCollection(omcId).doc(order.Id), order);
                         return batch.commit() as Promise<any>;
                     });
