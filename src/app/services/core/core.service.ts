@@ -311,8 +311,8 @@ export class CoreService {
     const stage5subscriprion = this.orderService.ordersCollection(this.omcId)
       .where("stage", "==", 5)
       .where("config.depot.id", "==", depotId)
-      .where("orderStageData.1.user.date", "<=", startofweek)
-      .orderBy("orderStageData.1.user.date", "asc")
+      .where("orderStageData.5.user.date", "<=", startofweek)
+      .orderBy("orderStageData.5.user.date", "asc")
       .onSnapshot(Data => {
         /**
          * reset the array at the postion when data changes

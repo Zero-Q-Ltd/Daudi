@@ -10,8 +10,8 @@ export interface Expiry {
 }
 
 export interface TruckEntry {
-  Name: string;
-  Id: string;
+  name: string;
+  id: string;
   qty: number;
   observed: number;
 }

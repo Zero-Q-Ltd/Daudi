@@ -137,8 +137,8 @@ export class EntryAssignComponent implements OnInit {
         tempEntry.active = entry.resultStatus;
 
         temporder.fuel[fuel].entries[index] = {
-          Id: entry.Id,
-          Name: entry.entry.name,
+          id: entry.Id,
+          name: entry.entry.name,
           observed: 0,
           qty: entry.qtyDrawn
         };

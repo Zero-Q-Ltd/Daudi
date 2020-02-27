@@ -49,29 +49,37 @@ export function validTruckUpdate(order: Order, omcId: string) {
          */
         case 4:
             const batch = firestore().batch();
+            console.log("Completed order...");
+
             return readDepot(order.config.depot.id)
                 .then(depotData => {
                     const depot = toObject(emptydepot, depotData);
                     return Promise.all([adjustASE(omcId, order, depot, batch), adjustEntries(omcId, order, batch)]).then(() => {
                         //move the order to complete stage
+                        console.log('Fuels Stocks Adjustment submissions complete, moving order');
+
                         order.stage = 5;
                         batch.update(orderCollection(omcId).doc(order.Id), order);
-                        return batch.commit();
+                        return batch.commit() as Promise<any>;
                     });
                 });
         default:
-            return true;
+            return Promise.resolve('Nothing to do');
     }
 }
 
 async function adjustASE(omcId: string, order: Order, depot: Depot, batch: FirebaseFirestore.WriteBatch) {
-    return await readStock(omcId, depot.Id, depot.config.private).then(snapshot => {
+    return readStock(omcId, depot.Id, depot.config.private).then(snapshot => {
+
         const stockObject: Stock = { ...newStock(), ...snapshot.data() };
+        console.log("Done reading stock", stockObject);
+
         FuelNamesArray.forEach(fueltype => {
             /**
              * sum the total qty observed in each entry
              */
             const qtyToAdjust = order.fuel[fueltype].entries.reduce((a, b) => a + (b.qty - b.observed), 0);
+            console.log('Adjusting stock qty by', qtyToAdjust);
             stockObject.qty[fueltype].ase += qtyToAdjust;
         });
         return batch.update(kpcStockCollection(omcId), stockObject);
@@ -88,15 +96,16 @@ async function adjustEntries(omcId: string, order: Order, batch: FirebaseFiresto
     FuelNamesArray.forEach(fueltype => {
         /**
          * Creae a read promise for each entry in each fuel type
+         * Olny the last entry is relevant in assigning the observed quantities
          */
-        order.fuel[fueltype].entries.forEach(entry => {
-            reads.push({
-                qtyToAdjust: entry.qty - entry.observed,
-                readPromise: directory.doc(entry.Id).get()
-            });
+        const lastEntry = order.fuel[fueltype].entries[order.fuel[fueltype].entries.length - 1];
+        reads.push({
+            qtyToAdjust: lastEntry.qty - lastEntry.observed,
+            readPromise: directory.doc(lastEntry.id).get()
         });
     });
     return Promise.all(reads.map(t => t.readPromise)).then(results => {
+        console.log("Done reading all assiciated entries", reads.length);
         /**
          * @todo needs further testing
          * @dangerous assume that promise resolution order is maintainde and use promise index to resolve original qty 
@@ -111,8 +120,10 @@ async function adjustEntries(omcId: string, order: Order, batch: FirebaseFiresto
              * Add this qty to the total observed for stats
              */
             entry.qty.directLoad.accumulated += reads[index].qtyToAdjust;
+            console.log('Adjusting Entry qty by', reads[index].qtyToAdjust, "EntryID", entry.Id);
+
             batch.update(directory.doc(entry.Id), entry);
-            return;
         });
+        return;
     });
 }

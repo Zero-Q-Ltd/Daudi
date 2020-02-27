@@ -1,3 +1,4 @@
+import * as util from "util";
 import * as admin from "firebase-admin";
 import * as functions from 'firebase-functions';
 import { CompanySync } from "./models/Cloud/CompanySync";
@@ -18,7 +19,7 @@ import { resolvePayment } from "./tasks/resolvepayment";
 import { sendsms } from './tasks/sms/sms';
 import { ordersms, trucksms } from './tasks/sms/smscompose';
 import { processSync } from './tasks/syncdb/processSync';
-import { validOrderUpdate } from './validators/orderupdate';
+import { validOrderUpdate, validTruckUpdate } from './validators/orderupdate';
 
 admin.initializeApp(functions.config().firebase);
 admin.firestore().settings({ timestampsInSnapshots: true });
@@ -153,6 +154,8 @@ exports.orderUpdated = functions.firestore
        * make sure that the stage has increased
        * @todo cater for orders reverted
        */
+      console.log(util.inspect(order, false, null, false /* enable colors */));
+
       const orderbefore = data.before.data() as Order;
       if (!orderbefore) {
         return true;
@@ -169,9 +172,9 @@ exports.orderUpdated = functions.firestore
           console.log("Ignoring change in orders not requiring SMS");
           return validOrderUpdate(order, omcId);
         }
-      } else if (orderbefore.truck.stage < orderbefore.truck.stage) {
+      } else if (orderbefore.truck.stage < order.truck.stage) {
         // return truckdatachanged(order)
-        return Promise.all([trucksms(order, omcId)]);
+        return Promise.all([trucksms(order, omcId), validTruckUpdate(order, omcId)]);
       } else {
         console.log("Order Info has changed, but stage has not increased");
         return true;

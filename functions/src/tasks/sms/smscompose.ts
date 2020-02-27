@@ -9,9 +9,7 @@ export function ordersms(order: Order, omcId: string) {
    * also ignore deleted orders
    */
   if (order.stage > 3) {
-    return new Promise((resolver, reject) => {
-      resolver("No SMS to send for order beyond stage 3");
-    });
+    return Promise.resolve("No SMS to send for order beyond stage 3");
   }
   const newsms: SMS = {
     Id: "",
@@ -43,6 +41,9 @@ export function ordersms(order: Order, omcId: string) {
 }
 
 export function trucksms(order: Order, omcId: string) {
+  if (order.truck.stage > 3) {
+    return Promise.resolve("Complete truck");
+  }
   const newsms: SMS = {
     Id: "",
     timestamp: firestore.Timestamp.fromDate(new Date()),
