@@ -124,6 +124,9 @@ export class TruckDetailsComponent implements OnInit, OnDestroy {
   }
 
   timespent(start, stop) {
+    if (!start || !stop) {
+      return null;
+    }
     const difference = moment(stop.toDate()).diff(moment(start.toDate()));
     const timediff = moment.duration(difference);
     // console.log(timediff.hours(), timediff.minutes());
@@ -147,14 +150,14 @@ export class TruckDetailsComponent implements OnInit, OnDestroy {
   }
 
   calculatetotaltime(timearray: any[]) {
-    let totaltime: any = '00:00:00';
+    // let totaltime: any = '00:00:00';
 
-    timearray.forEach(timeobject => {
-      totaltime = moment.duration(totaltime).add(timeobject.time);
-    });
-    const totalhours = moment.duration(totaltime).hours() > 9 ? moment.duration(totaltime).hours() : '0' + moment.duration(totaltime).hours();
-    const totalmins = moment.duration(totaltime).minutes() > 9 ? moment.duration(totaltime).minutes() : '0' + moment.duration(totaltime).minutes();
-    return `${totalhours}:${totalmins}:00`;
+    // timearray.forEach(timeobject => {
+    //   totaltime = moment.duration(totaltime).add(timeobject.time);
+    // });
+    // const totalhours = moment.duration(totaltime).hours() > 9 ? moment.duration(totaltime).hours() : '0' + moment.duration(totaltime).hours();
+    // const totalmins = moment.duration(totaltime).minutes() > 9 ? moment.duration(totaltime).minutes() : '0' + moment.duration(totaltime).minutes();
+    // return `${totalhours}:${totalmins}:00`;
   }
 
   calculateaccuracy(timearray, start, stop, stage) {

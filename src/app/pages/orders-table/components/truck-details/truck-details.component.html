@@ -137,21 +137,20 @@
         </td>
         <td>{{calculatetotaltime(order.truckStageData["3"].expiry)}}</td>
         <td>
-          <!-- <span *ngIf="order.truck.stage > 3">
+          <span *ngIf="order.truck.stage > 3">
             {{timespent(order.truckStageData["3"].user.date, order.truckStageData["4"].user.date)}}
-          </span> -->
+          </span>
         </td>
         <td>
-          <!-- <span *ngIf="order.truck.stage > 2">
+          <span *ngIf="order.truck.stage > 2">
             {{order.truckStageData["3"].expiry?.length - 1}}
-          </span> -->
+          </span>
         </td>
         <td class="custom-slider">
-          <!-- <ng5-slider
-            *ngIf="order.truck.stage > 3 && calculateaccuracy(order.truckStageData['3'].expiry, order.truckStageData['3'].user.date, 
-            order.truckStageData['4'].user.date, 3 )"
-            [manualRefresh]="manualRefresh" [options]="slider" [value]="accuracycolors[3].percentage">
-          </ng5-slider> -->
+          <ng5-slider *ngIf="order.truck.stage > 3 && calculateaccuracy(order.truckStageData['3'].expiry, order.truckStageData['3'].user.date, 
+            order.truckStageData['4'].user.date, 3 )" [manualRefresh]="manualRefresh" [options]="slider"
+            [value]="accuracycolors[3].percentage">
+          </ng5-slider>
         </td>
         <td>{{order.truckStageData["3"].user?.name}}</td>
       </tr>
@@ -161,7 +160,7 @@
   <div *ngIf="order.truck?.stage > 0" class="full-div">
     <span class="order-stage" matTooltip="Exit Time">
       <i class="fa fa-clock-o color-primary"></i>:
-      {{order.truckStageData["4"].user?.date | date: 'short'}}</span>
+      {{order.truckStageData["4"].user?.date |parseDate | date: 'short'}}</span>
     <span class="order-stage" matTooltip="Seals Range">
       <i class="fa fa-folder-o color-primary"></i>: {{order.seals.range}}</span>
     <span class="order-stage" matTooltip="Broken Seals">
@@ -240,8 +239,8 @@
           <table class="table table-stripped">
             <thead class="thead-primary">
               <tr class="color-pms">
-                <th>{{order.fuel.pms.entries["0"]?.Name || 'Batch1'}}</th>
-                <th>{{order.fuel.pms.entries["1"]?.Name || 'Batch2'}}</th>
+                <th>{{order.fuel.pms.entries["0"]?.name || 'Batch1'}}</th>
+                <th>{{order.fuel.pms.entries["1"]?.name || 'Batch2'}}</th>
                 <th>Total</th>
                 <th>Observed</th>
               </tr>
@@ -269,8 +268,8 @@
           <table class="table table-stripped">
             <thead class="thead-primary">
               <tr class="color-ago">
-                <th>{{order.fuel.ago.entries["0"]?.Name || 'Batch1'}}</th>
-                <th>{{order.fuel.ago.entries["1"]?.Name || 'Batch2'}}</th>
+                <th>{{order.fuel.ago.entries["0"]?.name || 'Batch1'}}</th>
+                <th>{{order.fuel.ago.entries["1"]?.name || 'Batch2'}}</th>
                 <th>Total</th>
                 <th>Observed</th>
               </tr>
@@ -297,8 +296,8 @@
           <table class="table table-stripped">
             <thead class="thead-primary">
               <tr class="color-ik">
-                <th>{{order.fuel.ik.entries["0"]?.Name || 'Batch1'}}</th>
-                <th>{{order.fuel.ik.entries["1"]?.Name || 'Batch2'}}</th>
+                <th>{{order.fuel.ik.entries["0"]?.name || 'Batch1'}}</th>
+                <th>{{order.fuel.ik.entries["1"]?.name || 'Batch2'}}</th>
                 <th>Total</th>
                 <th>Observed</th>
               </tr>

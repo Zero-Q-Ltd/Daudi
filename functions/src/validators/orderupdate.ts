@@ -101,6 +101,12 @@ async function adjustEntries(omcId: string, order: Order, batch: FirebaseFiresto
          * Creae a read promise for each entry in each fuel type
          * Olny the last entry is relevant in assigning the observed quantities
          */
+        if (order.fuel[fueltype].entries.length > 0) {
+            console.log("truck has no", fueltype, "Entry with ", order.fuel[fueltype].qty);
+            return;
+        }
+        console.log("truck has ", fueltype, "of", order.fuel[fueltype].qty, "and ", order.fuel[fueltype].entries.length, "Entries");
+
         const lastEntry = order.fuel[fueltype].entries[order.fuel[fueltype].entries.length - 1];
         reads.push({
             qtyToAdjust: lastEntry.qty - lastEntry.observed,
