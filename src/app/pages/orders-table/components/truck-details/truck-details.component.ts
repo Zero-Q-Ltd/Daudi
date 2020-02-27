@@ -13,6 +13,7 @@ import { Order } from '../../../../models/Daudi/order/Order';
 import { NotificationService } from '../../../../shared/services/notification.service';
 import { EntryAssignComponent } from '../entry-assign/entry-assign.component';
 import { TooltipPosition } from '@angular/material/tooltip';
+import { MyTimestamp } from "app/models/firestore/firestoreTypes";
 
 @Component({
   selector: 'truck-details',
@@ -131,11 +132,11 @@ export class TruckDetailsComponent implements OnInit, OnDestroy {
     return `${totalhours}:${totalmins}:00`;
   }
 
-  expired(MyTimestamp) {
-    if (!MyTimestamp || !(MyTimestamp instanceof MyTimestamp)) {
+  expired(time) {
+    if (!time || !(time instanceof MyTimestamp)) {
       return;
     }
-    return MyTimestamp.toDate() < moment().toDate();
+    return time.toDate() < moment().toDate();
   }
 
 
