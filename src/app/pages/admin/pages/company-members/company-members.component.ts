@@ -1,6 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import * as moment from 'moment';
-import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
+import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
   selector: 'company-members',
@@ -56,6 +55,6 @@ export class CompanyMembersComponent implements OnInit {
   }
 
   creationtime(time) {
-    return moment(time).format('MMMM Do YYYY, h:mm a');
+    // return moment(time).format('MMMM Do YYYY, h:mm a');
   }
 }

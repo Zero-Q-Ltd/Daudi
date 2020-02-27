@@ -1,7 +1,5 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
-import * as moment from 'moment';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
 // import {DateAdapter, SatCalendar, SatCalendarFooter, SatDatepicker} from 'saturn-datepicker';
 
 @Component({
@@ -11,7 +9,7 @@ import { takeUntil } from 'rxjs/operators';
 })
 
 export class CalendarRangesComponent<Date> {
-  public ranges: Array<{ key: string, label: string }> = [
+  public ranges: Array<{ key: string, label: string; }> = [
     { key: 'last3Months', label: 'Last 3 Months (Default)' },
     { key: 'last6Months', label: 'Last 6 Months' },
     { key: 'thisYear', label: 'last 1 Year' },

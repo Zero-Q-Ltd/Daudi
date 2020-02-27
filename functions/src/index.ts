@@ -16,9 +16,9 @@ import { updateCustomer } from './tasks/crud/qbo/customer/update';
 import { createQboOrder } from './tasks/crud/qbo/Order/create';
 import { resolvePayment } from "./tasks/resolvepayment";
 import { sendsms } from './tasks/sms/sms';
-import { ordersms } from './tasks/sms/smscompose';
+import { ordersms, trucksms } from './tasks/sms/smscompose';
 import { processSync } from './tasks/syncdb/processSync';
-import { validorderupdate } from './validators/orderupdate';
+import { validOrderUpdate } from './validators/orderupdate';
 
 admin.initializeApp(functions.config().firebase);
 admin.firestore().settings({ timestampsInSnapshots: true });
@@ -47,7 +47,7 @@ exports.createEstimate = functions.https.onCall((data: OrderCreate, context) => 
        */
       const EstimateResult = createResult.Estimate as QboOrder;
       data.order.QbConfig.EstimateId = EstimateResult.Id;
-      return Promise.all([ordersms(data.order, data.omcId), validorderupdate(data.order, data.omcId), creteOrder(data.order, data.omcId)]);
+      return Promise.all([ordersms(data.order, data.omcId), validOrderUpdate(data.order, data.omcId), creteOrder(data.order, data.omcId)]);
     });
   });
 });
@@ -66,7 +66,7 @@ exports.createInvoice = functions.https.onCall((data: OrderCreate, context) => {
       const InvoiceResult = createResult.Invoice as QboOrder;
       data.order.QbConfig.InvoiceId = InvoiceResult.Id;
       data.order.stage = 2;
-      return Promise.all([ordersms(data.order, data.omcId), validorderupdate(data.order, data.omcId), updateOrder(data.order, data.omcId)]);
+      return Promise.all([ordersms(data.order, data.omcId), validOrderUpdate(data.order, data.omcId), updateOrder(data.order, data.omcId)]);
     });
   });
 });
@@ -164,14 +164,14 @@ exports.orderUpdated = functions.firestore
           /**
            * Make the two processes run parallel so that none is blocking
            */
-          return Promise.all([ordersms(order, omcId), validorderupdate(order, omcId)]);
+          return Promise.all([ordersms(order, omcId), validOrderUpdate(order, omcId)]);
         } else {
           console.log("Ignoring change in orders not requiring SMS");
-          return validorderupdate(order, omcId);
+          return validOrderUpdate(order, omcId);
         }
       } else if (orderbefore.truck.stage < orderbefore.truck.stage) {
         // return truckdatachanged(order)
-        return true;
+        return Promise.all([trucksms(order, omcId)]);
       } else {
         console.log("Order Info has changed, but stage has not increased");
         return true;
