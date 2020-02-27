@@ -1,6 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-import { MatDialog } from '@angular/material';
 import { BatchTrucksComponent } from 'app/components/batch-trucks/batch-trucks.component';
 import { Depot } from 'app/models/Daudi/depot/Depot';
 import { AdminService } from 'app/services/core/admin.service';
@@ -9,6 +8,7 @@ import { DepotService } from 'app/services/core/depot.service';
 import { ReplaySubject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { NavLinks } from './admin-routes';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-admin',

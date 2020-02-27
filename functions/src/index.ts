@@ -1,30 +1,25 @@
+import * as util from "util";
 import * as admin from "firebase-admin";
 import * as functions from 'firebase-functions';
-import * as requester from "request";
-import { QuickBooks } from './libs/qbmain';
 import { CompanySync } from "./models/Cloud/CompanySync";
 import { OrderCreate } from './models/Cloud/OrderCreate';
-import { EmptyQboConfig } from "./models/Cloud/QboEnvironment";
 import { emptyDaudiCustomer } from './models/Daudi/customer/Customer';
 import { Order } from "./models/Daudi/order/Order";
 import { SMS } from './models/Daudi/sms/sms';
 import { MyTimestamp } from './models/firestore/firestoreTypes';
+import { DaudiPayment, emptyPayment } from "./models/payment/DaudiPayment";
 import { QboOrder } from "./models/Qbo/QboOrder";
 import { toObject } from "./models/utils/SnapshotUtils";
 import { creteOrder, updateOrder } from './tasks/crud/daudi/Order';
-import { ReadAndInstantiate, readQboConfig } from "./tasks/crud/daudi/QboConfig";
+import { paymentDoc } from "./tasks/crud/daudi/Paymnet";
+import { ReadAndInstantiate } from "./tasks/crud/daudi/QboConfig";
 import { updateCustomer } from './tasks/crud/qbo/customer/update';
 import { createQboOrder } from './tasks/crud/qbo/Order/create';
-import { sendsms } from './tasks/sms/sms';
-import { ordersms } from './tasks/sms/smscompose';
-import { processSync } from './tasks/syncdb/processSync';
-import { validorderupdate } from './validators/orderupdate';
-import { createQbo } from "./tasks/sharedqb";
-import { EquityBulk } from "./models/ipn/EquityBulk";
-import { paymentFcm } from "./tasks/FCM/paymentFcm";
 import { resolvePayment } from "./tasks/resolvepayment";
-import { DaudiPayment, emptyPayment } from "./models/ipn/DaudiPayment";
-import { PaymentDoc } from "./tasks/crud/daudi/Paymnet";
+import { sendsms } from './tasks/sms/sms';
+import { ordersms, trucksms } from './tasks/sms/smscompose';
+import { processSync } from './tasks/syncdb/processSync';
+import { validOrderUpdate, validTruckUpdate } from './validators/orderupdate';
 
 admin.initializeApp(functions.config().firebase);
 admin.firestore().settings({ timestampsInSnapshots: true });
@@ -43,7 +38,7 @@ function markAsRunning(eventID: string) {
  * create an estimate from the client directly
  */
 exports.createEstimate = functions.https.onCall((data: OrderCreate, context) => {
-  console.log(data)
+  console.log(data);
   return ReadAndInstantiate(data.omcId).then((result) => {
     // console.log(result.qbo)
     return result.qbo.createEstimate(new createQboOrder(data.order, result.config).QboOrder).then((createResult) => {
@@ -51,17 +46,17 @@ exports.createEstimate = functions.https.onCall((data: OrderCreate, context) => 
        * Only send sn SMS when estimate creation is complete
        * Make the two processes run parallel so that none is blocking
        */
-      const EstimateResult = createResult.Estimate as QboOrder
-      data.order.QbConfig.EstimateId = EstimateResult.Id
-      return Promise.all([ordersms(data.order, data.omcId), validorderupdate(data.order, data.omcId), creteOrder(data.order, data.omcId)])
+      const EstimateResult = createResult.Estimate as QboOrder;
+      data.order.QbConfig.EstimateId = EstimateResult.Id;
+      return Promise.all([ordersms(data.order, data.omcId), validOrderUpdate(data.order, data.omcId), creteOrder(data.order, data.omcId)]);
     });
-  })
-})
+  });
+});
 /**
  * create an order from the client directly
  */
 exports.createInvoice = functions.https.onCall((data: OrderCreate, context) => {
-  console.log(data)
+  console.log(data);
   return ReadAndInstantiate(data.omcId).then((result) => {
     // console.log(result.qbo)
     return result.qbo.createInvoice(new createQboOrder(data.order, result.config).QboOrder).then((createResult) => {
@@ -69,13 +64,13 @@ exports.createInvoice = functions.https.onCall((data: OrderCreate, context) => {
        * Only send sn SMS when invoice creation is complete
        * Make the two processes run parallel so that none is blocking
        */
-      const InvoiceResult = createResult.Invoice as QboOrder
-      data.order.QbConfig.InvoiceId = InvoiceResult.Id
-      data.order.stage = 2
-      return Promise.all([ordersms(data.order, data.omcId), validorderupdate(data.order, data.omcId), updateOrder(data.order, data.omcId)]);
-    })
-  })
-})
+      const InvoiceResult = createResult.Invoice as QboOrder;
+      data.order.QbConfig.InvoiceId = InvoiceResult.Id;
+      data.order.stage = 2;
+      return Promise.all([ordersms(data.order, data.omcId), validOrderUpdate(data.order, data.omcId), updateOrder(data.order, data.omcId)]);
+    });
+  });
+});
 
 
 exports.customerUpdated = functions.firestore
@@ -92,7 +87,7 @@ exports.customerUpdated = functions.firestore
     } else {
       markAsRunning(eventID);
       // A new customer has been updated
-      const customerbefore = snap.before.data()
+      const customerbefore = snap.before.data();
       if (!customerbefore) {
         return true;
       }
@@ -100,11 +95,11 @@ exports.customerUpdated = functions.firestore
         // this customer has just been created
         return true;
       }
-      const customer = toObject(emptyDaudiCustomer, snap.after)
+      const customer = toObject(emptyDaudiCustomer, snap.after);
 
       return ReadAndInstantiate(context.params.omcId).then(res => {
         return updateCustomer(customer, res.qbo);
-      })
+      });
     }
   });
 
@@ -159,25 +154,27 @@ exports.orderUpdated = functions.firestore
        * make sure that the stage has increased
        * @todo cater for orders reverted
        */
-      const orderbefore = data.before.data() as Order
+      console.log(util.inspect(order, false, null, false /* enable colors */));
+
+      const orderbefore = data.before.data() as Order;
       if (!orderbefore) {
-        return true
+        return true;
       }
-      const omcId = context.params.omcId
+      const omcId = context.params.omcId;
       if (orderbefore.stage < order.stage) {
         order.Id = data.after.id;
         if (order.notifications.sms) {
           /**
            * Make the two processes run parallel so that none is blocking
            */
-          return Promise.all([ordersms(order, omcId), validorderupdate(order, omcId)]);
+          return Promise.all([ordersms(order, omcId), validOrderUpdate(order, omcId)]);
         } else {
           console.log("Ignoring change in orders not requiring SMS");
-          return validorderupdate(order, omcId);
+          return validOrderUpdate(order, omcId);
         }
-      } else if (orderbefore.truck.stage < orderbefore.truck.stage) {
+      } else if (orderbefore.truck.stage < order.truck.stage) {
         // return truckdatachanged(order)
-        return true
+        return Promise.all([trucksms(order, omcId), validTruckUpdate(order, omcId)]);
       } else {
         console.log("Order Info has changed, but stage has not increased");
         return true;
@@ -186,12 +183,12 @@ exports.orderUpdated = functions.firestore
   });
 
 exports.requestsync = functions.https.onCall((data: CompanySync, _) => {
-  console.log(data)
+  console.log(data);
   return ReadAndInstantiate(data.omcId).then((result) => {
     // console.log(result.qbo)
     return processSync(data.sync, result.qbo, data.omcId, result.config);
-  })
-})
+  });
+});
 
 /**
  * Combines RTDB with cloud firestore to provide realtime updates for presence detection
@@ -209,6 +206,9 @@ exports.onUserStatusChanged = functions.database
       );
       return true;
     } else {
+
+      admin.database().ref();
+
       markAsRunning(eventID);
       // Then use other event data to create a reference to the
       // corresponding Firestore document.
@@ -254,8 +254,8 @@ exports.dbPayment = functions.firestore
       markAsRunning(eventID);
       const payment = snap.data() as DaudiPayment;
       return ReadAndInstantiate(context.params.omcId).then((result) => {
-        return resolvePayment(payment, result.qbo, context.params.omcId)
-      })
+        return resolvePayment(payment, result.qbo, context.params.omcId);
+      });
     }
   });
 
@@ -263,15 +263,32 @@ exports.dbPayment = functions.firestore
  * a way for the client app to re initiate a payment trigger
  */
 
-exports.paymentClientInit = functions.https.onCall((data: { paymentId: string, omcId: string }, context) => {
+exports.paymentClientInit = functions.https.onCall((data: { paymentId: string, omcId: string; }, context) => {
   console.log(data);
-  return PaymentDoc(data.omcId, data.paymentId)
+  return paymentDoc(data.omcId, data.paymentId)
     .get()
     .then(res => {
-      const payment = toObject(emptyPayment(), res)
+      const payment = toObject(emptyPayment(), res);
       return ReadAndInstantiate(data.omcId).then((result) => {
-        return resolvePayment(payment, result.qbo, data.omcId)
-      })
-    })
+        return resolvePayment(payment, result.qbo, data.omcId);
+      });
+    });
 
 });
+
+/**
+ * Payment NOtification endpoint
+ */
+
+// exports.paymentClientInit = functions.https.onRequest((req, res) => {
+//   console.log(data);
+//   return PaymentDoc(data.omcId, data.paymentId)
+//     .get()
+//     .then(res => {
+//       const payment = toObject(emptyPayment(), res)
+//       return ReadAndInstantiate(data.omcId).then((result) => {
+//         return resolvePayment(payment, result.qbo, data.omcId)
+//       })
+//     })
+
+// });

@@ -9,16 +9,17 @@ import { TxnStatus } from "../../../../models/Qbo/enums/TxnStatus";
 import { Line } from "../../../../models/Qbo/subTypes/Line";
 import { QboCofig } from "../../../../models/Cloud/QboEnvironment";
 import { QboOrder } from "../../../../models/Qbo/QboOrder";
+import { Payment } from "../../../../models/Qbo/Payment";
 
 
 export class createQboOrder {
-    QboOrder: QboOrder
-    constructor(private orderdata: Order, private config: QboCofig) {
+    QboOrder: QboOrder;
+    constructor(private orderdata: Order, private config: QboCofig, linkPayments?: Payment[]) {
         /**
          * format the timestamp again as it loses it when it doesnt directly go to the database
          */
-        orderdata.orderStageData["1"].user.date = moment().toDate() as any;
-        this.QboOrder = this.formulate(orderdata)
+        this.orderdata.orderStageData["1"].user.date = moment().toDate() as any;
+        this.QboOrder = this.formulate(this.orderdata);
     }
 
     private syncfueltypes(order: Order): Array<any> {
@@ -127,78 +128,7 @@ export class createQboOrder {
             },
             Line: this.syncfueltypes(order)
         };
-        console.log("Est", newEstimate)
+        console.log("Est", newEstimate);
         return newEstimate;
     }
-}
-let t = {
-    CustomField:
-        [{
-            DefinitionId: '1',
-            Name: 'Customer ID',
-            StringValue: '1',
-            Type: 'StringType'
-        }],
-    EmailStatus: 'NeedToSend',
-    CustomerRef: { value: '1' },
-    BillEmail: { Address: 'info@zero-q.com' },
-    TxnTaxDetail:
-    {
-        TotalTax: 3778,
-        TaxLine:
-            [{
-                Amount: 3778,
-                DetailType: 'TaxLineDetail',
-                TaxLineDetail:
-                {
-                    NetAmountTaxable: 88722,
-                    PercentBased: false,
-                    TaxPercent: 8,
-                    TaxRateRef: { value: '3' }
-                }
-            }]
-    },
-    domain: 'QBO',
-    TxnStatus: 'Pending',
-    PrintStatus: 'NeedToPrint',
-    ClassRef: { name: 'Eldoret', value: '1' },
-    Line:
-        [{
-            Amount: 88722,
-            DetailType: 'GroupLineDetail',
-            Description: 'VAT-Exempt : 41.5 \t Taxable Amount: 88722 \t VAT Total : 3778 \t',
-            Id: '5',
-            GroupLineDetail:
-            {
-                Quantity: 1000,
-                GroupItemRef: { name: 'pms', value: '5' },
-                Line:
-                    [{
-                        Amount: 88722,
-                        Description: '',
-                        DetailType: 'SalesItemLineDetail',
-                        Id: '3',
-                        SalesItemLineDetail:
-                        {
-                            ItemRef: { name: 'pms', value: '3' },
-                            Qty: 1000,
-                            TaxCodeRef: { value: 'TAX' },
-                            UnitPrice: 88.722
-                        }
-                    },
-                    {
-                        Amount: 0,
-                        Description: '',
-                        DetailType: 'SalesItemLineDetail',
-                        Id: '4',
-                        SalesItemLineDetail:
-                        {
-                            ItemRef: { name: 'pms', value: '4' },
-                            Qty: 1000,
-                            TaxCodeRef: { value: 'TAX' },
-                            UnitPrice: 0
-                        }
-                    }]
-            }
-        }]
 }

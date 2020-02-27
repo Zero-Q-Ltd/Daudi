@@ -1,5 +1,4 @@
 import { Component, OnDestroy } from '@angular/core';
-import { MatDialog } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MapsComponent } from 'app/components/maps/maps.component';
 import { AdminService } from 'app/services/core/admin.service';
@@ -18,6 +17,8 @@ import { AdminConfig, emptyConfig } from '../../models/Daudi/omc/AdminConfig';
 import { emptyorder, Order } from '../../models/Daudi/order/Order';
 import { NotificationService } from '../../shared/services/notification.service';
 import { ConfirmDepotComponent } from './components/confirm-depot/confirm-depot.component';
+import { MatDialog } from '@angular/material/dialog';
+import { TooltipPosition } from '@angular/material/tooltip';
 
 @Component({
   selector: 'create-order',
@@ -40,13 +41,13 @@ export class CreateOrderComponent implements OnDestroy {
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
   activedepot: { depot: Depot, config: DepotConfig } = { depot: { ...emptydepot }, config: { ...emptyDepotConfig } };
   omcConfig: AdminConfig = { ...emptyConfig };
-  kraModified = false;
-  validContactForm = false;
-  validCalculationForm = false;
-  orderError = false;
+  kraModified: boolean;
+  validContactForm: boolean;
+  validCalculationForm: boolean;
+  orderError: boolean;
 
-  position = 'before';
-  position1 = 'above';
+  position: TooltipPosition = 'before';
+  position1: TooltipPosition = 'above';
   temporder: Order = { ...emptyorder };
   tempsellingprices = {
     pms: 0,

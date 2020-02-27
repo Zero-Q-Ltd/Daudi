@@ -1,7 +1,6 @@
 import { Component, Inject, OnDestroy, OnInit } from "@angular/core";
 import { AngularFirestore } from "@angular/fire/firestore";
 import { FormControl, Validators } from "@angular/forms";
-import { MAT_DIALOG_DATA } from "@angular/material";
 import { DepotConfig, emptyDepotConfig } from "app/models/Daudi/depot/DepotConfig";
 import { EmptyEntryDraw, Entry, EntryDraw } from "app/models/Daudi/fuel/Entry";
 import { Stock, newStock } from "app/models/Daudi/omc/Stock";
@@ -18,6 +17,7 @@ import { Depot } from "../../../../../../models/Daudi/depot/Depot";
 import { FuelType } from "../../../../../../models/Daudi/fuel/FuelType";
 import { ASE } from 'app/models/Daudi/fuel/ASE';
 import { AseService } from 'app/services/ase.service';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
     selector: "app-transfer",

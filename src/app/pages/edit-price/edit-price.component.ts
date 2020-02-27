@@ -1,12 +1,16 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { AngularFirestore } from "@angular/fire/firestore";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
-import { MatDialog, MatTableDataSource } from "@angular/material";
+import { MatDialog } from "@angular/material/dialog";
+import { MatTableDataSource } from "@angular/material/table";
 import { ConfirmDialogComponent } from "app/components/confirm-dialog/confirm-dialog.component";
 import { newStock, Stock } from "app/models/Daudi/omc/Stock";
+import { TaxPrice } from "app/models/Daudi/price/TaxPrice";
 import { AdminService } from "app/services/core/admin.service";
 import { CoreService } from "app/services/core/core.service";
+import { DepotService } from "app/services/core/depot.service";
 import { OmcService } from "app/services/core/omc.service";
+import { StocksService } from "app/services/core/stocks.service";
 import { PricesService } from "app/services/prices.service";
 import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
@@ -18,17 +22,18 @@ import { FuelNamesArray, FuelType } from "../../models/Daudi/fuel/FuelType";
 import { OMC } from "../../models/Daudi/omc/OMC";
 import { AvgPrice } from "../../models/Daudi/price/AvgPrice";
 import { NotificationService } from "../../shared/services/notification.service";
+import { TooltipPosition } from '@angular/material/tooltip';
 
 @Component({
-  selector: 'edit-price',
+  selector: "edit-price",
   templateUrl: "./edit-price.component.html",
   styleUrls: ["./edit-price.component.scss"]
 })
 
 export class EditPriceComponent implements OnInit, OnDestroy {
-  position = "above";
-  position2 = "left";
-  position3 = "right";
+  position: TooltipPosition = "above";
+  position2: TooltipPosition = "left";
+  position3: TooltipPosition = "right";
 
   activedepot: { depot: Depot, config: DepotConfig } = { depot: { ...emptydepot }, config: { ...emptyDepotConfig } };
   spPricesform: FormGroup = new FormGroup({
@@ -38,6 +43,12 @@ export class EditPriceComponent implements OnInit, OnDestroy {
   });
 
   avgpricesform: FormGroup = new FormGroup({
+    pms: new FormControl("", [Validators.required, Validators.min(40)]),
+    ago: new FormControl("", [Validators.required, Validators.min(40)]),
+    ik: new FormControl("", [Validators.required, Validators.min(40)]),
+  });
+
+  minpricesForm: FormGroup = new FormGroup({
     pms: new FormControl("", [Validators.required, Validators.min(40)]),
     ago: new FormControl("", [Validators.required, Validators.min(40)]),
     ik: new FormControl("", [Validators.required, Validators.min(40)]),
@@ -62,7 +73,7 @@ export class EditPriceComponent implements OnInit, OnDestroy {
     [key in FuelType]: {
       total: number,
       avg: number,
-      prices: Price[]
+      prices: AvgPrice[]
     }
   } = {
       pms: {
@@ -89,6 +100,8 @@ export class EditPriceComponent implements OnInit, OnDestroy {
     private adminservice: AdminService,
     private priceservice: PricesService,
     private core: CoreService,
+    private depotService: DepotService,
+    private stockService: StocksService,
     private omcservice: OmcService) {
 
     this.core.depots
@@ -116,24 +129,17 @@ export class EditPriceComponent implements OnInit, OnDestroy {
     this.core.activedepot
       .pipe(takeUntil(this.comopnentDestroyed))
       .subscribe(depot => {
-        // this.activedepot = depot;
-        // this.spPricesform.controls.pms.setValidators(Validators.compose([Validators.min(this.activedepot.minpriceconfig.pms.price)]));
-        // this.spPricesform.controls.ago.setValidators(Validators.compose([Validators.min(this.activedepot.minpriceconfig.ago.price)]));
-        // this.spPricesform.controls.ik.setValidators(Validators.compose([Validators.min(this.activedepot.minpriceconfig.ik.price)]));
         this.activedepot = depot;
-        // this.taxconfigform.disable();
-        // this.fueltypesArray.forEach(fueltyp => {
-        //   this.avgprices[fueltyp].total
-        //     .pipe(takeUntil(this.comopnentDestroyed))
-        //     .subscribe(total => {
-        //       this.avgprices[fueltyp].total = total;
-        //     });
-        //   this.avgprices[fueltyp].prices
-        //     .pipe(takeUntil(this.comopnentDestroyed))
-        //     .subscribe(prices => {
-        //       this.avgprices[fueltyp].prices = prices;
-        //     });
-        // });
+        this.fueltypesArray.forEach(fueltyp => {
+          this.spPricesform.controls[fueltyp]
+            .setValidators(Validators.compose([Validators.min(this.activedepot.config.price[fueltyp].minPrice)]));
+          console.log(this.avgpricesform[fueltyp])
+          // this.avgpricesform[fueltyp].valuechanges
+          //   .pipe(takeUntil(this.comopnentDestroyed))
+          //   .subscribe(total => {
+          //     // this.avgprices[fueltyp].total = total;
+          //   });
+        });
 
       });
   }
@@ -154,7 +160,7 @@ export class EditPriceComponent implements OnInit, OnDestroy {
     return omc ? omc.name : undefined;
   }
 
-  addprice(fueltype: FuelType) {
+  saveSP(fueltype: FuelType) {
 
     if (this.spPricesform.controls[fueltype].valid) {
       this.saving = true;
@@ -167,26 +173,77 @@ export class EditPriceComponent implements OnInit, OnDestroy {
         .pipe(takeUntil(this.comopnentDestroyed))
         .subscribe(result => {
           if (result) {
-            const batchaction = this.db.firestore.batch();
-            const tempprice: Price = {
+            const batch = this.db.firestore.batch();
+            const tempPrice: Price = {
               user: this.adminservice.createUserObject(),
-              price: this.spPricesform.controls[fueltype].value,
+              price: +this.spPricesform.controls[fueltype].value,
               fueltytype: fueltype,
               depotId: this.activedepot.depot.Id,
-              Id: null
+              Id: this.core.createId()
             };
-            // batchaction.set(this.priceservice.createprice(), tempprice);
-            // this.activedepot.price[fueltype].price = tempprice.price;
-            // this.activedepot.price[fueltype].user = tempprice.user;
-            // batchaction.update(this.depotservice.updatedepot(), this.activedepot);
-            // batchaction.commit().then(res => {
-            //   this.saving = false;
-            //   this.notificationService.notify({
-            //     body: `${fueltype} in ${this.activedepot.Name} successfully changed`,
-            //     title: `Success`,
-            //     alert_type: "success"
-            //   });
-            // });
+            batch.set(this.priceservice.priceCollection(this.core.omcId).doc(tempPrice.Id), tempPrice);
+            this.activedepot.config.price[fueltype] = {
+              minPrice: this.activedepot.config.price[fueltype].minPrice,
+              price: +this.spPricesform.controls[fueltype].value,
+              user: this.adminservice.createUserObject()
+            }
+            batch.update(this.depotService.depotConfigDoc(this.core.omcId, this.activedepot.depot.Id), this.activedepot.config);
+            batch.commit().then(res => {
+              this.saving = false;
+              this.notificationService.notify({
+                body: `${fueltype} in ${this.activedepot.depot.Name} successfully changed`,
+                title: `Success`,
+                alert_type: "success"
+              });
+            });
+          } else {
+            this.saving = false;
+            this.notificationService.notify({
+              body: `Changes discarded`,
+              title: "",
+              alert_type: "warning"
+            });
+          }
+        });
+    }
+  }
+
+  saveMinSp(fueltype: FuelType) {
+
+    if (this.minpricesForm.controls[fueltype].valid) {
+      this.saving = true;
+      const dialogRef = this.dialog.open(ConfirmDialogComponent,
+        {
+          role: "dialog",
+          data: `Are you sure you want to set ${this.spPricesform.controls[fueltype].value} as the current ${fueltype} price in ${this.activedepot.depot.Name}?`
+        });
+      dialogRef.afterClosed()
+        .pipe(takeUntil(this.comopnentDestroyed))
+        .subscribe(result => {
+          if (result) {
+            const batch = this.db.firestore.batch();
+            const tempPrice: Price = {
+              user: this.adminservice.createUserObject(),
+              price: +this.minpricesForm.controls[fueltype].value,
+              fueltytype: fueltype,
+              depotId: this.activedepot.depot.Id,
+              Id: this.core.createId()
+            };
+            batch.set(this.priceservice.minPriceCollection(this.core.omcId).doc(tempPrice.Id), tempPrice);
+            this.activedepot.config.price[fueltype] = {
+              minPrice: +this.minpricesForm.controls[fueltype].value,
+              price: this.activedepot.config.price[fueltype].price,
+              user: this.adminservice.createUserObject()
+            }
+            batch.update(this.depotService.depotConfigDoc(this.core.omcId, this.activedepot.depot.Id), this.activedepot.config);
+            batch.commit().then(res => {
+              this.saving = false;
+              this.notificationService.notify({
+                body: `${fueltype} in ${this.activedepot.depot.Name} successfully changed`,
+                title: `Success`,
+                alert_type: "success"
+              });
+            });
           } else {
             this.saving = false;
             this.notificationService.notify({
@@ -217,10 +274,11 @@ export class EditPriceComponent implements OnInit, OnDestroy {
           user: this.adminservice.createUserObject(),
           price: this.avgpricesform.controls[fueltype].value,
           fueltytype: fueltype,
-          Id: null,
+          Id: this.core.createId(),
+          depotId: this.activedepot.depot.Id,
           omcId: this.selectedOMC.Id
         };
-        batchaction.set(this.priceservice.createavgprice(this.core.currentOmc.value.Id), tempprice);
+        batchaction.set(this.priceservice.avgPricesCollection(this.core.currentOmc.value.Id).doc(tempprice.Id), tempprice);
 
         batchaction.commit().then(res => {
           this.saving = false;
@@ -240,6 +298,45 @@ export class EditPriceComponent implements OnInit, OnDestroy {
         });
       }
     }
+  }
+  addTaxPrice(fueltype: FuelType) {
+    this.saving = true;
+
+    if (this.taxconfigform.controls[fueltype].valid) {
+
+      const batch = this.db.firestore.batch();
+      const tempprice: TaxPrice = {
+        user: this.adminservice.createUserObject(),
+        price: +this.taxconfigform.controls[fueltype].value,
+        fueltytype: fueltype,
+        Id: this.core.createId(),
+      };
+
+      this.stock.taxExempt[fueltype] = {
+        amount: +this.taxconfigform.controls[fueltype].value,
+        user: this.adminservice.createUserObject(),
+      }
+      batch.update(this.stockService.stockDoc(
+        this.core.currentOmc.value.Id, this.activedepot.depot.Id, this.activedepot.depot.config.private), this.stock);
+
+      batch.set(this.priceservice.TaxCollection(this.core.omcId).doc(tempprice.Id), tempprice);
+      batch.commit().then(res => {
+        this.saving = false;
+        this.notificationService.notify({
+          body: `${fueltype} in ${this.activedepot.depot.Name} successfully changed`,
+          title: `Success`,
+          alert_type: "success"
+        });
+      });
+    } else {
+      this.saving = false;
+      this.notificationService.notify({
+        body: `Ivalid ${fueltype} Price`,
+        alert_type: "error",
+        title: `Error`
+      });
+    }
+
   }
 
   deleteavg(price: Price) {

@@ -1,6 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { MatSnackBar } from '@angular/material';
 import { Router } from '@angular/router';
 import { CoreService } from 'app/services/core/core.service';
 import { DepotService } from 'app/services/core/depot.service';
@@ -21,6 +20,8 @@ import { FuelBoundstats } from '../charts/charts.config';
 import { singleFuelpricestat } from '../charts/prices';
 import { fuelgauge } from '../charts/qty';
 import { saleStats } from '../charts/sales';
+import { MatSnackBar } from '@angular/material/snack-bar';
+
 
 @Component({
   selector: 'app-stats',
@@ -279,7 +280,7 @@ export class StatsComponent implements OnInit, OnDestroy {
           // this.fuelstats = { ...allfuelstats };
           // if (this.axisdates.length == 29) {
           const position = this.axisdates.findIndex(mappeddate => {
-            return moment(price.user.date.toDate()).startOf('day').isSame(mappeddate.date);
+            return moment(price.user.date).startOf('day').isSame(mappeddate.date);
           });
           // console.log(position, price);
           // console.log(this.fuelstats[price.fueltytype].series[1]);

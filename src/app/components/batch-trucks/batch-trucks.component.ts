@@ -1,9 +1,10 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialog } from '@angular/material'; // added dialog data receive
 import * as moment from 'moment';
 import { ReplaySubject } from 'rxjs';
 import { Truck } from '../../models/Daudi/order/truck/Truck';
 import { OrderDetailsComponent } from '../../pages/orders-table/components/order-details/order-details.component';
+import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
+import { TooltipPosition } from '@angular/material/tooltip';
 
 @Component({
   selector: 'batch-trucks',
@@ -12,7 +13,7 @@ import { OrderDetailsComponent } from '../../pages/orders-table/components/order
 })
 export class BatchTrucksComponent implements OnInit, OnDestroy {
   trucks: any[];
-  position = 'above'; // for tooltip
+  position: TooltipPosition = 'above'; // for tooltip
   batchdId: String = null;
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
 

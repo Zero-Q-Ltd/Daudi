@@ -9,7 +9,7 @@ export interface Depot {
   Name: string;
   Contact: {
     phone: string,
-    name: string
+    name: string;
   };
   Location: MyGeoPoint;
   config: {
@@ -23,7 +23,7 @@ export interface Depot {
      */
     externalVisibility: boolean,
 
-    creator: DepotCreator
+    creator: DepotCreator;
   };
 }
 

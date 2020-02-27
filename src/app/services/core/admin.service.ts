@@ -77,7 +77,7 @@ export class AdminService {
     return {
       name: this.userdata.profile.name,
       adminId: this.userdata.Id,
-      date: MyTimestamp.now()
+      date: new Date()
     };
   }
 

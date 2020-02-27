@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { AngularFireFunctions } from '@angular/fire/functions';
-import { MatPaginator, MatTableDataSource } from '@angular/material';
 import { CoreService } from 'app/services/core/core.service';
 import { EntriesService } from 'app/services/entries.service';
 import { ReplaySubject } from 'rxjs';
@@ -9,6 +8,8 @@ import { emptyEntry, Entry } from '../../../../models/Daudi/fuel/Entry';
 import { FuelNamesArray, FuelType } from '../../../../models/Daudi/fuel/FuelType';
 import { NotificationService } from '../../../../shared/services/notification.service';
 import { CoreAdminService } from '../../services/core.service';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-entries',
@@ -30,7 +31,7 @@ export class EntriesComponent implements OnInit {
   loading: {
     pms: boolean,
     ago: boolean,
-    ik: boolean
+    ik: boolean;
   } = {
       pms: true,
       ago: true,
@@ -39,7 +40,7 @@ export class EntriesComponent implements OnInit {
   availablefuel: {
     pms: number,
     ago: number,
-    ik: number
+    ik: number;
   } = {
       pms: 0,
       ago: 0,
@@ -51,7 +52,7 @@ export class EntriesComponent implements OnInit {
    */
   subscriptions: Map<string, () => void> = new Map<string, () => void>();
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
-
+  typedValue: string;
   constructor(
     private notification: NotificationService,
     private functions: AngularFireFunctions,
@@ -73,7 +74,7 @@ export class EntriesComponent implements OnInit {
 
           let queryvalue = this.entriesService.entryCollection(this.core.omcId)
             .where("active", "==", true)
-            .where('fuelType', '==', fueltype)
+            .where('fuelType', '==', fueltype);
           /**
            * Filter by depot if its a privtae depot
            */
@@ -148,8 +149,7 @@ export class EntriesComponent implements OnInit {
 
   getTotalAvailable(batch: Entry) {
     const totalqty = batch.qty.total;
-    const totalLoaded = batch.qty.directLoad.total + batch.qty.transferred.total;
-    return totalqty - totalLoaded;
+    return totalqty - batch.qty.used;
   }
 
   ngOnInit() {

@@ -29,17 +29,17 @@
             <div class="col-md-12">
               <div class="btn-group" role="group">
                 <button [routerLinkActiveOptions]="{ exact: true }" [routerLink]="['/orders-table', 1]"
-                        class=" btn btn-primary " routerLinkActive='active' type="button">
+                  class=" btn btn-primary " routerLinkActive='active' type="button">
                   <span class="badge badge-info">{{orderscount[1]}}</span>
                   ESTIMATES
                 </button>
                 <button [routerLinkActiveOptions]="{ exact: true }" [routerLink]="['/orders-table', 2]"
-                        class="btn btn-primary " routerLinkActive='active' type="button">
+                  class="btn btn-primary " routerLinkActive='active' type="button">
                   <span class="badge badge-info">{{orderscount[2]}}</span>
                   INVOICED
                 </button>
                 <button [routerLinkActiveOptions]="{ exact: true }" [routerLink]="['/orders-table', 3]"
-                        class="btn btn-primary " routerLinkActive='active' type="button">
+                  class="btn btn-primary " routerLinkActive='active' type="button">
                   <span class="badge badge-info">{{orderscount[3]}}</span>
                   PAID
                 </button>
@@ -50,24 +50,24 @@
             <div class="btn-group" role="group">
               <div class="col-md-12">
                 <button [routerLinkActiveOptions]="{ exact: true }" [routerLink]="['/edit-price']"
-                        class="btn btn-primary" routerLinkActive='active' type="button">
-                                    <span *ngFor='let pricetype of fueltypesArray'>
-                                        <i *ngIf="connectionStatus" class="fa fa-circle color-{{pricetype}}"></i>
-                                        <i *ngIf="!connectionStatus" class="fa fa-circle color-light-grey"></i>
-                                        <span class="label" matTooltip="{{pricetype}} SP">
-                                            {{activedepot.config.price[pricetype].price | number : '1.0-2'}}
-                                        </span>
-                                        <span class="label color-light-grey nafasi-k" matTooltip="{{pricetype}} MinSP">
-                                            <small>{{activedepot.config.price[pricetype].minPrice | number : '1.0-2'}}</small>
-                                        </span>
-                                    </span>
+                  class="btn btn-primary" routerLinkActive='active' type="button">
+                  <span *ngFor='let pricetype of fueltypesArray'>
+                    <i *ngIf="connectionStatus" class="fa fa-circle color-{{pricetype}}"></i>
+                    <i *ngIf="!connectionStatus" class="fa fa-circle color-light-grey"></i>
+                    <span class="label" matTooltip="{{pricetype}} SP">
+                      {{activedepot.config.price[pricetype].price | number : '1.0-2'}}
+                    </span>
+                    <span class="label color-light-grey nafasi-k" matTooltip="{{pricetype}} MinSP">
+                      <small>{{activedepot.config.price[pricetype].minPrice | number : '1.0-2'}}</small>
+                    </span>
+                  </span>
 
                 </button>
                 <button *ngIf='!activedepot' class="btn btn-primary " type="button">
-                                    <span>
-                                        <mat-progress-spinner color="warn" diameter="17" mode='indeterminate'>
-                                        </mat-progress-spinner>
-                                    </span>
+                  <span>
+                    <mat-progress-spinner color="warn" diameter="17" mode='indeterminate'>
+                    </mat-progress-spinner>
+                  </span>
                 </button>
               </div>
             </div>
@@ -77,7 +77,7 @@
           <div class="row no-gutters loading-border-c">
             <div class="col-md-12">
               <button [routerLinkActiveOptions]="{ exact: true }" [routerLink]="['/orders-table', 4]"
-                      class="btn btn-primary  btn-block" routerLinkActive='active' type="button">
+                class="btn btn-primary  btn-block" routerLinkActive='active' type="button">
                 <span class="badge badge-info">{{orderscount[4]}}</span> LOADING ORDERS
                 <i class="fa fa-truck"></i>
               </button>
@@ -87,19 +87,19 @@
             <div class="col-md-12">
               <div class="btn-group" role="group">
                 <button [routerLinkActiveOptions]="{ exact: true }" [routerLink]="['/trucks-table', 1]"
-                        class="btn btn-primary " routerLinkActive='active' type="button">
+                  class="btn btn-primary " routerLinkActive='active' type="button">
                   <span class="badge badge-info">{{truckscount[1]}}</span>
                   Processing
                 </button>
                 <button [routerLinkActiveOptions]="{ exact: true }" [routerLink]="['/trucks-table', 2]"
-                        class="btn btn-primary " routerLinkActive='active' type="button">
+                  class="btn btn-primary " routerLinkActive='active' type="button">
                   <span class="badge badge-info">{{truckscount[2]}}</span>
                   Queued
                 </button>
                 <button [routerLinkActiveOptions]="{ exact: true }" [routerLink]="['/trucks-table', 3]"
-                        class="btn btn-primary " routerLinkActive='active' type="button">
+                  class="btn btn-primary " routerLinkActive='active' type="button">
                   <span class="badge badge-info">{{truckscount[3]}}</span>
-                  Loading
+                  Loaded
                 </button>
               </div>
             </div>
@@ -110,17 +110,17 @@
             <div class="col-md-12">
               <div class="btn-group nafasi-l" role="group">
                 <button [routerLinkActiveOptions]="{ exact: true }" [routerLink]="['/orders-table', 5]"
-                        class="btn btn-primary" routerLinkActive='active' type="button">
+                  class="btn btn-primary" routerLinkActive='active' type="button">
                   <span class="badge badge-info">{{orderscount[5]}}</span>
                   COMPLETE
                 </button>
                 <button [routerLinkActiveOptions]="{ exact: true }" [routerLink]="['/orders-table', 6]"
-                        class="btn btn-primary " routerLinkActive='active' type="button">
+                  class="btn btn-primary " routerLinkActive='active' type="button">
                   <span class="badge badge-info">{{orderscount[6]}}</span>
                   DELETED
                 </button>
-                <button [routerLinkActiveOptions]="{ exact: true }" [routerLink]="['/archive']"
-                        class="btn btn-primary " routerLinkActive='active' type="button">
+                <button [routerLinkActiveOptions]="{ exact: true }" [routerLink]="['/archive']" class="btn btn-primary "
+                  routerLinkActive='active' type="button">
                   SEARCH
                   <i aria-hidden="true" class="fa fa-search"></i>
                 </button>
@@ -131,20 +131,20 @@
             <div class="col-md-6">
               <div class="btn-group katikati" role="group">
                 <button [matTooltipPosition]="position2" [routerLinkActiveOptions]="{ exact: true }"
-                        [routerLink]="['/create-order']" class="btn btn-primary nafasi"
-                        matTooltip="Create New Order" routerLinkActive='active' type="button">
+                  [routerLink]="['/create-order']" class="btn btn-primary nafasi" matTooltip="Create New Order"
+                  routerLinkActive='active' type="button">
                   <!--Create-->
                   <i aria-hidden="true" class="fa fa-pencil color-yellow"></i>
                 </button>
                 <button [matTooltipPosition]="position2" [routerLinkActiveOptions]="{ exact: true }"
-                        [routerLink]="['/admin']" class="btn btn-primary nafasi" matTooltip="Admin Config"
-                        routerLinkActive='active' type="button">
+                  [routerLink]="['/admin']" class="btn btn-primary nafasi" matTooltip="Admin Config"
+                  routerLinkActive='active' type="button">
                   <!--Config-->
                   <i aria-hidden="true" class="fa fa-cog color-yellow"></i>
                 </button>
                 <button [matTooltipPosition]="position2" [routerLinkActiveOptions]="{ exact: true }"
-                        [routerLink]="['/']" class="btn btn-primary nafasi" matTooltip="Stats"
-                        routerLinkActive='active' type="button">
+                  [routerLink]="['/']" class="btn btn-primary nafasi" matTooltip="Stats" routerLinkActive='active'
+                  type="button">
                   <!--Stats-->
                   <i aria-hidden="true" class="fa fa-line-chart color-yellow"></i>
                 </button>
@@ -156,13 +156,13 @@
                 <mat-select (selectionChange)="changeactivedepot()" [(value)]="activedepot.depot">
                   <mat-optgroup label="Private">
                     <mat-option *ngFor="let depot of privateDepots; let i = index"
-                                [disabled]='depot.Id === activedepot.depot.Id' [value]="depot">
+                      [disabled]='depot.Id === activedepot.depot.Id' [value]="depot">
                       {{depot.Name}}
                     </mat-option>
                   </mat-optgroup>
                   <mat-optgroup label="KPC">
                     <mat-option *ngFor="let depot of kpcDepots; let i = index"
-                                [disabled]='depot.Id === activedepot.depot.Id' [value]="depot">
+                      [disabled]='depot.Id === activedepot.depot.Id' [value]="depot">
                       {{depot.Name}}
                     </mat-option>
                   </mat-optgroup>
@@ -172,8 +172,8 @@
               <mat-spinner *ngIf="loadingDepots" [diameter]="19" matSuffix></mat-spinner>
             </div>
             <mat-menu #mymenu="matMenu">
-              <button (click)='changeactivedepot(depot)' *ngFor='let depot of alldepots; let i = index'
-                      [disabled]='depot.Id === activedepot.depot.Id' mat-menu-item>
+              <button (click)='changeactivedepot()' *ngFor='let depot of alldepots; let i = index'
+                [disabled]='depot.Id === activedepot.depot.Id' mat-menu-item>
                 <mat-icon>local_gas_station</mat-icon>
                 <span>{{depot.Name}}</span>
               </button>
@@ -189,26 +189,27 @@
         <li>
           <br>
           <button [matMenuTriggerFor]="menu" class="btn btn-lg" mat-button
-                  style="background-image: {{currentuser.profile.photoURL}}">
+            [style.background-image]="currentuser.profile.photoURL">
+            <!-- <button [matMenuTriggerFor]="menu" class="btn btn-lg" mat-button> -->
             <!--<img *ngIf="isLoggedIn" src={{firestore.userdata.data.photoURL}} alt="" class="rounded img30_30">-->
             <i *ngIf="connectionStatus" class="fa fa-caret-down color-yellow"></i>
             <i *ngIf="!connectionStatus" class="fa fa-caret-down color-red"></i>
             <span *ngIf="!isLoggedIn" class="logo-icon material-icons">
-                            <span *ngIf="connectionStatus" [matTooltipPosition]="position2" class="color-yellow"
-                                  matTooltip="Online">account_box</span>
-                            <span *ngIf="!connectionStatus" [matTooltipPosition]="position2" class="color-red"
-                                  matTooltip="Offline">account_box</span>
-                        </span>
+              <span *ngIf="connectionStatus" [matTooltipPosition]="position2" class="color-yellow"
+                matTooltip="Online">account_box</span>
+              <span *ngIf="!connectionStatus" [matTooltipPosition]="position2" class="color-red"
+                matTooltip="Offline">account_box</span>
+            </span>
             <mat-menu #menu="matMenu">
-                            <span mat-menu-item>
-                                <img alt="" class="rounded img30_30" src="{{currentuser.profile.photoURL}}">
-                              {{currentuser.profile.name}}
-                            </span>
+              <span mat-menu-item>
+                <img alt="" class="rounded img30_30" src="{{currentuser.profile.photoURL}}">
+                {{currentuser.profile.name}}
+              </span>
               <hr>
               <!-- <button mat-menu-item [routerLink]="['/account-details']">My Account</button> -->
               <button (click)="onLogoutClick()" mat-menu-item>
-                                <span class="pull-right">
-                                    <i aria-hidden="true" class="fa fa-sign-out"></i> Log Out </span>
+                <span class="pull-right">
+                  <i aria-hidden="true" class="fa fa-sign-out"></i> Log Out </span>
               </button>
             </mat-menu>
           </button>

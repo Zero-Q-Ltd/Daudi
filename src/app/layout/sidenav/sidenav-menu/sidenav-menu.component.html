@@ -1,7 +1,7 @@
 <ul class="nav" myAccordionNav myAppendSubmenuIcon myHighlightActiveItems>
   <li class="nav-header"><span>Navigation</span></li>
   <li><a [routerLink]="['/admin']" mat-button><i class="nav-icon material-icons">home</i><span
-    class="nav-text">Dashboard</span></a>
+        class="nav-text">Dashboard</span></a>
   </li>
   <li>
     <a mat-button>
@@ -11,9 +11,9 @@
     <ul>
       <li>
         <button (click)='changeactivedepot(depot)' *ngFor='let depot of alldepots; let i = index'
-                [disabled]='depot.Id === activedepot.Id' mat-menu-item>
+          [disabled]='depot.Id === activedepot.Id' mat-menu-item>
           <mat-icon>ev_station</mat-icon>
-          <span [ngClass]="{ 'color-danger' : depot.sandbox}">{{depot.Name}}</span>
+          <span>{{depot.Name}}</span>
         </button>
       </li>
       <!--<li>-->
@@ -30,14 +30,14 @@
     </a>
     <ul>
       <li>
-        <a [routerLinkActiveOptions]="{ exact: true }" [routerLink]="['/create-order']"
-           class="mat-button prepend-icon" mat-button routerLinkActive='active'>Create
+        <a [routerLinkActiveOptions]="{ exact: true }" [routerLink]="['/create-order']" class="mat-button prepend-icon"
+          mat-button routerLinkActive='active'>Create
           <i class="material-icons">create</i>
         </a>
       </li>
       <li>
-        <a [routerLinkActiveOptions]="{ exact: true }" [routerLink]="['/edit-price']"
-           class="mat-button prepend-icon" mat-button routerLinkActive='active'>Pricing
+        <a [routerLinkActiveOptions]="{ exact: true }" [routerLink]="['/edit-price']" class="mat-button prepend-icon"
+          mat-button routerLinkActive='active'>Pricing
           <i aria-hidden="true" class="fa fa-usd"></i>
           <!-- <i class="nav-icon nav-dot material-icons" style="color:black;">fiber_manual_record</i>
           <i class="nav-icon nav-dot material-icons color-warning">fiber_manual_record</i>
@@ -46,13 +46,13 @@
       </li>
       <li>
         <a [routerLinkActiveOptions]="{ exact: true }" [routerLink]="['/admin']" class="mat-button prepend-icon"
-           mat-button routerLinkActive='active'>Config
+          mat-button routerLinkActive='active'>Config
           <i class="material-icons">settings</i>
         </a>
       </li>
       <li>
         <a [routerLinkActiveOptions]="{ exact: true }" [routerLink]="['/admin']" class="mat-button prepend-icon"
-           mat-button routerLinkActive='active'>Stats
+          mat-button routerLinkActive='active'>Stats
           <i aria-hidden="true" class="fa fa-line-chart color-yellow"></i>
         </a>
       </li>
@@ -63,27 +63,27 @@
     <a mat-button>
       <i class="nav-icon material-icons">fiber_new</i>
       <span [routerLinkActiveOptions]="{ exact: true }" [routerLink]="['/orders-table', 1]" class="nav-text"
-            routerLinkActive='active'>Orders
-                <span class="badge badge-default">{{orderscount[1]}}</span>
-            </span>
+        routerLinkActive='active'>Orders
+        <span class="badge badge-default">{{orderscount[1]}}</span>
+      </span>
     </a>
   </li>
   <li>
     <a mat-button>
       <i class="nav-icon material-icons">receipt</i>
       <span [routerLinkActiveOptions]="{ exact: true }" [routerLink]="['/orders-table', 2]" class="nav-text"
-            routerLinkActive='active'>Invoiced
-                <span class="badge badge-default">{{orderscount[2]}}</span>
-            </span>
+        routerLinkActive='active'>Invoiced
+        <span class="badge badge-default">{{orderscount[2]}}</span>
+      </span>
     </a>
   </li>
   <li>
     <a mat-button>
       <i class="nav-icon material-icons">payment</i>
       <span [routerLinkActiveOptions]="{ exact: true }" [routerLink]="['/orders-table', 3]" class="nav-text"
-            routerLinkActive='active'>Paid
-                <span class="badge badge-default">{{orderscount[3]}}</span>
-            </span>
+        routerLinkActive='active'>Paid
+        <span class="badge badge-default">{{orderscount[3]}}</span>
+      </span>
     </a>
   </li>
   <li class="nav-divider"></li>
@@ -91,33 +91,33 @@
     <a href="/admin" mat-button>
       <i class="nav-icon material-icons">local_shipping</i>
       <span [routerLinkActiveOptions]="{ exact: true }" [routerLink]="['/orders-table', 4]" class="nav-text"
-            routerLinkActive='active'>Pending
-                <span class="badge badge-default">{{orderscount[4]}}</span>
-            </span>
+        routerLinkActive='active'>Pending
+        <span class="badge badge-default">{{orderscount[4]}}</span>
+      </span>
     </a>
     <ul>
       <li>
         <a [routerLinkActiveOptions]="{ exact: true }" [routerLinkActiveOptions]="{ exact: true }"
-           [routerLink]="['/trucks-table', 1]" class="mat-button prepend-icon" mat-button
-           routerLinkActive='active' routerLinkActive='active'>Processing
+          [routerLink]="['/trucks-table', 1]" class="mat-button prepend-icon" mat-button routerLinkActive='active'
+          routerLinkActive='active'>Processing
           <span class="badge badge-default">{{truckscount[1]}}</span>
         </a>
       </li>
       <li>
         <a [routerLinkActiveOptions]="{ exact: true }" [routerLink]="['/trucks-table', 2]"
-           class="mat-button prepend-icon" mat-button routerLinkActive='active'>Queued
+          class="mat-button prepend-icon" mat-button routerLinkActive='active'>Queued
           <span class="badge badge-default">{{truckscount[2]}}</span>
         </a>
       </li>
       <li>
         <a [routerLinkActiveOptions]="{ exact: true }" [routerLink]="['/trucks-table', 3]"
-           class="mat-button prepend-icon" mat-button routerLinkActive='active'>Loading
+          class="mat-button prepend-icon" mat-button routerLinkActive='active'>Loading
           <span class="badge badge-default">{{truckscount[3]}}</span>
         </a>
       </li>
       <li>
         <a [routerLinkActiveOptions]="{ exact: true }" [routerLink]="['/trucks-table', 4]"
-           class="mat-button prepend-icon" mat-button routerLinkActive='active'>Exit
+          class="mat-button prepend-icon" mat-button routerLinkActive='active'>Exit
           <span class="badge badge-default">{{truckscount[4]}}</span>
         </a>
       </li>
@@ -128,25 +128,25 @@
     <a mat-button>
       <i class="nav-icon material-icons">done_all</i>
       <span [routerLinkActiveOptions]="{ exact: true }" [routerLink]="['/orders-table', 5]" class="nav-text"
-            routerLinkActive='active'>Complete
-                <span class="badge badge-default">{{orderscount[5]}}</span>
-            </span>
+        routerLinkActive='active'>Complete
+        <span class="badge badge-default">{{orderscount[5]}}</span>
+      </span>
     </a>
   </li>
   <li>
     <a mat-button>
       <i class="nav-icon material-icons">delete_sweep</i>
       <span [routerLinkActiveOptions]="{ exact: true }" [routerLink]="['/orders-table', 6]" class="nav-text"
-            routerLinkActive='active'>Deleted
-                <span class="badge badge-default">{{orderscount[6]}}</span>
-            </span>
+        routerLinkActive='active'>Deleted
+        <span class="badge badge-default">{{orderscount[6]}}</span>
+      </span>
     </a>
   </li>
   <li>
     <a mat-button>
       <i class="nav-icon material-icons">search</i>
       <span [routerLinkActiveOptions]="{ exact: true }" [routerLink]="['/archive']" class="nav-text"
-            routerLinkActive='active'>Search</span>
+        routerLinkActive='active'>Search</span>
     </a>
   </li>
   <li class="nav-divider"></li>

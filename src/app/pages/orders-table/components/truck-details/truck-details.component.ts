@@ -1,6 +1,6 @@
 import { Component, EventEmitter, OnDestroy, OnInit } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { ComponentCommunicationService } from 'app/services/component-communication.service';
 import { CoreService } from 'app/services/core/core.service';
 import { OrdersService } from 'app/services/orders.service';
@@ -8,11 +8,12 @@ import * as moment from 'moment';
 import { Options } from 'ng5-slider';
 import { ReplaySubject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { ConfirmDialogComponent } from '../../../../components/confirm-dialog/confirm-dialog.component';
 import { Order } from '../../../../models/Daudi/order/Order';
 import { NotificationService } from '../../../../shared/services/notification.service';
-import { ConfirmDialogComponent } from '../../../../components/confirm-dialog/confirm-dialog.component';
-import { EntriesSelectorComponent } from '../../../../components/entries-selector/entries-selector.component';
 import { EntryAssignComponent } from '../entry-assign/entry-assign.component';
+import { TooltipPosition } from '@angular/material/tooltip';
+import { MyTimestamp } from "app/models/firestore/firestoreTypes";
 
 @Component({
   selector: 'truck-details',
@@ -21,12 +22,12 @@ import { EntryAssignComponent } from '../entry-assign/entry-assign.component';
 })
 export class TruckDetailsComponent implements OnInit, OnDestroy {
   order: Order;
-  position = 'above';
+  position: TooltipPosition = 'above';
 
   dialogProperties: object = {};
-  position1 = 'before';
-  position2 = 'after';
-  position3 = 'below';
+  position1: TooltipPosition = 'before';
+  position2: TooltipPosition = 'after';
+  position3: TooltipPosition = 'below';
   accuracycolors = {
     1: {
       percentage: 0
@@ -123,6 +124,9 @@ export class TruckDetailsComponent implements OnInit, OnDestroy {
   }
 
   timespent(start, stop) {
+    if (!start || !stop) {
+      return null;
+    }
     const difference = moment(stop.toDate()).diff(moment(start.toDate()));
     const timediff = moment.duration(difference);
     // console.log(timediff.hours(), timediff.minutes());
@@ -131,11 +135,11 @@ export class TruckDetailsComponent implements OnInit, OnDestroy {
     return `${totalhours}:${totalmins}:00`;
   }
 
-  expired(MyTimestamp) {
-    if (!MyTimestamp || !(MyTimestamp instanceof MyTimestamp)) {
+  expired(time) {
+    if (!time || !(time instanceof MyTimestamp)) {
       return;
     }
-    return MyTimestamp.toDate() < moment().toDate();
+    return time.toDate() < moment().toDate();
   }
 
 
@@ -146,14 +150,14 @@ export class TruckDetailsComponent implements OnInit, OnDestroy {
   }
 
   calculatetotaltime(timearray: any[]) {
-    let totaltime: any = '00:00:00';
+    // let totaltime: any = '00:00:00';
 
-    timearray.forEach(timeobject => {
-      totaltime = moment.duration(totaltime).add(timeobject.time);
-    });
-    const totalhours = moment.duration(totaltime).hours() > 9 ? moment.duration(totaltime).hours() : '0' + moment.duration(totaltime).hours();
-    const totalmins = moment.duration(totaltime).minutes() > 9 ? moment.duration(totaltime).minutes() : '0' + moment.duration(totaltime).minutes();
-    return `${totalhours}:${totalmins}:00`;
+    // timearray.forEach(timeobject => {
+    //   totaltime = moment.duration(totaltime).add(timeobject.time);
+    // });
+    // const totalhours = moment.duration(totaltime).hours() > 9 ? moment.duration(totaltime).hours() : '0' + moment.duration(totaltime).hours();
+    // const totalmins = moment.duration(totaltime).minutes() > 9 ? moment.duration(totaltime).minutes() : '0' + moment.duration(totaltime).minutes();
+    // return `${totalhours}:${totalmins}:00`;
   }
 
   calculateaccuracy(timearray, start, stop, stage) {

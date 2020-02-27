@@ -1,12 +1,16 @@
 import { animate, sequence, state, style, transition, trigger } from "@angular/animations";
 import { Component, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import { AngularFirestore } from "@angular/fire/firestore";
-import { MatDialog, MatPaginator, MatSort, MatTableDataSource } from "@angular/material";
+import { MatDialog } from "@angular/material/dialog";
+import { MatPaginator } from "@angular/material/paginator";
+import { MatSort } from "@angular/material/sort";
+import { MatTableDataSource } from "@angular/material/table";
 import { ActivatedRoute, Router } from "@angular/router";
 import { ColumnsCustomizerComponent } from "app/components/columns-customizer/columns-customizer.component";
-import { CompartmentsComponent } from "app/pages/orders-table/components/compartments/compartments.component";
+import { ConfirmDialogComponent } from "app/components/confirm-dialog/confirm-dialog.component";
 import { ReasonComponent } from "app/components/reason/reason.component";
 import { SendMsgComponent } from "app/components/send-msg/send-msg.component";
+import { CompartmentsComponent } from "app/pages/orders-table/components/compartments/compartments.component";
 import { ComponentCommunicationService } from "app/services/component-communication.service";
 import { AdminService } from "app/services/core/admin.service";
 import { CoreService } from "app/services/core/core.service";
@@ -20,13 +24,13 @@ import { Truck } from "../../models/Daudi/order/truck/Truck";
 import { SMS } from "../../models/Daudi/sms/sms";
 import { MyTimestamp } from "../../models/firestore/firestoreTypes";
 import { NotificationService } from "../../shared/services/notification.service";
-import { ConfirmDialogComponent } from 'app/components/confirm-dialog/confirm-dialog.component';
+import { TooltipPosition } from '@angular/material/tooltip';
 
 const EXCEL_TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
 const EXCEL_EXTENSION = ".xlsx";
 
 @Component({
-  selector: 'orders-table',
+  selector: "orders-table",
   templateUrl: "./orders-table.component.html",
   styleUrls: ["./orders-table.component.scss"],
   animations: [
@@ -49,21 +53,22 @@ const EXCEL_EXTENSION = ".xlsx";
 
 export class OrdersTableComponent implements OnInit, OnDestroy {
 
-  position = "above";
-  position1 = "before";
-  position2 = "after";
-  position3 = "below";
+  position: TooltipPosition = "above";
+  position1: TooltipPosition = "before";
+  position2: TooltipPosition = "after";
+  position3: TooltipPosition = "below";
   ordersdataSource = new MatTableDataSource<Order>();
   stage = 0;
-  ordercolumns = ["Id", "Company", "Contact", "Time", "User", "Phone", "PMS", "AGO", "IK", "Total", "Action", 'Frozen'];
+  ordercolumns = ["Id", "Company", "Contact", "Time", "User", "Phone", "PMS", "AGO", "IK", "Total", "Action", "Frozen"];
   loadingtruck = true;
   clickedtruck: Truck;
   expandedElement = null;
 
   loadingordders = true;
-  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
-  @ViewChild(MatSort, { static: false }) sort: MatSort;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
+  typedValue: string
 
   constructor(
     private route: ActivatedRoute,
@@ -161,16 +166,16 @@ export class OrdersTableComponent implements OnInit, OnDestroy {
   freezeOrder(order: Order) {
     const dialogRef = this.dialog.open(ConfirmDialogComponent,
       {
-        role: 'dialog',
-        data: order.frozen ? 'Are you sure you want to restore to normal?' : 'Freeze this Order? This will disable any modifications'
+        role: "dialog",
+        data: order.frozen ? "Are you sure you want to restore to normal?" : "Freeze this Order? This will disable any modifications"
       });
     dialogRef.afterClosed().pipe(takeUntil(this.comopnentDestroyed)).subscribe(result => {
       if (result) {
         this.orderservice.updateorder(order.Id, this.core.currentOmc.value.Id, order).then(value => {
           this.notification.notify({
-            body: 'Saved',
-            alert_type: 'success',
-            title: 'Success',
+            body: "Saved",
+            alert_type: "success",
+            title: "Success",
             duration: 2000
           });
         });

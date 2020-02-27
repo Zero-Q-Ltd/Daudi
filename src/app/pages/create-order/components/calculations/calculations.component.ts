@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
-import { Validators } from '@angular/forms';
+import { Validators, FormGroup, FormControl } from '@angular/forms';
 import { CoreService } from 'app/services/core/core.service';
-import { FormControl, FormGroup } from 'ngx-strongly-typed-forms';
 import { ReplaySubject } from 'rxjs';
 import { skipWhile, takeUntil } from 'rxjs/operators';
 import { AdminConfig, emptyConfig } from '../../../../models/Daudi/omc/AdminConfig';
@@ -29,18 +28,18 @@ export class CalculationsComponent implements OnInit, OnChanges {
   omcConfig: AdminConfig = { ...emptyConfig };
   activedepot: { depot: Depot, config: DepotConfig } = { depot: { ...emptydepot }, config: { ...emptyDepotConfig } };
   stock: Stock = { ...newStock() };
-  calculationsForm: FormGroup<Calculations> = new FormGroup<Calculations>({
-    pms: new FormGroup<FuelCalculation>({
-      price: new FormControl<number>(0, [Validators.required]),
-      qty: new FormControl<number>(0, [Validators.required, Validators.min(1000)]),
+  calculationsForm: FormGroup = new FormGroup({
+    pms: new FormGroup({
+      price: new FormControl(0, [Validators.required]),
+      qty: new FormControl(0, [Validators.required, Validators.min(1000)]),
     }),
-    ago: new FormGroup<FuelCalculation>({
-      price: new FormControl<number>(0, [Validators.required]),
-      qty: new FormControl<number>(0, [Validators.required, Validators.min(1000)]),
+    ago: new FormGroup({
+      price: new FormControl(0, [Validators.required]),
+      qty: new FormControl(0, [Validators.required, Validators.min(1000)]),
     }),
-    ik: new FormGroup<FuelCalculation>({
-      price: new FormControl<number>(0, [Validators.required]),
-      qty: new FormControl<number>(0, [Validators.required, Validators.min(1000)]),
+    ik: new FormGroup({
+      price: new FormControl(0, [Validators.required]),
+      qty: new FormControl(0, [Validators.required, Validators.min(1000)]),
     })
   });
 

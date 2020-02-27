@@ -1,29 +1,39 @@
-import {Injectable} from '@angular/core';
-import {AngularFirestore} from '@angular/fire/firestore';
-import {EquityBulk} from 'app/models/ipn/EquityBulk';
-import {BehaviorSubject} from 'rxjs';
-import {AdminConfigService} from './core/admin-config.service';
-import {DepotService} from './core/depot.service';
+import { Injectable } from '@angular/core';
+import { AngularFirestore } from '@angular/fire/firestore';
+import { BehaviorSubject } from 'rxjs';
+import { AdminConfigService } from './core/admin-config.service';
+import { DepotService } from './core/depot.service';
+import { DaudiPayment } from 'app/models/payment/DaudiPayment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PaymentsService {
 
-  proddbstring = 'prodpayments';
-  sandboxdbstring = 'sandboxpayments';
-  unprocessedpayments: BehaviorSubject<EquityBulk[]> = new BehaviorSubject<EquityBulk[]>([]);
+  unprocessedpayments: BehaviorSubject<DaudiPayment[]> = new BehaviorSubject<DaudiPayment[]>([]);
 
   /**
    * this keeps a local copy of all the subscriptions within this service
    */
   subscriptions: Map<string, any> = new Map<string, any>();
 
+
   constructor(
     private db: AngularFirestore,
     private config: AdminConfigService,
     private depotservice: DepotService) {
 
+  }
+
+
+  paymentsCollection(omcId: string) {
+    return this.db.firestore.collection('omc')
+      .doc(omcId)
+      .collection('payments')
+  }
+  paymentsDoc(omcId: string, paymentId: string) {
+    return this.paymentsCollection(omcId)
+      .doc(paymentId)
   }
 
   getrecentpayments() {

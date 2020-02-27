@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatDialog, MatPaginator, MatTableDataSource } from '@angular/material';
 import { newStock, Stock } from 'app/models/Daudi/omc/Stock';
 import { AseService } from 'app/services/ase.service';
 import { CoreService } from 'app/services/core/core.service';
@@ -10,6 +9,9 @@ import { FuelNamesArray, FuelType } from '../../../../models/Daudi/fuel/FuelType
 import { NotificationService } from '../../../../shared/services/notification.service';
 import { CoreAdminService } from '../../services/core.service';
 import { TransferComponent } from './dialogs/transfer/transfer.component';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
     selector: "app-ase",
@@ -45,6 +47,7 @@ export class AseComponent implements OnInit {
     comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
     private = true;
     stock: Stock = { ...newStock() };
+    typedValue: string
 
     constructor(
         private notification: NotificationService,

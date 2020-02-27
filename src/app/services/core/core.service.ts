@@ -39,7 +39,7 @@ export class CoreService {
   /**
    * Be careful when subscribing to this value because it will always emit a value
    */
-  activedepot: BehaviorSubject<{ depot: Depot, config: DepotConfig }> = new BehaviorSubject({
+  activedepot: BehaviorSubject<{ depot: Depot, config: DepotConfig; }> = new BehaviorSubject({
     depot: { ...emptydepot },
     config: { ...emptyDepotConfig }
   });
@@ -100,9 +100,6 @@ export class CoreService {
         this.subscriptions.set("configSubscription", this.adminConfigService.configDoc(admin.config.omcId)
           .onSnapshot(t => {
             const config = toObject(emptyConfig, t);
-            // this.duplicate(admin.config.omcId, "configs", "admin", { adminTypes: config.adminTypes });
-            // this.duplicate(admin.config.omcId, "values", "config", { adminTypes: t.data().adminTypes });
-
             this.omcId = admin.config.omcId;
             this.adminConfig.next(config);
             /**
@@ -151,7 +148,7 @@ export class CoreService {
         this.activedepot.value.depot.config.private
       )
         .onSnapshot(t => {
-          console.log(t.data())
+          console.log(t.data());
           this.stock.next(toObject(newStock(), t));
           this.loaders.stock.next(false);
         }));
@@ -290,43 +287,29 @@ export class CoreService {
       if (this.subscriptions.get(`orders${stage}`)) {
         this.subscriptions.get(`orders${stage}`)();
       }
+      const startofweek = moment().startOf("week").toDate();
 
-      const subscriprion = this.orderService.ordersCollection(this.omcId)
+      let query = this.orderService.ordersCollection(this.omcId)
         .where("stage", "==", stage)
         .where("config.depot.id", "==", depotId)
-        .orderBy("orderStageData.1.user.date", "asc")
-        .onSnapshot(Data => {
-          /**
-           * reset the array at the postion when data changes
-           */
-          this.orders[stage].next([]);
-          this.orders[stage].next(toArray(emptyorder, Data));
-          this.loaders.orders.next(false);
-        });
-
-      this.subscriptions.set(`orders${stage}`, subscriprion);
-    });
-
-    const startofweek = moment().startOf("week").toDate();
-    /**
-     * Fetch completed orders
-     */
-    const stage5subscriprion = this.orderService.ordersCollection(this.omcId)
-      .where("stage", "==", 5)
-      .where("config.depot.id", "==", depotId)
-      .where("orderStageData.1.user.date", "<=", startofweek)
-      .orderBy("orderStageData.1.user.date", "asc")
-      .onSnapshot(Data => {
+        .orderBy(`orderStageData.${stage}.user.date`, "asc");
+      /**
+       * Add conditional query for stage 5 and 6 because we only want to fetch orders colder than 1 week
+       */
+      if (stage > 4) {
+        query = query.where(`orderStageData.${stage}.user.date`, ">=", startofweek);
+      }
+      const subscriprion = query.onSnapshot(Data => {
         /**
          * reset the array at the postion when data changes
          */
-        this.orders[5].next([]);
-
-        this.orders[5].next(toArray(emptyorder, Data));
+        this.orders[stage].next([]);
+        this.orders[stage].next(toArray(emptyorder, Data));
         this.loaders.orders.next(false);
       });
 
-    this.subscriptions.set(`orders${5}`, stage5subscriprion);
+      this.subscriptions.set(`orders${stage}`, subscriprion);
+    });
   }
 
   /**
@@ -338,7 +321,7 @@ export class CoreService {
     this.fueltypesArray.forEach(fuelType => {
       let queryvalue = this.entriesService.entryCollection(this.omcId)
         .where("active", "==", true)
-        .where("fuelType", "==", fuelType)
+        .where("fuelType", "==", fuelType);
       /**
        * Filter by depot if its a privtae depot
        */

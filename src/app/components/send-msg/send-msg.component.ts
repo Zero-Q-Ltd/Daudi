@@ -1,22 +1,22 @@
-import {Component, Inject, OnInit} from '@angular/core';
-import {AngularFirestore} from '@angular/fire/firestore';
-import {MAT_DIALOG_DATA, MatDialog} from '@angular/material'; // added dialog data receive
-import {CoreService} from 'app/services/core/core.service';
-import {SmsService} from 'app/services/sms.service';
-import {emptysms, SMS} from '../../models/Daudi/sms/sms';
-import {NotificationService} from '../../shared/services/notification.service';
+import { Component, Inject, OnInit } from "@angular/core";
+import { AngularFirestore } from "@angular/fire/firestore";
+import { MAT_DIALOG_DATA, MatDialog } from "@angular/material/dialog";
+import { CoreService } from "app/services/core/core.service";
+import { SmsService } from "app/services/sms.service";
+import { emptysms, SMS } from "../../models/Daudi/sms/sms";
+import { NotificationService } from "../../shared/services/notification.service";
 
 @Component({
-  selector: 'send-msg',
-  templateUrl: './send-msg.component.html',
-  styleUrls: ['./send-msg.component.scss']
+  selector: "send-msg",
+  templateUrl: "./send-msg.component.html",
+  styleUrls: ["./send-msg.component.scss"]
 })
 export class SendMsgComponent implements OnInit {
 
   dialogProperties: object = {}; // added to sent data via dialog
   saving = false;
   bulk = false;
-  tempbulkmodel: SMS = {...emptysms};
+  tempbulkmodel: SMS = { ...emptysms };
 
   constructor(
     private dialog: MatDialog,
@@ -29,8 +29,8 @@ export class SendMsgComponent implements OnInit {
     console.log(tempsms);
     if (this.tempsms instanceof Array) {
       this.bulk = true;
-      this.tempbulkmodel.greeting = 'Jambo';
-      this.tempsms = this.tempsms.filter(smsdata => !smsdata.company.name.includes('DELETED'));
+      this.tempbulkmodel.greeting = "Jambo";
+      this.tempsms = this.tempsms.filter(smsdata => !smsdata.company.name.includes("DELETED"));
     }
   }
 
@@ -46,7 +46,7 @@ export class SendMsgComponent implements OnInit {
           sms.greeting = this.tempbulkmodel.greeting;
           sms.msg = `ID ${sms.company.Id} ${this.tempbulkmodel.msg}`;
           sms.type = {
-            origin: 'bulk',
+            origin: "bulk",
             reason: this.tempbulkmodel.type.reason
           };
           batchaction.set(this.sms.smsCollection(this.core.currentOmc.value.Id).doc(this.core.createId()), sms);
@@ -56,9 +56,9 @@ export class SendMsgComponent implements OnInit {
         {
           this.saving = false;
           this.notificationService.notify({
-            alert_type: 'success',
-            title: 'Success',
-            body: 'Bulk SMS\'s queued for sending'
+            alert_type: "success",
+            title: "Success",
+            body: "Bulk SMS's queued for sending"
           });
         }
       });
@@ -67,9 +67,9 @@ export class SendMsgComponent implements OnInit {
       this.sms.createsms(this.core.currentOmc.value.Id, this.tempsms).then(result => {
         this.saving = false;
         this.notificationService.notify({
-          alert_type: 'success',
-          title: 'Success',
-          body: 'SMS successfully queued for sending'
+          alert_type: "success",
+          title: "Success",
+          body: "SMS successfully queued for sending"
         });
       });
     }

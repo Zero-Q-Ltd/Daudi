@@ -2,7 +2,7 @@
   <mat-card-content>
     <div class="ot-header">
       <mat-form-field appearance="legacy">
-        <input (keyup)="filterorders($event.target.value)" matInput placeholder="Filter">
+        <input (keyup)="filterorders(typedValue)" [(ngModel)]="typedValue" matInput placeholder="Filter">
       </mat-form-field>
     </div>
     <div class="ot-container">
@@ -57,12 +57,11 @@
         </ng-container>
         <ng-container matColumnDef="expandedDetail">
           <td *matCellDef="let sms" [attr.colspan]="displayedColumns.length" mat-cell>
-            <mat-card [@detailExpand]="sms == expandedElement ? 'expanded' : 'collapsed'"
-                      class="element-detail">
+            <mat-card [@detailExpand]="sms == expandedElement ? 'expanded' : 'collapsed'" class="element-detail">
               <mat-card-content class="full-div">
                 {{sms.msg}}
               </mat-card-content>
-              <div *ngIf="loadingtruck" class="full-div">
+              <div class="full-div">
                 <mat-spinner class="katikati"></mat-spinner>
               </div>
             </mat-card>
@@ -70,9 +69,7 @@
         </ng-container>
         <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
         <tr (click)="expandedElement = sms" *matRowDef="let sms; columns:  displayedColumns;" [@flyIn]
-            [class.expanded-row]="expandedElement === sms"
-            class="element-row"
-            mat-row></tr>
+          [class.expanded-row]="expandedElement === sms" class="element-row" mat-row></tr>
         <tr *matRowDef="let row; columns: ['expandedDetail']" class="detail-row" mat-row></tr>
       </table>
     </div>

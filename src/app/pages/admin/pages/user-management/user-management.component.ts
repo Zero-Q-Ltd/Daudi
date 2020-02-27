@@ -1,55 +1,57 @@
-import {animate, sequence, state, style, transition, trigger} from '@angular/animations';
-import {Component, HostListener, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {AngularFireFunctions} from '@angular/fire/functions';
-import {MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
-import {AdminService} from 'app/services/core/admin.service';
-import {CoreService} from 'app/services/core/core.service';
-import * as moment from 'moment';
-import {ReplaySubject} from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
-import {SyncRequest} from '../../../../models/Cloud/Sync';
-import {Admin, emptyadmin} from '../../../../models/Daudi/admin/Admin';
-import {Depot} from '../../../../models/Daudi/depot/Depot';
-import {emptyomc, OMC} from '../../../../models/Daudi/omc/OMC';
-import {MyTimestamp} from '../../../../models/firestore/firestoreTypes';
-import {NotificationService} from '../../../../shared/services/notification.service';
+import { animate, sequence, state, style, transition, trigger } from "@angular/animations";
+import { Component, HostListener, OnDestroy, OnInit, ViewChild } from "@angular/core";
+import { AngularFireFunctions } from "@angular/fire/functions";
+import { MatPaginator } from "@angular/material/paginator";
+import { MatSort } from "@angular/material/sort";
+import { MatTableDataSource } from "@angular/material/table";
+import { AdminService } from "app/services/core/admin.service";
+import { CoreService } from "app/services/core/core.service";
+import * as moment from "moment";
+import { ReplaySubject } from "rxjs";
+import { takeUntil } from "rxjs/operators";
+import { SyncRequest } from "../../../../models/Cloud/Sync";
+import { Admin, emptyadmin } from "../../../../models/Daudi/admin/Admin";
+import { Depot } from "../../../../models/Daudi/depot/Depot";
+import { emptyomc, OMC } from "../../../../models/Daudi/omc/OMC";
+import { MyTimestamp } from "../../../../models/firestore/firestoreTypes";
+import { NotificationService } from "../../../../shared/services/notification.service";
 
 @Component({
-  selector: 'user-management',
-  templateUrl: './user-management.component.html',
-  styleUrls: ['./user-management.component.scss'],
+  selector: "user-management",
+  templateUrl: "./user-management.component.html",
+  styleUrls: ["./user-management.component.scss"],
   animations: [
-    trigger('flyIn', [
-      state('in', style({transform: 'translateX(0)'})),
-      transition('void => *', [
-        style({height: '*', opacity: '0', transform: 'translateX(-550px)', 'box-shadow': 'none'}),
+    trigger("flyIn", [
+      state("in", style({ transform: "translateX(0)" })),
+      transition("void => *", [
+        style({ height: "*", opacity: "0", transform: "translateX(-550px)", "box-shadow": "none" }),
         sequence([
-          animate('.20s ease', style({height: '*', opacity: '.2', transform: 'translateX(0)', 'box-shadow': 'none'})),
-          animate('.15s ease', style({height: '*', opacity: 1, transform: 'translateX(0)'}))
+          animate(".20s ease", style({ height: "*", opacity: ".2", transform: "translateX(0)", "box-shadow": "none" })),
+          animate(".15s ease", style({ height: "*", opacity: 1, transform: "translateX(0)" }))
         ])
       ])
     ]),
-    trigger('detailExpand', [
-      state('collapsed', style({height: '0px', minHeight: '0', display: 'none'})),
-      state('expanded', style({height: '*'})),
-      transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)'))
+    trigger("detailExpand", [
+      state("collapsed", style({ height: "0px", minHeight: "0", display: "none" })),
+      state("expanded", style({ height: "*" })),
+      transition("expanded <=> collapsed", animate("225ms cubic-bezier(0.4, 0.0, 0.2, 1)"))
     ])]
 })
 
 export class UserManagementComponent implements OnInit, OnDestroy {
 
   usersdatasource = new MatTableDataSource<Admin>();
-  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
-  @ViewChild(MatSort, {static: true}) sort: MatSort;
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
   creatingsync = false;
-  displayedColumns: string[] = ['photo', 'QbId', 'name', 'email', 'phone', 'type', 'level', 'sandbox', 'depot', 'status', 'action'];
+  displayedColumns: string[] = ["photo", "QbId", "name", "email", "phone", "type", "level", "sandbox", "depot", "status", "action"];
   activeuser: Admin = emptyadmin;
   loadingadmins = true;
   saving = false;
   alldepots: Depot[];
   expandedEAdmin: Admin;
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
-  originalCompany: OMC = {...emptyomc};
+  originalCompany: OMC = { ...emptyomc };
 
   constructor(
     private adminservice: AdminService,
@@ -81,7 +83,7 @@ export class UserManagementComponent implements OnInit, OnDestroy {
 
   }
 
-  @HostListener('document:keydown.escape', ['$event']) onKeydownHandler(event: KeyboardEvent) {
+  @HostListener("document:keydown.escape", ["$event"]) onKeydownHandler(event: KeyboardEvent) {
     this.expandedEAdmin = null;
   }
 
@@ -107,14 +109,14 @@ export class UserManagementComponent implements OnInit, OnDestroy {
 
     const syncobject: SyncRequest = {
       time: MyTimestamp.now(),
-      synctype: ['Employee']
+      synctype: ["Employee"]
     };
-    this.functions.httpsCallable('requestsync')(syncobject).pipe(takeUntil(this.comopnentDestroyed)).subscribe(res => {
+    this.functions.httpsCallable("requestsync")(syncobject).pipe(takeUntil(this.comopnentDestroyed)).subscribe(res => {
       this.creatingsync = false;
       this.notification.notify({
-        alert_type: 'success',
-        title: 'Success',
-        body: 'Users Synchronized'
+        alert_type: "success",
+        title: "Success",
+        body: "Users Synchronized"
       });
     });
   }
@@ -126,17 +128,17 @@ export class UserManagementComponent implements OnInit, OnDestroy {
       this.adminsService.updateadmin(this.expandedEAdmin).then(_ => {
         this.saving = false;
         this.notification.notify({
-          alert_type: 'success',
-          title: 'Success',
-          body: 'Admin Updated'
+          alert_type: "success",
+          title: "Success",
+          body: "Admin Updated"
         });
       });
     } else {
       this.saving = false;
       this.notification.notify({
-        alert_type: 'error',
-        title: 'ERROR',
-        body: 'You are not authorised to perform this action'
+        alert_type: "error",
+        title: "ERROR",
+        body: "You are not authorised to perform this action"
       });
     }
   }
@@ -156,7 +158,7 @@ export class UserManagementComponent implements OnInit, OnDestroy {
     if (MyTimestamp) {
       return `Last Seen ${moment(MyTimestamp).fromNow()}`;
     } else {
-      return 'Uknown Last Seen';
+      return "Uknown Last Seen";
     }
   }
 
@@ -165,7 +167,7 @@ export class UserManagementComponent implements OnInit, OnDestroy {
     if (image) {
       return image;
     } else {
-      return '/assets/images/EmkayLogoBMP.svg';
+      return "/assets/images/EmkayLogoBMP.svg";
     }
   }
 }

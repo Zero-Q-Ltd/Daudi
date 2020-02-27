@@ -1,9 +1,10 @@
-import {animate, sequence, state, style, transition, trigger} from '@angular/animations';
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {MatPaginator, MatTableDataSource} from '@angular/material';
-import {SmsService} from 'app/services/sms.service';
-import {ReplaySubject} from 'rxjs';
-import {emptysms, SMS} from '../../../../models/Daudi/sms/sms';
+import { animate, sequence, state, style, transition, trigger } from '@angular/animations';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { MatTableDataSource } from '@angular/material/table';
+import { SmsService } from 'app/services/sms.service';
+import { ReplaySubject } from 'rxjs';
+import { emptysms, SMS } from '../../../../models/Daudi/sms/sms';
+import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
   selector: 'sms-logs',
@@ -11,18 +12,18 @@ import {emptysms, SMS} from '../../../../models/Daudi/sms/sms';
   styleUrls: ['./sms-logs.component.scss'],
   animations: [
     trigger('flyIn', [
-      state('in', style({transform: 'translateX(0)'})),
+      state('in', style({ transform: 'translateX(0)' })),
       transition('void => *', [
-        style({height: '*', opacity: '0', transform: 'translateX(-550px)', 'box-shadow': 'none'}),
+        style({ height: '*', opacity: '0', transform: 'translateX(-550px)', 'box-shadow': 'none' }),
         sequence([
-          animate('.20s ease', style({height: '*', opacity: '.2', transform: 'translateX(0)', 'box-shadow': 'none'})),
-          animate('.15s ease', style({height: '*', opacity: 1, transform: 'translateX(0)'}))
+          animate('.20s ease', style({ height: '*', opacity: '.2', transform: 'translateX(0)', 'box-shadow': 'none' })),
+          animate('.15s ease', style({ height: '*', opacity: 1, transform: 'translateX(0)' }))
         ])
       ])
     ]),
     trigger('detailExpand', [
-      state('collapsed', style({height: '0px', minHeight: '0', display: 'none'})),
-      state('expanded', style({height: '*'})),
+      state('collapsed', style({ height: '0px', minHeight: '0', display: 'none' })),
+      state('expanded', style({ height: '*' })),
       transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)'))
     ])]
 })
@@ -30,8 +31,10 @@ export class SmsLogsComponent implements OnInit, OnDestroy {
   position = 'right';
   smslogs = new MatTableDataSource();
   displayedColumns: string[] = ['timestamp', 'QbId', 'name', 'name', 'contactname', 'phone', 'origin', 'reason', 'greeting', 'status'];
-  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
+  typedValue: string
+  expandedElement;
 
   constructor(private sms: SmsService) {
     this.sms.getsmslogs().get().then(snapshot => {

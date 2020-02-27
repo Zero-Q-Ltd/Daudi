@@ -7,7 +7,7 @@ import { syncCustomers } from "./syncCustomers";
 import { syncEntry } from "./syncEntry";
 import { QboCofig } from "../../models/Cloud/QboEnvironment";
 
-export function processSync(sync: SyncRequest, qbo: QuickBooks, omcId: string, config: QboCofig) {
+export function processSync(sync: SyncRequest, qbo: QuickBooks, omcId: string, config: QboCofig): Promise<any> {
     return Promise.all(
         sync.synctype.map(async (syncdetail: QbTypes) => {
             switch (syncdetail) {

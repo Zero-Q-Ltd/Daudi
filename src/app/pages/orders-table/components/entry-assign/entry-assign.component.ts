@@ -1,6 +1,5 @@
 import { Component, Inject, OnInit } from "@angular/core";
 import { AngularFirestore } from "@angular/fire/firestore";
-import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material";
 import { Entry, EntryDraw } from "app/models/Daudi/fuel/Entry";
 import { FuelNamesArray, FuelType } from "app/models/Daudi/fuel/FuelType";
 import { newStock, Stock } from "app/models/Daudi/omc/Stock";
@@ -13,6 +12,7 @@ import { EntriesService } from "app/services/entries.service";
 import { OrdersService } from "app/services/orders.service";
 import { NotificationService } from "app/shared/services/notification.service";
 import * as moment from "moment";
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
   templateUrl: "./entry-assign.component.html",
@@ -137,8 +137,8 @@ export class EntryAssignComponent implements OnInit {
         tempEntry.active = entry.resultStatus;
 
         temporder.fuel[fuel].entries[index] = {
-          Id: entry.Id,
-          Name: entry.entry.name,
+          id: entry.Id,
+          name: entry.entry.name,
           observed: 0,
           qty: entry.qtyDrawn
         };

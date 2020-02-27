@@ -4,7 +4,7 @@ import { FuelNamesArray, FuelType } from "../../models/Daudi/fuel/FuelType";
 import { FuelConfig } from "../../models/Daudi/omc/FuelConfig";
 import { newStock, Stock } from "../../models/Daudi/omc/Stock";
 import { Bill } from "../../models/Qbo/Bill";
-import { readStock, stockCollection } from "../crud/daudi/Stock";
+import { kpcStockCollection } from "../crud/daudi/Stock";
 
 /**
  * 
@@ -16,8 +16,8 @@ export function syncAse(omcId: string, fuelConfig: { [key in FuelType]: FuelConf
     const ValidLineItems: Array<{
         bill: Bill,
         index: number,
-        fueltype: FuelType
-    }> = []
+        fueltype: FuelType;
+    }> = [];
     bills.map(async bill => {
         if (bill.Line) {
             bill.Line.forEach((t, index) => {
@@ -28,46 +28,46 @@ export function syncAse(omcId: string, fuelConfig: { [key in FuelType]: FuelConf
                                 fueltype: FuelType.pms,
                                 index,
                                 bill
-                            })
+                            });
                         } else if (t.ItemBasedExpenseLineDetail.ItemRef.value === fuelConfig.ago.aseId) {
                             ValidLineItems.push({
                                 fueltype: FuelType.pms,
                                 index,
                                 bill
-                            })
+                            });
                         } else if (t.ItemBasedExpenseLineDetail.ItemRef.value === fuelConfig.ik.aseId) {
                             ValidLineItems.push({
                                 fueltype: FuelType.pms,
                                 index,
                                 bill
-                            })
+                            });
                         } else {
-                            console.log("Bill does not have a valid fueltype attached to it")
+                            console.log("Bill does not have a valid fueltype attached to it");
                         }
                     }
                 } else {
-                    console.log("Bill does not have a Line item")
+                    console.log("Bill does not have a Line item");
                 }
-            })
+            });
         }
-    })
+    });
 
     if (ValidLineItems.length < 1) {
-        console.error("ITEM CONFIG NOT FOUND")
-        return new Promise(res => res())
+        console.error("ITEM CONFIG NOT FOUND");
+        return new Promise(res => res());
     }
-    const batch = firestore().batch()
+    const batch = firestore().batch();
     /**
     * Record the total amount of fuel added in this transaction to update the stock doc
     * By consilidating totals to one var, we allow the possibility of having the same fueltype in the same bill payment multiple times
     */
-    const totalAdded: { [key in FuelType]: number } = { ago: 0, ik: 0, pms: 0 }
+    const totalAdded: { [key in FuelType]: number } = { ago: 0, ik: 0, pms: 0 };
     return Promise.all(ValidLineItems.map(async item => {
         const convertedASE = covertBillToASE(item.bill, item.fueltype, item.index);
         const directory = firestore()
             .collection("omc")
             .doc(omcId)
-            .collection("ases")
+            .collection("ases");
 
         const fetchedbatch = await directory.where("ase.QbId", "==", convertedASE.ase.QbId).get();
         /**
@@ -75,22 +75,22 @@ export function syncAse(omcId: string, fuelConfig: { [key in FuelType]: FuelConf
          */
         if (fetchedbatch.empty) {
             console.log("creating new ASE");
-            totalAdded[item.fueltype] += convertedASE.qty
+            totalAdded[item.fueltype] += convertedASE.qty;
             return batch.set(directory.doc(), convertedASE);
         } else {
-            console.log("ASE exists")
-            return Promise.resolve()
+            console.log("ASE exists");
+            return Promise.resolve();
         }
     })).then(async () => {
-        return await readStock(omcId).then(snapshot => {
-            const stockObject: Stock = { ...newStock(), ...snapshot.data() }
+        return await kpcStockCollection(omcId).get().then(snapshot => {
+            const stockObject: Stock = { ...newStock(), ...snapshot.data() };
             FuelNamesArray.forEach(fueltype => {
-                stockObject.qty[fueltype].ase += totalAdded[fueltype]
-            })
-            batch.set(stockCollection(omcId), stockObject);
-            return batch.commit()
-        })
-    })
+                stockObject.qty[fueltype].ase += totalAdded[fueltype];
+            });
+            batch.set(kpcStockCollection(omcId), stockObject);
+            return batch.commit();
+        });
+    });
 }
 
 

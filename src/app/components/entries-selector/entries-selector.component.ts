@@ -1,6 +1,5 @@
 import { Component, Inject, OnDestroy, OnInit } from "@angular/core";
 import { AngularFirestore } from "@angular/fire/firestore";
-import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material";
 import { AdminConfigService } from "app/services/core/admin-config.service";
 import { AdminService } from "app/services/core/admin.service";
 import { StocksService } from "app/services/core/stocks.service";
@@ -19,6 +18,7 @@ import { MyTimestamp } from "../../models/firestore/firestoreTypes";
 import { NotificationService } from "../../shared/services/notification.service";
 import { CoreService } from 'app/services/core/core.service';
 import { OrdersService } from 'app/services/orders.service';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 interface EntryContent {
   id: string;
@@ -42,7 +42,7 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
   depotEntries: {
     pms: Entry[],
     ago: Entry[],
-    ik: Entry[]
+    ik: Entry[];
   } = {
       pms: [],
       ago: [],
@@ -58,7 +58,7 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
       ik: [],
     };
   fuelerror: {
-    [key in FuelType]: { status: boolean, errorString: string }
+    [key in FuelType]: { status: boolean, errorString: string; }
   } = {
       ago: { status: false, errorString: null },
       ik: { status: false, errorString: null },
@@ -75,7 +75,7 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
    */
   subscriptions: Map<string, () => void> = new Map<string, any>();
   stock: Stock = { ...newStock() };
-  activedepot: { depot: Depot, config: DepotConfig } = { depot: { ...emptydepot }, config: { ...emptyDepotConfig } };
+  activedepot: { depot: Depot, config: DepotConfig; } = { depot: { ...emptydepot }, config: { ...emptyDepotConfig } };
 
   constructor(
     public dialogRef: MatDialogRef<EntriesSelectorComponent>,
@@ -363,14 +363,14 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
              * update the batches to the order as well
              */
             this.order.fuel[fueltype].entries[0] = {
-              Id: this.drawnEntry[fueltype][0].id,
-              Name: this.drawnEntry[fueltype][0].name,
+              id: this.drawnEntry[fueltype][0].id,
+              name: this.drawnEntry[fueltype][0].name,
               observed: 0,
               qty: this.drawnEntry[fueltype][0].qtydrawn
             };
             this.order.fuel[fueltype].entries[1] = {
-              Id: this.drawnEntry[fueltype][1].id,
-              Name: this.drawnEntry[fueltype][1].name,
+              id: this.drawnEntry[fueltype][1].id,
+              name: this.drawnEntry[fueltype][1].name,
               observed: 0,
               qty: this.drawnEntry[fueltype][1].qtydrawn
             };
@@ -424,8 +424,8 @@ export class EntriesSelectorComponent implements OnInit, OnDestroy {
              * update the batches to the order as well
              */
             this.order.fuel[fueltype].entries[0] = {
-              Id: this.drawnEntry[fueltype][0].id,
-              Name: this.drawnEntry[fueltype][0].name,
+              id: this.drawnEntry[fueltype][0].id,
+              name: this.drawnEntry[fueltype][0].name,
               observed: 0,
               qty: this.drawnEntry[fueltype][0].qtydrawn
             };

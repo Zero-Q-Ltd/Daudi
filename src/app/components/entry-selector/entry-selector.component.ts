@@ -1,12 +1,12 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-import { MatTableDataSource } from '@angular/material';
 import { EmptyEntryDraw, EntryDraw, Entry } from 'app/models/Daudi/fuel/Entry';
 import { FuelType } from 'app/models/Daudi/fuel/FuelType';
 import { CoreService } from 'app/services/core/core.service';
 import { ReplaySubject } from 'rxjs';
 import { delay, takeUntil } from 'rxjs/operators';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-entry-selector',
@@ -77,7 +77,7 @@ export class EntrySelectorComponent implements OnInit, OnDestroy, OnChanges {
        */
 
       this.entries.data[index].qtyRemaining =
-        this.entries.data[index].qty.total - this.entries.data[index].qty.transferred.total - this.entries.data[index].qty.directLoad.total;
+        this.entries.data[index].qty.total - this.entries.data[index].qty.used;
       /**
        * Reset the status
        */

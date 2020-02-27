@@ -1,4 +1,4 @@
-<mat-card>
+<!-- <mat-card>
   <mat-card-content>
     <div class="loading-container">
       <div *ngIf="loadingadmins" class="loading-shade">
@@ -18,15 +18,13 @@
 
       <div class="ot-container">
         <table [dataSource]="usersdatasource" mat-table matSort multiTemplateDataRows style="width: 100%">
-          <!--ID Column-->
           <ng-container matColumnDef="photo">
             <th *matHeaderCellDef mat-header-cell>
               <i aria-hidden="true" class="fa fa-picture-o"></i>
             </th>
             <td *matCellDef="let admin" mat-cell>
               <div *ngIf="expandedEAdmin === admin; else nonedit">
-                <img (click)="uploadphoto()" alt="" class="rounded img30_30"
-                     src="{{admin.data.photoURL}}">
+                <img (click)="uploadphoto()" alt="" class="rounded img30_30" src="{{admin.data.photoURL}}">
               </div>
               <ng-template #nonedit>
                 <img alt="" class="rounded img30_30" src="{{admin.data.photoURL}}">
@@ -35,14 +33,12 @@
 
 
           </ng-container>
-          <!--ID Column-->
           <ng-container matColumnDef="QbId">
             <th *matHeaderCellDef mat-header-cell mat-sort-header> QbID</th>
             <td *matCellDef="let admin" mat-cell>
               {{admin.qbconfig?.QbId}}
             </td>
           </ng-container>
-          <!-- Name Column -->
           <ng-container matColumnDef="name">
             <th *matHeaderCellDef mat-header-cell mat-sort-header> Name</th>
             <td *matCellDef="let admin" mat-cell>
@@ -59,15 +55,12 @@
               </ng-template>
             </td>
           </ng-container>
-          <!--Email Column-->
           <ng-container matColumnDef="email">
             <th *matHeaderCellDef mat-header-cell mat-sort-header> Email</th>
             <td *matCellDef="let admin" mat-cell>
               {{admin.data.email}}
             </td>
           </ng-container>
-
-          <!-- Phone Column -->
           <ng-container matColumnDef="phone">
             <th *matHeaderCellDef mat-header-cell mat-sort-header> Phone</th>
             <td *matCellDef="let admin" mat-cell>
@@ -84,15 +77,13 @@
 
             </td>
           </ng-container>
-          <!-- User Level -->
           <ng-container matColumnDef="type">
             <th *matHeaderCellDef mat-header-cell mat-sort-header>User Type</th>
             <td *matCellDef="let admin" mat-cell>
               <div *ngIf="expandedEAdmin === admin && admin.Id !==activeuser.Id; else nonedit">
                 <mat-form-field>
                   <mat-select [(ngModel)]="expandedEAdmin.config.type" placeholder="User Type">
-                    <mat-option *ngFor="let type of originalCompany.adminTypes;let i = index"
-                                [value]="i">
+                    <mat-option *ngFor="let type of originalCompany.adminTypes;let i = index" [value]="i">
                       {{ type.name }}
                     </mat-option>
                   </mat-select>
@@ -101,8 +92,7 @@
               <ng-template #nonedit>
                 <mat-form-field>
                   <mat-select [ngModel]="admin.config.type" disabled placeholder="User type">
-                    <mat-option *ngFor="let type of originalCompany.adminTypes;let i = index"
-                                [value]="i">
+                    <mat-option *ngFor="let type of originalCompany.adminTypes;let i = index" [value]="i">
                       {{ type.name }}
                     </mat-option>
                   </mat-select>
@@ -110,7 +100,6 @@
               </ng-template>
             </td>
           </ng-container>
-          <!-- User Level -->
           <ng-container matColumnDef="level">
             <th *matHeaderCellDef mat-header-cell mat-sort-header> Level</th>
             <td *matCellDef="let admin" mat-cell>
@@ -138,7 +127,6 @@
               </ng-template>
             </td>
           </ng-container>
-          <!-- View sandbox -->
           <ng-container matColumnDef="sandbox">
             <th *matHeaderCellDef mat-header-cell mat-sort-header> Sandbox</th>
             <td *matCellDef="let admin" mat-cell>
@@ -152,15 +140,13 @@
               </ng-template>
             </td>
           </ng-container>
-          <!-- Depot -->
           <ng-container matColumnDef="depot">
             <th *matHeaderCellDef mat-header-cell mat-sort-header>Assigned Depot</th>
             <td *matCellDef="let admin" mat-cell>
               <div *ngIf="expandedEAdmin === admin; else nonedit">
                 <mat-form-field>
-                  <mat-select [(ngModel)]="expandedEAdmin.config.depotid" [disabled]=""
-                              name="adminlevel"
-                              placeholder="Depot">
+                  <mat-select [(ngModel)]="expandedEAdmin.config.depotid" [disabled]="" name="adminlevel"
+                    placeholder="Depot">
                     <mat-option *ngFor="let depot of alldepots" [value]="depot.Id">
                       {{ depot.Name}}
                     </mat-option>
@@ -168,8 +154,7 @@
                 </mat-form-field>
               </div>
               <ng-template #nonedit>
-                <mat-select [(ngModel)]="admin.config.depotid" disabled name="adminlevel"
-                            placeholder="Depot">
+                <mat-select [(ngModel)]="admin.config.depotid" disabled name="adminlevel" placeholder="Depot">
                   <mat-option *ngFor="let depot of alldepots" [value]="depot.Id">
                     {{ depot.Name}}
                   </mat-option>
@@ -177,7 +162,6 @@
               </ng-template>
             </td>
           </ng-container>
-          <!-- Save -->
           <ng-container matColumnDef="action">
             <th *matHeaderCellDef mat-header-cell mat-sort-header></th>
             <td *matCellDef="let admin" mat-cell>
@@ -200,7 +184,6 @@
               </ng-template>
             </td>
           </ng-container>
-          <!-- Phone Column -->
           <ng-container matColumnDef="status">
             <th *matHeaderCellDef mat-header-cell> Status</th>
             <td *matCellDef="let admin" mat-cell>
@@ -212,7 +195,6 @@
               </button>
             </td>
           </ng-container>
-          <!--only expand the column for admins not you-->
           <tr *matRowDef="let admin; columns: displayedColumns;" [@flyIn] class="element-row" mat-row>
           </tr>
           <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
@@ -221,4 +203,4 @@
     </div>
     <mat-paginator [pageSizeOptions]="[10, 20, 50, 100]" [pageSize]="10" showFirstLastButtons></mat-paginator>
   </mat-card-content>
-</mat-card>
+</mat-card> -->

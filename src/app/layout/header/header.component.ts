@@ -1,16 +1,17 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {APPCONFIG} from 'app/config';
-import {Admin, emptyadmin} from 'app/models/Daudi/admin/Admin';
-import {Depot, emptydepot} from 'app/models/Daudi/depot/Depot';
-import {DepotConfig, emptyDepotConfig} from 'app/models/Daudi/depot/DepotConfig';
-import {FuelNamesArray} from 'app/models/Daudi/fuel/FuelType';
-import {OrderStageIds} from 'app/models/Daudi/order/OrderStages';
-import {TruckStageNames} from 'app/models/Daudi/order/truck/TruckStages';
-import {AdminService} from 'app/services/core/admin.service';
-import {CoreService} from 'app/services/core/core.service';
-import {StatusService} from 'app/services/core/status.service';
-import {ReplaySubject} from 'rxjs';
-import {skipWhile, takeUntil} from 'rxjs/operators';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { APPCONFIG } from 'app/config';
+import { Admin, emptyadmin } from 'app/models/Daudi/admin/Admin';
+import { Depot, emptydepot } from 'app/models/Daudi/depot/Depot';
+import { DepotConfig, emptyDepotConfig } from 'app/models/Daudi/depot/DepotConfig';
+import { FuelNamesArray } from 'app/models/Daudi/fuel/FuelType';
+import { OrderStageIds } from 'app/models/Daudi/order/OrderStages';
+import { TruckStageNames } from 'app/models/Daudi/order/truck/TruckStages';
+import { AdminService } from 'app/services/core/admin.service';
+import { CoreService } from 'app/services/core/core.service';
+import { StatusService } from 'app/services/core/status.service';
+import { ReplaySubject } from 'rxjs';
+import { skipWhile, takeUntil } from 'rxjs/operators';
+import { TooltipPosition } from '@angular/material/tooltip';
 
 @Component({
   selector: 'my-app-header',
@@ -19,9 +20,9 @@ import {skipWhile, takeUntil} from 'rxjs/operators';
 })
 
 export class AppHeaderComponent implements OnInit, OnDestroy {
-  position = 'after';
-  position1 = 'before';
-  position2 = 'above';
+  position: TooltipPosition = 'after';
+  position1: TooltipPosition = 'before';
+  position2: TooltipPosition = 'above';
   public AppConfig: any;
   isLoggedIn: boolean;
   loggedInUser: string;
@@ -30,8 +31,8 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
   // fuelprices: FuelPrices = {};
   allowsandbox = true;
   adminLevel: number = null;
-  activedepot: { depot: Depot, config: DepotConfig } = {depot: {...emptydepot}, config: {...emptyDepotConfig}};
-  currentuser: Admin = {...emptyadmin};
+  activedepot: { depot: Depot, config: DepotConfig } = { depot: { ...emptydepot }, config: { ...emptyDepotConfig } };
+  currentuser: Admin = { ...emptyadmin };
   connectionStatus: boolean;
   alldepots: Depot[] = [];
   privateDepots: Depot[] = [];
@@ -67,14 +68,14 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
       });
     this.core.depots
       .pipe(takeUntil(this.comopnentDestroyed)).subscribe((alldepots: Depot[]) => {
-      this.alldepots = alldepots;
-      this.kpcDepots = alldepots.filter(depot => {
-        return !depot.config.private;
+        this.alldepots = alldepots;
+        this.kpcDepots = alldepots.filter(depot => {
+          return !depot.config.private;
+        });
+        this.privateDepots = alldepots.filter(depot => {
+          return depot.config.private;
+        });
       });
-      this.privateDepots = alldepots.filter(depot => {
-        return depot.config.private;
-      });
-    });
     this.core.loaders.depots.subscribe(loading => {
       this.loadingDepots = loading;
     });
