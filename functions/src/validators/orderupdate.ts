@@ -11,6 +11,7 @@ import { readDepot } from "../tasks/crud/daudi/depot";
 import { toObject } from "../models/utils/SnapshotUtils";
 import { emptydepot, Depot } from "../models/Daudi/depot/Depot";
 import { emptyEntry } from "../models/Daudi/fuel/Entry";
+import { orderCollection } from "../tasks/crud/daudi/Order";
 
 export function validOrderUpdate(order: Order, omcId: string) {
     switch (order.stage) {
@@ -52,6 +53,9 @@ export function validTruckUpdate(order: Order, omcId: string) {
                 .then(depotData => {
                     const depot = toObject(emptydepot, depotData);
                     return Promise.all([adjustASE(omcId, order, depot, batch), adjustEntries(omcId, order, batch)]).then(() => {
+                        //move the order to complete stage
+                        order.stage = 5;
+                        batch.update(orderCollection(omcId).doc(order.Id), order);
                         return batch.commit();
                     });
                 });
