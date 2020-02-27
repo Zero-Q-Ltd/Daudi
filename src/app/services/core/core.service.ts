@@ -291,7 +291,7 @@ export class CoreService {
       const subscriprion = this.orderService.ordersCollection(this.omcId)
         .where("stage", "==", stage)
         .where("config.depot.id", "==", depotId)
-        .orderBy("orderStageData.1.user.date", "asc")
+        .orderBy(`orderStageData.${stage}.user.date`, "asc")
         .onSnapshot(Data => {
           /**
            * reset the array at the postion when data changes
@@ -304,26 +304,26 @@ export class CoreService {
       this.subscriptions.set(`orders${stage}`, subscriprion);
     });
 
-    const startofweek = moment().startOf("week").toDate();
-    /**
-     * Fetch completed orders
-     */
-    const stage5subscriprion = this.orderService.ordersCollection(this.omcId)
-      .where("stage", "==", 5)
-      .where("config.depot.id", "==", depotId)
-      .where("orderStageData.5.user.date", "<=", startofweek)
-      .orderBy("orderStageData.5.user.date", "asc")
-      .onSnapshot(Data => {
-        /**
-         * reset the array at the postion when data changes
-         */
-        this.orders[5].next([]);
+    // const startofweek = moment().startOf("week").toDate();
+    // /**
+    //  * Fetch completed orders
+    //  */
+    // const stage5subscriprion = this.orderService.ordersCollection(this.omcId)
+    //   .where("stage", "==", 5)
+    //   .where("config.depot.id", "==", depotId)
+    //   .where("orderStageData.5.user.date", "<=", startofweek)
+    //   .orderBy("orderStageData.5.user.date", "asc")
+    //   .onSnapshot(Data => {
+    //     /**
+    //      * reset the array at the postion when data changes
+    //      */
+    //     this.orders[5].next([]);
 
-        this.orders[5].next(toArray(emptyorder, Data));
-        this.loaders.orders.next(false);
-      });
+    //     this.orders[5].next(toArray(emptyorder, Data));
+    //     this.loaders.orders.next(false);
+    //   });
 
-    this.subscriptions.set(`orders${5}`, stage5subscriprion);
+    // this.subscriptions.set(`orders${5}`, stage5subscriprion);
   }
 
   /**
