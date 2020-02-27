@@ -31,7 +31,7 @@ export class EntriesComponent implements OnInit {
   loading: {
     pms: boolean,
     ago: boolean,
-    ik: boolean
+    ik: boolean;
   } = {
       pms: true,
       ago: true,
@@ -40,7 +40,7 @@ export class EntriesComponent implements OnInit {
   availablefuel: {
     pms: number,
     ago: number,
-    ik: number
+    ik: number;
   } = {
       pms: 0,
       ago: 0,
@@ -52,7 +52,7 @@ export class EntriesComponent implements OnInit {
    */
   subscriptions: Map<string, () => void> = new Map<string, () => void>();
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
-  typedValue: string
+  typedValue: string;
   constructor(
     private notification: NotificationService,
     private functions: AngularFireFunctions,
@@ -74,7 +74,7 @@ export class EntriesComponent implements OnInit {
 
           let queryvalue = this.entriesService.entryCollection(this.core.omcId)
             .where("active", "==", true)
-            .where('fuelType', '==', fueltype)
+            .where('fuelType', '==', fueltype);
           /**
            * Filter by depot if its a privtae depot
            */
@@ -149,8 +149,7 @@ export class EntriesComponent implements OnInit {
 
   getTotalAvailable(batch: Entry) {
     const totalqty = batch.qty.total;
-    const totalLoaded = batch.qty.directLoad.total + batch.qty.transferred.total;
-    return totalqty - totalLoaded;
+    return totalqty - batch.qty.used;
   }
 
   ngOnInit() {

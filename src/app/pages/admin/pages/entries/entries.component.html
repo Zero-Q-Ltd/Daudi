@@ -63,7 +63,7 @@
             <ng-container matColumnDef="availableqty">
               <th *matHeaderCellDef mat-header-cell> Available Qty</th>
               <td *matCellDef="let entry" mat-cell>
-                {{entry.qty.total - entry.qty.transferred.total - entry.qty.directLoad.total}}</td>
+                {{entry.qty.total - entry.qty.used}}</td>
             </ng-container>
             <!-- Cost Column -->
             <ng-container matColumnDef="status">

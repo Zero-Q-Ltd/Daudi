@@ -16,7 +16,7 @@ export function resolvePayment(payment: DaudiPayment, qbo: QuickBooks, omcId: st
     const customerId = payment.transaction.billNumber;
 
     if (payment.daudiFields.status === 0) {
-        return Promise.resolve("Ignoring payment lacking customerId")
+        return Promise.resolve("Ignoring payment lacking customerId");
     } else {
         /**
          * Sort the invoices by the creation time so that there's a FIFO order
@@ -41,16 +41,16 @@ export function resolvePayment(payment: DaudiPayment, qbo: QuickBooks, omcId: st
                 const applicableInvoices: Array<QboOrder> = allpendinginvoices.filter((invoice, index) => {
                     if (applicableInvoicesTotal <= Number(payment.transaction.amount)) {
                         applicableInvoicesTotal += invoice.Balance;
-                        return true
+                        return true;
                     } else if (index === 0) {
                         /**
                          * Apply if there's only one invoice
                          */
-                        console.log('Applying to Only 1 invoice')
+                        console.log('Applying to Only 1 invoice');
                         applicableInvoicesTotal += invoice.Balance;
-                        return true
+                        return true;
                     } else {
-                        return false
+                        return false;
                     }
                 });
 
@@ -62,8 +62,8 @@ export function resolvePayment(payment: DaudiPayment, qbo: QuickBooks, omcId: st
                 const invoiceValues: {
                     invoiceId: string;
                     amountPaid: number,
-                    invoiceAmount: number
-                }[] = []
+                    invoiceAmount: number;
+                }[] = [];
                 if (applicableInvoices.length > 0) {
                     /**
                      * Local var keeping the total amount that has been applied while looping
@@ -90,7 +90,7 @@ export function resolvePayment(payment: DaudiPayment, qbo: QuickBooks, omcId: st
                                     invoiceId: String(invoice.Id),
                                     amountPaid: amountToapply,
                                     invoiceAmount: invoice.Balance
-                                }
+                                };
                             } else {
                                 amountToapply = Number(payment.transaction.amount) - appliedamount;
                                 appliedamount += amountToapply;
@@ -101,7 +101,7 @@ export function resolvePayment(payment: DaudiPayment, qbo: QuickBooks, omcId: st
                                     invoiceId: String(invoice.Id),
                                     amountPaid: amountToapply,
                                     invoiceAmount: invoice.Balance
-                                }
+                                };
                             }
                             const line: LineItems = {
                                 Amount: amountToapply,
@@ -117,29 +117,29 @@ export function resolvePayment(payment: DaudiPayment, qbo: QuickBooks, omcId: st
                         TotalAmt: Number(payment.transaction.amount)
                     };
                     return qbo.createPayment(qboPayment).then(res => {
-                        const paymentResult = res.Payment.Line
+                        const paymentResult = res.Payment.Line;
                         if (!paymentResult) {
                             console.error("Payment not sucessful");
-                            payment.daudiFields.status = paymentStatus.error
+                            payment.daudiFields.status = paymentStatus.error;
                             payment.daudiFields.errordetail = {
                                 code: PaymentErrorCodes["Error Consolidating with Quickbooks"],
                                 error: "Unknown error details"
-                            }
-                            return paymentDoc(omcId, payment.Id).update(payment)
+                            };
+                            return paymentDoc(omcId, payment.Id).update(payment);
                         }
-                        const batch = firestore().batch() as any
+                        const batch = firestore().batch() as any;
                         /**
                          * Loop through the payment results and conditionally move the orders to paid in Daudi
                          */
                         const readPromises = invoiceValues.map(val => {
-                            return orderCollection(omcId).where("QbConfig.InvoiceId", '==', val.invoiceId).get()
-                        })
+                            return orderCollection(omcId).where("QbConfig.InvoiceId", '==', val.invoiceId).get();
+                        });
 
                         return Promise.all(readPromises).then(orderDocs => {
-                            const orders = orderDocs.map(d => toObject(emptyorder, d.docs[0]))
-                            console.log(orders)
+                            const orders = orderDocs.map(d => toObject(emptyorder, d.docs[0]));
+                            console.log(orders);
                             orders.forEach(order => {
-                                const matchingInvoice = invoiceValues.find(v => v.invoiceId === order.QbConfig.InvoiceId)
+                                const matchingInvoice = invoiceValues.find(v => v.invoiceId === order.QbConfig.InvoiceId);
                                 const stagedata: GenericStage = {
                                     user: {
                                         name: "QBO",
@@ -148,20 +148,19 @@ export function resolvePayment(payment: DaudiPayment, qbo: QuickBooks, omcId: st
                                     }
                                 };
                                 if (matchingInvoice.amountPaid === matchingInvoice.invoiceAmount) {
-                                    batch.update(orderDoc(order.Id, omcId), {
-                                        stage: 3,
-                                        [`stagedata.${3}`]: stagedata,
-                                        [`paymentDetail.${payment.Id}`]: matchingInvoice.amountPaid
-                                    })
+                                    order.stage = 3;
+                                    order.orderStageData[3] = stagedata;
+                                    order.paymentDetail[payment.Id] = matchingInvoice.amountPaid;
+                                    batch.update(orderDoc(order.Id, omcId), order);
                                 } else {
                                     batch.update(orderDoc(order.Id, omcId), {
                                         [`paymentDetail.${payment.Id}`]: matchingInvoice.amountPaid
-                                    })
+                                    });
                                 }
-                            })
-                            return batch.commit()
-                        })
-                    })
+                            });
+                            return batch.commit();
+                        });
+                    });
                 } else {
                     const unappliedPayment: Payment = {
 
@@ -175,7 +174,7 @@ export function resolvePayment(payment: DaudiPayment, qbo: QuickBooks, omcId: st
                     };
                     return qbo.createPayment(unappliedPayment).then(() => {
                         payment.daudiFields.status = paymentStatus.complete;
-                        return paymentDoc(omcId, payment.Id).update(payment)
+                        return paymentDoc(omcId, payment.Id).update(payment);
                     });
                 }
             });

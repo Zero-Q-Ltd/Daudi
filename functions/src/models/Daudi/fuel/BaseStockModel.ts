@@ -7,8 +7,8 @@ export interface BaseStockModel {
   Amount: number;
   date: Date;
   depot: {
-    name: string
-    Id: string
+    name: string;
+    Id: string;
   };
   qty: StockQty;
   fuelType: FuelType;
