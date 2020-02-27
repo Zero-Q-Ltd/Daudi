@@ -77,7 +77,7 @@ export class EntrySelectorComponent implements OnInit, OnDestroy, OnChanges {
        */
 
       this.entries.data[index].qtyRemaining =
-        this.entries.data[index].qty.total - this.entries.data[index].qty.transferred.total - this.entries.data[index].qty.directLoad.total;
+        this.entries.data[index].qty.total - this.entries.data[index].qty.used;
       /**
        * Reset the status
        */
