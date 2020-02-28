@@ -152,10 +152,11 @@ export class EntrySelectorComponent implements OnInit, OnDestroy, OnChanges {
         /**
          * A change is either added or removed
          */
+        console.log(val);
         if (val.added.length > 0) {
-          this.drwanQtyControls[this.entries.data.findIndex(t => val.added[0])].enable();
+          this.drwanQtyControls[this.entries.data.findIndex(t => t === val.added[0])].enable();
         } else {
-          const index = this.entries.data.findIndex(t => val.removed[0]);
+          const index = this.entries.data.findIndex(t => t === val.removed[0]);
           /**
            * Also zero the value when the form is disabled
            */

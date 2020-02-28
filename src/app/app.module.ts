@@ -12,7 +12,6 @@ import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { BrowserModule } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { TextMaskModule } from "angular2-text-mask";
-// import { SatDatepickerModule, SatNativeDateModule } from "saturn-datepicker";
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
 import { BatchTrucksComponent } from "./components/batch-trucks/batch-trucks.component";
