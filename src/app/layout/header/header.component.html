@@ -150,27 +150,6 @@
                 </button>
               </div>
             </div>
-            <div class="col-md-6">
-              <mat-form-field appearance="outline" class="depot-select">
-                <mat-label>Depot</mat-label>
-                <mat-select (selectionChange)="changeactivedepot()" [(value)]="activedepot.depot">
-                  <mat-optgroup label="Private">
-                    <mat-option *ngFor="let depot of privateDepots; let i = index"
-                      [disabled]='depot.Id === activedepot.depot.Id' [value]="depot">
-                      {{depot.Name}}
-                    </mat-option>
-                  </mat-optgroup>
-                  <mat-optgroup label="KPC">
-                    <mat-option *ngFor="let depot of kpcDepots; let i = index"
-                      [disabled]='depot.Id === activedepot.depot.Id' [value]="depot">
-                      {{depot.Name}}
-                    </mat-option>
-                  </mat-optgroup>
-                </mat-select>
-              </mat-form-field>
-
-              <mat-spinner *ngIf="loadingDepots" [diameter]="19" matSuffix></mat-spinner>
-            </div>
             <mat-menu #mymenu="matMenu">
               <button (click)='changeactivedepot()' *ngFor='let depot of alldepots; let i = index'
                 [disabled]='depot.Id === activedepot.depot.Id' mat-menu-item>
@@ -184,6 +163,26 @@
       <span></span>
     </div>
     <div class="top-nav-right">
+      <mat-form-field appearance="standard" class="depot-select">
+        <mat-label>Depot</mat-label>
+        <mat-select (selectionChange)="changeactivedepot()" [(value)]="activedepot.depot">
+          <mat-optgroup label="Private">
+            <mat-option *ngFor="let depot of privateDepots; let i = index"
+              [disabled]='depot.Id === activedepot.depot.Id' [value]="depot">
+              {{depot.Name}}
+            </mat-option>
+          </mat-optgroup>
+          <mat-optgroup label="KPC">
+            <mat-option *ngFor="let depot of kpcDepots; let i = index"
+              [disabled]='depot.Id === activedepot.depot.Id' [value]="depot">
+              {{depot.Name}}
+            </mat-option>
+          </mat-optgroup>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-spinner *ngIf="loadingDepots" [diameter]="19" matSuffix></mat-spinner>
+
       <!--{{firestore.connectionStatus.value === true ? 'Online ' : 'Offline'}}-->
       <ul class="list-unstyled float-right">
         <li>
