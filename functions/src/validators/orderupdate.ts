@@ -1,5 +1,5 @@
 import { QuickBooks } from "../libs/qbmain";
-import { QboOrder } from "../models/Qbo/QboOrder";
+import { Invoice_Estimate } from "../models/Qbo/QboOrder";
 import { Order } from "../models/Daudi/order/Order";
 import { editStats } from "../tasks/crud/daudi/editStats";
 import { ReadAndInstantiate } from "../tasks/crud/daudi/QboConfig";
@@ -25,7 +25,7 @@ export function validOrderUpdate(order: Order, omcId: string) {
                 console.log("deleting order...");
                 return ReadAndInstantiate(omcId).then(res => {
                     return res.qbo.getInvoice(order.QbConfig.QbId).then(result => {
-                        const resultinvoice = result.Invoice as QboOrder;
+                        const resultinvoice = result.Invoice as Invoice_Estimate;
                         resultinvoice.void = true;
                         /**
                          * @todo Implement deletion reason and User detail
@@ -60,7 +60,7 @@ export function validTruckUpdate(order: Order, omcId: string) {
 
                         order.stage = 5;
                         order.orderStageData[5] = {
-                            user: order.truckStageData[4].user,
+                            user: order.printStatus.gatepass.user,
                         };
                         batch.update(orderCollection(omcId).doc(order.Id), order);
                         return batch.commit() as Promise<any>;
@@ -101,7 +101,7 @@ async function adjustEntries(omcId: string, order: Order, batch: FirebaseFiresto
          * Creae a read promise for each entry in each fuel type
          * Olny the last entry is relevant in assigning the observed quantities
          */
-        if (order.fuel[fueltype].entries.length > 0) {
+        if (order.fuel[fueltype].entries.length === 0) {
             console.log("truck has no", fueltype, "Entry with ", order.fuel[fueltype].qty);
             return;
         }
@@ -121,6 +121,10 @@ async function adjustEntries(omcId: string, order: Order, batch: FirebaseFiresto
          */
         results.forEach((readResult, index) => {
             const entry = toObject(emptyEntry, readResult);
+            /**
+             * re-activate the entry just in case
+             */
+            entry.active = true;
             /**
              * Deduct the difference from the qty used
              */

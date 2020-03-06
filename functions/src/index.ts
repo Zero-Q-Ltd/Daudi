@@ -8,13 +8,13 @@ import { Order } from "./models/Daudi/order/Order";
 import { SMS } from './models/Daudi/sms/sms';
 import { MyTimestamp } from './models/firestore/firestoreTypes';
 import { DaudiPayment, emptyPayment } from "./models/payment/DaudiPayment";
-import { QboOrder } from "./models/Qbo/QboOrder";
+import { Invoice_Estimate } from "./models/Qbo/QboOrder";
 import { toObject } from "./models/utils/SnapshotUtils";
 import { creteOrder, updateOrder } from './tasks/crud/daudi/Order';
 import { paymentDoc } from "./tasks/crud/daudi/Paymnet";
 import { ReadAndInstantiate } from "./tasks/crud/daudi/QboConfig";
 import { updateCustomer } from './tasks/crud/qbo/customer/update';
-import { createQboOrder } from './tasks/crud/qbo/Order/create';
+import { QbOrder } from './tasks/crud/qbo/Order/create';
 import { resolvePayment } from "./tasks/resolvepayment";
 import { sendsms } from './tasks/sms/sms';
 import { ordersms, trucksms } from './tasks/sms/smscompose';
@@ -41,12 +41,12 @@ exports.createEstimate = functions.https.onCall((data: OrderCreate, context) => 
   console.log(data);
   return ReadAndInstantiate(data.omcId).then((result) => {
     // console.log(result.qbo)
-    return result.qbo.createEstimate(new createQboOrder(data.order, result.config).QboOrder).then((createResult) => {
+    return result.qbo.createEstimate(new QboOrder(data.order, result.config).QboOrder).then((createResult) => {
       /**
        * Only send sn SMS when estimate creation is complete
        * Make the two processes run parallel so that none is blocking
        */
-      const EstimateResult = createResult.Estimate as QboOrder;
+      const EstimateResult = createResult.Estimate as Invoice_Estimate;
       data.order.QbConfig.EstimateId = EstimateResult.Id;
       return Promise.all([ordersms(data.order, data.omcId), validOrderUpdate(data.order, data.omcId), creteOrder(data.order, data.omcId)]);
     });
@@ -59,12 +59,12 @@ exports.createInvoice = functions.https.onCall((data: OrderCreate, context) => {
   console.log(data);
   return ReadAndInstantiate(data.omcId).then((result) => {
     // console.log(result.qbo)
-    return result.qbo.createInvoice(new createQboOrder(data.order, result.config).QboOrder).then((createResult) => {
+    return result.qbo.createInvoice(new QboOrder(data.order, result.config).QboOrder).then((createResult) => {
       /**
        * Only send sn SMS when invoice creation is complete
        * Make the two processes run parallel so that none is blocking
        */
-      const InvoiceResult = createResult.Invoice as QboOrder;
+      const InvoiceResult = createResult.Invoice as Invoice_Estimate;
       data.order.QbConfig.InvoiceId = InvoiceResult.Id;
       data.order.stage = 2;
       return Promise.all([ordersms(data.order, data.omcId), validOrderUpdate(data.order, data.omcId), updateOrder(data.order, data.omcId)]);

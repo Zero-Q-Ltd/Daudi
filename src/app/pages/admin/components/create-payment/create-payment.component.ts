@@ -16,6 +16,7 @@ export class CreatePaymentComponent implements OnInit {
   ngOnInit() {
   }
   createPayment() {
+    this.payment.Id = this.payment.bank.reference;
     this.payment.daudiFields.status = paymentStatus.Processing;
     this.payment.depositedBy.name = "Kamana Kisinga";
     this.paymentsService.paymentsDoc(this.core.omcId, this.payment.Id).set(this.payment);

@@ -60,9 +60,18 @@ export class EntrySelectorComponent implements OnInit, OnDestroy, OnChanges {
 
   /** Selects all rows if they are not all selected; otherwise clear selection. */
   masterToggle() {
-    this.isAllSelected() ?
-      this.selection.clear() :
-      this.entries.data.forEach(row => this.selection.select(row));
+    if (this.isAllSelected()) {
+      this.selection.clear();
+      this.entries.data.forEach((row, index) => {
+        this.drwanQtyControls[index].disable();
+      });
+
+    } else {
+      this.entries.data.forEach((row, index) => {
+        this.drwanQtyControls[index].enable();
+        this.selection.select(row);
+      });
+    }
   }
 
   calculateTotals() {
@@ -152,7 +161,7 @@ export class EntrySelectorComponent implements OnInit, OnDestroy, OnChanges {
         /**
          * A change is either added or removed
          */
-        console.log(val);
+        // console.log(val);
         if (val.added.length > 0) {
           this.drwanQtyControls[this.entries.data.findIndex(t => t === val.added[0])].enable();
         } else {

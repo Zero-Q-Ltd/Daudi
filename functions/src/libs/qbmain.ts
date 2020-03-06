@@ -12,7 +12,7 @@ import * as util from "util";
 import * as moment from "moment";
 import * as _ from "underscore";
 import { QbTypes } from "../models/QbTypes";
-import { QboOrder } from "../models/Qbo/QboOrder";
+import { Invoice_Estimate } from "../models/Qbo/QboOrder";
 import { Payment } from "../models/Qbo/Payment";
 import { Item } from "../models/Qbo/Item";
 import { Employee } from "../models/Qbo/Employee";
@@ -47,21 +47,21 @@ export type QbApiConfig = {
   useSandbox: boolean,
   debug: boolean,
   minorversion: number,
-  refreshtoken: string
-}
+  refreshtoken: string;
+};
 
 type Querycriteria = {
   field?: QbTypes | string,
   value?: string | number | Array<string> | boolean,
-  operator?: ">" | "<" | ">=" | "<=" | "=" | "in"
+  operator?: ">" | "<" | ">=" | "<=" | "=" | "in";
   limit?: number,
   offset?: number,
   fetchAll?: Boolean,
   /**
    * This is important when making queries of type in
    */
-  [key: string]: any
-}
+  [key: string]: any;
+};
 
 export class QuickBooks {
   /**
@@ -340,7 +340,7 @@ export class QuickBooks {
    * @param  {object} estimate - The unsaved estimate, to be persisted in QuickBooks
    * persistent Estimate
    */
-  createEstimate(estimate: QboOrder): Promise<any> {
+  createEstimate(estimate: Invoice_Estimate): Promise<any> {
     return create("Estimate", estimate);
   }
 
@@ -350,7 +350,7 @@ export class QuickBooks {
    * @param  {object} invoice - The unsaved invoice, to be persisted in QuickBooks
    * persistent Invoice
    */
-  createInvoice(invoice: QboOrder): Promise<any> {
+  createInvoice(invoice: Invoice_Estimate): Promise<any> {
     return create("Invoice", invoice);
   }
 
@@ -1054,7 +1054,7 @@ export class QuickBooks {
    * @param  {object} invoice - The persistent Invoice, including Id and Synctoken fields
    * persistent Invoice
    */
-  updateInvoice(invoice: QboOrder): Promise<any> {
+  updateInvoice(invoice: Invoice_Estimate): Promise<any> {
     return update("Invoice", invoice);
   }
 

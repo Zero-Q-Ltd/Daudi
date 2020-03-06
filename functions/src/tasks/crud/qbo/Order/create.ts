@@ -8,12 +8,12 @@ import { PrintStatus } from "../../../../models/Qbo/enums/PrintStatus";
 import { TxnStatus } from "../../../../models/Qbo/enums/TxnStatus";
 import { Line } from "../../../../models/Qbo/subTypes/Line";
 import { QboCofig } from "../../../../models/Cloud/QboEnvironment";
-import { QboOrder } from "../../../../models/Qbo/QboOrder";
+import { Invoice_Estimate } from "../../../../models/Qbo/QboOrder";
 import { Payment } from "../../../../models/Qbo/Payment";
 
 
-export class createQboOrder {
-    QboOrder: QboOrder;
+export class QbOrder {
+    QboOrder: Invoice_Estimate;
     constructor(private orderdata: Order, private config: QboCofig, linkPayments?: Payment[]) {
         /**
          * format the timestamp again as it loses it when it doesnt directly go to the database
@@ -85,8 +85,8 @@ export class createQboOrder {
         return values;
     }
 
-    private formulate(order: Order): QboOrder {
-        const newEstimate: QboOrder = {
+    private formulate(order: Order): Invoice_Estimate {
+        const newEstimate: Invoice_Estimate = {
             CustomField: [{
                 DefinitionId: "1",
                 Name: "Customer ID",
@@ -126,7 +126,8 @@ export class createQboOrder {
                 name: order.config.depot.name,
                 value: order.QbConfig.departmentId
             },
-            Line: this.syncfueltypes(order)
+            Line: this.syncfueltypes(order),
+            AutoDocNumber: true,
         };
         console.log("Est", newEstimate);
         return newEstimate;

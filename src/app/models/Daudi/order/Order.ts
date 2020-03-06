@@ -25,23 +25,23 @@ export interface Order {
   origin: string;
   notifications: {
     sms: boolean,
-    email: boolean
+    email: boolean;
   };
   config: {
     depot: {
       name: string,
-      id: string
-    }
+      id: string;
+    };
   };
   error?: {
     status: boolean,
     errorCode: string,
     origin: string,
     timestamp: Date,
-    errorDetail: string
+    errorDetail: string;
   };
   deliveryNote: {
-    value: string
+    value: string;
   };
   truck: Truck;
   frozen: boolean;
@@ -55,7 +55,7 @@ export interface Order {
    * This makes multi-directional query to happen, both by orderId and paymentId
    */
   paymentDetail: {
-    [key: string]: number
+    [key: string]: number;
   };
   orderStageData: {
     [key in OrderStages]: GenericStage;
@@ -150,7 +150,6 @@ export const emptyorder: Order = {
     1: deepCopy(EmptyGenericTruckStage),
     2: deepCopy(EmptyGenericTruckStage),
     3: deepCopy(EmptyGenericTruckStage),
-    4: deepCopy(EmptyGenericTruckStage),
   },
   origin: null,
   stage: null,
