@@ -140,6 +140,7 @@ export function resolvePayment(payment: DaudiPayment, qbo: QuickBooks, omcId: st
                             console.log(orders);
                             orders.forEach(order => {
                                 if (!order) {
+                                    console.log("Ignoring order created outside DAUDI");
                                     return;
                                 }
                                 const matchingInvoice = invoiceValues.find(v => v.invoiceId === order.QbConfig.InvoiceId);
@@ -166,7 +167,6 @@ export function resolvePayment(payment: DaudiPayment, qbo: QuickBooks, omcId: st
                     });
                 } else {
                     const unappliedPayment: Payment = {
-
                         PaymentRefNum: payment.transaction.reference,
                         CustomerRef: {
                             value: customerId,

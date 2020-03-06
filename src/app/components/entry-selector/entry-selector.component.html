@@ -86,7 +86,12 @@
     </ng-container>
     <!-- Disclaimer column -->
     <ng-container matColumnDef="TotalValue">
-        <td mat-footer-cell *matFooterCellDef colspan="2"> {{totalEntryDraw}} </td>
+        <td mat-footer-cell *matFooterCellDef> {{totalEntryDraw}}
+            <span *ngIf="qtyToDraw - totalEntryDraw > 0">
+                <p style="color:red;">
+                    Deficit: {{qtyToDraw - totalEntryDraw }}</p>
+            </span>
+        </td>
     </ng-container>
     <!-- Disclaimer column -->
     <ng-container matColumnDef="Okay">
