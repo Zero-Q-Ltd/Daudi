@@ -68,7 +68,7 @@ export class OrdersTableComponent implements OnInit, OnDestroy {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
-  typedValue: string
+  typedValue: string;
 
   constructor(
     private route: ActivatedRoute,
@@ -87,10 +87,11 @@ export class OrdersTableComponent implements OnInit, OnDestroy {
     });
 
     this.route.params.pipe(takeUntil(this.comopnentDestroyed))
-      .pipe(switchMap((paramdata: { stage: number }) => {
+      .pipe(switchMap((paramdata: { stage: number; }) => {
         if (paramdata.stage === 4) {
           this.ordercolumns.splice(4, 0, "Time Approved");
         }
+        this.stage = paramdata.stage;
         return core.orders[paramdata.stage].pipe(takeUntil(this.comopnentDestroyed));
       }))
       .subscribe((stageorders: Order[]) => {
@@ -278,7 +279,7 @@ export class OrdersTableComponent implements OnInit, OnDestroy {
       disableClose: true
 
     });
-    trucksdialog.afterClosed().subscribe((result: { order: Order, truck: Truck }) => {
+    trucksdialog.afterClosed().subscribe((result: { order: Order, truck: Truck; }) => {
       if (!result) {
         return;
       }

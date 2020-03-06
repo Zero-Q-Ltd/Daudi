@@ -1,6 +1,5 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { Subject } from 'rxjs';
-// import {DateAdapter, SatCalendar, SatCalendarFooter, SatDatepicker} from 'saturn-datepicker';
 
 @Component({
   selector: 'app-calendar-ranges',

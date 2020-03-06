@@ -16,8 +16,18 @@
 
             <!-- ID Column -->
             <ng-container matColumnDef="Id">
-              <th *matHeaderCellDef mat-header-cell mat-sort-header>ID</th>
-              <td *matCellDef="let order" mat-cell> {{order.QbConfig.InvoiceId}}</td>
+              <th *matHeaderCellDef mat-header-cell mat-sort-header>
+                <div [ngSwitch]="stage">
+                  <div *ngSwitchCase="1">Estimate ID</div>
+                  <div *ngSwitchDefault>Invoice ID</div>
+                </div>
+              </th>
+              <td *matCellDef="let order" mat-cell>
+                <div [ngSwitch]="stage">
+                  <div *ngSwitchCase="1">{{order.QbConfig.EstimateNumber}}</div>
+                  <div *ngSwitchDefault>{{order.QbConfig.InvoiceNumber}}</div>
+                </div>
+              </td>
             </ng-container>
             <!-- Company Column -->
             <ng-container matColumnDef="Company">

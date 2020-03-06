@@ -1,7 +1,7 @@
 import { firestore } from "firebase-admin";
 import * as moment from "moment";
 import { LineItems, Payment } from "../models/Qbo/Payment";
-import { QboOrder } from "../models/Qbo/QboOrder";
+import { Invoice_Estimate } from "../models/Qbo/QboOrder";
 import { createQbo } from "./sharedqb";
 import { DaudiPayment, paymentStatus, PaymentErrorCodes } from "../models/payment/DaudiPayment";
 import { QuickBooks } from "../libs/qbmain";
@@ -31,14 +31,14 @@ export function resolvePayment(payment: DaudiPayment, qbo: QuickBooks, omcId: st
                 /**
                  * initialize the array in case empty
                  */
-                const allpendinginvoices: Array<QboOrder> = invoicesresult.QueryResponse.Invoice || [];
+                const allpendinginvoices: Array<Invoice_Estimate> = invoicesresult.QueryResponse.Invoice || [];
                 console.log(`Customer has ${allpendinginvoices.length} pending invoices`);
                 /**
                  * Make sure that we dont link more invoices to the amount than applicable
                  */
                 let applicableInvoicesTotal = 0;
 
-                const applicableInvoices: Array<QboOrder> = allpendinginvoices.filter((invoice, index) => {
+                const applicableInvoices: Array<Invoice_Estimate> = allpendinginvoices.filter((invoice, index) => {
                     if (applicableInvoicesTotal <= Number(payment.transaction.amount)) {
                         applicableInvoicesTotal += invoice.Balance;
                         return true;
@@ -139,6 +139,9 @@ export function resolvePayment(payment: DaudiPayment, qbo: QuickBooks, omcId: st
                             const orders = orderDocs.map(d => toObject(emptyorder, d.docs[0]));
                             console.log(orders);
                             orders.forEach(order => {
+                                if (!order) {
+                                    return;
+                                }
                                 const matchingInvoice = invoiceValues.find(v => v.invoiceId === order.QbConfig.InvoiceId);
                                 const stagedata: GenericStage = {
                                     user: {

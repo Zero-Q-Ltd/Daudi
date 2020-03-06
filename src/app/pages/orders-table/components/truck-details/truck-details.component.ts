@@ -161,22 +161,22 @@ export class TruckDetailsComponent implements OnInit, OnDestroy {
   }
 
   calculateaccuracy(timearray, start, stop, stage) {
-    const totalestime = this.calculatetotaltime(timearray);
-    const totaltimespent = this.timespent(start, stop);
-    const diff = moment.duration(totalestime).subtract(totaltimespent).asMilliseconds();
-    // console.log(diff, moment.duration(totaltimespent).asMilliseconds(), moment.duration(totalestime).asMilliseconds());
-    // console.log(diff / moment.duration(totaltimespent).asMilliseconds() * 100);
+    // const totalestime = this.calculatetotaltime(timearray);
+    // const totaltimespent = this.timespent(start, stop);
+    // const diff = moment.duration(totalestime).subtract(totaltimespent).asMilliseconds();
+    // // console.log(diff, moment.duration(totaltimespent).asMilliseconds(), moment.duration(totalestime).asMilliseconds());
+    // // console.log(diff / moment.duration(totaltimespent).asMilliseconds() * 100);
 
-    const percentage = diff / moment.duration(totalestime).asMilliseconds();
-    // console.log(this.accuracycolors[stage]);
-    if (this.accuracycolors[stage].percentage !== percentage) {
-      this.accuracycolors[stage].percentage = percentage;
-      setTimeout(() => {
-        // console.log('Emmiting change');
-        this.manualRefresh.emit();
-        return;
-      }, 100);
-    }
+    // const percentage = diff / moment.duration(totalestime).asMilliseconds();
+    // // console.log(this.accuracycolors[stage]);
+    // if (this.accuracycolors[stage].percentage !== percentage) {
+    //   this.accuracycolors[stage].percentage = percentage;
+    //   setTimeout(() => {
+    //     // console.log('Emmiting change');
+    //     this.manualRefresh.emit();
+    //     return;
+    //   }, 100);
+    // }
 
     return true;
   }

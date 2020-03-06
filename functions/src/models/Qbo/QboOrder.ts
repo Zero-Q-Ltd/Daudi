@@ -11,7 +11,10 @@ import { QboMetaData } from "./subTypes/QboMetaData";
 import { ShipAddr } from "./subTypes/ShipAddr";
 import { TxnTaxDetail } from "./subTypes/TxnTaxDetail";
 
-export interface QboOrder {
+/**
+ * Shared model for both Invoice and Estimaet, as both are more or less identical
+ */
+export interface Invoice_Estimate {
 
   /**
    *  filterable , sortable
@@ -60,11 +63,11 @@ export interface QboOrder {
    * This field maps to the Memo field on the Invoice form
    */
   void?: boolean;
-  PrivateNote?: string
+  PrivateNote?: string;
   DepartmentRef?: ReferenceType,
   ClassRef: ReferenceType,
   Balance?: number;
-
+  AutoDocNumber?: boolean;
 }
 
 

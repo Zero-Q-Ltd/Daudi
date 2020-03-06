@@ -120,7 +120,10 @@ export class EntryAssignComponent implements OnInit {
 
     const tempStock = this.stock;
     FuelNamesArray.forEach(fuel => {
-      if (this.selectedEntries[fuel].length > 1) {
+      /**
+       * Only allow a max of 2 entries per truck
+       */
+      if (this.selectedEntries[fuel].length > 2) {
         batchesNumberError = true;
       }
       /**
@@ -168,7 +171,7 @@ export class EntryAssignComponent implements OnInit {
       this.notification.notify({
         alert_type: "error",
         title: "Max Reached",
-        body: `A maximum of 2 entries per truck per fuel`
+        body: `A maximum of 2 entries per per fuel truck`
       });
       return;
     } else {
