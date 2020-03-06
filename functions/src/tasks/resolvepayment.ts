@@ -139,6 +139,9 @@ export function resolvePayment(payment: DaudiPayment, qbo: QuickBooks, omcId: st
                             const orders = orderDocs.map(d => toObject(emptyorder, d.docs[0]));
                             console.log(orders);
                             orders.forEach(order => {
+                                if (!order) {
+                                    return;
+                                }
                                 const matchingInvoice = invoiceValues.find(v => v.invoiceId === order.QbConfig.InvoiceId);
                                 const stagedata: GenericStage = {
                                     user: {
