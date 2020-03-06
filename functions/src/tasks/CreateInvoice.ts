@@ -29,11 +29,16 @@ export function CreateInvoice(qbo: QuickBooks, config: QboCofig, omcId: string, 
             queriedpayments.forEach(payment => {
                 totalunapplied += payment.UnappliedAmt;
                 if (totalunapplied < InvoiceResult.TotalAmt) {
-                    totalunapplied += payment.UnappliedAmt;
-                    validpayments.push({
-                        payment,
-                        amount: payment.UnappliedAmt
-                    });
+                    if (payment.UnappliedAmt > 0) {
+                        totalunapplied += payment.UnappliedAmt;
+                        validpayments.push({
+                            payment,
+                            amount: payment.UnappliedAmt
+                        });
+                    } else {
+                        console.log("Payment fully used up");
+                        return;
+                    }
                 } else {
                     console.log("Unused payments enough to pay for invoice");
                     if (!invoicefullypaid) {
