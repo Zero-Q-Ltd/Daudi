@@ -20,6 +20,7 @@ import { sendsms } from './tasks/sms/sms';
 import { ordersms, trucksms } from './tasks/sms/smscompose';
 import { processSync } from './tasks/syncdb/processSync';
 import { validOrderUpdate, validTruckUpdate } from './validators/orderupdate';
+import { CreateInvoice } from "./tasks/CreateInvoice";
 
 admin.initializeApp(functions.config().firebase);
 admin.firestore().settings({ timestampsInSnapshots: true });
@@ -60,17 +61,7 @@ exports.createInvoice = functions.https.onCall((data: OrderCreate, context) => {
   console.log(data);
   return ReadAndInstantiate(data.omcId).then((result) => {
     // console.log(result.qbo)
-    return result.qbo.createInvoice(new QboOrder(data.order, result.config).QboOrder).then((createResult) => {
-      /**
-       * Only send sn SMS when invoice creation is complete
-       * Make the two processes run parallel so that none is blocking
-       */
-      const InvoiceResult = createResult.Invoice as Invoice_Estimate;
-      data.order.QbConfig.InvoiceId = InvoiceResult.Id;
-      data.order.QbConfig.InvoiceNumber = InvoiceResult.DocNumber || null;
-      data.order.stage = 2;
-      return Promise.all([ordersms(data.order, data.omcId), validOrderUpdate(data.order, data.omcId), updateOrder(data.order, data.omcId)]);
-    });
+    return CreateInvoice(result.qbo, result.config, data.omcId, data.order);
   });
 });
 

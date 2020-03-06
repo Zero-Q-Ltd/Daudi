@@ -21,10 +21,10 @@ export function validOrderUpdate(order: Order, omcId: string) {
             /**
              * Delete orders deleted on Daudi, which havae already been created on QB
              */
-            if (order.QbConfig.QbId) {
+            if (order.QbConfig.InvoiceId) {
                 console.log("deleting order...");
                 return ReadAndInstantiate(omcId).then(res => {
-                    return res.qbo.getInvoice(order.QbConfig.QbId).then(result => {
+                    return res.qbo.getInvoice(order.QbConfig.InvoiceId).then(result => {
                         const resultinvoice = result.Invoice as Invoice_Estimate;
                         resultinvoice.void = true;
                         /**
