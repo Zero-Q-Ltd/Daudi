@@ -16,7 +16,6 @@ export interface Order {
     InvoiceNumber: string,
     EstimateId: string,
     EstimateNumber: string,
-    QbId: string,
     /**
      * depots are created in qbo as departments
      * The departments Id's must be referenced
@@ -120,7 +119,6 @@ export const emptyorder: Order = {
     EstimateNumber: null,
     InvoiceNumber: null,
     InvoiceId: null,
-    QbId: null,
     departmentId: null
   },
   truck: deepCopy(emptytruck),
