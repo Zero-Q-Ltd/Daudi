@@ -141,7 +141,13 @@ export class EntrySelectorComponent implements OnInit, OnDestroy, OnChanges {
           disabled: true
         },
           [Validators.required, Validators.min(0),
-          Validators.max(entry.qty.total - entry.qty.transferred.total - entry.qty.directLoad.total),
+          /**
+           * Allow the value to exactly equal to the required amount
+           */
+          Validators.max(entry.qty.total - entry.qty.used),
+          /**
+           * Allow only numbers to be entered
+           */
           Validators.pattern('^[1-9]\\d*$')]);
 
         this.drwanQtyControls[index].valueChanges.subscribe(() => {
