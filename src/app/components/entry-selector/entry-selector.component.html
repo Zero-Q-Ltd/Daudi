@@ -45,8 +45,8 @@
     <ng-container matColumnDef="transferqty">
         <th *matHeaderCellDef mat-header-cell>Qty</th>
         <td *matCellDef="let entry; let i = index" mat-cell>
-            <mat-form-field appearance="outline">
-                <input [formControl]="drwanQtyControls[i]" matInput placeholder="Qty" type="number" value="0">
+            <mat-form-field appearance="legacy">
+                <input [formControl]="drwanQtyControls[i]" matInput type="number" value="0">
                 <mat-error>Enter a value </mat-error>
             </mat-form-field>
         </td>

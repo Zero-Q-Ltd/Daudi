@@ -29,7 +29,7 @@ export class AseComponent implements OnInit {
     @ViewChild(MatPaginator, { static: true }) pmspaginator: MatPaginator;
     @ViewChild(MatPaginator, { static: true }) agopaginator: MatPaginator;
     @ViewChild(MatPaginator, { static: true }) ikpaginator: MatPaginator;
-    displayedColumns: string[] = ["daudiId", "date", "id", "totalqty"];
+    displayedColumns: string[] = ["date", "id", "totalqty"];
     loading: {
         pms: boolean,
         ago: boolean,
@@ -117,7 +117,7 @@ export class AseComponent implements OnInit {
             role: "dialog",
             data: fuelType,
             height: "auto",
-            width: "75%%",
+            width: "75%",
         });
 
     }
