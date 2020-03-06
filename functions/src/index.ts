@@ -14,7 +14,7 @@ import { creteOrder, updateOrder } from './tasks/crud/daudi/Order';
 import { paymentDoc } from "./tasks/crud/daudi/Paymnet";
 import { ReadAndInstantiate } from "./tasks/crud/daudi/QboConfig";
 import { updateCustomer } from './tasks/crud/qbo/customer/update';
-import { QbOrder } from './tasks/crud/qbo/Order/create';
+import { QboOrder } from './tasks/crud/qbo/Order/create';
 import { resolvePayment } from "./tasks/resolvepayment";
 import { sendsms } from './tasks/sms/sms';
 import { ordersms, trucksms } from './tasks/sms/smscompose';
@@ -48,6 +48,7 @@ exports.createEstimate = functions.https.onCall((data: OrderCreate, context) => 
        */
       const EstimateResult = createResult.Estimate as Invoice_Estimate;
       data.order.QbConfig.EstimateId = EstimateResult.Id;
+      data.order.QbConfig.EstimateNumber = EstimateResult.DocNumber || null;
       return Promise.all([ordersms(data.order, data.omcId), validOrderUpdate(data.order, data.omcId), creteOrder(data.order, data.omcId)]);
     });
   });
@@ -66,6 +67,7 @@ exports.createInvoice = functions.https.onCall((data: OrderCreate, context) => {
        */
       const InvoiceResult = createResult.Invoice as Invoice_Estimate;
       data.order.QbConfig.InvoiceId = InvoiceResult.Id;
+      data.order.QbConfig.InvoiceNumber = InvoiceResult.DocNumber || null;
       data.order.stage = 2;
       return Promise.all([ordersms(data.order, data.omcId), validOrderUpdate(data.order, data.omcId), updateOrder(data.order, data.omcId)]);
     });

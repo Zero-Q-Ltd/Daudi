@@ -24,8 +24,8 @@
               </th>
               <td *matCellDef="let order" mat-cell>
                 <div [ngSwitch]="stage">
-                  <div *ngSwitchCase="1">{{order.QbConfig.EstimateId}}</div>
-                  <div *ngSwitchDefault>{{order.QbConfig.InvoiceId}}</div>
+                  <div *ngSwitchCase="1">{{order.QbConfig.EstimateNumber}}</div>
+                  <div *ngSwitchDefault>{{order.QbConfig.InvoiceNumber}}</div>
                 </div>
               </td>
             </ng-container>

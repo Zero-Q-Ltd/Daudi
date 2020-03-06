@@ -13,7 +13,9 @@ export interface Order {
   customer: CustomerDetail;
   QbConfig: {
     InvoiceId: string,
+    InvoiceNumber: string,
     EstimateId: string,
+    EstimateNumber: string,
     QbId: string,
     /**
      * depots are created in qbo as departments
@@ -115,6 +117,8 @@ export const emptyorder: Order = {
   paymentDetail: {},
   QbConfig: {
     EstimateId: null,
+    EstimateNumber: null,
+    InvoiceNumber: null,
     InvoiceId: null,
     QbId: null,
     departmentId: null

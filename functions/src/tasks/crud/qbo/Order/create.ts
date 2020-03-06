@@ -12,7 +12,7 @@ import { Invoice_Estimate } from "../../../../models/Qbo/QboOrder";
 import { Payment } from "../../../../models/Qbo/Payment";
 
 
-export class QbOrder {
+export class QboOrder {
     QboOrder: Invoice_Estimate;
     constructor(private orderdata: Order, private config: QboCofig, linkPayments?: Payment[]) {
         /**
