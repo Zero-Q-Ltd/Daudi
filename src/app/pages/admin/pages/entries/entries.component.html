@@ -1,3 +1,4 @@
+<div class="container-fluid">
 <mat-tab-group>
   <mat-tab *ngFor='let fueltype of fueltypesArray'>
     <ng-template mat-tab-label>
@@ -24,7 +25,7 @@
           <table *ngIf="!loading[fueltype]" [dataSource]="datasource[fueltype]" mat-table style="width: 100%">
 
             <ng-container matColumnDef="id">
-              <th *matHeaderCellDef mat-header-cell> Entry ID</th>
+              <th *matHeaderCellDef mat-header-cell> Entry #</th>
               <td *matCellDef="let entry" mat-cell> {{entry.entry.name}}</td>
 
             </ng-container>
@@ -37,10 +38,10 @@
 
             <!-- Item Column -->
 
-            <ng-container matColumnDef="entry">
+            <!-- <ng-container matColumnDef="entry">
               <th *matHeaderCellDef mat-header-cell> Entry #</th>
               <td *matCellDef="let entry" mat-cell> {{entry.entry.id}}</td>
-            </ng-container>
+            </ng-container> -->
 
             <!-- Cost Column -->
             <ng-container matColumnDef="totalqty">
@@ -87,3 +88,4 @@
     </mat-card>
   </mat-tab>
 </mat-tab-group>
+</div>

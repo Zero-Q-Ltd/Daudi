@@ -1,20 +1,20 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { AngularFireFunctions } from '@angular/fire/functions';
-import { CoreService } from 'app/services/core/core.service';
-import { EntriesService } from 'app/services/entries.service';
-import { ReplaySubject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
-import { emptyEntry, Entry } from '../../../../models/Daudi/fuel/Entry';
-import { FuelNamesArray, FuelType } from '../../../../models/Daudi/fuel/FuelType';
-import { NotificationService } from '../../../../shared/services/notification.service';
-import { CoreAdminService } from '../../services/core.service';
-import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';
+import { Component, OnInit, ViewChild } from "@angular/core";
+import { AngularFireFunctions } from "@angular/fire/functions";
+import { MatPaginator } from "@angular/material/paginator";
+import { MatTableDataSource } from "@angular/material/table";
+import { CoreService } from "app/services/core/core.service";
+import { EntriesService } from "app/services/entries.service";
+import { ReplaySubject } from "rxjs";
+import { takeUntil } from "rxjs/operators";
+import { emptyEntry, Entry } from "../../../../models/Daudi/fuel/Entry";
+import { FuelNamesArray, FuelType } from "../../../../models/Daudi/fuel/FuelType";
+import { NotificationService } from "../../../../shared/services/notification.service";
+import { CoreAdminService } from "../../services/core.service";
 
 @Component({
-  selector: 'app-entries',
-  templateUrl: './entries.component.html',
-  styleUrls: ['./entries.component.scss']
+  selector: "app-entries",
+  templateUrl: "./entries.component.html",
+  styleUrls: ["./entries.component.scss"]
 })
 export class EntriesComponent implements OnInit {
   fueltypesArray = FuelNamesArray;
@@ -27,7 +27,7 @@ export class EntriesComponent implements OnInit {
   @ViewChild(MatPaginator, { static: true }) pmspaginator: MatPaginator;
   @ViewChild(MatPaginator, { static: true }) agopaginator: MatPaginator;
   @ViewChild(MatPaginator, { static: true }) ikpaginator: MatPaginator;
-  displayedColumns: string[] = ['id', 'date', 'entry', 'totalqty', 'transferred', 'loadedqty', 'availableqty', 'status'];
+  displayedColumns: string[] = ["id", "date", "totalqty", "transferred", "loadedqty", "availableqty", "status"];
   loading: {
     pms: boolean,
     ago: boolean,
@@ -74,7 +74,7 @@ export class EntriesComponent implements OnInit {
 
           let queryvalue = this.entriesService.entryCollection(this.core.omcId)
             .where("active", "==", true)
-            .where('fuelType', '==', fueltype);
+            .where("fuelType", "==", fueltype);
           /**
            * Filter by depot if its a privtae depot
            */
@@ -127,22 +127,22 @@ export class EntriesComponent implements OnInit {
 
   syncdb() {
     this.creatingsync = true;
-    this.coreAdmin.syncdb(['BillPayment'])
+    this.coreAdmin.syncdb(["BillPayment"])
       .then(res => {
         this.creatingsync = false;
         this.notification.notify({
-          alert_type: 'success',
-          body: 'Entries updated',
-          title: 'Success'
+          alert_type: "success",
+          body: "Entries updated",
+          title: "Success"
         });
       },
         err => {
           console.error(err);
           this.creatingsync = false;
           this.notification.notify({
-            alert_type: 'error',
-            body: 'Error Syncronising',
-            title: 'Error'
+            alert_type: "error",
+            body: "Error Syncronising",
+            title: "Error"
           });
         });
   }

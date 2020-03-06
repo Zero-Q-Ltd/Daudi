@@ -1,4 +1,15 @@
-<h1 mat-dialog-title>Fuel Transfer</h1>
+<div fxLayout="row" fxLayoutGap="10">
+    <div fxFlex="45%">
+        <h1 mat-dialog-title>Fuel Transfer</h1>
+    </div>
+    <div fxFlex="5%">
+        <mat-spinner *ngIf="loadingDepotConfig" diameter="20"></mat-spinner>
+    </div>
+    <div fxFlex="50%">
+        <span>New {{fuelType}} Qty at {{selectedDepot?.depot.Name}} Depot: 
+            {{selectedDepot?.stock.qty[fuelType].ase + (+qtyToDrawControl.value)}} </span>
+    </div>
+  </div>
 
 <div mat-dialog-content class="parent-div">
     <mat-form-field>
@@ -13,8 +24,6 @@
         <input [formControl]="qtyToDrawControl" matInput placeholder="Enter ASE amount to transfer">
     </mat-form-field>
 
-    <mat-spinner *ngIf="loadingDepotConfig"></mat-spinner>
-
     <div *ngIf="qtyToDrawControl.valid && selectedDepot && !loadingDepotConfig">
         <app-entry-selector [fuelType]='fuelType' [qtyToDraw]="+qtyToDrawControl.value"
             (selectedEntries)="selectedEntries = $event" (validTotals)="validTotals = $event"
@@ -24,13 +33,11 @@
 
 </div>
 <mat-dialog-actions align="end">
-    <span>{{selectedDepot?.depot.Name}} New {{fuelType}} Quantity
-        {{selectedDepot?.stock.qty[fuelType].ase + (+qtyToDrawControl.value)}} </span>
-    <button mat-raised-button mat-dialog-close>Cancel</button>
+    <button mat-raised-button mat-dialog-close color="warn">Cancel</button>
     <button mat-raised-button color="primary" [disabled]="!validEntryForms || !qtyToDrawControl.valid || !validTotals"
         (click)="saveEntryChanges()" cdkFocusInitial>
         Transfer
     </button>
-    <mat-progress-spinner *ngIf="saving">
+    <mat-progress-spinner *ngIf="saving" diameter="20">
     </mat-progress-spinner>
 </mat-dialog-actions>

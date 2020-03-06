@@ -1,3 +1,4 @@
+<div class="container-fluid">
 <mat-tab-group>
   <mat-tab *ngFor='let fueltype of fueltypesArray'>
     <ng-template mat-tab-label>
@@ -13,27 +14,32 @@
             <mat-spinner></mat-spinner>
           </div>
           <div class="ot-header">
-            <mat-form-field appearance="legacy">
-              <input (keyup)="filterbatches(fueltype, typedValue)" [(ngModel)]="typedValue" matInput
-                placeholder="Filter">
-              <button (click)='syncdb()' *ngIf='!creatingsync' mat-icon-button matSuffix type="button">
-                <span class="nav-icon nav-dot material-icons kra-save" matTooltip="Update">
-                  autorenew
-                </span>
-              </button>
-              <mat-spinner *ngIf='creatingsync' [diameter]="19" matSuffix></mat-spinner>
-            </mat-form-field>
+            <div fxLayout="row" fxLayoutGap="10">
+              <div fxFlex="90%">
+                <mat-form-field appearance="legacy">
+                  <input (keyup)="filterbatches(fueltype, typedValue)" [(ngModel)]="typedValue" matInput
+                    placeholder="Filter">
+                  <button (click)='syncdb()' *ngIf='!creatingsync' mat-icon-button matSuffix type="button">
+                    <span class="nav-icon nav-dot material-icons kra-save" matTooltip="Update">
+                      autorenew
+                    </span>
+                  </button>
+                  <mat-spinner *ngIf='creatingsync' [diameter]="19" matSuffix></mat-spinner>
+                </mat-form-field>
+              </div>
+              <div fxFlex="10%">
+                <button class="transfer-btn" (click)="trasfer(fueltype)" [disabled]="private" color="primary" mat-raised-button>Transfer</button>
+              </div>
+            </div>
           </div>
-          <button (click)="trasfer(fueltype)" [disabled]="private" color="primary" mat-raised-button>Transfer
-          </button>
 
           <table *ngIf="!loading[fueltype]" [dataSource]="datasource[fueltype]" mat-table style="width: 100%">
 
-            <ng-container matColumnDef="daudiId">
+            <!-- <ng-container matColumnDef="daudiId">
               <th *matHeaderCellDef mat-header-cell> Daudi ID</th>
               <td *matCellDef="let ase" mat-cell> {{ase.Id}}</td>
 
-            </ng-container>
+            </ng-container> -->
 
             <ng-container matColumnDef="date">
               <th *matHeaderCellDef mat-header-cell> Date</th>
@@ -63,3 +69,4 @@
     </mat-card>
   </mat-tab>
 </mat-tab-group>
+</div>
