@@ -146,6 +146,9 @@ export class ContactFormComponent implements OnInit, OnChanges {
     this.contactForm.controls.kraPin.setValue(selectedcompany.krapin, {
       emitEvent: false
     });
+    this.contactForm.controls.companyName.setValue(selectedcompany.name, {
+      emitEvent: false
+    });
     this.contactForm.controls.name.setValue(selectedcompany.contact[0].name, {
       emitEvent: false
     });
