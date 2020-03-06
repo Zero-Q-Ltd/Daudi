@@ -22,31 +22,31 @@ import { PaymentsComponent } from "./pages/payments/payments.component";
  */
 export const NavLinks: Routes = [
     {
-        path: "entries|Entries|stars",
+        path: "entries|Entries|list",
         component: EntriesComponent,
     },
     {
-        path: "stock|Stock|stars",
+        path: "stock|Stock|shopping_basket",
         component: AseComponent
     },
     {
-        path: "depot-management|Depot Management|stars",
+        path: "depot-management|Depot Management|local_gas_station",
         component: DepotManagementComponent
     },
     {
-        path: "company-management|Company Management|stars",
+        path: "company-management|Company Management|account_balance",
         component: CompanyManagementComponent
     },
     {
-        path: "customer-management|Customer Management|stars",
+        path: "customer-management|Customer Management|supervisor_account",
         component: CustomerManagementComponent
     },
     {
-        path: "sms-logs|SMS Logs|stars",
+        path: "sms-logs|SMS Logs|textsms",
         component: SmsLogsComponent
     },
     {
-        path: "payments|Payments|stars",
+        path: "payments|Payments|attach_money",
         component: PaymentsComponent
     },
 

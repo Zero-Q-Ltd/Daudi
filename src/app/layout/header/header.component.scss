@@ -22,10 +22,10 @@
   background-color: $mk-grey;
 }
 
-.depot-select.mat-select-panel {
-  background: rgba(0, 0, 255, 0.5);
-  height: 100px;
-}
+// .depot-select.mat-select-panel {
+//   // background: rgba(0, 0, 255, 0.5);
+//   // height: 100px;
+// }
 
 /* .app-sidebar .sidebar-header {
     line-height: 100px;
@@ -188,7 +188,7 @@ row {
 
 .btn-primary:focus,
 .btn-primary.focus {
-  box-shadow: 0 0 0 2px rgba($mk-grey, 0.5);
+  box-shadow: 0 0 0 2px rgba($mk-secondary, 0.9);
 }
 
 .color-light-grey {
@@ -197,4 +197,41 @@ row {
 
 .color-dark-grey {
   color: darkgrey;
+}
+
+
+.mat-form-field{
+  margin: 20px 20px 0 0;
+}
+
+/deep/.mat-select-value-text {
+  color: $mk-white;
+}
+
+/deep/.mat-form-field-label{
+  color: $mk-secondary;
+}
+
+/deep/ .mat-select-arrow {
+  color: $mk-secondary;
+}
+
+/deep/.mat-form-field-appearance-outline .mat-form-field-outline {
+  color: $mk-secondary;
+}
+
+/deep/.mat-form-field-appearance-outline .mat-form-field-outline-thick {
+  color: $mk-secondary;
+}
+
+/deep/.mat-form-field-appearance-outline .mat-form-field-outline-thick:active {
+  color: $mk-secondary;
+}
+
+/deep/ .mat-form-field-appearance-standard .mat-form-field-underline {
+  background-color: $mk-secondary;
+}
+
+/deep/ .mat-form-field-ripple {
+  background-color: $mk-secondary;
 }
