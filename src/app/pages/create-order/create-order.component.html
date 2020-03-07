@@ -1,12 +1,9 @@
-<section class="container-fluid sixty-top">
+<section class="container-fluid">
+  <div class="p-comp" fxFlex="row">
+    <app-price-comparison></app-price-comparison>
+  </div>
   <mat-card>
     <mat-card-content>
-      <div class="container-fluid" fxFlex="row">
-        <app-price-comparison>
-
-        </app-price-comparison>
-
-      </div>
       <div fxFlex="row">
         <app-contact-form (formValid)="validContactForm = $any($event)" [(initData)]="temporder" [newOrder]="newOrder">
         </app-contact-form>
@@ -16,7 +13,7 @@
         <div>
           <div class="" fxLayout fxLayout.xs="column" fxLayoutAlign="center" fxLayoutGap="10px" fxLayoutGap.xs="0">
             <button class="btn-default1" mat-raised-button matTooltip="Orders processsing in the background">
-              << {{queuedorders.length}} </button>
+              {{queuedorders.length}} </button>
                 <div fxFlex>&nbsp;</div>
                 <div fxFlex>&nbsp;</div>
                 <div *ngIf="newOrder" class="btn-group" role="group" style="width: 100%;">
