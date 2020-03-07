@@ -15,7 +15,7 @@
 
 .vat-title1 {
   color: $mk-primary;
-  font-weight: bold;
+  font-weight: bold;;
 }
 
 .vat-title {
@@ -194,16 +194,16 @@
   font-size: 25px;
 }
 
-.container {
-  // padding-top: 60px;
+.p-comp {
+  padding-right: 15px;
 }
 
 .zero-top {
   padding-top: 0px;
 }
 
-.sixty-top {
-  // padding-top: 60px;
+.container-fluid {
+  padding: 20px;
 }
 
 .mat-form-field {
@@ -234,4 +234,17 @@ mat-panel-title {
 
 th {
   color: $mk-default;
+}
+
+
+/deep/ .mat-form-field-appearance-legacy .mat-form-field-infix {
+  text-align: center;
+}
+
+/deep/ .table thead th{
+  text-align: center;
+}
+
+/deep/ .table td{
+  text-align: center;
 }
