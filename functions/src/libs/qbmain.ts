@@ -129,7 +129,7 @@ export class QuickBooks {
    * Use the refresh token to obtain a new access token.
    */
   refreshAccesstoken(): Promise<any> {
-    // const auth = Buffer.from(clientID + ":" + clientSecret, "base64");
+    // const auth = Buffer.from(clientID + ":" + clientSecret).toString("base64");
     const auth = (new Buffer(clientID + ":" + clientSecret).toString("base64"));
     const postBody = {
       url: authConfig.token_endpoint,
