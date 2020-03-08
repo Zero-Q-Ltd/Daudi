@@ -7,6 +7,7 @@ import { validOrderUpdate } from "../validators/orderupdate";
 import { updateOrder } from "./crud/daudi/Order";
 import { QboOrder } from "./crud/qbo/Order/create";
 import { ordersms } from "./sms/smscompose";
+import { AssociatedUser } from "../models/Daudi/admin/AssociatedUser";
 
 export function CreateInvoice(qbo: QuickBooks, config: QboCofig, omcId: string, order: Order) {
     return qbo.createInvoice(new QboOrder(order, config).QboOrder).then((createResult) => {
@@ -16,18 +17,21 @@ export function CreateInvoice(qbo: QuickBooks, config: QboCofig, omcId: string, 
         const InvoiceResult = createResult.Invoice as Invoice_Estimate;
         order.QbConfig.InvoiceId = InvoiceResult.Id;
         order.QbConfig.InvoiceNumber = InvoiceResult.DocNumber || null;
+
+        console.log("result:", InvoiceResult);
         // order.stage = 2;
         return qbo.findPayments([
             { field: "CustomerRef", value: order.customer.QbId, operator: "=" },
             { field: "limit", value: 20 }
         ]).then(value => {
-            const queriedpayments = value.QueryResponse.Payment || [];
+            const queriedpayments = value.QueryResponse.Payment as Payment[] || [];
             let invoicefullypaid = false;
             const validpayments: Array<{ payment: Payment, amount: number; }> = [];
             let totalunapplied = 0;
 
             queriedpayments.forEach(payment => {
                 totalunapplied += payment.UnappliedAmt;
+                // console.log("Unapplied:", totalunapplied);
                 if (totalunapplied < InvoiceResult.TotalAmt) {
                     if (payment.UnappliedAmt > 0) {
                         totalunapplied += payment.UnappliedAmt;
@@ -59,7 +63,7 @@ export function CreateInvoice(qbo: QuickBooks, config: QboCofig, omcId: string, 
                 console.log(`Company has ${validpayments.length} unused payments`);
                 // console.log(validpayments);
                 /**
-                  * This part needs to be blocking so that we dont get concurrent errors when
+                  * This part needs to be blocking so that we dont get concurrency errors when
                   * Udating the same payment multiple times
                   */
                 validpayments.forEach(async paymentdetial => {
@@ -73,14 +77,17 @@ export function CreateInvoice(qbo: QuickBooks, config: QboCofig, omcId: string, 
                     return await qbo.updatePayment(paymentdetial.payment);
                 });
                 console.log("Done updating payments");
-                order.stage = invoicefullypaid ? 3 : 2;
-                order.orderStageData[3] = {
-                    user: {
-                        adminId: null,
-                        date: new Date(),
-                        name: "QBO"
-                    }
+                const data: AssociatedUser = {
+                    adminId: null,
+                    date: new Date(),
+                    name: "QBO"
                 };
+                if (invoicefullypaid) {
+                    order.stage = 3;
+                    order.orderStageData[3] = {
+                        user: data
+                    };
+                }
                 return Promise.all([ordersms(order, omcId), validOrderUpdate(order, omcId), updateOrder(order, omcId)]);
             } else {
                 console.log("Company doesn't have unused payments");

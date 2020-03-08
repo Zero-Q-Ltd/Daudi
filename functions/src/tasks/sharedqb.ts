@@ -15,13 +15,13 @@ export function createQbo(omcId: string, config: QboCofig, useSandbox: boolean):
     refreshtoken: config.auth.authConfig.refreshToken,
     token: config.auth.authConfig.accessToken,
     useSandbox
-  }
+  };
 
   const qbo = new QuickBooks(apiconfig);
   /**
    * Access tokens expire after an hour
    */
-  if (moment().isAfter(moment(config.auth.authConfig.createdAt).add(1, 'hour'))) {
+  if (moment().isAfter(moment(config.auth.authConfig.createdAt).add(50, 'minute'))) {
     // if (true) {
     console.log("expired token");
     // console.log(apiconfig);
@@ -49,7 +49,7 @@ export function createQbo(omcId: string, config: QboCofig, useSandbox: boolean):
             refreshtoken: config.auth.authConfig.refreshToken,
             token: config.auth.authConfig.accessToken,
             useSandbox
-          }
+          };
           return new QuickBooks(newapiconfig);
         });
     });

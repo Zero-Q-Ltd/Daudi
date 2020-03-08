@@ -12,63 +12,70 @@
           </mat-form-field>
         </div>
         <div class="example-container">
-          <table #table [dataSource]="trucksdataSource" class="faded-bg" mat-table matSort multiTemplateDataRows>
+          <table #table [dataSource]="ordersDataSource" class="faded-bg" mat-table matSort multiTemplateDataRows>
             <!-- ID Column -->
             <ng-container matColumnDef="truckId">
               <th *matHeaderCellDef class="truck-id-size" mat-header-cell mat-sort-header>
                 <i aria-hidden="true" class="fa fa-truck"></i>&nbsp;#
               </th>
-              <td *matCellDef="let truck" class="truck-id-size" mat-cell> {{truck.truckId}}</td>
+              <td *matCellDef="let order" class="truck-id-size" mat-cell> {{order.QbConfig.InvoiceNumber}}</td>
             </ng-container>
             <!-- Company Column -->
             <ng-container matColumnDef="time">
               <th *matHeaderCellDef class="company-size" mat-header-cell mat-sort-header>{{stage == 4 ? 'Completion Time'
                 : 'Expiry Time'}}
               </th>
-              <td *matCellDef="let truck" class="company-size" mat-cell>
-                <span *ngIf="stage<4">{{resolvetime(truck.stagedata[stage].data.expiry[0].timestamp)}}</span>
-                <span *ngIf="stage==4">{{truck.stagedata[stage].user.time?.toDate() | date: 'short'}}</span>
+              <td *matCellDef="let order" class="company-size" mat-cell>
+                <span *ngIf="stage<4">{{resolvetime(order.truck.truckStageData[stage].expiry[0].expiry)}}</span>
+                <!-- <span *ngIf="stage==4">{{order.truck.truckStageData[stage].user.time?.toDate() | date: 'short'}}</span> -->
               </td>
 
             </ng-container>
             <!-- Company Column -->
-            <ng-container matColumnDef="Print Status">
+            <ng-container matColumnDef="LoadingOrder">
               <th *matHeaderCellDef class="company-size" mat-header-cell mat-sort-header>
-                Print Status
+                Loading Order
               </th>
-              <td *matCellDef="let truck" class="company-size" mat-cell>
-                <span>{{truck.isPrinted ? 'Printed' : 'Not Printed'}}</span>
+              <td *matCellDef="let order" class="company-size" mat-cell>
+                <span>{{order.printStatus.LoadingOrder.status ? 'Printed:'+order.printStatus.LoadingOrder.user.name : 'Not Printed'}}</span>
               </td>
-
+            </ng-container>
+            <ng-container matColumnDef="Gatepass">
+              <th *matHeaderCellDef class="company-size" mat-header-cell mat-sort-header>
+                Gatepass
+              </th>
+              <td *matCellDef="let order" class="company-size" mat-cell>
+                <span>{{order.printStatus.gatepass.status ? 'Printed:'+order.printStatus.gatepass.user.name : 'Not Printed'}}</span>
+              </td>
             </ng-container>
             <!-- Company Column -->
             <ng-container matColumnDef="orderCompanyName">
               <th *matHeaderCellDef class="company-size" mat-header-cell mat-sort-header>Company Name</th>
-              <td *matCellDef="let truck" class="company-size" mat-cell>{{truck.company.name}}</td>
+              <td *matCellDef="let order" class="company-size" mat-cell>{{order.customer.name}}</td>
             </ng-container>
             <ng-container matColumnDef="Phone">
               <th *matHeaderCellDef class="company-size" mat-header-cell mat-sort-header>Company Phone
               </th>
-              <td *matCellDef="let truck" class="company-size" mat-cell>
-                <button (click)="sendSMS(truck)" class="btn btn-outline-primary">
-                  {{truck.company.phone}}
+              <td *matCellDef="let order" class="company-size" mat-cell>
+                <button (click)="sendSMS(order)" class="btn btn-outline-primary">
+                  {{order.customer.contact[0]?.phone}}
                 </button>
               </td>
             </ng-container>
             <!-- Driver Name Column -->
             <ng-container align="center" matColumnDef="driverName">
               <th *matHeaderCellDef mat-header-cell mat-sort-header>Driver Name</th>
-              <td *matCellDef="let truck" mat-cell>{{truck.drivername}}</td>
+              <td *matCellDef="let order" mat-cell>{{order.truck.driverdetail.name}}</td>
             </ng-container>
             <!-- Driver ID Column -->
             <ng-container matColumnDef="driverId">
               <th *matHeaderCellDef class="gen-size" mat-header-cell mat-sort-header>Driver ID</th>
-              <td *matCellDef="let truck" class="gen-size" mat-cell>{{truck.driverid}}</td>
+              <td *matCellDef="let order" class="gen-size" mat-cell>{{order.truck.driverdetail.id}}</td>
             </ng-container>
             <!-- Number Plate Column -->
             <ng-container matColumnDef="truckReg">
               <th *matHeaderCellDef class="gen-size" mat-header-cell mat-sort-header>Number Plate</th>
-              <td *matCellDef="let truck" class="gen-size" mat-cell>{{truck.numberplate}}</td>
+              <td *matCellDef="let order" class="gen-size" mat-cell>{{order.truck.truckdetail.numberplate}}</td>
             </ng-container>
             <!-- PMS Column -->
             <ng-container matColumnDef="pmsQty">
@@ -77,9 +84,9 @@
                   matTooltip="PMS">local_gas_station
                 </mat-icon>
               </th>
-              <td *matCellDef="let truck" class="fuel-size" mat-cell
-                matTooltip="{{truck.fuel.pms.batches['0'].Name + truck.fuel.pms.batches['1'].Name}}">
-                {{truck.fuel.pms.qty| number}}
+              <td *matCellDef="let order" class="fuel-size" mat-cell
+                matTooltip="{{order.fuel.pms.entries[0]?.name + order.fuel.pms.entries[1]?.name}}">
+                {{order.fuel.pms.qty| number}}
               </td>
             </ng-container>
             <!-- AGO Column -->
@@ -89,9 +96,9 @@
                   matTooltip="AGO">local_gas_station
                 </mat-icon>
               </th>
-              <td *matCellDef="let truck" class="fuel-size" mat-cell
-                matTooltip="{{truck.fuel.ago.batches['0'].Name + truck.fuel.ago.batches['1'].Name}}">
-                {{truck.fuel.ago.qty | number}}
+              <td *matCellDef="let order" class="fuel-size" mat-cell
+                matTooltip="{{order.fuel.ago.entries[0]?.name + order.fuel.ago.entries[1]?.name}}">
+                {{order.fuel.ago.qty | number}}
               </td>
             </ng-container>
             <!-- IK Column -->
@@ -101,20 +108,20 @@
                   matTooltip="IK">local_gas_station
                 </mat-icon>
               </th>
-              <td *matCellDef="let truck" class="fuel-size" mat-cell
-                matTooltip="{{truck.fuel.ik.batches['0'].Name + truck.fuel.ik.batches['1'].Name}}">
-                {{truck.fuel.ik.qty | number}}
+              <td *matCellDef="let order" class="fuel-size" mat-cell
+                matTooltip="{{order.fuel.ik.entries[0]?.name + order.fuel.ik.entries[1]?.name}}">
+                {{order.fuel.ik.qty | number}}
               </td>
             </ng-container>
 
             <ng-container matColumnDef="Seals">
               <th *matHeaderCellDef mat-header-cell mat-sort-header>Seal Numbers</th>
-              <td *matCellDef="let truck" mat-cell>{{truck.stagedata['4'].data.seals.range}}</td>
+              <td *matCellDef="let order" mat-cell>{{order.truck.truckStageData['4'].data.seals.range}}</td>
             </ng-container>
 
             <ng-container matColumnDef="expandedDetail">
-              <td *matCellDef="let truck" [attr.colspan]="truckcolumns.length" mat-cell style="width: 100%">
-                <mat-card [@detailExpand]="truck == expandedElement ? 'expanded' : 'collapsed'">
+              <td *matCellDef="let order" [attr.colspan]="truckcolumns.length" mat-cell style="width: 100%">
+                <mat-card [@detailExpand]="order == expandedElement ? 'expanded' : 'collapsed'">
                   <mat-card-content>
                     <table class="table table-stripped">
                       <thead class="">
@@ -131,13 +138,20 @@
 
                       <tbody>
                         <tr>
-                          <td class="color-{{truck.compartments[0].fueltype}}">{{truck.compartments[0].qty}}</td>
-                          <td class="color-{{truck.compartments[1].fueltype}}">{{truck.compartments[1].qty}}</td>
-                          <td class="color-{{truck.compartments[2].fueltype}}">{{truck.compartments[2].qty}}</td>
-                          <td class="color-{{truck.compartments[3].fueltype}}">{{truck.compartments[3].qty}}</td>
-                          <td class="color-{{truck.compartments[4].fueltype}}">{{truck.compartments[4].qty}}</td>
-                          <td class="color-{{truck.compartments[5].fueltype}}">{{truck.compartments[5].qty}}</td>
-                          <td class="color-{{truck.compartments[6].fueltype}}">{{truck.compartments[6].qty}}</td>
+                          <td class="color-{{order.truck.compartments[0].fueltype}}">{{order.truck.compartments[0].qty}}
+                          </td>
+                          <td class="color-{{order.truck.compartments[1].fueltype}}">{{order.truck.compartments[1].qty}}
+                          </td>
+                          <td class="color-{{order.truck.compartments[2].fueltype}}">{{order.truck.compartments[2].qty}}
+                          </td>
+                          <td class="color-{{order.truck.compartments[3].fueltype}}">{{order.truck.compartments[3].qty}}
+                          </td>
+                          <td class="color-{{order.truck.compartments[4].fueltype}}">{{order.truck.compartments[4].qty}}
+                          </td>
+                          <td class="color-{{order.truck.compartments[5].fueltype}}">{{order.truck.compartments[5].qty}}
+                          </td>
+                          <td class="color-{{order.truck.compartments[6].fueltype}}">{{order.truck.compartments[6].qty}}
+                          </td>
                         </tr>
                       </tbody>
                     </table>
@@ -147,8 +161,8 @@
             </ng-container>
 
             <tr *matHeaderRowDef="truckcolumns" mat-header-row></tr>
-            <tr (click)="expandedElement = truck" *matRowDef="let truck; columns: truckcolumns;" [@flyIn]
-              [class.expanded-row]="expandedElement === truck" [ngClass]="{'frozentruck': truck.frozen}"
+            <tr (click)="expandedElement = order" *matRowDef="let order; columns: truckcolumns;" [@flyIn]
+              [class.expanded-row]="expandedElement === order" [ngClass]="{'frozentruck': order.frozen}"
               class="element-row" mat-row>
             </tr>
             <tr *matRowDef="let row;  columns: ['expandedDetail']" class="detail-row" mat-row></tr>

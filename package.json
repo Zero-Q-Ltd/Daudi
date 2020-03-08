@@ -11,7 +11,7 @@
     "build": "ng build ",
     "build-stats": "node --max_old_space_size=6144 ./node_modules/@angular/cli/bin/ng build --dev --stats-json",
     "build-prod": "node --max_old_space_size=6144 ./node_modules/@angular/cli/bin/ng build --prod",
-    "build-prod-firebase-deploy": "node --max_old_space_size=6144 ./node_modules/@angular/cli/bin/ng build --prod && firebase deploy --only-hosting",
+    "build-prod-firebase-deploy": "node --max_old_space_size=6144 ./node_modules/@angular/cli/bin/ng build --prod && firebase deploy",
     "build-prod-stats": "node --max_old_space_size=6144 ./node_modules/@angular/cli/bin/ng build --prod --stats-json",
     "test": "ng test",
     "lint": "ng lint",

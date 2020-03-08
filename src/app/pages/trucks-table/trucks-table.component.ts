@@ -1,23 +1,22 @@
-import { animate, sequence, state, style, transition, trigger } from '@angular/animations';
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
-import { ActivatedRoute } from '@angular/router';
-import { ColumnsCustomizerComponent } from 'app/components/columns-customizer/columns-customizer.component';
-import { SendMsgComponent } from 'app/components/send-msg/send-msg.component';
-import { CoreService } from 'app/services/core/core.service';
-import { DepotService } from 'app/services/core/depot.service';
-import { ExcelService } from 'app/services/excel-service.service';
-import * as moment from 'moment';
-import { ReplaySubject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
-import { Order } from '../../models/Daudi/order/Order';
-import { emptytruck, Truck } from '../../models/Daudi/order/truck/Truck';
-import { SMS } from '../../models/Daudi/sms/sms';
-import { MyTimestamp } from '../../models/firestore/firestoreTypes';
-import { TooltipPosition } from '@angular/material/tooltip';
+import { animate, sequence, state, style, transition, trigger } from "@angular/animations";
+import { Component, OnInit, ViewChild } from "@angular/core";
+import { MatDialog } from "@angular/material/dialog";
+import { MatPaginator } from "@angular/material/paginator";
+import { MatSort } from "@angular/material/sort";
+import { MatTableDataSource } from "@angular/material/table";
+import { TooltipPosition } from "@angular/material/tooltip";
+import { ActivatedRoute } from "@angular/router";
+import { ColumnsCustomizerComponent } from "app/components/columns-customizer/columns-customizer.component";
+import { SendMsgComponent } from "app/components/send-msg/send-msg.component";
+import { CoreService } from "app/services/core/core.service";
+import { ExcelService } from "app/services/excel-service.service";
+import * as moment from "moment";
+import { ReplaySubject } from "rxjs";
+import { map, switchMap, takeUntil } from "rxjs/operators";
+import { Order } from "../../models/Daudi/order/Order";
+import { emptytruck, Truck } from "../../models/Daudi/order/truck/Truck";
+import { SMS } from "../../models/Daudi/sms/sms";
+import { MyTimestamp } from "../../models/firestore/firestoreTypes";
 
 @Component({
   selector: "trucks-table",
@@ -49,9 +48,9 @@ export class TrucksTableComponent implements OnInit {
   activePage: any;
   stage: number;
 
-  trucksdataSource = new MatTableDataSource<Truck>();
+  ordersDataSource = new MatTableDataSource<Order>();
 
-  truckcolumns = ["truckId", "orderCompanyName", "time", "Print Status", "Phone", "driverName", "driverId", "truckReg", "pmsQty", "agoQty", "ikQty"];
+  truckcolumns = ["truckId", "orderCompanyName", "time", "LoadingOrder", "Gatepass", "Phone", "driverName", "driverId", "truckReg", "pmsQty", "agoQty", "ikQty"];
 
   temporder = {};
   loadingtrucks = true;
@@ -65,8 +64,7 @@ export class TrucksTableComponent implements OnInit {
     private dialog: MatDialog,
     private route: ActivatedRoute,
     private excelService: ExcelService,
-    private core: CoreService,
-    private depotservice: DepotService) {
+    private core: CoreService) {
 
     /**
      * propagate changes when depot changes
@@ -75,13 +73,18 @@ export class TrucksTableComponent implements OnInit {
       this.loadingtrucks = value;
     });
 
-    // this.route.params.pipe(takeUntil(this.comopnentDestroyed))
-    //   .pipe(switchMap((paramdata: { stage: number }) => {
-    // return this.truckservice.trucks[paramdata.stage].pipe(takeUntil(this.comopnentDestroyed));
-    //   }))
-    //   .subscribe((stagetrucks: Array<Truck>) => {
-    //     this.trucksdataSource.data = stagetrucks;
-    //   });
+    this.route.params.pipe(takeUntil(this.comopnentDestroyed))
+      .pipe(switchMap((paramdata: { stage: number; }) => {
+        return this.core.orders[4].pipe(takeUntil(this.comopnentDestroyed),
+          map(data => {
+            return data.filter(order => {
+              return order.truck.stage === +paramdata.stage;
+            });
+          }));
+      }))
+      .subscribe((stagetrucks: Order[]) => {
+        this.ordersDataSource.data = stagetrucks;
+      });
   }
 
   ngOnDestroy(): void {
@@ -98,7 +101,7 @@ export class TrucksTableComponent implements OnInit {
       });
     dialogRef.afterClosed().pipe(takeUntil(this.comopnentDestroyed)).subscribe(result => {
       if (result) {
-        this.excelService.exportAsExcelFile(this.trucksdataSource.data, "Orders");
+        this.excelService.exportAsExcelFile(this.ordersDataSource.data, "Orders");
       }
     });
   }
@@ -106,7 +109,7 @@ export class TrucksTableComponent implements OnInit {
   filtertrucks(filterValue: string) {
     filterValue = filterValue.trim(); // Remove whitespace
     filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
-    this.trucksdataSource.filter = filterValue;
+    this.ordersDataSource.filter = filterValue;
   }
 
   sendSMS(clickedOrder: Order) {
@@ -142,7 +145,7 @@ export class TrucksTableComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    this.trucksdataSource.paginator = this.paginator;
-    this.trucksdataSource.sort = this.sort;
+    this.ordersDataSource.paginator = this.paginator;
+    this.ordersDataSource.sort = this.sort;
   }
 }

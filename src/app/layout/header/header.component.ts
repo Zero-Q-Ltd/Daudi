@@ -31,7 +31,7 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
   // fuelprices: FuelPrices = {};
   allowsandbox = true;
   adminLevel: number = null;
-  activedepot: { depot: Depot, config: DepotConfig } = { depot: { ...emptydepot }, config: { ...emptyDepotConfig } };
+  activedepot: { depot: Depot, config: DepotConfig; } = { depot: { ...emptydepot }, config: { ...emptyDepotConfig } };
   currentuser: Admin = { ...emptyadmin };
   connectionStatus: boolean;
   alldepots: Depot[] = [];
@@ -82,7 +82,20 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
     OrderStageIds.forEach(stage => {
       this.core.orders[stage]
         .pipe(takeUntil(this.comopnentDestroyed))
-        .subscribe(orders => this.orderscount[stage] = orders.length);
+        .subscribe(orders => {
+          this.orderscount[stage] = orders.length;
+          if (stage === 4) {
+            this.truckscount = {
+              1: 0,
+              2: 0,
+              3: 0,
+              4: 0
+            };
+            orders.map(order => {
+              this.truckscount[order.truck.stage] += 1;
+            });
+          }
+        });
     });
     TruckStageNames.forEach(stage => {
       // this.truckservice.trucks[stage].pipe(takeUntil(this.comopnentDestroyed)).subscribe(trucks => this.truckscount[stage] = trucks.length);
