@@ -25,11 +25,11 @@ export function CreateInvoice(qbo: QuickBooks, config: QboCofig, omcId: string, 
             { field: "limit", value: 20 }
         ]).then(value => {
             const queriedpayments = value.QueryResponse.Payment as Payment[] || [];
-            const totalUnappliedPayments = queriedpayments.reduce((a, b) => a + b.UnappliedAmt, 0);
+            const totalUnappliedPayments = queriedpayments.reduce((a, b) => a + Number(b.UnappliedAmt), 0);
             /**
              * Check if the inused payments are enough to fully pay for the just created invoice
              */
-
+            console.log("Unappied:" + totalUnappliedPayments, "Invoice:" + InvoiceResult.TotalAmt, "Enough:", totalUnappliedPayments >= InvoiceResult.TotalAmt);
             if (totalUnappliedPayments >= InvoiceResult.TotalAmt) {
                 console.log("Unused payments enough to pay for invoice");
 
@@ -112,10 +112,9 @@ export function CreateInvoice(qbo: QuickBooks, config: QboCofig, omcId: string, 
                     return await qbo.updatePayment(payment);
                 });
                 console.log("Done updating payments");
-                return Promise.resolve("Invoice created" as any);
+                return Promise.all([ordersms(order, omcId), validOrderUpdate(order, omcId), updateOrder(order, omcId)]);
             } else {
                 console.log("Company doesn't have unused payments");
-                order.stage = 2;
                 return Promise.all([ordersms(order, omcId), validOrderUpdate(order, omcId), updateOrder(order, omcId)]);
             }
         });
