@@ -17,84 +17,107 @@ export function CreateInvoice(qbo: QuickBooks, config: QboCofig, omcId: string, 
         const InvoiceResult = createResult.Invoice as Invoice_Estimate;
         order.QbConfig.InvoiceId = InvoiceResult.Id;
         order.QbConfig.InvoiceNumber = InvoiceResult.DocNumber || null;
+        order.stage = 2;
 
         console.log("result:", InvoiceResult);
-        // order.stage = 2;
         return qbo.findPayments([
             { field: "CustomerRef", value: order.customer.QbId, operator: "=" },
             { field: "limit", value: 20 }
         ]).then(value => {
             const queriedpayments = value.QueryResponse.Payment as Payment[] || [];
-            let invoicefullypaid = false;
-            const validpayments: Array<{ payment: Payment, amount: number; }> = [];
-            let totalunapplied = 0;
+            const totalUnappliedPayments = queriedpayments.reduce((a, b) => a + b.UnappliedAmt, 0);
+            /**
+             * Check if the inused payments are enough to fully pay for the just created invoice
+             */
 
-            queriedpayments.forEach(payment => {
-                totalunapplied += payment.UnappliedAmt;
-                // console.log("Unapplied:", totalunapplied);
-                if (totalunapplied < InvoiceResult.TotalAmt) {
-                    if (payment.UnappliedAmt > 0) {
-                        totalunapplied += payment.UnappliedAmt;
-                        validpayments.push({
-                            payment,
-                            amount: payment.UnappliedAmt
-                        });
-                    } else {
-                        console.log("Payment fully used up");
-                        return;
-                    }
-                } else {
-                    console.log("Unused payments enough to pay for invoice");
-                    if (!invoicefullypaid) {
-                        validpayments.push({
-                            payment,
-                            // amount: (totalunapplied < invoiceresult.TotalAmt ? payment.UnappliedAmt : totalunapplied - invoiceresult.TotalAmt)
-                            amount: payment.UnappliedAmt
-                        });
-                        invoicefullypaid = true;
-                    } else {
-                        console.log("Accumulated unused payments already enough, skipping....");
-                        return;
-                    }
-                }
-            });
+            if (totalUnappliedPayments >= InvoiceResult.TotalAmt) {
+                console.log("Unused payments enough to pay for invoice");
 
-            if (validpayments.length > 0) {
-                console.log(`Company has ${validpayments.length} unused payments`);
-                // console.log(validpayments);
+                let unapplied = 0;
                 /**
-                  * This part needs to be blocking so that we dont get concurrency errors when
-                  * Udating the same payment multiple times
-                  */
-                validpayments.forEach(async paymentdetial => {
-                    paymentdetial.payment.Line.push({
-                        Amount: paymentdetial.amount,
-                        LinkedTxn: [{
-                            TxnId: InvoiceResult.Id,
-                            TxnType: "Invoice"
-                        }]
-                    });
-                    return await qbo.updatePayment(paymentdetial.payment);
+                 * variable to escape attaching payments to invoice
+                 */
+                let escapeLoop = false;
+
+                /**
+                 * serial process each payment so as to avoid concurrecy access errors from qbo
+                 */
+                queriedpayments.forEach(async payment => {
+                    /**
+                     * Escape early in case this payment has already been fully used
+                     * This is neccessary because we cannt filter unused payments from qbo
+                     */
+                    if (payment.UnappliedAmt > 0) {
+                        unapplied += payment.UnappliedAmt;
+                        /**
+                         * make sure we dont overpay
+                         */
+                        if (unapplied < InvoiceResult.TotalAmt) {
+                            payment.Line.push({
+                                Amount: payment.UnappliedAmt,
+                                LinkedTxn: [{
+                                    TxnId: InvoiceResult.Id,
+                                    TxnType: "Invoice"
+                                }]
+                            });
+                            return await qbo.updatePayment(payment);
+                        } else if (!escapeLoop) {
+                            /**
+                             * Only apply an the amount required to completely pay for the order
+                             */
+                            payment.Line.push({
+                                Amount: InvoiceResult.TotalAmt - unapplied,
+                                LinkedTxn: [{
+                                    TxnId: InvoiceResult.Id,
+                                    TxnType: "Invoice"
+                                }]
+                            });
+                            escapeLoop = true;
+                            return await qbo.updatePayment(payment);
+                        }
+                    }
+
+                });
+                //move the order to the paid stage
+                console.log("Done updating payments");
+                order.stage = 3;
+                order.orderStageData[3] = {
+                    user: {
+                        adminId: null,
+                        date: new Date(),
+                        name: "QBO"
+                    }
+                };
+
+                return Promise.all([ordersms(order, omcId), validOrderUpdate(order, omcId), updateOrder(order, omcId)]);
+            } else if (totalUnappliedPayments > 0) {
+                console.log("Not enough money to pay for invoice!!");
+                /**
+                 * serial process each payment so as to avoid concurrecy access errors from qbo
+                 */
+                queriedpayments.forEach(async payment => {
+                    /**
+                     * Since we're sure the total payments cannot exceed the invoice amount, then we're also sure the unapplied amount cannot, therefore apply 
+                     * every available penny 
+                     */
+                    if (payment.UnappliedAmt > 0) {
+                        payment.Line.push({
+                            Amount: payment.UnappliedAmt,
+                            LinkedTxn: [{
+                                TxnId: InvoiceResult.Id,
+                                TxnType: "Invoice"
+                            }]
+                        });
+                    }
+                    return await qbo.updatePayment(payment);
                 });
                 console.log("Done updating payments");
-                const data: AssociatedUser = {
-                    adminId: null,
-                    date: new Date(),
-                    name: "QBO"
-                };
-                if (invoicefullypaid) {
-                    order.stage = 3;
-                    order.orderStageData[3] = {
-                        user: data
-                    };
-                }
-                return Promise.all([ordersms(order, omcId), validOrderUpdate(order, omcId), updateOrder(order, omcId)]);
+                return Promise.resolve("Invoice created" as any);
             } else {
                 console.log("Company doesn't have unused payments");
                 order.stage = 2;
                 return Promise.all([ordersms(order, omcId), validOrderUpdate(order, omcId), updateOrder(order, omcId)]);
             }
         });
-
     });
 }
