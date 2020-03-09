@@ -60,20 +60,20 @@ export function CreateInvoice(qbo: QuickBooks, config: QboCofig, omcId: string, 
                                     TxnType: "Invoice"
                                 }]
                             });
-                            return await qbo.updatePayment(payment);
+                            await qbo.updatePayment(payment);
                         } else if (!escapeLoop) {
                             /**
                              * Only apply an the amount required to completely pay for the order
                              */
                             payment.Line.push({
-                                Amount: InvoiceResult.TotalAmt - unapplied,
+                                Amount: unapplied - InvoiceResult.TotalAmt,
                                 LinkedTxn: [{
                                     TxnId: InvoiceResult.Id,
                                     TxnType: "Invoice"
                                 }]
                             });
                             escapeLoop = true;
-                            return await qbo.updatePayment(payment);
+                            await qbo.updatePayment(payment);
                         }
                     }
 
@@ -109,7 +109,7 @@ export function CreateInvoice(qbo: QuickBooks, config: QboCofig, omcId: string, 
                             }]
                         });
                     }
-                    return await qbo.updatePayment(payment);
+                    await qbo.updatePayment(payment);
                 });
                 console.log("Done updating payments");
                 return Promise.all([ordersms(order, omcId), validOrderUpdate(order, omcId), updateOrder(order, omcId)]);
