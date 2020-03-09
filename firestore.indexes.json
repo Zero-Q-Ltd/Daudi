@@ -89,56 +89,6 @@
       ]
     },
     {
-      "collectionGroup": "batches",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "status",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "type",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "date",
-          "order": "ASCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "batches",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "status",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "type",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "date",
-          "order": "DESCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "batches",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "type",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "status",
-          "order": "DESCENDING"
-        }
-      ]
-    },
-    {
       "collectionGroup": "companies",
       "queryScope": "COLLECTION",
       "fields": [
@@ -219,38 +169,6 @@
         {
           "fieldPath": "sandbox",
           "order": "DESCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "entry",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "entry.refs",
-          "arrayConfig": "CONTAINS"
-        },
-        {
-          "fieldPath": "entry.name",
-          "order": "ASCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "entry",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "fuelType",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "status",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "date",
-          "order": "ASCENDING"
         }
       ]
     },
@@ -367,80 +285,6 @@
         {
           "fieldPath": "transaction.date",
           "order": "ASCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "trucks",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "stage",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "stagedata.`1`.user.time",
-          "order": "DESCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "trucks",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "stage",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "stagedata.`4`.time",
-          "order": "ASCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "trucks",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "stage",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "stagedata.`4`.time",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "stagedata.`4`.time",
-          "order": "DESCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "trucks",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "stage",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "stagedata.`4`.user.time",
-          "order": "ASCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "trucks",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "stage",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "stagedata.`4`.user.time",
-          "order": "DESCENDING"
         }
       ]
     }
