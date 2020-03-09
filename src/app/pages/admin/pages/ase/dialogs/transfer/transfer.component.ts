@@ -26,7 +26,7 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 })
 export class TransferComponent implements OnInit, OnDestroy {
     privateDepots: Depot[] = [];
-    selectedDepot: { depot: Depot, config: DepotConfig, stock: Stock };
+    selectedDepot: { depot: Depot, config: DepotConfig, stock: Stock; };
     comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
     qtyToDraw = 0;
     depotControl: FormControl = new FormControl({}, [Validators.required]);
@@ -97,6 +97,7 @@ export class TransferComponent implements OnInit, OnDestroy {
              * Create another var to avoid mutation of the original values
              */
             const t = deepCopy(tt);
+            t.active = tt.resultStatus;
             Object.keys(EmptyEntryDraw).forEach(index => {
                 delete t[index];
             });
@@ -179,7 +180,7 @@ export class TransferComponent implements OnInit, OnDestroy {
             },
             fuelType: this.fuelType,
             price: null
-        }
+        };
 
         batchaction.set(this.aseService.ASECollection(this.core.omcId).doc(newAse.Id), newAse);
 
