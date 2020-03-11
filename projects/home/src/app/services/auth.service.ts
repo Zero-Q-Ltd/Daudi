@@ -14,7 +14,7 @@ export class AuthService implements Resolve<Promise<any>> {
 
   constructor(private afAuth: AngularFireAuth) {
     afAuth.authState.subscribe(state => {
-      console.log(afAuth.auth.currentUser);
+      // console.log(afAuth.auth.currentUser);
       this.observableuserdata.next(afAuth.auth.currentUser);
     });
   }

@@ -34,7 +34,7 @@ export class OrdersComponent implements OnInit, OnDestroy {
           .get()
           .then(res => {
             this.order = toObject(emptyorder, res.docs[0]);
-            console.log(this.order);
+            // console.log(this.order);
           });
       });
   }
