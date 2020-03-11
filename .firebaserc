@@ -1,5 +1,17 @@
 {
   "projects": {
     "default": "daudi-4"
+  },
+  "targets": {
+    "daudi-4": {
+      "hosting": {
+        "daudihome": [
+          "daudihome"
+        ],
+        "omcportal": [
+          "omcportal"
+        ]
+      }
+    }
   }
 }
