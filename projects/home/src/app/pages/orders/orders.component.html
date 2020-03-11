@@ -1,0 +1,160 @@
+<div class="invoice-box">
+  <table cellpadding="0" cellspacing="0">
+    <tr class="top">
+      <td colspan="7">
+        <table>
+          <tr>
+            <td class="title">
+              <img
+                src="https://emkaybeta.firebaseapp.com/assets/images/EmkayIntlLogo.svg"
+                class="mk-logo"
+              />
+            </td>
+            <td>
+              Loading Order #: {{ order.QbConfig.InvoiceNumber }}<br />
+              Truck Created:
+              {{ order.truckStageData[1].user.date }}
+              <br />
+              Depot: {{ order.config.depot.name }}
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr class="information">
+      <td colspan="7">
+        <table>
+          <tr>
+            <td>
+              Emkay International Ltd<br />
+              Annex A,Watermark Business park<br />
+              KAREN
+            </td>
+            <td>
+              {{ order.customer.name }}<br />
+              {{ order.customer.contact[0]?.name }}<br />
+              {{ order.customer.contact[0]?.name }}
+            </td>
+          </tr>
+        </table>
+
+        <table>
+          <tr>
+            <td></td>
+            <td>Driver Name: {{ order.truck.driverdetail.name }}</td>
+            <td>Driver ID: {{ order.truck.driverdetail.id }}</td>
+          </tr>
+        </table>
+
+        <div id="bg-text">{{ order.truck.stage > 3 ? "PASSED" : "" }}</div>
+      </td>
+    </tr>
+    <tr class="heading">
+      <td colspan="3">
+        Truck Number plate
+      </td>
+      <td colspan="3" class="vuta-right">
+        Seal Numbers
+      </td>
+      <td colspan="3" class="vuta-right">
+        Broken Seal(s)
+      </td>
+    </tr>
+    <tr class="details">
+      <td colspan="3">
+        {{ order.truck.truckdetail.numberplate }}
+      </td>
+      <td colspan="3" class="vuta-right">
+        {{ order.seals?.range }}
+      </td>
+      <td colspan="3" class="vuta-right">
+        {{ order.seals?.broken }}
+      </td>
+    </tr>
+    <tr class="heading">
+      <td>Comp 1</td>
+      <td>Comp 2</td>
+      <td>Comp 3</td>
+      <td>Comp 4</td>
+      <td>Comp 5</td>
+      <td>Comp 6</td>
+      <td>Comp 7</td>
+    </tr>
+    <tr>
+      <td [ngClass]="{ 'truckdata.compartments[0].fueltype': true }">
+        {{ order.truck.compartments[0]?.qty }}
+        <span> {{ order.truck.compartments[0]?.fueltype }} </span>
+      </td>
+      <td [ngClass]="{ 'truckdata.compartments[1].fueltype': true }">
+        {{ order.truck.compartments[1]?.qty }}
+        <span> {{ order.truck.compartments[1]?.fueltype }} </span>
+      </td>
+      <td [ngClass]="{ 'truckdata.compartments[2].fueltype': true }">
+        {{ order.truck.compartments[2]?.qty }}
+        <span> {{ order.truck.compartments[2]?.fueltype }} </span>
+      </td>
+      <td [ngClass]="{ 'truckdata.compartments[3].fueltype': true }">
+        {{ order.truck.compartments[3]?.qty }}
+        <span> {{ order.truck.compartments[3]?.fueltype }} </span>
+      </td>
+      <td [ngClass]="{ 'truckdata.compartments[4].fueltype': true }">
+        {{ order.truck.compartments[4]?.qty }}
+        <span> {{ order.truck.compartments[4]?.fueltype }} </span>
+      </td>
+      <td [ngClass]="{ 'truckdata.compartments[5].fueltype': true }">
+        {{ order.truck.compartments[5]?.qty }}
+        <span> {{ order.truck.compartments[5]?.fueltype }} </span>
+      </td>
+      <td [ngClass]="{ 'truckdata.compartments[6].fueltype': true }">
+        {{ order.truck.compartments[6]?.qty }}
+        <span> {{ order.truck.compartments[6]?.fueltype }} </span>
+      </td>
+    </tr>
+
+    <tr class="heading">
+      <td colspan="6">
+        Item
+      </td>
+      <td>
+        Quantity
+      </td>
+    </tr>
+    <tr class="item color-pms">
+      <td colspan="6">
+        PMS
+      </td>
+      <td>
+        {{ order.fuel.pms.qty }}
+      </td>
+    </tr>
+    <tr class="item color-ago">
+      <td colspan="6">
+        AGO
+      </td>
+      <td>
+        {{ order.fuel.ago.qty }}
+      </td>
+    </tr>
+
+    <tr class="item last color-ik">
+      <td colspan="6">
+        IK
+      </td>
+      <td>
+        {{ order.fuel.ik.qty }}
+      </td>
+    </tr>
+    <tr class="total"></tr>
+  </table>
+
+  <span style="width: 100%">
+    <input
+      id="printbtn"
+      class="vuta-right"
+      type="button"
+      value="Print this page"
+      onclick="window.print();"
+    />
+  </span>
+</div>

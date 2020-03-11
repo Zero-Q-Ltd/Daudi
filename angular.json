@@ -3,57 +3,166 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "Daudi": {
+    "home": {
+      "projectType": "application",
+      "schematics": {},
+      "root": "projects/home",
+      "sourceRoot": "projects/home/src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/home",
+            "index": "projects/home/src/index.html",
+            "main": "projects/home/src/main.ts",
+            "polyfills": "projects/home/src/polyfills.ts",
+            "tsConfig": "projects/home/tsconfig.app.json",
+            "aot": true,
+            "assets": [
+              "projects/home/src/favicon.ico",
+              "projects/home/src/assets"
+            ],
+            "styles": ["projects/home/src/styles.css"],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "projects/home/src/environments/environment.ts",
+                  "with": "projects/home/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "home:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "home:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "home:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/home/src/test.ts",
+            "polyfills": "projects/home/src/polyfills.ts",
+            "tsConfig": "projects/home/tsconfig.spec.json",
+            "karmaConfig": "projects/home/karma.conf.js",
+            "assets": [
+              "projects/home/src/favicon.ico",
+              "projects/home/src/assets"
+            ],
+            "styles": ["projects/home/src/styles.css"],
+            "scripts": []
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/home/tsconfig.app.json",
+              "projects/home/tsconfig.spec.json",
+              "projects/home/e2e/tsconfig.json"
+            ],
+            "exclude": ["**/node_modules/**"]
+          }
+        },
+        "e2e": {
+          "builder": "@angular-devkit/build-angular:protractor",
+          "options": {
+            "protractorConfig": "projects/home/e2e/protractor.conf.js",
+            "devServerTarget": "home:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "home:serve:production"
+            }
+          }
+        }
+      }
+    },
+    "omcportal": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
           "style": "scss"
         }
       },
-      "root": "",
-      "sourceRoot": "src",
+      "root": "projects/omcportal",
+      "sourceRoot": "projects/omcportal/src",
       "prefix": "app",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/",
-            "index": "src/index.html",
-            "main": "src/main.ts",
-            "polyfills": "src/polyfills.ts",
-            "tsConfig": "tsconfig.app.json",
+            "outputPath": "dist/omcportal",
+            "index": "projects/omcportal/src/index.html",
+            "main": "projects/omcportal/src/main.ts",
+            "polyfills": "projects/omcportal/src/polyfills.ts",
+            "tsConfig": "projects/omcportal/tsconfig.app.json",
             "aot": true,
             "assets": [
-              "src/favicon.ico",
-              "src/firebase-messaging-sw.js",
-              "src/assets",
-              "src/vendors",
-              "src/favicon.ico"
+              "projects/omcportal/src/favicon.ico",
+              "projects/omcportal/src/firebase-messaging-sw.js",
+              "projects/omcportal/src/assets",
+              "projects/omcportal/src/vendors",
+              "projects/omcportal/src/favicon.ico"
             ],
             "styles": [
-              "src/styles/app.scss",
-              "src/styles/bootstrap.scss",
-              "src/styles/font-awesome.scss",
-              "src/styles/layout.scss",
-              "src/styles/loader.scss",
-              "src/styles/material2-theme.scss",
-              "src/styles/theme.scss",
-              "src/styles/ui.scss",
-              "src/vendors/loader.css",
-              "src/vendors/material-design-icons/iconfont/material-icons.css",
+              "projects/omcportal/src/styles/app.scss",
+              "projects/omcportal/src/styles/bootstrap.scss",
+              "projects/omcportal/src/styles/font-awesome.scss",
+              "projects/omcportal/src/styles/layout.scss",
+              "projects/omcportal/src/styles/loader.scss",
+              "projects/omcportal/src/styles/material2-theme.scss",
+              "projects/omcportal/src/styles/theme.scss",
+              "projects/omcportal/src/styles/ui.scss",
+              "projects/omcportal/src/vendors/loader.css",
+              "projects/omcportal/src/vendors/material-design-icons/iconfont/material-icons.css",
               "./node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css",
-              "src/styles.scss"
+              "projects/omcportal/src/styles.scss"
             ],
-            "scripts": [
-              "node_modules/jquery/dist/jquery.min.js"
-            ]
+            "scripts": ["node_modules/jquery/dist/jquery.min.js"]
           },
           "configurations": {
             "production": {
               "fileReplacements": [
                 {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.prod.ts"
+                  "replace": "projects/omcportal/src/environments/environment.ts",
+                  "with": "projects/omcportal/src/environments/environment.prod.ts"
                 }
               ],
               "optimization": true,
@@ -82,35 +191,32 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "Daudi:build"
+            "browserTarget": "omcportal:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "Daudi:build:production"
+              "browserTarget": "omcportal:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "Daudi:build"
+            "browserTarget": "omcportal:build"
           }
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "src/test.ts",
-            "polyfills": "src/polyfills.ts",
-            "tsConfig": "tsconfig.spec.json",
-            "karmaConfig": "karma.conf.js",
+            "main": "projects/omcportal/src/test.ts",
+            "polyfills": "projects/omcportal/src/polyfills.ts",
+            "tsConfig": "projects/omcportal/tsconfig.spec.json",
+            "karmaConfig": "projects/omcportal/karma.conf.js",
             "assets": [
-              "src/favicon.ico",
-              "src/assets"
+              "projects/omcportal/src/favicon.ico",
+              "projects/omcportal/src/assets"
             ],
-            "styles": [
-              "./node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css",
-              "src/styles.scss"
-            ],
+            "styles": ["projects/omcportal/src/styles.scss"],
             "scripts": []
           }
         },
@@ -118,32 +224,30 @@
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "tsconfig.app.json",
-              "tsconfig.spec.json",
-              "e2e/tsconfig.json"
+              "projects/omcportal/tsconfig.app.json",
+              "projects/omcportal/tsconfig.spec.json",
+              "projects/omcportal/e2e/tsconfig.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         },
         "e2e": {
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
-            "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "Daudi:serve"
+            "protractorConfig": "projects/omcportal/e2e/protractor.conf.js",
+            "devServerTarget": "omcportal:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "Daudi:serve:production"
+              "devServerTarget": "omcportal:serve:production"
             }
           }
         }
       }
     }
   },
-  "defaultProject": "Daudi",
   "cli": {
-    "analytics": "60702cbe-5682-46e2-a843-fe4db859ac6e"
-  }
+    "analytics": "dc2c644c-3284-4a71-912f-8b6a14c571c1"
+  },
+  "defaultProject": "home"
 }
