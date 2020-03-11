@@ -1,4 +1,11 @@
-import { animate, sequence, state, style, transition, trigger } from "@angular/animations";
+import {
+  animate,
+  sequence,
+  state,
+  style,
+  transition,
+  trigger
+} from "@angular/animations";
 import { Component, OnInit, ViewChild } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { MatPaginator } from "@angular/material/paginator";
@@ -26,18 +33,41 @@ import { MyTimestamp } from "../../models/firestore/firestoreTypes";
     trigger("flyIn", [
       state("in", style({ transform: "translateX(0)" })),
       transition("void => *", [
-        style({ height: "*", opacity: "0", transform: "translateX(-550px)", "box-shadow": "none" }),
+        style({
+          height: "*",
+          opacity: "0",
+          transform: "translateX(-550px)",
+          "box-shadow": "none"
+        }),
         sequence([
-          animate(".20s ease", style({ height: "*", opacity: ".2", transform: "translateX(0)", "box-shadow": "none" })),
-          animate(".15s ease", style({ height: "*", opacity: 1, transform: "translateX(0)" }))
+          animate(
+            ".20s ease",
+            style({
+              height: "*",
+              opacity: ".2",
+              transform: "translateX(0)",
+              "box-shadow": "none"
+            })
+          ),
+          animate(
+            ".15s ease",
+            style({ height: "*", opacity: 1, transform: "translateX(0)" })
+          )
         ])
       ])
     ]),
     trigger("detailExpand", [
-      state("collapsed", style({ height: "0px", minHeight: "0", display: "none" })),
+      state(
+        "collapsed",
+        style({ height: "0px", minHeight: "0", display: "none" })
+      ),
       state("expanded", style({ height: "*" })),
-      transition("expanded <=> collapsed", animate("225ms cubic-bezier(0.4, 0.0, 0.2, 1)"))
-    ])]
+      transition(
+        "expanded <=> collapsed",
+        animate("225ms cubic-bezier(0.4, 0.0, 0.2, 1)")
+      )
+    ])
+  ]
 })
 export class TrucksTableComponent implements OnInit {
   position: TooltipPosition = "above"; // for tooltip
@@ -50,7 +80,20 @@ export class TrucksTableComponent implements OnInit {
 
   ordersDataSource = new MatTableDataSource<Order>();
 
-  truckcolumns = ["truckId", "orderCompanyName", "time", "LoadingOrder", "Gatepass", "Phone", "driverName", "driverId", "truckReg", "pmsQty", "agoQty", "ikQty"];
+  truckcolumns = [
+    "truckId",
+    "orderCompanyName",
+    "time",
+    "LoadingOrder",
+    "Gatepass",
+    "Phone",
+    "driverName",
+    "driverId",
+    "truckReg",
+    "pmsQty",
+    "agoQty",
+    "ikQty"
+  ];
 
   temporder = {};
   loadingtrucks = true;
@@ -64,24 +107,31 @@ export class TrucksTableComponent implements OnInit {
     private dialog: MatDialog,
     private route: ActivatedRoute,
     private excelService: ExcelService,
-    private core: CoreService) {
-
+    private core: CoreService
+  ) {
     /**
      * propagate changes when depot changes
      */
-    this.core.loaders.orders.pipe(takeUntil(this.comopnentDestroyed)).subscribe(value => {
-      this.loadingtrucks = value;
-    });
+    this.core.loaders.orders
+      .pipe(takeUntil(this.comopnentDestroyed))
+      .subscribe(value => {
+        this.loadingtrucks = value;
+      });
 
-    this.route.params.pipe(takeUntil(this.comopnentDestroyed))
-      .pipe(switchMap((paramdata: { stage: number; }) => {
-        return this.core.orders[4].pipe(takeUntil(this.comopnentDestroyed),
-          map(data => {
-            return data.filter(order => {
-              return order.truck.stage === +paramdata.stage;
-            });
-          }));
-      }))
+    this.route.params
+      .pipe(takeUntil(this.comopnentDestroyed))
+      .pipe(
+        switchMap((paramdata: { stage: number }) => {
+          return this.core.orders[4].pipe(
+            takeUntil(this.comopnentDestroyed),
+            map(data => {
+              return data.filter(order => {
+                return order.truck.stage === +paramdata.stage;
+              });
+            })
+          );
+        })
+      )
       .subscribe((stagetrucks: Order[]) => {
         this.ordersDataSource.data = stagetrucks;
       });
@@ -93,17 +143,22 @@ export class TrucksTableComponent implements OnInit {
   }
 
   exportAsExcelFile(): void {
-    const dialogRef = this.dialog.open(ColumnsCustomizerComponent,
-      {
-        data: emptytruck,
-        width: "70%",
-        role: "dialog"
-      });
-    dialogRef.afterClosed().pipe(takeUntil(this.comopnentDestroyed)).subscribe(result => {
-      if (result) {
-        this.excelService.exportAsExcelFile(this.ordersDataSource.data, "Orders");
-      }
+    const dialogRef = this.dialog.open(ColumnsCustomizerComponent, {
+      data: emptytruck,
+      width: "70%",
+      role: "dialog"
     });
+    dialogRef
+      .afterClosed()
+      .pipe(takeUntil(this.comopnentDestroyed))
+      .subscribe(result => {
+        if (result) {
+          this.excelService.exportAsExcelFile(
+            this.ordersDataSource.data,
+            "Orders"
+          );
+        }
+      });
   }
 
   filtertrucks(filterValue: string) {
@@ -113,25 +168,9 @@ export class TrucksTableComponent implements OnInit {
   }
 
   sendSMS(clickedOrder: Order) {
-    const sms: SMS = {
-      Id: null,
-      company: clickedOrder.customer,
-      type: {
-        reason: null,
-        origin: "custom"
-      },
-      contact: clickedOrder.customer.contact,
-      greeting: "Jambo",
-      msg: null,
-      status: {
-        delivered: false,
-        sent: false
-      },
-      timestamp: MyTimestamp.now()
-    };
     const dialogRef = this.dialog.open(SendMsgComponent, {
       role: "dialog",
-      data: sms,
+      data: [clickedOrder.customer],
       height: "auto"
     });
     // this.dialog.open(SendMsgComponent);
@@ -141,8 +180,7 @@ export class TrucksTableComponent implements OnInit {
     return moment(MyTimestamp.toDate()).fromNow();
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   ngAfterViewInit() {
     this.ordersDataSource.paginator = this.paginator;

@@ -1,34 +1,51 @@
-import { SelectionModel } from '@angular/cdk/collections';
-import { Component, Inject, OnDestroy, OnInit, Optional, ViewChild } from '@angular/core';
-import { AngularFireFunctions } from '@angular/fire/functions';
-import { SendMsgComponent } from 'app/components/send-msg/send-msg.component';
-import { AdminService } from 'app/services/core/admin.service';
-import { CoreService } from 'app/services/core/core.service';
-import { CustomerService } from 'app/services/customers.service';
-import { ReplaySubject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
-import { DaudiCustomer } from '../../../../models/Daudi/customer/Customer';
-import { SMS } from '../../../../models/Daudi/sms/sms';
-import { MyTimestamp } from '../../../../models/firestore/firestoreTypes';
-import { NotificationService } from '../../../../shared/services/notification.service';
-import { CoreAdminService } from '../../services/core.service';
-import { CompanyMembersComponent } from '../company-members/company-members.component';
-import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { SelectionModel } from "@angular/cdk/collections";
+import {
+  Component,
+  Inject,
+  OnDestroy,
+  OnInit,
+  Optional,
+  ViewChild
+} from "@angular/core";
+import { AngularFireFunctions } from "@angular/fire/functions";
+import { SendMsgComponent } from "app/components/send-msg/send-msg.component";
+import { AdminService } from "app/services/core/admin.service";
+import { CoreService } from "app/services/core/core.service";
+import { CustomerService } from "app/services/customers.service";
+import { ReplaySubject } from "rxjs";
+import { takeUntil } from "rxjs/operators";
+import { DaudiCustomer } from "../../../../models/Daudi/customer/Customer";
+import { SMS } from "../../../../models/Daudi/sms/sms";
+import { MyTimestamp } from "../../../../models/firestore/firestoreTypes";
+import { NotificationService } from "../../../../shared/services/notification.service";
+import { CoreAdminService } from "../../services/core.service";
+import { CompanyMembersComponent } from "../company-members/company-members.component";
+import { MatTableDataSource } from "@angular/material/table";
+import { MatPaginator } from "@angular/material/paginator";
+import { MatSort } from "@angular/material/sort";
+import { MatSnackBar } from "@angular/material/snack-bar";
+import {
+  MatDialog,
+  MatDialogRef,
+  MAT_DIALOG_DATA
+} from "@angular/material/dialog";
 
 @Component({
-  selector: 'customer-management',
-  templateUrl: './customer-management.component.html',
-  styleUrls: ['./customer-management.component.scss']
+  selector: "customer-management",
+  templateUrl: "./customer-management.component.html",
+  styleUrls: ["./customer-management.component.scss"]
 })
-
 export class CustomerManagementComponent implements OnInit, OnDestroy {
-
   dialogProperties: object = {};
-  displayedColumns: string[] = ['select', 'QbId', 'name', 'email', 'phone', 'krapin', 'balance'];
+  displayedColumns: string[] = [
+    "select",
+    "QbId",
+    "name",
+    "email",
+    "phone",
+    "krapin",
+    "balance"
+  ];
   companiesdatasource = new MatTableDataSource<DaudiCustomer>();
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -36,7 +53,7 @@ export class CustomerManagementComponent implements OnInit, OnDestroy {
   selection = new SelectionModel<DaudiCustomer>(true, []);
   loadingcompanies = true;
   savingcompany = false;
-  typedValue: string
+  typedValue: string;
 
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
 
@@ -50,7 +67,8 @@ export class CustomerManagementComponent implements OnInit, OnDestroy {
     private core: CoreService,
     private coreAdmin: CoreAdminService,
     @Optional() public dialogRef: MatDialogRef<CustomerManagementComponent>,
-    @Optional() @Inject(MAT_DIALOG_DATA) public purpose: 'SMS' | 'Attach') {
+    @Optional() @Inject(MAT_DIALOG_DATA) public purpose: "SMS" | "Attach"
+  ) {
     this.core.activedepot
       .pipe(takeUntil(this.comopnentDestroyed))
       .subscribe(depotvata => {
@@ -59,7 +77,7 @@ export class CustomerManagementComponent implements OnInit, OnDestroy {
         if (depotvata.depot.Id) {
           if (purpose) {
             switch (purpose) {
-              case 'Attach': {
+              case "Attach": {
                 /**
                  * disable mutiselect and channge the buttontext
                  */
@@ -79,7 +97,6 @@ export class CustomerManagementComponent implements OnInit, OnDestroy {
             });
         }
       });
-
   }
 
   ngOnDestroy(): void {
@@ -95,11 +112,10 @@ export class CustomerManagementComponent implements OnInit, OnDestroy {
   openMembers(id: string) {
     console.log(id);
     this.dialog.open(CompanyMembersComponent, {
-      role: 'dialog',
+      role: "dialog",
       data: id,
-      height: 'auto'
+      height: "auto"
       // width: '100%%',
-
     });
   }
 
@@ -110,35 +126,11 @@ export class CustomerManagementComponent implements OnInit, OnDestroy {
   }
 
   submitcompanies() {
-    if (!this.purpose || this.purpose === 'SMS') {
-      const sms: SMS[] = this.selection.selected.map(company => {
-        const sms: SMS = {
-          Id: null,
-          company: {
-            QbId: company.QbId,
-            Id: company.Id,
-            name: company.name,
-            krapin: company.krapin
-          },
-          contact: company.contact,
-          type: {
-            reason: null,
-            origin: 'custom' as 'custom'
-          },
-          greeting: 'Jambo',
-          msg: null,
-          status: {
-            delivered: false,
-            sent: false
-          },
-          timestamp: MyTimestamp.now()
-        };
-        return sms;
-      });
+    if (!this.purpose || this.purpose === "SMS") {
       this.dialog.open(SendMsgComponent, {
-        role: 'dialog',
-        data: sms,
-        height: 'auto'
+        role: "dialog",
+        data: this.selection.selected,
+        height: "auto"
       });
     } else {
       this.dialogRef.close(this.selection.selected);
@@ -148,32 +140,36 @@ export class CustomerManagementComponent implements OnInit, OnDestroy {
 
   /** Selects all rows if they are not all selected; otherwise clear selection. */
   masterToggle() {
-    this.isAllSelected() ?
-      this.selection.clear() :
-      this.companiesdatasource.data.forEach(row => this.selection.select(row));
+    this.isAllSelected()
+      ? this.selection.clear()
+      : this.companiesdatasource.data.forEach(row =>
+          this.selection.select(row)
+        );
   }
 
   syncdb() {
     this.creatingsync = true;
-    this.coreAdmin.syncdb(['Customer']).then(res => {
-      this.creatingsync = false;
-      this.notification.notify({
-        alert_type: 'success',
-        title: 'Success',
-        body: 'Companies Synchronized'
+    this.coreAdmin
+      .syncdb(["Customer"])
+      .then(res => {
+        this.creatingsync = false;
+        this.notification.notify({
+          alert_type: "success",
+          title: "Success",
+          body: "Companies Synchronized"
+        });
+      })
+      .catch(e => {
+        this.creatingsync = false;
+        this.notification.notify({
+          alert_type: "error",
+          title: "Error",
+          body: "Sync failed, please try again later"
+        });
+        /**
+         * @todo send the error to the database
+         */
       });
-    }).catch(e => {
-      this.creatingsync = false;
-      this.notification.notify({
-        alert_type: 'error',
-        title: 'Error',
-        body: 'Sync failed, please try again later'
-      });
-      /**
-       * @todo send the error to the database
-       */
-    });
-
   }
 
   openOrders(id: string) {
@@ -182,23 +178,26 @@ export class CustomerManagementComponent implements OnInit, OnDestroy {
 
   approvecompany(company: DaudiCustomer) {
     this.savingcompany = true;
-    this.customerservice.verifykra(company.krapin, this.core.currentOmc.value.Id)
+    this.customerservice
+      .verifykra(company.krapin, this.core.currentOmc.value.Id)
       .get()
-      .then((snapshot) => {
+      .then(snapshot => {
         if (snapshot.empty) {
           company.kraverified = {
             status: true,
             user: this.adminservice.createUserObject()
           };
-          this.customerservice.updateCustomer(company, this.core.currentOmc.value.Id).then(() => {
-            this.savingcompany = false;
-          });
+          this.customerservice
+            .updateCustomer(company, this.core.currentOmc.value.Id)
+            .then(() => {
+              this.savingcompany = false;
+            });
         } else {
           this.savingcompany = false;
           this.notification.notify({
-            alert_type: 'error',
-            title: 'Error',
-            body: 'Duplicate KRA pin'
+            alert_type: "error",
+            title: "Error",
+            body: "Duplicate KRA pin"
           });
         }
       });
@@ -224,14 +223,17 @@ export class CustomerManagementComponent implements OnInit, OnDestroy {
     // company.verifiedByUser = this.authService.getUser().displayName;
     // update company
     // this.updateCompanies(company.$key, company)
-    this.snackBar.open('Company details updated!', 'Emkay Now ', { duration: 4000 });
-
+    this.snackBar.open("Company details updated!", "Emkay Now ", {
+      duration: 4000
+    });
   }
 
   saveChanges(company: DaudiCustomer) {
     console.log(company);
     // update company
     // this.updateCompanies(company.$key, company)
-    this.snackBar.open('Company details updated!', 'Emkay Now ', { duration: 4000 });
+    this.snackBar.open("Company details updated!", "Emkay Now ", {
+      duration: 4000
+    });
   }
 }
