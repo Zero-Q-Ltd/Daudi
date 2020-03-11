@@ -14,19 +14,22 @@ const debug = true;
 //[END AfricasTalking credentials]
 
 export function sendsms(smsdata: SMS, smsid: string) {
-  return Promise.all(smsdata.contact.map(contact => {
-    return sendMessage(
-      "+254" + contact.phone,
-      `${smsdata.greeting} ${capitalizeFirstLetter(smsdata.company.name.toLowerCase)} ${smsdata.msg}`
-    ).then(result => {
-      return admin
-        .firestore()
-        .collection("sms")
-        .doc(smsid)
-        .update({ status: { sent: true, delivered: false } });
-    });
-  }))
-
+  return Promise.all(
+    smsdata.contact.map(contact => {
+      return sendMessage(
+        "+254" + contact.phone,
+        `${smsdata.greeting} ${capitalizeFirstLetter(
+          smsdata.company.name.toLowerCase()
+        )} ${smsdata.msg}`
+      ).then(result => {
+        return admin
+          .firestore()
+          .collection("sms")
+          .doc(smsid)
+          .update({ status: { sent: true, delivered: false } });
+      });
+    })
+  );
 }
 function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
@@ -37,7 +40,7 @@ function sendMessage(to: string, message: string) {
     username: username,
     to: to,
     message: message,
-    from: "Emkay",
+    from: "Emkay"
   });
 
   console.log(post_data);
@@ -53,9 +56,9 @@ function sendMessage(to: string, message: string) {
     json: true,
     body: post_data
   };
-  return new Promise(function (resolve, reject) {
+  return new Promise(function(resolve, reject) {
     // if (!token) reject('null token')
-    requester(opts, function (err, res, body) {
+    requester(opts, function(err, res, body) {
       if (debug) {
         console.log("invoking endpoint: " + opts.url);
         console.log(JSON.stringify(body, null, 2));
