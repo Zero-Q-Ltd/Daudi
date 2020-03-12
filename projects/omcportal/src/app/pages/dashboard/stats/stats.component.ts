@@ -264,42 +264,42 @@ export class StatsComponent implements OnInit, OnDestroy {
               return;
             case "W":
               const thisWeek = moment()
-                .startOf("w")
+                .startOf(history.statType)
                 .toString();
               const lastWeek = moment()
-                .startOf("w")
+                .startOf(history.statType)
                 .toString();
 
               if (
                 moment(this.parseDate.transform(history.date))
-                  .startOf("w")
+                  .startOf(history.statType)
                   .toString() === thisWeek
               ) {
                 this.stats.thisweek = history;
               } else if (
                 moment(this.parseDate.transform(history.date))
-                  .startOf("w")
+                  .startOf(history.statType)
                   .toString() === lastWeek
               ) {
                 this.stats.lastweek = history;
               }
             case "M":
               const thisMonth = moment()
-                .startOf("m")
+                .startOf(history.statType)
                 .toString();
               const lastMonth = moment()
-                .startOf("m")
+                .startOf(history.statType)
                 .toString();
 
               if (
                 moment(this.parseDate.transform(history.date))
-                  .startOf("m")
+                  .startOf(history.statType)
                   .toString() === thisMonth
               ) {
                 this.stats.thismonth = history;
               } else if (
                 moment(this.parseDate.transform(history.date))
-                  .startOf("m")
+                  .startOf(history.statType)
                   .toString() === lastMonth
               ) {
                 this.stats.lastmonth = history;
@@ -320,7 +320,7 @@ export class StatsComponent implements OnInit, OnDestroy {
                 this.stats.thisyear = history;
               } else if (
                 moment(this.parseDate.transform(history.date))
-                  .startOf("w")
+                  .startOf("y")
                   .toString() === lastYear
               ) {
                 this.stats.lastyear = history;
