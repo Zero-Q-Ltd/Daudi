@@ -1,5 +1,18 @@
-import { animate, sequence, state, style, transition, trigger } from "@angular/animations";
-import { Component, HostListener, OnDestroy, OnInit, ViewChild } from "@angular/core";
+import {
+  animate,
+  sequence,
+  state,
+  style,
+  transition,
+  trigger
+} from "@angular/animations";
+import {
+  Component,
+  HostListener,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from "@angular/core";
 import { AngularFireFunctions } from "@angular/fire/functions";
 import { MatPaginator } from "@angular/material/paginator";
 import { MatSort } from "@angular/material/sort";
@@ -15,6 +28,8 @@ import { Depot } from "../../../../models/Daudi/depot/Depot";
 import { emptyomc, OMC } from "../../../../models/Daudi/omc/OMC";
 import { MyTimestamp } from "../../../../models/firestore/firestoreTypes";
 import { NotificationService } from "../../../../shared/services/notification.service";
+import { AdminConfig, emptyConfig } from "app/models/Daudi/omc/AdminConfig";
+import { toArray } from "app/models/utils/SnapshotUtils";
 
 @Component({
   selector: "user-management",
@@ -24,66 +39,103 @@ import { NotificationService } from "../../../../shared/services/notification.se
     trigger("flyIn", [
       state("in", style({ transform: "translateX(0)" })),
       transition("void => *", [
-        style({ height: "*", opacity: "0", transform: "translateX(-550px)", "box-shadow": "none" }),
+        style({
+          height: "*",
+          opacity: "0",
+          transform: "translateX(-550px)",
+          "box-shadow": "none"
+        }),
         sequence([
-          animate(".20s ease", style({ height: "*", opacity: ".2", transform: "translateX(0)", "box-shadow": "none" })),
-          animate(".15s ease", style({ height: "*", opacity: 1, transform: "translateX(0)" }))
+          animate(
+            ".20s ease",
+            style({
+              height: "*",
+              opacity: ".2",
+              transform: "translateX(0)",
+              "box-shadow": "none"
+            })
+          ),
+          animate(
+            ".15s ease",
+            style({ height: "*", opacity: 1, transform: "translateX(0)" })
+          )
         ])
       ])
     ]),
     trigger("detailExpand", [
-      state("collapsed", style({ height: "0px", minHeight: "0", display: "none" })),
+      state(
+        "collapsed",
+        style({ height: "0px", minHeight: "0", display: "none" })
+      ),
       state("expanded", style({ height: "*" })),
-      transition("expanded <=> collapsed", animate("225ms cubic-bezier(0.4, 0.0, 0.2, 1)"))
-    ])]
+      transition(
+        "expanded <=> collapsed",
+        animate("225ms cubic-bezier(0.4, 0.0, 0.2, 1)")
+      )
+    ])
+  ]
 })
-
 export class UserManagementComponent implements OnInit, OnDestroy {
-
   usersdatasource = new MatTableDataSource<Admin>();
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   creatingsync = false;
-  displayedColumns: string[] = ["photo", "QbId", "name", "email", "phone", "type", "level", "sandbox", "depot", "status", "action"];
+  displayedColumns: string[] = [
+    "photo",
+    "QbId",
+    "name",
+    "email",
+    "phone",
+    "type",
+    "level",
+    "depot",
+    "status",
+    "action"
+  ];
   activeuser: Admin = emptyadmin;
   loadingadmins = true;
   saving = false;
   alldepots: Depot[];
   expandedEAdmin: Admin;
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
-  originalCompany: OMC = { ...emptyomc };
+  config: AdminConfig = { ...emptyConfig };
 
   constructor(
-    private adminservice: AdminService,
     private functions: AngularFireFunctions,
     private notification: NotificationService,
     private adminsService: AdminService,
-    private core: CoreService) {
-    this.core.activedepot.pipe(takeUntil(this.comopnentDestroyed)).subscribe(depotvata => {
-      if (depotvata.depot.Id) {
-        this.adminservice.observableuserdata.pipe(takeUntil(this.comopnentDestroyed)).subscribe(admin => {
-          this.activeuser = admin;
-        });
-        this.adminservice.getalladmins().onSnapshot(snapshot => {
-          this.loadingadmins = false;
-          this.usersdatasource.data = snapshot.docs.map(doc => {
-            const value = Object.assign({}, emptyadmin, doc.data());
-            value.Id = doc.id;
-            return value as Admin;
+    private core: CoreService
+  ) {
+    this.core.activedepot
+      .pipe(takeUntil(this.comopnentDestroyed))
+      .subscribe(depotvata => {
+        if (depotvata.depot.Id) {
+          this.adminsService.observableuserdata
+            .pipe(takeUntil(this.comopnentDestroyed))
+            .subscribe(admin => {
+              this.activeuser = admin;
+            });
+          this.adminsService.getalladmins().onSnapshot(snapshot => {
+            this.loadingadmins = false;
+            this.usersdatasource.data = toArray(emptyadmin, snapshot);
           });
-        });
-        this.core.adminConfig.pipe(takeUntil(this.comopnentDestroyed)).subscribe(co => {
-          // this.originalCompany = co;
-        });
-      }
-    });
-    this.core.depots.pipe(takeUntil(this.comopnentDestroyed)).subscribe(depots => {
-      this.alldepots = depots;
-    });
-
+          this.core.adminConfig
+            .pipe(takeUntil(this.comopnentDestroyed))
+            .subscribe(co => {
+              // this.originalCompany = co;
+            });
+        }
+      });
+    this.core.depots
+      .pipe(takeUntil(this.comopnentDestroyed))
+      .subscribe(depots => {
+        this.alldepots = depots;
+      });
   }
 
-  @HostListener("document:keydown.escape", ["$event"]) onKeydownHandler(event: KeyboardEvent) {
+  @HostListener("document:keydown.escape", ["$event"]) onKeydownHandler(
+    event: KeyboardEvent
+  ) {
     this.expandedEAdmin = null;
   }
 
@@ -96,13 +148,18 @@ export class UserManagementComponent implements OnInit, OnDestroy {
     this.usersdatasource.paginator = this.paginator;
     this.usersdatasource.sort = this.sort;
   }
+  initvalues(): void {
+    this.core.adminConfig
+      .pipe(takeUntil(this.comopnentDestroyed))
+      .subscribe(conf => {
+        this.config = conf;
+      });
+  }
 
   /**
    * @todo allow custom photo upload
    */
-  uploadphoto() {
-
-  }
+  uploadphoto() {}
 
   syncdb() {
     this.creatingsync = true;
@@ -111,14 +168,17 @@ export class UserManagementComponent implements OnInit, OnDestroy {
       time: MyTimestamp.now(),
       synctype: ["Employee"]
     };
-    this.functions.httpsCallable("requestsync")(syncobject).pipe(takeUntil(this.comopnentDestroyed)).subscribe(res => {
-      this.creatingsync = false;
-      this.notification.notify({
-        alert_type: "success",
-        title: "Success",
-        body: "Users Synchronized"
+    this.functions
+      .httpsCallable("requestsync")(syncobject)
+      .pipe(takeUntil(this.comopnentDestroyed))
+      .subscribe(res => {
+        this.creatingsync = false;
+        this.notification.notify({
+          alert_type: "success",
+          title: "Success",
+          body: "Users Synchronized"
+        });
       });
-    });
   }
 
   savechanges() {
