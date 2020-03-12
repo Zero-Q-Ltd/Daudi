@@ -28,6 +28,8 @@ import { Depot } from "../../../../models/Daudi/depot/Depot";
 import { emptyomc, OMC } from "../../../../models/Daudi/omc/OMC";
 import { MyTimestamp } from "../../../../models/firestore/firestoreTypes";
 import { NotificationService } from "../../../../shared/services/notification.service";
+import { AdminConfig, emptyConfig } from "app/models/Daudi/omc/AdminConfig";
+import { toArray } from "app/models/utils/SnapshotUtils";
 
 @Component({
   selector: "user-management",
@@ -96,7 +98,8 @@ export class UserManagementComponent implements OnInit, OnDestroy {
   alldepots: Depot[];
   expandedEAdmin: Admin;
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
-  originalCompany: OMC = { ...emptyomc };
+  config: AdminConfig = { ...emptyConfig };
+
   constructor(
     private functions: AngularFireFunctions,
     private notification: NotificationService,
@@ -114,11 +117,7 @@ export class UserManagementComponent implements OnInit, OnDestroy {
             });
           this.adminsService.getalladmins().onSnapshot(snapshot => {
             this.loadingadmins = false;
-            this.usersdatasource.data = snapshot.docs.map(doc => {
-              const value = Object.assign({}, emptyadmin, doc.data());
-              value.Id = doc.id;
-              return value as Admin;
-            });
+            this.usersdatasource.data = toArray(emptyadmin, snapshot);
           });
           this.core.adminConfig
             .pipe(takeUntil(this.comopnentDestroyed))
@@ -148,6 +147,13 @@ export class UserManagementComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.usersdatasource.paginator = this.paginator;
     this.usersdatasource.sort = this.sort;
+  }
+  initvalues(): void {
+    this.core.adminConfig
+      .pipe(takeUntil(this.comopnentDestroyed))
+      .subscribe(conf => {
+        this.config = conf;
+      });
   }
 
   /**

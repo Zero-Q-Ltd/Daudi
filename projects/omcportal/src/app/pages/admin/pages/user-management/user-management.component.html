@@ -51,14 +51,14 @@
                   (click)="uploadphoto()"
                   alt=""
                   class="rounded img30_30"
-                  src="{{ admin.data.photoURL }}"
+                  src="{{ admin.data?.photoURL }}"
                 />
               </div>
               <ng-template #nonedit>
                 <img
                   alt=""
                   class="rounded img30_30"
-                  src="{{ admin.data.photoURL }}"
+                  src="{{ admin.data?.photoURL }}"
                 />
               </ng-template>
             </td>
@@ -96,7 +96,7 @@
           <ng-container matColumnDef="email">
             <th *matHeaderCellDef mat-header-cell mat-sort-header>Email</th>
             <td *matCellDef="let admin" mat-cell>
-              {{ admin.data.email }}
+              {{ admin.data?.email }}
             </td>
           </ng-container>
           <ng-container matColumnDef="phone">
@@ -138,10 +138,7 @@
                     placeholder="User Type"
                   >
                     <mat-option
-                      *ngFor="
-                        let type of originalCompany.adminTypes;
-                        let i = index
-                      "
+                      *ngFor="let type of config.adminTypes; let i = index"
                       [value]="i"
                     >
                       {{ type.name }}
@@ -157,10 +154,7 @@
                     placeholder="User type"
                   >
                     <mat-option
-                      *ngFor="
-                        let type of originalCompany.adminTypes;
-                        let i = index
-                      "
+                      *ngFor="let type of config.adminTypes; let i = index"
                       [value]="i"
                     >
                       {{ type.name }}
@@ -186,7 +180,7 @@
                   >
                     <mat-option
                       *ngFor="
-                        let level of originalCompany.adminTypes[
+                        let level of config.adminTypes[
                           expandedEAdmin.config.type
                         ]?.levels;
                         let i = index
@@ -207,9 +201,8 @@
                   >
                     <mat-option
                       *ngFor="
-                        let level of originalCompany.adminTypes[
-                          admin.config.type
-                        ]?.levels;
+                        let level of config.adminTypes[admin.config.type]
+                          ?.levels;
                         let i = index
                       "
                       [value]="i"
@@ -230,7 +223,7 @@
               <div *ngIf="expandedEAdmin === admin; else nonedit">
                 <mat-form-field>
                   <mat-select
-                    [(ngModel)]="expandedEAdmin.config.depotid"
+                    [(ngModel)]="expandedEAdmin.config.app.depotid"
                     [disabled]=""
                     name="adminlevel"
                     placeholder="Depot"
