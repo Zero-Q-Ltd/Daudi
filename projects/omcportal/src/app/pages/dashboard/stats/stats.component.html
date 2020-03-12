@@ -379,19 +379,11 @@
           <span class="totals-a">TOTALS</span>
         </div>
         <div class="box-info">
-          <span>THIS WEEK</span>&nbsp;&nbsp;
-          <span>LAST WEEK</span>
+          <span>LAST WEEK</span>&nbsp;&nbsp;
+          <span>THIS WEEK</span>
         </div>
         <div class="box-bottom">
           <div class="row no-gutters">
-            <div class="col">
-              <span class="totals-b">{{
-                stats.thisweek.fuelsold.pms.amount +
-                  stats.thisweek.fuelsold.ago.amount +
-                  stats.thisweek.fuelsold.ik.amount | number: "1.0-0"
-              }}</span>
-            </div>
-            |
             <div class="col float-left">
               <span class="totals-b">{{
                 stats.lastweek.fuelsold.pms.amount +
@@ -399,6 +391,14 @@
                   stats.lastweek.fuelsold.ik.amount | number: "1.0-0"
               }}</span>
             </div>
+            |
+            <div class="col">
+              <span class="totals-b">{{
+                stats.thisweek.fuelsold.pms.amount +
+                  stats.thisweek.fuelsold.ago.amount +
+                  stats.thisweek.fuelsold.ik.amount | number: "1.0-0"
+              }}</span>
+            </div>
           </div>
         </div>
       </div>
@@ -409,19 +409,11 @@
           <span class="totals-a">TOTALS</span>
         </div>
         <div class="box-info">
-          <span>THIS MONTH</span>&nbsp;&nbsp;
-          <span>LAST MONTH</span>
+          <span>LAST MONTH</span>&nbsp;&nbsp;
+          <span>THIS MONTH</span>
         </div>
         <div class="box-bottom">
           <div class="row no-gutters">
-            <div class="col">
-              <span class="totals-b">{{
-                stats.thismonth.fuelsold.pms.amount +
-                  stats.thismonth.fuelsold.ago.amount +
-                  stats.thismonth.fuelsold.ik.amount | number: "1.0-0"
-              }}</span>
-            </div>
-            |
             <div class="col float-left">
               <span class="totals-b">{{
                 stats.lastmonth.fuelsold.pms.amount +
@@ -429,6 +421,14 @@
                   stats.lastmonth.fuelsold.ik.amount | number: "1.0-0"
               }}</span>
             </div>
+            |
+            <div class="col">
+              <span class="totals-b">{{
+                stats.thismonth.fuelsold.pms.amount +
+                  stats.thismonth.fuelsold.ago.amount +
+                  stats.thismonth.fuelsold.ik.amount | number: "1.0-0"
+              }}</span>
+            </div>
           </div>
         </div>
       </div>
@@ -439,24 +439,24 @@
           <span class="totals-a">TOTALS</span>
         </div>
         <div class="box-info">
-          <span>THIS YEAR</span>&nbsp;&nbsp;
-          <span>LAST YEAR</span>
+          <span>LAST YEAR</span>&nbsp;&nbsp;
+          <span>THIS YEAR</span>
         </div>
         <div class="box-bottom">
           <div class="row no-gutters">
-            <div class="col">
-              <span class="totals-b">{{
-                stats.thisyear.fuelsold.pms.amount +
-                  stats.thisyear.fuelsold.ago.amount +
-                  stats.thisyear.fuelsold.ik.amount | number: "1.0-0"
-              }}</span>
-            </div>
-            |
             <div class="col float-left">
               <span class="totals-b">{{
                 stats.lastyear.fuelsold.pms.amount +
                   stats.lastyear.fuelsold.ago.amount +
                   stats.lastyear.fuelsold.ik.amount | number: "1.0-0"
+              }}</span>
+            </div>
+            |
+            <div class="col">
+              <span class="totals-b">{{
+                stats.thisyear.fuelsold.pms.amount +
+                  stats.thisyear.fuelsold.ago.amount +
+                  stats.thisyear.fuelsold.ik.amount | number: "1.0-0"
               }}</span>
             </div>
           </div>
