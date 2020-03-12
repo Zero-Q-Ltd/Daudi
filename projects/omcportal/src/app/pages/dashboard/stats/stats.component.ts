@@ -14,13 +14,15 @@ import { skipWhile, takeUntil } from "rxjs/operators";
 import { Price } from "../../../models/Daudi/depot/Price";
 import { Entry } from "../../../models/Daudi/fuel/Entry";
 import { FuelNamesArray, FuelType } from "../../../models/Daudi/fuel/FuelType";
-import { emptystat, Core } from "../../../models/Daudi/stats/Core";
 import { CalendarRangesComponent } from "../calendar-ranges/calendar-ranges.component";
 import { FuelBoundstats } from "../charts/charts.config";
 import { singleFuelpricestat } from "../charts/prices";
 import { fuelgauge } from "../charts/qty";
 import { saleStats } from "../charts/sales";
 import { MatSnackBar } from "@angular/material/snack-bar";
+import { emptyTimeStats, TimeStats } from "app/models/Daudi/stats/TimeStats";
+import { toArray } from "app/models/utils/SnapshotUtils";
+import { ParseDatePipe } from "app/shared/pipes/parse-date.pipe";
 
 @Component({
   selector: "app-stats",
@@ -28,7 +30,6 @@ import { MatSnackBar } from "@angular/material/snack-bar";
   styleUrls: ["./stats.component.scss"]
 })
 export class StatsComponent implements OnInit, OnDestroy {
-  @Input() depotResolution: "All" | "CurrentDepot";
   date = moment();
   fuelgauge = {
     pms: fuelgauge.pms,
@@ -45,20 +46,20 @@ export class StatsComponent implements OnInit, OnDestroy {
 
   fueltypesArray = FuelNamesArray;
   emptystats = {
-    thisweek: { ...emptystat },
-    lastweek: { ...emptystat },
-    thismonth: { ...emptystat },
-    lastmonth: { ...emptystat },
-    thisyear: { ...emptystat },
-    lastyear: { ...emptystat }
+    thisweek: { ...emptyTimeStats },
+    lastweek: { ...emptyTimeStats },
+    thismonth: { ...emptyTimeStats },
+    lastmonth: { ...emptyTimeStats },
+    thisyear: { ...emptyTimeStats },
+    lastyear: { ...emptyTimeStats }
   };
   stats: {
-    thisweek: Core;
-    lastweek: Core;
-    thismonth: Core;
-    lastmonth: Core;
-    thisyear: Core;
-    lastyear: Core;
+    thisweek: TimeStats;
+    lastweek: TimeStats;
+    thismonth: TimeStats;
+    lastmonth: TimeStats;
+    thisyear: TimeStats;
+    lastyear: TimeStats;
   } = this.emptystats;
   axisdates: { date: Date; pos: number }[] = [];
   dateControl: FormControl = new FormControl({
@@ -93,7 +94,8 @@ export class StatsComponent implements OnInit, OnDestroy {
     private entriesService: EntriesService,
     private statservice: StatsService,
     private core: CoreService,
-    private priceservice: PricesService
+    private priceservice: PricesService,
+    private parseDate: ParseDatePipe
   ) {
     this.core.activedepot
       .pipe(
@@ -124,7 +126,7 @@ export class StatsComponent implements OnInit, OnDestroy {
         this.dateControl.reset({
           begin: new Date(
             moment()
-              .subtract(1, "M")
+              .subtract(3, "M")
               .startOf("day")
               .toDate()
           ),
@@ -146,7 +148,9 @@ export class StatsComponent implements OnInit, OnDestroy {
                  * force change detection in the charts directive
                  */
                 this.fuelgauge[fueltype] = { ...fuelgauge[fueltype] };
-                // this.fuelgauge[fueltype].series[0].max += Math.round(batch.qty / 1000);
+                this.fuelgauge[fueltype].series[0].max += Math.round(
+                  batch.qty.total / 1000
+                );
                 const available = this.getTotalAvailable(batch);
                 this.fuelgauge[fueltype].series[0].data[0].value += Math.round(
                   available / 1000
@@ -202,22 +206,6 @@ export class StatsComponent implements OnInit, OnDestroy {
         .toDate();
       datesrange[dayCount - i] = temp;
       this.saleStats.xAxis[0].data.push(moment(temp).format("DD-MM-YY"));
-      this.fueltypesArray.forEach(ftype => {
-        /**
-         * Important so that later the array can be properly iterated
-         */
-        // this.priceStats[ftype].xAxis.data.length = datesrange.length;
-        // this.priceStats[ftype].xAxis.data[dayCount - i] = moment(temp).format("DD-MM-YY");
-        // this.priceStats[ftype].series[0].data[dayCount - i] = [];
-        // this.priceStats[ftype].series[1].data[dayCount - i] = [];
-        // this.priceStats[ftype].series[2].data[dayCount - i] = [];
-        // this.priceStats[ftype].series[3].data[dayCount - i] = [];
-        // this.priceStats[ftype].series[4].data[dayCount - i] = [];
-        this.axisdates[dayCount - i] = {
-          date: temp,
-          pos: dayCount - i
-        };
-      });
     }
     /**
      * this is where all the magic happes
@@ -230,7 +218,7 @@ export class StatsComponent implements OnInit, OnDestroy {
     }
     const subscription = this.statservice
       .getstatsrange(
-        this.core.activedepot.value.depot.Id,
+        this.core.omcId,
         moment()
           .startOf("day")
           .subtract(dayCount, "days")
@@ -243,39 +231,30 @@ export class StatsComponent implements OnInit, OnDestroy {
          * remove results from weeks, months, years by filtering
          */
         this.saleStats = { ...saleStats };
-        const filteredhistory = saleshistory.docs
-          .map(f => {
-            const g = f.data();
-            g.id = f.id;
-            // console.log(g);
-            return g as Core;
-          })
-          .filter(c => {
-            return c.id.indexOf("W") !== 0 && c.id.length === 10;
-          });
+        const filteredhistory = toArray(emptyTimeStats, saleshistory);
 
         /**
          * create a temporary array to avoid mutation
          * Copy over the data because there's a possibiliy that the data in db has some missing dates
          * fill any missing date with the empty equivalent
          */
+        console.log(filteredhistory);
         const newfilteredhistory = [];
+
         datesrange.forEach((specificdate, index) => {
           if (
             !filteredhistory.find(hist => {
-              if (hist && !hist.id) {
-                return false;
-              }
               if (
-                hist.date &&
-                moment(hist.date.toDate()).isSame(specificdate)
+                moment(this.parseDate.transform(hist.date))
+                  .startOf("day")
+                  .isSame(specificdate)
               ) {
                 newfilteredhistory[dayCount - index] = hist;
                 return true;
               }
             })
           ) {
-            newfilteredhistory[index] = { ...emptystat };
+            newfilteredhistory[index] = { ...emptyTimeStats };
           }
         });
 
@@ -295,7 +274,6 @@ export class StatsComponent implements OnInit, OnDestroy {
             if (history.fuelsold[ftype].qty > highest[ftype]) {
               highest[ftype] = history.fuelsold[ftype].qty;
             }
-            // @ts-ignore
             this.saleStats.series[i + 1].data[dayCount - historyindex] =
               history.fuelsold[ftype].qty;
           });
@@ -303,70 +281,6 @@ export class StatsComponent implements OnInit, OnDestroy {
         this.isLoadingsalesStats = false;
       });
     this.subscriptions.set(`statsrange`, subscription);
-
-    /**
-     * Remove realtimeness to save on performance
-     */
-    this.priceservice
-      .getAvgpricesrange(
-        this.core.currentOmc.value.Id,
-        this.core.activedepot.value.depot.Id,
-        FuelType.pms,
-        moment()
-          .startOf("day")
-          .subtract(dayCount, "days")
-          .toDate(),
-        moment().toDate()
-      )
-      .orderBy("user.time", "desc")
-      .get()
-      .then(pricesinrange => {
-        const prices = pricesinrange.docs.map(f => {
-          const h = f.data();
-          h.id = f.id;
-          return h as Price;
-        });
-        prices.forEach(price => {
-          // this.fuelstats = { ...allfuelstats };
-          // if (this.axisdates.length == 29) {
-          const position = this.axisdates.findIndex(mappeddate => {
-            return moment(price.user.date)
-              .startOf("day")
-              .isSame(mappeddate.date);
-          });
-          // console.log(position, price);
-          // console.log(this.fuelstats[price.fueltytype].series[1]);
-          /**
-           * only push the data to the respective position, the iterate the sorted data to calculate MA's
-           */
-          // @ts-ignore
-          this.priceStats[price.fueltytype].series[0].data[position].push(
-            price.price
-          );
-          this.priceStats[price.fueltytype] = JSON.parse(
-            JSON.stringify(this.priceStats[price.fueltytype])
-          );
-        });
-        /**
-         * MA calculation must be done sequentially, so wait until all the data has been mapped to the right position
-         */
-        this.fueltypesArray.forEach(ftype => {
-          const copy = [];
-          // const copy = JSON.parse(JSON.stringify(this.priceStats[ftype].series[0].data));
-          copy.map((data, pos) => {
-            // console.log(pos, data);
-            // console.log(copy);
-            // this.priceStats[ftype].series[1].data = calculateMA(copy, 5);
-            // this.priceStats[ftype].series[2].data = calculateMA(copy, 10);
-            // this.priceStats[ftype].series[3].data = calculateMA(copy, 20);
-            // this.priceStats[ftype].series[4].data = calculateMA(copy, 30);
-          });
-          this.priceStats[ftype] = JSON.parse(
-            JSON.stringify(this.priceStats[ftype])
-          );
-        });
-        this.isLoadingPrices = false;
-      });
 
     /**
      * Unsubcribe to previous subscription if exists
@@ -384,8 +298,8 @@ export class StatsComponent implements OnInit, OnDestroy {
       .onSnapshot(weekstatsobject => {
         this.stats.thisweek = Object.assign(
           {},
-          emptystat,
-          weekstatsobject.data() as Core
+          emptyTimeStats,
+          weekstatsobject.data() as TimeStats
         );
       });
     this.subscriptions.set(`thisweek`, thisweeksubscription);
@@ -407,8 +321,8 @@ export class StatsComponent implements OnInit, OnDestroy {
       .onSnapshot(weekstatsobject => {
         this.stats.lastweek = Object.assign(
           {},
-          emptystat,
-          weekstatsobject.data() as Core
+          emptyTimeStats,
+          weekstatsobject.data() as TimeStats
         );
       });
     this.subscriptions.set(`lastweek`, lastweeksubscription);
@@ -429,8 +343,8 @@ export class StatsComponent implements OnInit, OnDestroy {
       .onSnapshot(monthtatsobject => {
         this.stats.thismonth = Object.assign(
           {},
-          emptystat,
-          monthtatsobject.data() as Core
+          emptyTimeStats,
+          monthtatsobject.data() as TimeStats
         );
       });
     this.subscriptions.set(`thismonth`, thismonthsubscription);
@@ -452,8 +366,8 @@ export class StatsComponent implements OnInit, OnDestroy {
       .onSnapshot(monthtatsobject => {
         this.stats.lastmonth = Object.assign(
           {},
-          emptystat,
-          monthtatsobject.data() as Core
+          emptyTimeStats,
+          monthtatsobject.data() as TimeStats
         );
       });
     this.subscriptions.set(`lastmonth`, lastmonthsubscription);
@@ -474,8 +388,8 @@ export class StatsComponent implements OnInit, OnDestroy {
       .onSnapshot(yearstatsobject => {
         this.stats.thisyear = Object.assign(
           {},
-          emptystat,
-          yearstatsobject.data() as Core
+          emptyTimeStats,
+          yearstatsobject.data() as TimeStats
         );
       });
     this.subscriptions.set(`thisyear`, thisyearsubscription);
@@ -497,8 +411,8 @@ export class StatsComponent implements OnInit, OnDestroy {
       .onSnapshot(yeartatsobject => {
         this.stats.lastyear = Object.assign(
           {},
-          emptystat,
-          yeartatsobject.data() as Core
+          emptyTimeStats,
+          yeartatsobject.data() as TimeStats
         );
       });
     this.subscriptions.set(`lastyear`, lastyearsubscription);

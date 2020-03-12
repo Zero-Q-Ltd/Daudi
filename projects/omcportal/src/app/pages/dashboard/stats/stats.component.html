@@ -1,4 +1,7 @@
-<div class="container-fluid no-breadcrumbs page-dashboard" style="padding-top:20px;">
+<div
+  class="container-fluid no-breadcrumbs page-dashboard"
+  style="padding-top:20px;"
+>
   <!--  <div class="row">
       <div class="col">
         <div class="btn-group float-right">
@@ -7,56 +10,74 @@
         </div>
       </div>
     </div>-->
-  <div>
+  <!-- <div>
     <div class="row">
-      {{depotResolution}}
       <div class="col-sm-4"></div>
       <div class="col-sm-4">
         <mat-form-field class="full-width">
-          <!-- <input [formControl]="dateControl" [max]="maxDate" [min]="minDate" [satDatepicker]="picker" matInput
-            placeholder="CHOOSE A DATE RANGE"> -->
-          <!-- <sat-datepicker #picker [calendarFooterComponent]="rangesFooter" [closeAfterSelection]="false"
+          <input
+            [formControl]="dateControl"
+            [max]="maxDate"
+            [min]="minDate"
+            matInput
+            placeholder="CHOOSE A DATE RANGE"
+          />
+          <sat-datepicker #picker [calendarFooterComponent]="rangesFooter" [closeAfterSelection]="false"
             [rangeMode]="true">
           </sat-datepicker>
           <mat-hint class="date-hint">NB: Bigger Ranges may take sometime to load all the data</mat-hint>
-          <sat-datepicker-toggle [for]="picker" matSuffix></sat-datepicker-toggle> -->
+          <sat-datepicker-toggle [for]="picker" matSuffix></sat-datepicker-toggle>
         </mat-form-field>
       </div>
       <div class="col-sm-4"></div>
     </div>
-  </div>
-  <br>
+  </div> -->
+  <br />
   <mat-accordion class="accordionstyle">
     <mat-expansion-panel>
       <mat-expansion-panel-header>
         <mat-panel-title>
           Sales Stats
         </mat-panel-title>
-        <mat-panel-description>
-        </mat-panel-description>
+        <mat-panel-description> </mat-panel-description>
       </mat-expansion-panel-header>
-      <div [loading]="isLoadingsalesStats" [options]="saleStats" class="bar-height" echarts theme="macarons"></div>
+      <div
+        [loading]="isLoadingsalesStats"
+        [options]="saleStats"
+        class="bar-height"
+        echarts
+        theme="macarons"
+      ></div>
     </mat-expansion-panel>
-    <br>
-    <mat-expansion-panel>
+    <br />
+    <!-- <mat-expansion-panel>
       <mat-expansion-panel-header>
         <mat-panel-title>
           Price Candle 2020 &nbsp; <b> (Not Real-Time) </b>
         </mat-panel-title>
-        <mat-panel-description>
-        </mat-panel-description>
+        <mat-panel-description> </mat-panel-description>
       </mat-expansion-panel-header>
       <div *ngFor="let fueltype of fueltypesArray">
-        <div [loading]="isLoadingPrices" [options]="priceStats[fueltype]" class="bar-height " echarts theme="macarons">
-        </div>
+        <div
+          [loading]="isLoadingPrices"
+          [options]="priceStats[fueltype]"
+          class="bar-height "
+          echarts
+          theme="macarons"
+        ></div>
       </div>
-    </mat-expansion-panel>
-    <br>
+    </mat-expansion-panel> -->
+    <br />
   </mat-accordion>
   <div class="row">
     <div *ngFor="let fueltype of fueltypesArray" class="col-sm-4">
-      <div [loading]="isLoadingFuelqty[fueltype]" [options]="fuelgauge[fueltype]" class="gauge-height box box-default"
-        echarts theme="macarons"></div>
+      <div
+        [loading]="isLoadingFuelqty[fueltype]"
+        [options]="fuelgauge[fueltype]"
+        class="gauge-height box box-default"
+        echarts
+        theme="macarons"
+      ></div>
     </div>
   </div>
   <div class="row">
@@ -72,25 +93,37 @@
         <div class="box-bottom">
           <div class="row no-gutters">
             <div class="col">
-              <span
-                class="float-right color-pms stats-font">{{stats.lastweek.fuelsold.pms.qty| number : '1.0-0'}}</span>
-              <span
-                class="float-right color-pms stats-font">{{stats.lastmonth.fuelsold.pms.qty| number : '1.0-0'}}</span>
-              <span
-                class="float-right color-pms stats-font">{{stats.lastyear.fuelsold.pms.qty| number : '1.0-0'}}</span>
+              <span class="float-right color-pms stats-font">{{
+                stats.lastweek.fuelsold.pms.qty | number: "1.0-0"
+              }}</span>
+              <span class="float-right color-pms stats-font">{{
+                stats.lastmonth.fuelsold.pms.qty | number: "1.0-0"
+              }}</span>
+              <span class="float-right color-pms stats-font">{{
+                stats.lastyear.fuelsold.pms.qty | number: "1.0-0"
+              }}</span>
             </div>
             <div class="col">
-              <div class="row"><span class="stats-font1 text-primary">WEEK</span></div>
-              <div class="row"><span class="stats-font1 text-primary">MONTH</span></div>
-              <div class="row"><span class="stats-font1 text-primary">YEAR</span></div>
+              <div class="row">
+                <span class="stats-font1 text-primary">WEEK</span>
+              </div>
+              <div class="row">
+                <span class="stats-font1 text-primary">MONTH</span>
+              </div>
+              <div class="row">
+                <span class="stats-font1 text-primary">YEAR</span>
+              </div>
             </div>
             <div class="col float-left">
               <span class="float-left color-pms stats-font">
-                {{stats.thisweek.fuelsold.pms.qty| number : '1.0-0'}}</span>
+                {{ stats.thisweek.fuelsold.pms.qty | number: "1.0-0" }}</span
+              >
               <span class="float-left color-pms stats-font">
-                {{stats.thismonth.fuelsold.pms.qty| number : '1.0-0'}}</span>
+                {{ stats.thismonth.fuelsold.pms.qty | number: "1.0-0" }}</span
+              >
               <span class="float-left color-pms stats-font">
-                {{stats.thisyear.fuelsold.pms.qty| number : '1.0-0'}}</span>
+                {{ stats.thisyear.fuelsold.pms.qty | number: "1.0-0" }}</span
+              >
             </div>
           </div>
         </div>
@@ -106,28 +139,40 @@
         <div class="box-bottom">
           <div class="row no-gutters">
             <div class="col">
-              <span
-                class="float-right color-pms stats-font">{{stats.lastweek.fuelsold.pms.amount| number : '1.0-0'}}</span>
-              <span
-                class="float-right color-pms stats-font">{{stats.lastmonth.fuelsold.pms.amount| number : '1.0-0'}}</span>
-              <span
-                class="float-right color-pms stats-font">{{stats.lastyear.fuelsold.pms.amount| number : '1.0-0'}}</span>
-
+              <span class="float-right color-pms stats-font">{{
+                stats.lastweek.fuelsold.pms.amount | number: "1.0-0"
+              }}</span>
+              <span class="float-right color-pms stats-font">{{
+                stats.lastmonth.fuelsold.pms.amount | number: "1.0-0"
+              }}</span>
+              <span class="float-right color-pms stats-font">{{
+                stats.lastyear.fuelsold.pms.amount | number: "1.0-0"
+              }}</span>
             </div>
             <div class="col">
-              <div class="row"><span class="stats-font1 text-primary">WEEK</span></div>
-              <div class="row"><span class="stats-font1 text-primary">MONTH</span></div>
-              <div class="row"><span class="stats-font1 text-primary">YEAR</span></div>
+              <div class="row">
+                <span class="stats-font1 text-primary">WEEK</span>
+              </div>
+              <div class="row">
+                <span class="stats-font1 text-primary">MONTH</span>
+              </div>
+              <div class="row">
+                <span class="stats-font1 text-primary">YEAR</span>
+              </div>
             </div>
 
             <div class="col float-left">
               <span class="float-left color-pms stats-font">
-                {{stats.thisweek.fuelsold.pms.amount| number : '1.0-0'}}</span>
+                {{ stats.thisweek.fuelsold.pms.amount | number: "1.0-0" }}</span
+              >
               <span class="float-left color-pms stats-font">
-                {{stats.thismonth.fuelsold.pms.amount| number : '1.0-0'}}</span>
+                {{
+                  stats.thismonth.fuelsold.pms.amount | number: "1.0-0"
+                }}</span
+              >
               <span class="float-left color-pms stats-font">
-                {{stats.thisyear.fuelsold.pms.amount| number : '1.0-0'}}</span>
-
+                {{ stats.thisyear.fuelsold.pms.amount | number: "1.0-0" }}</span
+              >
             </div>
           </div>
         </div>
@@ -145,27 +190,38 @@
         <div class="box-bottom">
           <div class="row no-gutters">
             <div class="col">
-              <span
-                class="float-right color-ago stats-font">{{stats.lastweek.fuelsold.ago.qty| number : '1.0-0'}}</span>
-              <span
-                class="float-right color-ago stats-font">{{stats.lastmonth.fuelsold.ago.qty| number : '1.0-0'}}</span>
-              <span
-                class="float-right color-ago stats-font">{{stats.lastyear.fuelsold.ago.qty| number : '1.0-0'}}</span>
-
+              <span class="float-right color-ago stats-font">{{
+                stats.lastweek.fuelsold.ago.qty | number: "1.0-0"
+              }}</span>
+              <span class="float-right color-ago stats-font">{{
+                stats.lastmonth.fuelsold.ago.qty | number: "1.0-0"
+              }}</span>
+              <span class="float-right color-ago stats-font">{{
+                stats.lastyear.fuelsold.ago.qty | number: "1.0-0"
+              }}</span>
             </div>
             <div class="col">
-              <div class="row"><span class="stats-font1 text-primary">WEEK</span></div>
-              <div class="row"><span class="stats-font1 text-primary">MONTH</span></div>
-              <div class="row"><span class="stats-font1 text-primary">YEAR</span></div>
+              <div class="row">
+                <span class="stats-font1 text-primary">WEEK</span>
+              </div>
+              <div class="row">
+                <span class="stats-font1 text-primary">MONTH</span>
+              </div>
+              <div class="row">
+                <span class="stats-font1 text-primary">YEAR</span>
+              </div>
             </div>
 
             <div class="col float-left">
               <span class="float-left color-ago stats-font">
-                {{stats.thisweek.fuelsold.ago.qty| number : '1.0-0'}}</span>
+                {{ stats.thisweek.fuelsold.ago.qty | number: "1.0-0" }}</span
+              >
               <span class="float-left color-ago stats-font">
-                {{stats.thismonth.fuelsold.ago.qty| number : '1.0-0'}}</span>
+                {{ stats.thismonth.fuelsold.ago.qty | number: "1.0-0" }}</span
+              >
               <span class="float-left color-ago stats-font">
-                {{stats.thisyear.fuelsold.ago.qty| number : '1.0-0'}}</span>
+                {{ stats.thisyear.fuelsold.ago.qty | number: "1.0-0" }}</span
+              >
             </div>
           </div>
         </div>
@@ -181,28 +237,40 @@
         <div class="box-bottom">
           <div class="row no-gutters">
             <div class="col">
-              <span
-                class="float-right color-ago stats-font">{{stats.lastweek.fuelsold.ago.amount| number : '1.0-0'}}</span>
-              <span
-                class="float-right color-ago stats-font">{{stats.lastmonth.fuelsold.ago.amount| number : '1.0-0'}}</span>
-              <span
-                class="float-right color-ago stats-font">{{stats.lastyear.fuelsold.ago.amount| number : '1.0-0'}}</span>
-
+              <span class="float-right color-ago stats-font">{{
+                stats.lastweek.fuelsold.ago.amount | number: "1.0-0"
+              }}</span>
+              <span class="float-right color-ago stats-font">{{
+                stats.lastmonth.fuelsold.ago.amount | number: "1.0-0"
+              }}</span>
+              <span class="float-right color-ago stats-font">{{
+                stats.lastyear.fuelsold.ago.amount | number: "1.0-0"
+              }}</span>
             </div>
             <div class="col">
-              <div class="row"><span class="stats-font1 text-primary">WEEK</span></div>
-              <div class="row"><span class="stats-font1 text-primary">MONTH</span></div>
-              <div class="row"><span class="stats-font1 text-primary">YEAR</span></div>
+              <div class="row">
+                <span class="stats-font1 text-primary">WEEK</span>
+              </div>
+              <div class="row">
+                <span class="stats-font1 text-primary">MONTH</span>
+              </div>
+              <div class="row">
+                <span class="stats-font1 text-primary">YEAR</span>
+              </div>
             </div>
 
             <div class="col float-left">
               <span class="float-left color-ago stats-font">
-                {{stats.thisweek.fuelsold.ago.amount| number : '1.0-0'}}</span>
+                {{ stats.thisweek.fuelsold.ago.amount | number: "1.0-0" }}</span
+              >
               <span class="float-left color-ago stats-font">
-                {{stats.thismonth.fuelsold.ago.amount| number : '1.0-0'}}</span>
+                {{
+                  stats.thismonth.fuelsold.ago.amount | number: "1.0-0"
+                }}</span
+              >
               <span class="float-left color-ago stats-font">
-                {{stats.thisyear.fuelsold.ago.amount| number : '1.0-0'}}</span>
-
+                {{ stats.thisyear.fuelsold.ago.amount | number: "1.0-0" }}</span
+              >
             </div>
           </div>
         </div>
@@ -220,22 +288,38 @@
         <div class="box-bottom">
           <div class="row no-gutters">
             <div class="col">
-              <span class="float-right color-ik stats-font">{{stats.lastweek.fuelsold.ik.qty| number : '1.0-0'}}</span>
-              <span class="float-right color-ik stats-font">{{stats.lastmonth.fuelsold.ik.qty| number : '1.0-0'}}</span>
-              <span class="float-right color-ik stats-font">{{stats.lastyear.fuelsold.ik.qty| number : '1.0-0'}}</span>
-
+              <span class="float-right color-ik stats-font">{{
+                stats.lastweek.fuelsold.ik.qty | number: "1.0-0"
+              }}</span>
+              <span class="float-right color-ik stats-font">{{
+                stats.lastmonth.fuelsold.ik.qty | number: "1.0-0"
+              }}</span>
+              <span class="float-right color-ik stats-font">{{
+                stats.lastyear.fuelsold.ik.qty | number: "1.0-0"
+              }}</span>
             </div>
             <div class="col">
-              <div class="row"><span class="stats-font1 text-primary">WEEK</span></div>
-              <div class="row"><span class="stats-font1 text-primary">MONTH</span></div>
-              <div class="row"><span class="stats-font1 text-primary">YEAR</span></div>
+              <div class="row">
+                <span class="stats-font1 text-primary">WEEK</span>
+              </div>
+              <div class="row">
+                <span class="stats-font1 text-primary">MONTH</span>
+              </div>
+              <div class="row">
+                <span class="stats-font1 text-primary">YEAR</span>
+              </div>
             </div>
 
             <div class="col float-left">
-              <span class="float-left color-ik stats-font"> {{stats.thisweek.fuelsold.ik.qty| number : '1.0-0'}}</span>
-              <span class="float-left color-ik stats-font"> {{stats.thismonth.fuelsold.ik.qty| number : '1.0-0'}}</span>
-              <span class="float-left color-ik stats-font"> {{stats.thisyear.fuelsold.ik.qty| number : '1.0-0'}}</span>
-
+              <span class="float-left color-ik stats-font">
+                {{ stats.thisweek.fuelsold.ik.qty | number: "1.0-0" }}</span
+              >
+              <span class="float-left color-ik stats-font">
+                {{ stats.thismonth.fuelsold.ik.qty | number: "1.0-0" }}</span
+              >
+              <span class="float-left color-ik stats-font">
+                {{ stats.thisyear.fuelsold.ik.qty | number: "1.0-0" }}</span
+              >
             </div>
           </div>
         </div>
@@ -252,27 +336,38 @@
         <div class="box-bottom">
           <div class="row no-gutters">
             <div class="col">
-              <span
-                class="float-right color-ik stats-font">{{stats.lastweek.fuelsold.ik.amount| number : '1.0-0'}}</span>
-              <span
-                class="float-right color-ik stats-font">{{stats.lastmonth.fuelsold.ik.amount| number : '1.0-0'}}</span>
-              <span
-                class="float-right color-ik stats-font">{{stats.lastyear.fuelsold.ik.amount| number : '1.0-0'}}</span>
+              <span class="float-right color-ik stats-font">{{
+                stats.lastweek.fuelsold.ik.amount | number: "1.0-0"
+              }}</span>
+              <span class="float-right color-ik stats-font">{{
+                stats.lastmonth.fuelsold.ik.amount | number: "1.0-0"
+              }}</span>
+              <span class="float-right color-ik stats-font">{{
+                stats.lastyear.fuelsold.ik.amount | number: "1.0-0"
+              }}</span>
             </div>
             <div class="col">
-              <div class="row"><span class="stats-font1 text-primary">WEEK</span></div>
-              <div class="row"><span class="stats-font1 text-primary">MONTH</span></div>
-              <div class="row"><span class="stats-font1 text-primary">YEAR</span></div>
+              <div class="row">
+                <span class="stats-font1 text-primary">WEEK</span>
+              </div>
+              <div class="row">
+                <span class="stats-font1 text-primary">MONTH</span>
+              </div>
+              <div class="row">
+                <span class="stats-font1 text-primary">YEAR</span>
+              </div>
             </div>
 
             <div class="col float-left">
               <span class="float-left color-ik stats-font">
-                {{stats.thisweek.fuelsold.ik.amount| number : '1.0-0'}}</span>
+                {{ stats.thisweek.fuelsold.ik.amount | number: "1.0-0" }}</span
+              >
               <span class="float-left color-ik stats-font">
-                {{stats.thismonth.fuelsold.ik.amount| number : '1.0-0'}}</span>
+                {{ stats.thismonth.fuelsold.ik.amount | number: "1.0-0" }}</span
+              >
               <span class="float-left color-ik stats-font">
-                {{stats.thisyear.fuelsold.ik.amount| number : '1.0-0'}}</span>
-
+                {{ stats.thisyear.fuelsold.ik.amount | number: "1.0-0" }}</span
+              >
             </div>
           </div>
         </div>
@@ -290,13 +385,19 @@
         <div class="box-bottom">
           <div class="row no-gutters">
             <div class="col">
-              <span
-                class="totals-b">{{stats.thisweek.fuelsold.pms.amount + stats.thisweek.fuelsold.ago.amount + stats.thisweek.fuelsold.ik.amount| number : '1.0-0'}}</span>
+              <span class="totals-b">{{
+                stats.thisweek.fuelsold.pms.amount +
+                  stats.thisweek.fuelsold.ago.amount +
+                  stats.thisweek.fuelsold.ik.amount | number: "1.0-0"
+              }}</span>
             </div>
             |
             <div class="col float-left">
-              <span
-                class="totals-b">{{stats.lastweek.fuelsold.pms.amount + stats.lastweek.fuelsold.ago.amount + stats.lastweek.fuelsold.ik.amount| number : '1.0-0'}}</span>
+              <span class="totals-b">{{
+                stats.lastweek.fuelsold.pms.amount +
+                  stats.lastweek.fuelsold.ago.amount +
+                  stats.lastweek.fuelsold.ik.amount | number: "1.0-0"
+              }}</span>
             </div>
           </div>
         </div>
@@ -314,13 +415,19 @@
         <div class="box-bottom">
           <div class="row no-gutters">
             <div class="col">
-              <span
-                class="totals-b">{{stats.thismonth.fuelsold.pms.amount + stats.thismonth.fuelsold.ago.amount + stats.thismonth.fuelsold.ik.amount| number : '1.0-0'}}</span>
+              <span class="totals-b">{{
+                stats.thismonth.fuelsold.pms.amount +
+                  stats.thismonth.fuelsold.ago.amount +
+                  stats.thismonth.fuelsold.ik.amount | number: "1.0-0"
+              }}</span>
             </div>
             |
             <div class="col float-left">
-              <span
-                class="totals-b">{{stats.lastmonth.fuelsold.pms.amount + stats.lastmonth.fuelsold.ago.amount + stats.lastmonth.fuelsold.ik.amount| number : '1.0-0'}}</span>
+              <span class="totals-b">{{
+                stats.lastmonth.fuelsold.pms.amount +
+                  stats.lastmonth.fuelsold.ago.amount +
+                  stats.lastmonth.fuelsold.ik.amount | number: "1.0-0"
+              }}</span>
             </div>
           </div>
         </div>
@@ -338,13 +445,19 @@
         <div class="box-bottom">
           <div class="row no-gutters">
             <div class="col">
-              <span
-                class="totals-b">{{stats.thisyear.fuelsold.pms.amount + stats.thisyear.fuelsold.ago.amount + stats.thisyear.fuelsold.ik.amount| number : '1.0-0'}}</span>
+              <span class="totals-b">{{
+                stats.thisyear.fuelsold.pms.amount +
+                  stats.thisyear.fuelsold.ago.amount +
+                  stats.thisyear.fuelsold.ik.amount | number: "1.0-0"
+              }}</span>
             </div>
             |
             <div class="col float-left">
-              <span
-                class="totals-b">{{stats.lastyear.fuelsold.pms.amount + stats.lastyear.fuelsold.ago.amount + stats.lastyear.fuelsold.ik.amount| number : '1.0-0'}}</span>
+              <span class="totals-b">{{
+                stats.lastyear.fuelsold.pms.amount +
+                  stats.lastyear.fuelsold.ago.amount +
+                  stats.lastyear.fuelsold.ik.amount | number: "1.0-0"
+              }}</span>
             </div>
           </div>
         </div>

@@ -34,7 +34,7 @@ export function validOrderUpdate(order: Order, omcId: string) {
               value: order.orderStageData["6"].user.name
             };
             return Promise.all([
-              editStats(omcId, order, "deleted"),
+              // editStats(omcId, order, "deleted"),
               res.qbo.updateInvoice(resultinvoice)
             ]);
           });
