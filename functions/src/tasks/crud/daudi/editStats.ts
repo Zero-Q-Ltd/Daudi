@@ -35,6 +35,11 @@ export function editStats(omcId: string, order: Order, action: OrderAction) {
         "==",
         timeTypeValue("Y", order.orderStageData[3].user.date)
       );
+
+    /**
+     * Update logic cascading downwards to avoid conflics
+     * Pssibly update logic
+     */
     const monthQuery = timeStats
       .where("statType", "==", "M")
       .where(
