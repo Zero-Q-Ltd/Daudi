@@ -1,12 +1,11 @@
 import { FuelType } from "../fuel/FuelType";
 
 export interface Core {
-  date: any;
+  date: Date;
   /**
    * Separate stat types into Day, Month or Year
    */
   statType: StatType;
-  typeValue: number;
   id: string;
   fuelsold: {
     [key in FuelType]: {
@@ -41,7 +40,6 @@ export type StatType = "D" | "W" | "M" | "Y";
 
 export const emptyCoreStat: Core = {
   date: new Date(),
-  typeValue: 0,
   statType: null,
   id: null,
   fuelsold: {

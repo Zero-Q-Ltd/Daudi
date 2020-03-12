@@ -31,35 +31,67 @@ export function editStats(omcId: string, order: Order, action: OrderAction) {
     const yearQuery = timeStats
       .where("statType", "==", "Y")
       .where(
-        "statType",
-        "==",
-        timeTypeValue("Y", order.orderStageData[3].user.date)
+        "date",
+        ">=",
+        moment(order.orderStageData[3].user.date)
+          .startOf("y")
+          .toDate()
+      )
+      .where(
+        "date",
+        "<=",
+        moment(order.orderStageData[3].user.date)
+          .endOf("y")
+          .toDate()
       );
 
-    /**
-     * Update logic cascading downwards to avoid conflics
-     * Pssibly update logic
-     */
     const monthQuery = timeStats
       .where("statType", "==", "M")
       .where(
-        "statType",
-        "==",
-        timeTypeValue("M", order.orderStageData[3].user.date)
+        "date",
+        ">=",
+        moment(order.orderStageData[3].user.date)
+          .startOf("M")
+          .toDate()
+      )
+      .where(
+        "date",
+        "<=",
+        moment(order.orderStageData[3].user.date)
+          .endOf("M")
+          .toDate()
       );
     const weekQuery = timeStats
       .where("statType", "==", "W")
       .where(
-        "statType",
-        "==",
-        timeTypeValue("W", order.orderStageData[3].user.date)
+        "date",
+        ">=",
+        moment(order.orderStageData[3].user.date)
+          .startOf("W")
+          .toDate()
+      )
+      .where(
+        "date",
+        "<=",
+        moment(order.orderStageData[3].user.date)
+          .endOf("W")
+          .toDate()
       );
     const dayQuery = timeStats
       .where("statType", "==", "D")
       .where(
-        "statType",
-        "==",
-        timeTypeValue("D", order.orderStageData[3].user.date)
+        "date",
+        ">=",
+        moment(order.orderStageData[3].user.date)
+          .startOf("D")
+          .toDate()
+      )
+      .where(
+        "date",
+        "<=",
+        moment(order.orderStageData[3].user.date)
+          .endOf("D")
+          .toDate()
       );
 
     const daystat = await transaction.get(yearQuery);
@@ -80,7 +112,6 @@ export function editStats(omcId: string, order: Order, action: OrderAction) {
               new: 0
             },
             statType: TimeType,
-            typeValue: Number(timeTypeValue(TimeType, moment().toDate())),
             stock: {
               pms: {
                 accumulated: 0,

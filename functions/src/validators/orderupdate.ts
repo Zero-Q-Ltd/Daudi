@@ -30,10 +30,13 @@ export function validOrderUpdate(order: Order, omcId: string) {
             /**
              * @todo Implement deletion reason and User detail
              */
-            // resultinvoice.CustomerMemo = {
-            //     value: order.stagedata["6"].data.reason
-            // };
-            return res.qbo.updateInvoice(resultinvoice);
+            resultinvoice.CustomerMemo = {
+              value: order.orderStageData["6"].user.name
+            };
+            return Promise.all([
+              editStats(omcId, order, "deleted"),
+              res.qbo.updateInvoice(resultinvoice)
+            ]);
           });
         });
       } else return true;
