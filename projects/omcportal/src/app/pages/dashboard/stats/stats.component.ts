@@ -231,32 +231,14 @@ export class StatsComponent implements OnInit, OnDestroy {
          * remove results from weeks, months, years by filtering
          */
         this.saleStats = { ...saleStats };
-        const filteredhistory = toArray(emptyTimeStats, saleshistory);
+        const fetchedHistory = toArray(emptyTimeStats, saleshistory);
 
         /**
          * create a temporary array to avoid mutation
          * Copy over the data because there's a possibiliy that the data in db has some missing dates
          * fill any missing date with the empty equivalent
          */
-        console.log(filteredhistory);
-        const newfilteredhistory = [];
-
-        datesrange.forEach((specificdate, index) => {
-          if (
-            !filteredhistory.find(hist => {
-              if (
-                moment(this.parseDate.transform(hist.date))
-                  .startOf("day")
-                  .isSame(specificdate)
-              ) {
-                newfilteredhistory[dayCount - index] = hist;
-                return true;
-              }
-            })
-          ) {
-            newfilteredhistory[index] = { ...emptyTimeStats };
-          }
-        });
+        console.log(fetchedHistory);
 
         const highest = {
           pms: 0,
@@ -266,156 +248,88 @@ export class StatsComponent implements OnInit, OnDestroy {
         /**
          * Copy over the data
          */
-        newfilteredhistory.forEach((history, historyindex) => {
-          /**
-           * find the highest in each fuel type
-           */
-          this.fueltypesArray.forEach((ftype, i) => {
-            if (history.fuelsold[ftype].qty > highest[ftype]) {
-              highest[ftype] = history.fuelsold[ftype].qty;
-            }
-            this.saleStats.series[i + 1].data[dayCount - historyindex] =
-              history.fuelsold[ftype].qty;
-          });
+        fetchedHistory.forEach((history, historyindex) => {
+          switch (history.statType) {
+            case "D":
+              /**
+               * find the highest in each fuel type
+               */
+              this.fueltypesArray.forEach((ftype, i) => {
+                if (history.fuelsold[ftype].qty > highest[ftype]) {
+                  highest[ftype] = history.fuelsold[ftype].qty;
+                }
+                this.saleStats.series[i + 1].data[dayCount - historyindex] =
+                  history.fuelsold[ftype].qty;
+              });
+              return;
+            case "W":
+              const thisWeek = moment()
+                .startOf("w")
+                .toString();
+              const lastWeek = moment()
+                .startOf("w")
+                .toString();
+
+              if (
+                moment(this.parseDate.transform(history.date))
+                  .startOf("w")
+                  .toString() === thisWeek
+              ) {
+                this.stats.thisweek = history;
+              } else if (
+                moment(this.parseDate.transform(history.date))
+                  .startOf("w")
+                  .toString() === lastWeek
+              ) {
+                this.stats.lastweek = history;
+              }
+            case "M":
+              const thisMonth = moment()
+                .startOf("m")
+                .toString();
+              const lastMonth = moment()
+                .startOf("m")
+                .toString();
+
+              if (
+                moment(this.parseDate.transform(history.date))
+                  .startOf("m")
+                  .toString() === thisMonth
+              ) {
+                this.stats.thismonth = history;
+              } else if (
+                moment(this.parseDate.transform(history.date))
+                  .startOf("m")
+                  .toString() === lastMonth
+              ) {
+                this.stats.lastmonth = history;
+              }
+            default:
+              const thisYear = moment()
+                .startOf("y")
+                .toString();
+              const lastYear = moment()
+                .startOf("y")
+                .toString();
+
+              if (
+                moment(this.parseDate.transform(history.date))
+                  .startOf("y")
+                  .toString() === thisYear
+              ) {
+                this.stats.thisyear = history;
+              } else if (
+                moment(this.parseDate.transform(history.date))
+                  .startOf("w")
+                  .toString() === lastYear
+              ) {
+                this.stats.lastyear = history;
+              }
+          }
         });
         this.isLoadingsalesStats = false;
       });
     this.subscriptions.set(`statsrange`, subscription);
-
-    /**
-     * Unsubcribe to previous subscription if exists
-     */
-    if (this.subscriptions.has("thisweek")) {
-      this.subscriptions.get("thisweek")();
-    }
-    const thisweeksubscription = this.statservice
-      .getstats(
-        this.core.activedepot.value.depot.Id,
-        moment()
-          .startOf("week")
-          .format("YYYY-MM-WW") + "W"
-      )
-      .onSnapshot(weekstatsobject => {
-        this.stats.thisweek = Object.assign(
-          {},
-          emptyTimeStats,
-          weekstatsobject.data() as TimeStats
-        );
-      });
-    this.subscriptions.set(`thisweek`, thisweeksubscription);
-
-    /**
-     * Unsubcribe to previous subscription if exists
-     */
-    if (this.subscriptions.has("lastweek")) {
-      this.subscriptions.get("lastweek")();
-    }
-    const lastweeksubscription = this.statservice
-      .getstats(
-        this.core.activedepot.value.depot.Id,
-        moment()
-          .subtract(1, "week")
-          .startOf("week")
-          .format("YYYY-MM-WW") + "W"
-      )
-      .onSnapshot(weekstatsobject => {
-        this.stats.lastweek = Object.assign(
-          {},
-          emptyTimeStats,
-          weekstatsobject.data() as TimeStats
-        );
-      });
-    this.subscriptions.set(`lastweek`, lastweeksubscription);
-
-    /**
-     * Unsubcribe to previous subscription if exists
-     */
-    if (this.subscriptions.has("thismonth")) {
-      this.subscriptions.get("thismonth")();
-    }
-    const thismonthsubscription = this.statservice
-      .getstats(
-        this.core.activedepot.value.depot.Id,
-        moment()
-          .startOf("month")
-          .format("YYYY-MM")
-      )
-      .onSnapshot(monthtatsobject => {
-        this.stats.thismonth = Object.assign(
-          {},
-          emptyTimeStats,
-          monthtatsobject.data() as TimeStats
-        );
-      });
-    this.subscriptions.set(`thismonth`, thismonthsubscription);
-
-    /**
-     * Unsubcribe to previous subscription if exists
-     */
-    if (this.subscriptions.has("lastmonth")) {
-      this.subscriptions.get("lastmonth")();
-    }
-    const lastmonthsubscription = this.statservice
-      .getstats(
-        this.core.activedepot.value.depot.Id,
-        moment()
-          .subtract(1, "month")
-          .startOf("month")
-          .format("YYYY-MM")
-      )
-      .onSnapshot(monthtatsobject => {
-        this.stats.lastmonth = Object.assign(
-          {},
-          emptyTimeStats,
-          monthtatsobject.data() as TimeStats
-        );
-      });
-    this.subscriptions.set(`lastmonth`, lastmonthsubscription);
-
-    /**
-     * Unsubcribe to previous subscription if exists
-     */
-    if (this.subscriptions.has("thisyear")) {
-      this.subscriptions.get("thisyear")();
-    }
-    const thisyearsubscription = this.statservice
-      .getstats(
-        this.core.activedepot.value.depot.Id,
-        moment()
-          .startOf("year")
-          .format("YYYY")
-      )
-      .onSnapshot(yearstatsobject => {
-        this.stats.thisyear = Object.assign(
-          {},
-          emptyTimeStats,
-          yearstatsobject.data() as TimeStats
-        );
-      });
-    this.subscriptions.set(`thisyear`, thisyearsubscription);
-
-    /**
-     * Unsubcribe to previous subscription if exists
-     */
-    if (this.subscriptions.has("lastyear")) {
-      this.subscriptions.get("lastyear")();
-    }
-    const lastyearsubscription = this.statservice
-      .getstats(
-        this.core.activedepot.value.depot.Id,
-        moment()
-          .subtract(1, "year")
-          .startOf("year")
-          .format("YYYY")
-      )
-      .onSnapshot(yeartatsobject => {
-        this.stats.lastyear = Object.assign(
-          {},
-          emptyTimeStats,
-          yeartatsobject.data() as TimeStats
-        );
-      });
-    this.subscriptions.set(`lastyear`, lastyearsubscription);
   }
 
   readdb() {}
