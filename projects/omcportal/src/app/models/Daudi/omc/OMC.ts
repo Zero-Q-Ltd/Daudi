@@ -1,7 +1,7 @@
-import {MyGeoPoint} from '../../firestore/firestoreTypes';
-import {deepCopy} from '../../utils/deepCopy';
-import {emptymetadata, Metadata} from '../universal/Metadata';
-import {ContactPerson} from './ContactPerson';
+import { MyGeoPoint } from "../../firestore/firestoreTypes";
+import { deepCopy } from "../../utils/deepCopy";
+import { emptymetadata, Metadata } from "../universal/Metadata";
+import { ContactPerson } from "./ContactPerson";
 
 export interface OMC {
   license: string;
@@ -18,7 +18,15 @@ export interface OMC {
 
 export const emptyomc: OMC = {
   license: null,
-  contactperson: [],
+  contactperson: [
+    {
+      name: null,
+      phone: null,
+      email: null,
+      position: null,
+      address: null
+    }
+  ],
   logourl: null,
   status: null,
 
@@ -30,7 +38,5 @@ export const emptyomc: OMC = {
   Id: null,
   userid: null,
   description: null,
-  metadata: deepCopy<Metadata>(emptymetadata),
-
+  metadata: deepCopy<Metadata>(emptymetadata)
 };
-
