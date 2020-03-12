@@ -1,44 +1,49 @@
-import { deepCopy } from '../../utils/deepCopy';
-import { AssociatedUser, EmptyAssociatedUser } from '../admin/AssociatedUser';
-import { CustomerDetail } from '../customer/CustomerDetail';
-import { FuelType } from '../fuel/FuelType';
-import { OrderFuelConfig } from './FuelConfig';
-import { EmptyGenericStage, EmptyGenericTruckStage, GenericStage, GenericTruckStage } from './GenericStage';
-import { OrderStages } from './OrderStages';
-import { emptytruck, Truck } from './truck/Truck';
-import { TruckStages } from './truck/TruckStages';
+import { deepCopy } from "../../utils/deepCopy";
+import { AssociatedUser, EmptyAssociatedUser } from "../admin/AssociatedUser";
+import { CustomerDetail } from "../customer/CustomerDetail";
+import { FuelType } from "../fuel/FuelType";
+import { OrderFuelConfig } from "./FuelConfig";
+import {
+  EmptyGenericStage,
+  EmptyGenericTruckStage,
+  GenericStage,
+  GenericTruckStage
+} from "./GenericStage";
+import { OrderStages } from "./OrderStages";
+import { emptytruck, Truck } from "./truck/Truck";
+import { TruckStages } from "./truck/TruckStages";
 
 export interface Order {
   Id: string; // used to temporarily store the key, used later for looping
   customer: CustomerDetail;
   QbConfig: {
-    InvoiceId: string,
-    InvoiceNumber: string,
-    EstimateId: string,
-    EstimateNumber: string,
+    InvoiceId: string;
+    InvoiceNumber: string;
+    EstimateId: string;
+    EstimateNumber: string;
     /**
      * depots are created in qbo as departments
      * The departments Id's must be referenced
      */
-    departmentId: string,
+    departmentId: string;
   };
-  stage: (typeof OrderStages)[keyof typeof OrderStages];
-  origin: string;
+  stage: typeof OrderStages[keyof typeof OrderStages];
+  origin: "backend" | "frontend";
   notifications: {
-    sms: boolean,
+    sms: boolean;
     email: boolean;
   };
   config: {
     depot: {
-      name: string,
+      name: string;
       id: string;
     };
   };
   error?: {
-    status: boolean,
-    errorCode: string,
-    origin: string,
-    timestamp: Date,
+    status: boolean;
+    errorCode: string;
+    origin: string;
+    timestamp: Date;
     errorDetail: string;
   };
   deliveryNote: {
@@ -48,7 +53,7 @@ export interface Order {
   frozen: boolean;
   loaded: boolean;
   fuel: {
-    [key in FuelType]: OrderFuelConfig
+    [key in FuelType]: OrderFuelConfig;
   };
   /**
    * Keeps a reference to the payments
@@ -96,7 +101,7 @@ const initorderfuel: OrderFuelConfig = {
     taxAmnt: 0,
     nonTaxtotal: 0,
     taxablePrice: 0,
-    taxableAmnt: 0,
+    taxableAmnt: 0
   },
   entries: [],
   entryIds: []
@@ -140,7 +145,7 @@ export const emptyorder: Order = {
     gatepass: {
       status: null,
       user: null
-    },
+    }
   },
   seals: {
     broken: [],
@@ -151,7 +156,7 @@ export const emptyorder: Order = {
     0: deepCopy(EmptyGenericTruckStage),
     1: deepCopy(EmptyGenericTruckStage),
     2: deepCopy(EmptyGenericTruckStage),
-    3: deepCopy(EmptyGenericTruckStage),
+    3: deepCopy(EmptyGenericTruckStage)
   },
   origin: null,
   stage: null,
@@ -162,7 +167,7 @@ export const emptyorder: Order = {
     3: deepCopy(EmptyGenericStage),
     4: deepCopy(EmptyGenericStage),
     5: deepCopy(EmptyGenericStage),
-    6: deepCopy(EmptyGenericStage),
+    6: deepCopy(EmptyGenericStage)
   },
   fuel: {
     pms: deepCopy(initorderfuel),
