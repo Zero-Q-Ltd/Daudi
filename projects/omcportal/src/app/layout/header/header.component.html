@@ -164,7 +164,7 @@
     </div>
     <div class="top-nav-right">
       <mat-form-field appearance="standard" class="depot-select">
-        <mat-label>Depot</mat-label>
+        <mat-label class="color-yellow">Depot</mat-label>
         <mat-select (selectionChange)="changeactivedepot()" [(value)]="activedepot.depot">
           <mat-optgroup label="Private">
             <mat-option *ngFor="let depot of privateDepots; let i = index"
