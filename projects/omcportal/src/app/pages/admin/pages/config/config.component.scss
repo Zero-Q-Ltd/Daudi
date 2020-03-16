@@ -1,5 +1,5 @@
 agm-map {
-  height: 400px;
+  height: 450px;
 }
 
 .half-width {
@@ -14,3 +14,7 @@ agm-map {
   margin-right: 8px;
 }
 
+/deep/ .mat-tab-body-content {
+  height: 100%;
+  overflow: hidden !important;
+}
