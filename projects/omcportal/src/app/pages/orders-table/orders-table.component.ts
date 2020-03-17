@@ -24,7 +24,7 @@ import { CoreService } from "app/services/core/core.service";
 import { ExcelService } from "app/services/excel-service.service";
 import { OrdersService } from "app/services/orders.service";
 import { ReplaySubject } from "rxjs";
-import { switchMap, takeUntil } from "rxjs/operators";
+import { switchMap, takeUntil, take } from "rxjs/operators";
 import { EmptyGenericStage } from "../../models/Daudi/order/GenericStage";
 import { Order } from "../../models/Daudi/order/Order";
 import { Truck } from "../../models/Daudi/order/truck/Truck";
@@ -32,6 +32,7 @@ import { SMS } from "../../models/Daudi/sms/sms";
 import { MyTimestamp } from "../../models/firestore/firestoreTypes";
 import { NotificationService } from "../../shared/services/notification.service";
 import { TooltipPosition } from "@angular/material/tooltip";
+import { AngularFireStorage } from "@angular/fire/storage";
 
 const EXCEL_TYPE =
   "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
@@ -111,18 +112,19 @@ export class OrdersTableComponent implements OnInit, OnDestroy {
   @ViewChild(MatSort) sort: MatSort;
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
   typedValue: string;
+  albums: Array<any> = [];
 
   constructor(
     private route: ActivatedRoute,
     private dialog: MatDialog,
-    private db: AngularFirestore,
     private notification: NotificationService,
     private excelService: ExcelService,
     private adminservice: AdminService,
     private orderservice: OrdersService,
     private router: Router,
     private core: CoreService,
-    private componentcommunication: ComponentCommunicationService
+    private componentcommunication: ComponentCommunicationService,
+    private storage: AngularFireStorage
   ) {
     this.core.loaders.orders.subscribe(value => {
       this.loadingordders = value;
@@ -229,6 +231,27 @@ export class OrdersTableComponent implements OnInit, OnDestroy {
     }
     this.expandedElement = order;
     this.componentcommunication.clickedorder.next(order);
+    if (!order.deliveryNote?.photos) {
+      this.albums = [];
+      return;
+    }
+    Promise.all(
+      order.deliveryNote?.photos?.map(async photo => {
+        const src = await this.getPhotoUrl(photo).toPromise();
+        console.log(src);
+        return {
+          src,
+          caption: "Image",
+          thumb: src
+        };
+      })
+    ).then(res => {
+      this.albums = res;
+    });
+    console.log(this.albums);
+  }
+  getPhotoUrl(url: string) {
+    return this.storage.ref(url).getDownloadURL();
   }
 
   truckDeleted() {

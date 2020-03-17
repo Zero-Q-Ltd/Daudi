@@ -11,13 +11,21 @@
       <div fxFlex>
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Type Level</mat-label>
-          <input [formControl]="newadminform.get('level')" matInput required />
+          <input
+            [formControl]="$any(newadminform.get('level'))"
+            matInput
+            required
+          />
         </mat-form-field>
       </div>
       <div fxFlex>
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Admin Type Name</mat-label>
-          <input [formControl]="newadminform.get('name')" matInput required />
+          <input
+            [formControl]="$any(newadminform.get('name'))"
+            matInput
+            required
+          />
         </mat-form-field>
       </div>
 
@@ -25,7 +33,7 @@
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Type Description</mat-label>
           <textarea
-            [formControl]="newadminform.get('description')"
+            [formControl]="$any(newadminform.get('description'))"
             matInput
             required
           ></textarea>
@@ -128,7 +136,7 @@
             <input
               matInput
               required
-              [formControl]="newadminform.get('level')"
+              [formControl]="$any(newadminform.get('level'))"
             />
           </mat-form-field>
         </div>
@@ -191,7 +199,12 @@
           </div>
         </div>
       </div>
-      <button (click)="deleteTypedirect(i)" color="warn" mat-raised-button class="del-right">
+      <button
+        (click)="deleteTypedirect(i)"
+        color="warn"
+        mat-raised-button
+        class="del-right"
+      >
         DELETE
       </button>
       <button (click)="savecompany()" color="primary" mat-raised-button>

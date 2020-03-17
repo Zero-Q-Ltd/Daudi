@@ -203,7 +203,8 @@ export class UserManagementComponent implements OnInit, OnDestroy {
     }
   }
 
-  filterusers(filterValue: string) {
+  filterusers(value: any) {
+    let filterValue = value.target.value;
     filterValue = filterValue.trim(); // Remove whitespace
     filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
     this.usersdatasource.filter = filterValue;

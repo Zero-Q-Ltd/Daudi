@@ -6,11 +6,7 @@
       </div>
       <div>
         <mat-form-field appearance="legacy">
-          <input
-            (keyup)="filterusers($event.target.value)"
-            matInput
-            placeholder="Filter"
-          />
+          <input (keyup)="filterusers($event)" matInput placeholder="Filter" />
           <button
             (click)="syncdb()"
             *ngIf="!creatingsync"
