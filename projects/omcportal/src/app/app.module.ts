@@ -67,6 +67,7 @@ import { OrdersService } from "./services/orders.service";
 import { PricesService } from "./services/prices.service";
 import { NotificationComponent } from "./shared/components/notification/notification.component";
 import { SharedModule } from "./shared/shared.module";
+import { AngularFireStorageModule, BUCKET } from "@angular/fire/storage";
 
 const firebaseConfig = {
   apiKey: "AIzaSyD6abjtAtMf2kK7YEtgpyKqT_EPkHqjYXo",
@@ -96,6 +97,7 @@ const firebaseConfig = {
     AngularFirestoreModule.enablePersistence(),
     AngularFireAuthModule,
     AngularFireFunctionsModule,
+    AngularFireStorageModule,
 
     AgmCoreModule.forRoot({
       apiKey: "AIzaSyD73FGSNb0x-4dXOTksPjtl4RwowhzYqSs",
@@ -160,8 +162,7 @@ const firebaseConfig = {
     PriceComparisonComponent,
     TransferComponent,
     EntrySelectorComponent,
-    EntryAssignComponent,
-
+    EntryAssignComponent
   ],
   providers: [
     AngularFireAuth,
@@ -172,13 +173,11 @@ const firebaseConfig = {
     AdminService,
     OrdersService,
     PricesService,
-    FcmService],
-  bootstrap: [AppComponent],
-  exports: [
-    PipeModuleModule,
-    SharedModule,
-    EntrySelectorComponent,
+    FcmService,
+    { provide: BUCKET, useValue: "daudi-4.appspot.com" }
   ],
+  bootstrap: [AppComponent],
+  exports: [PipeModuleModule, SharedModule, EntrySelectorComponent],
   entryComponents: [
     NotificationComponent,
     ConfirmDialogComponent,
@@ -196,5 +195,4 @@ const firebaseConfig = {
     EntryAssignComponent
   ]
 })
-export class AppModule {
-}
+export class AppModule {}
