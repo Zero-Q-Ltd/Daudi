@@ -2,7 +2,7 @@ import { firestore } from "firebase-admin";
 import { Order } from "../../models/Daudi/order/Order";
 import { SMS } from "../../models/Daudi/sms/sms";
 
-export function ordersms(order: Order, omcId: string) {
+export function ordersms(order: Order, omcId: string): Promise<any> {
   /**
    * An order has been modified
    * Only sent an SMS if the stage has been incremented. Ignore stage 4 and 5 because another one will be sent for the truck
@@ -137,7 +137,9 @@ function resolveOrderText(order: Order): string {
       /**
        * Send only the first and last seal numbers in the array
        */
-      text += `Truck# ${order.QbConfig.InvoiceId} [PASSED]. Seal Numbers: ${order.seals.range[0]}-${order.seals.range[-1]}. Remember to always check your seals`;
+      text += `Truck# ${order.QbConfig.InvoiceId} [PASSED]. Seal Numbers: ${
+        order.seals.range[0]
+      }-${order.seals.range[-1]}. Remember to always check your seals`;
       break;
     default:
       console.error(
@@ -166,10 +168,12 @@ function resolveTrucksText(order: Order): string {
         " Thank you for making it Emkay today.";
       break;
     case 2:
-      text += " [QUEUED] Est-Time " + order.truckStageData["2"].expiry[0].expiry;
+      text +=
+        " [QUEUED] Est-Time " + order.truckStageData["2"].expiry[0].expiry;
       break;
     case 3:
-      text += " [LOADING] Est-Time " + order.truckStageData["3"].expiry[0].expiry;
+      text +=
+        " [LOADING] Est-Time " + order.truckStageData["3"].expiry[0].expiry;
       break;
     default:
       console.error(
