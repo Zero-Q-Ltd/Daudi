@@ -134,7 +134,10 @@ export class OrdersTableComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.comopnentDestroyed))
       .pipe(
         switchMap((paramdata: { stage: number }) => {
-          if (Number(paramdata.stage) === 4) {
+          if (
+            Number(paramdata.stage) === 4 &&
+            this.ordercolumns.length === 12
+          ) {
             this.ordercolumns.splice(4, 0, "Time Approved");
           }
           this.stage = paramdata.stage;
