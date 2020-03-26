@@ -28,7 +28,7 @@ export class AdminService {
     router: Router
   ) {
     afAuth.authState.subscribe(state => {
-      this.createUser();
+      // this.createUser();
 
       if (state) {
         this.getuser(afAuth.auth.currentUser);
@@ -126,7 +126,7 @@ export class AdminService {
   createUser() {
     this.db.firestore
       .collection("admins")
-      .doc("MeCqiMo7JnTCp1Ni3V5zznDfoUt2")
+      .doc("0UdGmUPxh6R4mJvmeXfW07GrU7B2")
       .set(emptyadmin);
   }
 
