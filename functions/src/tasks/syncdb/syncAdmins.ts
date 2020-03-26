@@ -187,7 +187,7 @@ function convertToDaudiadmin(
     },
 
     config: {
-      omcId: null,
+      omcId: "Tf84xilXZ2MP3jaGEsBs",
       level: null,
       qbo: {
         QbId: employee.Id,
