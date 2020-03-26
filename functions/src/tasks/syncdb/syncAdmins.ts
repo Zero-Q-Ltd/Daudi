@@ -66,7 +66,7 @@ export function syncAdmins(qbo: QuickBooks, omcId: string) {
                 console.log("successfully created Admin");
                 console.log(result);
                 qbAdmin.profile.uid = result.uid;
-                return batchwrite.update(
+                return batchwrite.set(
                   firestore()
                     .collection("admins")
                     .doc(result.uid),
