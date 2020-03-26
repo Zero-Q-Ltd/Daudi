@@ -14,7 +14,7 @@ Well some ids need to be in place first, and qbo needs to be set up rith in the 
 ## 1. Locations
 
 Enable locations, and create locations representing Each of the currently known depots within the KPC pipelime
-![QBO Setup](/documentation/locatioins.gif)
+![QBO Setup](/documentation/locations.gif)
 Obtain the location ID's by using qbo API Explorer where you will query for [all Departments](https://developer.intuit.com/app/developer/qbo/docs/api/accounting/all-entities/department#query-a-department)
 When all the depots are setup, copy over their IDs to Daudi. You can obtain the ID's from qbo playground
 ![Daudi Setup](/documentation/depotId.gif)
