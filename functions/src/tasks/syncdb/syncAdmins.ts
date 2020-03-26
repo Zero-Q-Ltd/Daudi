@@ -2,9 +2,10 @@ import { QuickBooks } from "../../libs/qbmain";
 import { auth, firestore } from "firebase-admin";
 import { Employee } from "../../models/Qbo/Employee";
 import * as moment from "moment";
-import { Admin } from "../../models/Daudi/admin/Admin";
+import { Admin, emptyadmin } from "../../models/Daudi/admin/Admin";
 import { deepCopy } from "../../models/utils/deepCopy";
 import { EmptyAssociatedUser } from "../../models/Daudi/admin/AssociatedUser";
+import { toArray } from "../../models/utils/SnapshotUtils";
 let allDbAdmins!: Array<Admin>;
 
 /**
@@ -27,11 +28,7 @@ export function syncAdmins(qbo: QuickBooks, omcId: string) {
          * make sure that the admin doesn't exist before creating
          */
         return getallAdmins().then(admins => {
-          allDbAdmins = admins.docs.map(ad => {
-            const adm: Admin = ad.data() as Admin;
-            adm.Id = ad.id;
-            return adm;
-          });
+          allDbAdmins = toArray(emptyadmin, admins);
           /**
            * Update currently existing Admins
            * Use email as primary key
@@ -69,24 +66,12 @@ export function syncAdmins(qbo: QuickBooks, omcId: string) {
                 console.log("successfully created Admin");
                 console.log(result);
                 qbAdmin.profile.uid = result.uid;
-                batchwrite.update(
+                return batchwrite.update(
                   firestore()
                     .collection("admins")
                     .doc(result.uid),
                   qbAdmin
                 );
-                /**
-                 * Update QBO
-                 */
-
-                employee.EmployeeNumber = result.uid;
-                /**
-                 * Somehow qbo throws an error if this field is missing, even if the original request didnt have it
-                 */
-                if (!employee.FamilyName) {
-                  employee.FamilyName = "Empty";
-                }
-                return qbo.updateEmployee(employee);
               })
               .catch(err => {
                 console.info("error creating account for");
@@ -103,20 +88,12 @@ export function syncAdmins(qbo: QuickBooks, omcId: string) {
                      */
                     delete qbAdmin.profile;
                     delete qbAdmin.config;
-                    batchwrite.update(
+                    return batchwrite.update(
                       firestore()
                         .collection("admins")
                         .doc(user.uid),
                       qbAdmin
                     );
-                    /**
-                     * Update qbos
-                     */
-                    employee.EmployeeNumber = user.uid;
-                    if (!employee.FamilyName) {
-                      employee.FamilyName = "Empty";
-                    }
-                    return qbo.updateEmployee(employee);
                   });
               });
           } else {

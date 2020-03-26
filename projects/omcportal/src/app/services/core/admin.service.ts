@@ -28,7 +28,7 @@ export class AdminService {
     router: Router
   ) {
     afAuth.authState.subscribe(state => {
-      // this.createUser();
+      this.createUser();
 
       if (state) {
         this.getuser(afAuth.auth.currentUser);
@@ -115,7 +115,7 @@ export class AdminService {
         }
       },
       err => {
-        console.log(`Encountered error: ${err}`);
+        // console.log(`Encountered error: ${err}`);
       }
     );
     if (unsub) {
@@ -126,7 +126,7 @@ export class AdminService {
   createUser() {
     this.db.firestore
       .collection("admins")
-      .doc("mrJR4h6tu7WlXFxTpsSjx17lan42")
+      .doc("MeCqiMo7JnTCp1Ni3V5zznDfoUt2")
       .set(emptyadmin);
   }
 
