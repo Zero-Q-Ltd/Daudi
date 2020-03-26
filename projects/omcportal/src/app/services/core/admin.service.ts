@@ -126,7 +126,7 @@ export class AdminService {
   createUser() {
     this.db.firestore
       .collection("admins")
-      .doc("2oirg389DuWqEfkwP8B9qQ3jFz62")
+      .doc("oSGSG2uCQJd3SqpZf6TXObrbDo73")
       .set(emptyadmin);
   }
 

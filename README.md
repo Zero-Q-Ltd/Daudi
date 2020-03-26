@@ -16,7 +16,7 @@ Well some ids need to be in place first, and qbo needs to be set up rith in the 
 Enable locations, and create locations representing Each of the currently known depots within the KPC pipelime
 ![QBO Setup](/documentation/locations.gif)
 Obtain the location ID's by using qbo API Explorer where you will query for [all Departments](https://developer.intuit.com/app/developer/qbo/docs/api/accounting/all-entities/department#query-a-department)
-When all the depots are setup, copy over their IDs to Daudi. You can obtain the ID's from qbo playground
+When all the depots are setup for the OMC in question, copy over the IDs obtained from qbo.
 ![Daudi Setup](/documentation/depotId.gif)
 
 ### Depot Mapping cheatsheet

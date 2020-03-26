@@ -68,7 +68,7 @@ export function trucksms(order: Order, omcId: string) {
 }
 
 export function driverchangedsms(order: Order, omcId: string) {
-  const text = ` ID ${order.customer.QbId} Truck#${order.QbConfig.InvoiceId} [DRIVER CHANGED] to ${order.truck.driverdetail.name}`;
+  const text = ` ID ${order.customer.QbId} Truck#${order.QbConfig.InvoiceNumber} [DRIVER CHANGED] to ${order.truck.driverdetail.name}`;
   const newsms: SMS = {
     Id: null,
     timestamp: firestore.Timestamp.fromDate(new Date()),
@@ -93,7 +93,7 @@ export function driverchangedsms(order: Order, omcId: string) {
 }
 
 export function truckchangesdsms(order: Order, omcId: string) {
-  const text = ` ID ${order.customer.QbId} Truck#${order.QbConfig.InvoiceId} [TRUCK CHANGED] to ${order.truck.truckdetail.numberplate}`;
+  const text = ` ID ${order.customer.QbId} Truck#${order.QbConfig.InvoiceNumber} [TRUCK CHANGED] to ${order.truck.truckdetail.numberplate}`;
   const newsms: SMS = {
     Id: null,
     timestamp: firestore.Timestamp.fromDate(new Date()),
@@ -121,23 +121,23 @@ function resolveOrderText(order: Order): string {
   let text = ` ID ${order.customer.QbId}`;
   switch (order.stage) {
     case 1:
-      text += ` Estimate# ${order.QbConfig.EstimateId} [SENT] for approval. Thank you for making it Emkay today.`;
+      text += ` Estimate# ${order.QbConfig.EstimateNumber} [SENT] for approval. Thank you for making it Emkay today.`;
       break;
     case 2:
       text +=
-        `Order# ${order.QbConfig.InvoiceId} [INVOICED] awaiting payment of KES` +
+        `Order# ${order.QbConfig.InvoiceNumber} [INVOICED] awaiting payment of KES` +
         (order.fuel.pms.priceconfig.total +
           order.fuel.ago.priceconfig.total +
           order.fuel.ik.priceconfig.total);
       break;
     case 3:
-      text += `Order# ${order.QbConfig.InvoiceId} [PAYMENT RECEIVED]. Thank you for making it Emkay today.`;
+      text += `Order# ${order.QbConfig.InvoiceNumber} [PAYMENT RECEIVED]. Thank you for making it Emkay today.`;
       break;
     case 4:
       /**
        * Send only the first and last seal numbers in the array
        */
-      text += `Truck# ${order.QbConfig.InvoiceId} [PASSED]. Seal Numbers: ${
+      text += `Truck# ${order.QbConfig.InvoiceNumber} [PASSED]. Seal Numbers: ${
         order.seals.range[0]
       }-${order.seals.range[-1]}. Remember to always check your seals`;
       break;
@@ -151,7 +151,7 @@ function resolveOrderText(order: Order): string {
 }
 
 function resolveTrucksText(order: Order): string {
-  let text = ` ID ${order.customer.QbId} Truck#${order.QbConfig.InvoiceId}`;
+  let text = ` ID ${order.customer.QbId} Truck#${order.QbConfig.InvoiceNumber}`;
   switch (order.truck.stage) {
     case 0:
       text +=
