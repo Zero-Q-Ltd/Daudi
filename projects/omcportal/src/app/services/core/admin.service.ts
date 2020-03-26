@@ -28,7 +28,7 @@ export class AdminService {
     router: Router
   ) {
     afAuth.authState.subscribe(state => {
-      this.createUser();
+      // this.createUser();
 
       if (state) {
         this.getuser(afAuth.auth.currentUser);

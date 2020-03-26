@@ -12,7 +12,7 @@ let allDbAdmins!: Array<Admin>;
  * Creates them as users on Daudi if they have emails, but their level has to be approved on the superadmin backend of Daudi
  * @param qbo
  */
-export function syncAdmins(qbo: QuickBooks) {
+export function syncAdmins(qbo: QuickBooks, omcId: string) {
   /**
    * Limit to 1000 customers for every sync operation
    */
@@ -22,11 +22,7 @@ export function syncAdmins(qbo: QuickBooks) {
 
     return Promise.all(
       alladmins.map(employee => {
-        const qbAdmin = convertToDaudiadmin(
-          employee,
-          qbo.sandbox,
-          qbo.companyid
-        );
+        const qbAdmin = convertToDaudiadmin(employee, omcId, qbo.companyid);
         /**
          * make sure that the admin doesn't exist before creating
          */
@@ -157,7 +153,7 @@ function updateAdminFiields(qbAdmin: Admin, dbAdmin: Admin): Admin {
 
 function convertToDaudiadmin(
   employee: Employee,
-  sandbox: boolean,
+  omcId: string,
   companyid: string
 ): Admin {
   console.log("converting employee to Admin");
@@ -187,7 +183,7 @@ function convertToDaudiadmin(
     },
 
     config: {
-      omcId: "Tf84xilXZ2MP3jaGEsBs",
+      omcId: omcId,
       level: null,
       qbo: {
         QbId: employee.Id,
