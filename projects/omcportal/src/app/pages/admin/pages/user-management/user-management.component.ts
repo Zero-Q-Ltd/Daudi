@@ -30,6 +30,7 @@ import { MyTimestamp } from "../../../../models/firestore/firestoreTypes";
 import { NotificationService } from "../../../../shared/services/notification.service";
 import { AdminConfig, emptyConfig } from "app/models/Daudi/omc/AdminConfig";
 import { toArray } from "app/models/utils/SnapshotUtils";
+import { CoreAdminService } from "app/pages/admin/services/core.service";
 
 @Component({
   selector: "user-management",
@@ -101,10 +102,10 @@ export class UserManagementComponent implements OnInit, OnDestroy {
   config: AdminConfig = { ...emptyConfig };
 
   constructor(
-    private functions: AngularFireFunctions,
     private notification: NotificationService,
     private adminsService: AdminService,
-    private core: CoreService
+    private core: CoreService,
+    private coreAdmin: CoreAdminService
   ) {
     this.core.activedepot
       .pipe(takeUntil(this.comopnentDestroyed))
@@ -163,21 +164,26 @@ export class UserManagementComponent implements OnInit, OnDestroy {
 
   syncdb() {
     this.creatingsync = true;
-
-    const syncobject: SyncRequest = {
-      time: MyTimestamp.now(),
-      synctype: ["Employee"]
-    };
-    this.functions
-      .httpsCallable("requestsync")(syncobject)
-      .pipe(takeUntil(this.comopnentDestroyed))
-      .subscribe(res => {
+    this.coreAdmin
+      .syncdb(["Employee"])
+      .then(res => {
         this.creatingsync = false;
         this.notification.notify({
           alert_type: "success",
           title: "Success",
-          body: "Users Synchronized"
+          body: "Companies Synchronized"
         });
+      })
+      .catch(e => {
+        this.creatingsync = false;
+        this.notification.notify({
+          alert_type: "error",
+          title: "Error",
+          body: "Sync failed, please try again later"
+        });
+        /**
+         * @todo send the error to the database
+         */
       });
   }
 
