@@ -39,7 +39,7 @@ export function syncEntry(
               fuelConfig.ago.entryId
             ) {
               ValidLineItems.push({
-                fueltype: FuelType.pms,
+                fueltype: FuelType.ago,
                 index,
                 bill
               });
@@ -48,7 +48,7 @@ export function syncEntry(
               fuelConfig.ik.entryId
             ) {
               ValidLineItems.push({
-                fueltype: FuelType.pms,
+                fueltype: FuelType.ik,
                 index,
                 bill
               });
