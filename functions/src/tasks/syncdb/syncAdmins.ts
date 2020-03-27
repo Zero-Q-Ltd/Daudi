@@ -2,9 +2,10 @@ import { QuickBooks } from "../../libs/qbmain";
 import { auth, firestore } from "firebase-admin";
 import { Employee } from "../../models/Qbo/Employee";
 import * as moment from "moment";
-import { Admin } from "../../models/Daudi/admin/Admin";
+import { Admin, emptyadmin } from "../../models/Daudi/admin/Admin";
 import { deepCopy } from "../../models/utils/deepCopy";
 import { EmptyAssociatedUser } from "../../models/Daudi/admin/AssociatedUser";
+import { toArray } from "../../models/utils/SnapshotUtils";
 let allDbAdmins!: Array<Admin>;
 
 /**
@@ -12,7 +13,7 @@ let allDbAdmins!: Array<Admin>;
  * Creates them as users on Daudi if they have emails, but their level has to be approved on the superadmin backend of Daudi
  * @param qbo
  */
-export function syncAdmins(qbo: QuickBooks) {
+export function syncAdmins(qbo: QuickBooks, omcId: string) {
   /**
    * Limit to 1000 customers for every sync operation
    */
@@ -22,20 +23,12 @@ export function syncAdmins(qbo: QuickBooks) {
 
     return Promise.all(
       alladmins.map(employee => {
-        const qbAdmin = convertToDaudiadmin(
-          employee,
-          qbo.sandbox,
-          qbo.companyid
-        );
+        const qbAdmin = convertToDaudiadmin(employee, omcId, qbo.companyid);
         /**
          * make sure that the admin doesn't exist before creating
          */
         return getallAdmins().then(admins => {
-          allDbAdmins = admins.docs.map(ad => {
-            const adm: Admin = ad.data() as Admin;
-            adm.Id = ad.id;
-            return adm;
-          });
+          allDbAdmins = toArray(emptyadmin, admins);
           /**
            * Update currently existing Admins
            * Use email as primary key
@@ -73,24 +66,12 @@ export function syncAdmins(qbo: QuickBooks) {
                 console.log("successfully created Admin");
                 console.log(result);
                 qbAdmin.profile.uid = result.uid;
-                batchwrite.update(
+                return batchwrite.set(
                   firestore()
                     .collection("admins")
                     .doc(result.uid),
                   qbAdmin
                 );
-                /**
-                 * Update QBO
-                 */
-
-                employee.EmployeeNumber = result.uid;
-                /**
-                 * Somehow qbo throws an error if this field is missing, even if the original request didnt have it
-                 */
-                if (!employee.FamilyName) {
-                  employee.FamilyName = "Empty";
-                }
-                return qbo.updateEmployee(employee);
               })
               .catch(err => {
                 console.info("error creating account for");
@@ -107,20 +88,12 @@ export function syncAdmins(qbo: QuickBooks) {
                      */
                     delete qbAdmin.profile;
                     delete qbAdmin.config;
-                    batchwrite.update(
+                    return batchwrite.update(
                       firestore()
                         .collection("admins")
                         .doc(user.uid),
                       qbAdmin
                     );
-                    /**
-                     * Update qbos
-                     */
-                    employee.EmployeeNumber = user.uid;
-                    if (!employee.FamilyName) {
-                      employee.FamilyName = "Empty";
-                    }
-                    return qbo.updateEmployee(employee);
                   });
               });
           } else {
@@ -157,7 +130,7 @@ function updateAdminFiields(qbAdmin: Admin, dbAdmin: Admin): Admin {
 
 function convertToDaudiadmin(
   employee: Employee,
-  sandbox: boolean,
+  omcId: string,
   companyid: string
 ): Admin {
   console.log("converting employee to Admin");
@@ -187,7 +160,7 @@ function convertToDaudiadmin(
     },
 
     config: {
-      omcId: null,
+      omcId: omcId,
       level: null,
       qbo: {
         QbId: employee.Id,
