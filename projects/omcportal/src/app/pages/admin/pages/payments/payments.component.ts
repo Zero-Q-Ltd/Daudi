@@ -8,10 +8,10 @@ import { takeUntil } from "rxjs/operators";
 import { DaudiCustomer } from "../../../../models/Daudi/customer/Customer";
 import { CreatePaymentComponent } from "../../components/create-payment/create-payment.component";
 import { CustomerManagementComponent } from "../customer-management/customer-management.component";
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
-import { MatDialog } from '@angular/material/dialog';
+import { MatPaginator } from "@angular/material/paginator";
+import { MatSort } from "@angular/material/sort";
+import { MatTableDataSource } from "@angular/material/table";
+import { MatDialog } from "@angular/material/dialog";
 
 @Component({
   selector: "app-payments",
@@ -19,20 +19,30 @@ import { MatDialog } from '@angular/material/dialog';
   styleUrls: ["./payments.component.scss"]
 })
 export class PaymentsComponent implements OnInit, OnDestroy {
-  displayedColumns: string[] = ["bank", "mode", "bankref", "amount", "name", "phone"];
+  displayedColumns: string[] = [
+    "bank",
+    "mode",
+    "bankref",
+    "amount",
+    "name",
+    "phone"
+  ];
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   unprocesseddatasource = new MatTableDataSource<DaudiPayment>();
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
-
+  saving: false;
   constructor(
     private functions: AngularFireFunctions,
     private adminservice: AdminService,
     private payments: PaymentsService,
-    private dialog: MatDialog) {
-    this.payments.unprocessedpayments.pipe(takeUntil(this.comopnentDestroyed)).subscribe(value => {
-      this.unprocesseddatasource.data = value;
-    });
+    private dialog: MatDialog
+  ) {
+    this.payments.unprocessedpayments
+      .pipe(takeUntil(this.comopnentDestroyed))
+      .subscribe(value => {
+        this.unprocesseddatasource.data = value;
+      });
   }
 
   ngOnInit() {
@@ -50,20 +60,24 @@ export class PaymentsComponent implements OnInit, OnDestroy {
       width: "80%",
       data: "Attach"
     });
-    dialogRef.afterClosed().pipe(takeUntil(this.comopnentDestroyed)).subscribe((result: DaudiCustomer[] | null) => {
-      if (result) {
-        payment.transaction.billNumber = result[0].Id;
-        payment.daudiFields.status = 48;
-        payment.daudiFields.approvedby = this.adminservice.createUserObject();
-        this.functions.httpsCallable("ipnCallable")(payment)
-          .pipe(takeUntil(this.comopnentDestroyed))
-          .subscribe(res => {
-            console.log(res);
-          });
-      }
-
-    });
-
+    dialogRef
+      .afterClosed()
+      .pipe(takeUntil(this.comopnentDestroyed))
+      .subscribe((result: DaudiCustomer[] | null) => {
+        if (result) {
+          payment.transaction.billNumber = result[0].Id;
+          payment.daudiFields.status = 48;
+          payment.daudiFields.approvedby = this.adminservice.createUserObject();
+          this.functions
+            .httpsCallable("ipnCallable")(payment)
+            .pipe(takeUntil(this.comopnentDestroyed))
+            .toPromise()
+            .then(res => {
+              console.log(res);
+            })
+            .catch(e => {});
+        }
+      });
   }
 
   addPayment() {
