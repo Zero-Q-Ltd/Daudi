@@ -1,7 +1,7 @@
 import { firestore } from "firebase-admin";
 import { Order } from "../../models/Daudi/order/Order";
 import { SMS } from "../../models/Daudi/sms/sms";
-
+import * as moment from "moment";
 export function ordersms(order: Order, omcId: string): Promise<any> {
   /**
    * An order has been modified
@@ -164,16 +164,27 @@ function resolveTrucksText(order: Order): string {
         " [ORDER SUBMITTED] at " +
         order.config.depot.name +
         " Est-Time " +
-        order.truckStageData[1].expiry[0].expiry +
+        getDifference(
+          order.truckStageData[1].expiry[0].timeCreated,
+          order.truckStageData[1].expiry[0].expiry
+        ) +
         " Thank you for making it Emkay today.";
       break;
     case 2:
       text +=
-        " [QUEUED] Est-Time " + order.truckStageData["2"].expiry[0].expiry;
+        " [QUEUED] Est-Time " +
+        getDifference(
+          order.truckStageData[2].expiry[0].timeCreated,
+          order.truckStageData[2].expiry[0].expiry
+        );
       break;
     case 3:
       text +=
-        " [LOADING] Est-Time " + order.truckStageData["3"].expiry[0].expiry;
+        " [LOADING] Est-Time " +
+        getDifference(
+          order.truckStageData[3].expiry[0].timeCreated,
+          order.truckStageData[3].expiry[0].expiry
+        );
       break;
     default:
       console.error(
@@ -182,4 +193,9 @@ function resolveTrucksText(order: Order): string {
       return "";
   }
   return (text += ` HELP:0733474703`);
+}
+
+function getDifference(timeCreated: Date, expiry: Date) {
+  let difference = moment(timeCreated).diff(expiry);
+  return moment(difference).format("HH:mm");
 }

@@ -1,80 +1,111 @@
 <div class="container-fluid">
-<mat-card>
-  <mat-card-content>
-    <div class="ot-header">
-      <mat-form-field appearance="legacy">
-        <input (keyup)="filterorders(typedValue)" [(ngModel)]="typedValue" matInput placeholder="Filter">
-      </mat-form-field>
-    </div>
-    <div class="ot-container">
-      <table [dataSource]="smslogs" mat-table multiTemplateDataRows>
-        <ng-container matColumnDef="timestamp">
-          <th *matHeaderCellDef mat-header-cell> Date</th>
-          <td *matCellDef="let sms" mat-cell> {{sms.timestamp.toDate() | date: 'short'}}</td>
-        </ng-container>
+  <mat-card>
+    <mat-card-content>
+      <div class="ot-header">
+        <mat-form-field appearance="legacy">
+          <input
+            (keyup)="filterorders(typedValue)"
+            [(ngModel)]="typedValue"
+            matInput
+            placeholder="Filter"
+          />
+        </mat-form-field>
+      </div>
+      <div class="ot-container">
+        <table [dataSource]="smslogs" mat-table multiTemplateDataRows>
+          <ng-container matColumnDef="timestamp">
+            <th *matHeaderCellDef mat-header-cell>Date</th>
+            <td *matCellDef="let sms" mat-cell>
+              {{ sms.timestamp.toDate() | date: "short" }}
+            </td>
+          </ng-container>
 
-        <ng-container matColumnDef="QbId">
-          <th *matHeaderCellDef mat-header-cell> Company ID</th>
-          <td *matCellDef="let sms" mat-cell> {{sms.company.QbId}}</td>
-        </ng-container>
+          <ng-container matColumnDef="QbId">
+            <th *matHeaderCellDef mat-header-cell>Company ID</th>
+            <td *matCellDef="let sms" mat-cell>{{ sms.company.QbId }}</td>
+          </ng-container>
 
-        <ng-container matColumnDef="name">
-          <th *matHeaderCellDef mat-header-cell> Company Name</th>
-          <td *matCellDef="let sms" mat-cell> {{sms.company.name}}</td>
-        </ng-container>
+          <ng-container matColumnDef="name">
+            <th *matHeaderCellDef mat-header-cell>Company Name</th>
+            <td *matCellDef="let sms" mat-cell>{{ sms.company.name }}</td>
+          </ng-container>
 
-        <ng-container matColumnDef="contactname">
-          <th *matHeaderCellDef mat-header-cell> Contact Name</th>
-          <td *matCellDef="let sms" mat-cell> {{sms.company.contactname}}</td>
-        </ng-container>
+          <ng-container matColumnDef="contactname">
+            <th *matHeaderCellDef mat-header-cell>Contact Name</th>
+            <td *matCellDef="let sms" mat-cell>
+              {{ sms.company.contactname }}
+            </td>
+          </ng-container>
 
-        <ng-container matColumnDef="phone">
-          <th *matHeaderCellDef mat-header-cell> Phone</th>
-          <td *matCellDef="let sms" mat-cell> {{sms.company.phone}}</td>
-        </ng-container>
+          <ng-container matColumnDef="phone">
+            <th *matHeaderCellDef mat-header-cell>Phone</th>
+            <td *matCellDef="let sms" mat-cell>{{ sms.company.phone }}</td>
+          </ng-container>
 
-        <ng-container matColumnDef="origin">
-          <th *matHeaderCellDef mat-header-cell> Origin</th>
-          <td *matCellDef="let sms" mat-cell> {{sms.type.origin}}</td>
-        </ng-container>
+          <ng-container matColumnDef="origin">
+            <th *matHeaderCellDef mat-header-cell>Origin</th>
+            <td *matCellDef="let sms" mat-cell>{{ sms.type.origin }}</td>
+          </ng-container>
 
-        <!-- Item Column -->
+          <!-- Item Column -->
 
-        <ng-container matColumnDef="reason">
-          <th *matHeaderCellDef mat-header-cell> Reason</th>
-          <td *matCellDef="let sms" mat-cell> {{sms.type.reason}}</td>
-        </ng-container>
+          <ng-container matColumnDef="reason">
+            <th *matHeaderCellDef mat-header-cell>Reason</th>
+            <td *matCellDef="let sms" mat-cell>{{ sms.type.reason }}</td>
+          </ng-container>
 
-        <!-- Cost Column -->
-        <ng-container matColumnDef="greeting">
-          <th *matHeaderCellDef mat-header-cell>Greeting</th>
-          <td *matCellDef="let sms" mat-cell>{{sms.greeting}}</td>
-        </ng-container>
+          <!-- Cost Column -->
+          <ng-container matColumnDef="greeting">
+            <th *matHeaderCellDef mat-header-cell>Greeting</th>
+            <td *matCellDef="let sms" mat-cell>{{ sms.greeting }}</td>
+          </ng-container>
 
-        <!-- Cost Column -->
-        <ng-container matColumnDef="status">
-          <th *matHeaderCellDef mat-header-cell> Status</th>
-          <td *matCellDef="let sms" mat-cell>{{sms.status.sent}}{{sms.status.delivered}}</td>
-        </ng-container>
-        <ng-container matColumnDef="expandedDetail">
-          <td *matCellDef="let sms" [attr.colspan]="displayedColumns.length" mat-cell>
-            <mat-card [@detailExpand]="sms == expandedElement ? 'expanded' : 'collapsed'" class="element-detail">
-              <mat-card-content class="full-div">
-                {{sms.msg}}
-              </mat-card-content>
-              <div class="full-div">
-                <mat-spinner class="katikati"></mat-spinner>
-              </div>
-            </mat-card>
-          </td>
-        </ng-container>
-        <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
-        <tr (click)="expandedElement = sms" *matRowDef="let sms; columns:  displayedColumns;" [@flyIn]
-          [class.expanded-row]="expandedElement === sms" class="element-row" mat-row></tr>
-        <tr *matRowDef="let row; columns: ['expandedDetail']" class="detail-row" mat-row></tr>
-      </table>
-    </div>
-    <mat-paginator [pageSizeOptions]="[5, 10, 20]" [pageSize]="10" showFirstLastButtons></mat-paginator>
-  </mat-card-content>
-</mat-card>
+          <!-- Cost Column -->
+          <ng-container matColumnDef="status">
+            <th *matHeaderCellDef mat-header-cell>Status</th>
+            <td *matCellDef="let sms" mat-cell>
+              {{ sms.status.sent }}{{ sms.status.delivered }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="expandedDetail">
+            <td
+              *matCellDef="let sms"
+              [attr.colspan]="displayedColumns.length"
+              mat-cell
+            >
+              <mat-card
+                [@detailExpand]="
+                  sms == expandedElement ? 'expanded' : 'collapsed'
+                "
+                class="element-detail"
+              >
+                <mat-card-content class="full-div">
+                  {{ sms.msg }}
+                </mat-card-content>
+              </mat-card>
+            </td>
+          </ng-container>
+          <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
+          <tr
+            (click)="expandedElement = sms"
+            *matRowDef="let sms; columns: displayedColumns"
+            [@flyIn]
+            [class.expanded-row]="expandedElement === sms"
+            class="element-row"
+            mat-row
+          ></tr>
+          <tr
+            *matRowDef="let row; columns: ['expandedDetail']"
+            class="detail-row"
+            mat-row
+          ></tr>
+        </table>
+      </div>
+      <mat-paginator
+        [pageSizeOptions]="[5, 10, 20]"
+        [pageSize]="10"
+        showFirstLastButtons
+      ></mat-paginator>
+    </mat-card-content>
+  </mat-card>
 </div>

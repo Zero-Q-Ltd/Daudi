@@ -60,7 +60,7 @@ import { CoreService } from "app/services/core/core.service";
 })
 export class SmsLogsComponent implements OnInit, OnDestroy {
   position = "right";
-  smslogs = new MatTableDataSource();
+  smslogs = new MatTableDataSource<SMS>();
   displayedColumns: string[] = [
     "timestamp",
     "QbId",
