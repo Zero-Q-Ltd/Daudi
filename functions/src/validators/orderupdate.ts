@@ -3,7 +3,11 @@ import { Invoice_Estimate } from "../models/Qbo/QboOrder";
 import { Order } from "../models/Daudi/order/Order";
 import { editStats } from "../tasks/crud/daudi/editStats";
 import { ReadAndInstantiate } from "../tasks/crud/daudi/QboConfig";
-import { readStock, kpcStockCollection } from "../tasks/crud/daudi/Stock";
+import {
+  readStock,
+  kpcStockCollection,
+  privateStockCollection
+} from "../tasks/crud/daudi/Stock";
 import { Stock, newStock } from "../models/Daudi/omc/Stock";
 import { FuelNamesArray } from "../models/Daudi/fuel/FuelType";
 import { firestore } from "firebase-admin";
@@ -99,7 +103,11 @@ async function adjustASE(
       console.log("Adjusting stock qty by", qtyToAdjust);
       stockObject.qty[fueltype].ase += qtyToAdjust;
     });
-    return batch.update(kpcStockCollection(omcId), stockObject);
+    if (depot.config.private) {
+      return batch.update(privateStockCollection(omcId, depot.Id), stockObject);
+    } else {
+      return batch.update(kpcStockCollection(omcId), stockObject);
+    }
   });
 }
 async function adjustEntries(
