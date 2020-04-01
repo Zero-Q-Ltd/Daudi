@@ -1,0 +1,13 @@
+[debug] [2020-04-01T19:24:12.255Z] ----------------------------------------------------------------------
+[debug] [2020-04-01T19:24:12.259Z] Command:       /home/kisinga/.asdf/installs/nodejs/12.13.0/bin/node /home/kisinga/.npm-global/bin/firebase deploy --only functions
+[debug] [2020-04-01T19:24:12.259Z] CLI Version:   7.12.1
+[debug] [2020-04-01T19:24:12.259Z] Platform:      linux
+[debug] [2020-04-01T19:24:12.259Z] Node Version:  v12.13.0
+[debug] [2020-04-01T19:24:12.259Z] Time:          Wed Apr 01 2020 22:24:12 GMT+0300 (GMT+03:00)
+[debug] [2020-04-01T19:24:12.259Z] ----------------------------------------------------------------------
+[debug] [2020-04-01T19:24:12.259Z] 
+[debug] [2020-04-01T19:24:12.268Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2020-04-01T19:24:12.268Z] > authorizing via signed-in user
+[debug] [2020-04-01T19:24:12.269Z] [iam] checking project daudi-4 for permissions ["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]
+[debug] [2020-04-01T19:24:12.270Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/daudi-4:testIamPermissions  
+
