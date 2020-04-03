@@ -90,6 +90,8 @@ export function syncEntry(
        */
       const fetchedEntry = await await directory
         .where("entry.name", "==", convertedEntry.entry.name)
+        // Omit entrie sthat have been transferred to private dpeots
+        .where("depot.Id", "==", null)
         .get();
 
       if (fetchedEntry.empty) {
