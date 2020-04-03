@@ -88,7 +88,7 @@ export function syncAdmins(qbo: QuickBooks, omcId: string) {
                      */
                     delete qbAdmin.profile;
                     delete qbAdmin.config;
-                    return batchwrite.update(
+                    return batchwrite.set(
                       firestore()
                         .collection("admins")
                         .doc(user.uid),
