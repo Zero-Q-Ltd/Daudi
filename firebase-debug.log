@@ -1,0 +1,24 @@
+[debug] [2020-04-03T12:12:14.059Z] ----------------------------------------------------------------------
+[debug] [2020-04-03T12:12:14.061Z] Command:       /home/kisinga/.asdf/installs/nodejs/12.13.0/bin/node /home/kisinga/.npm-global/bin/firebase deploy --only functions
+[debug] [2020-04-03T12:12:14.061Z] CLI Version:   7.12.1
+[debug] [2020-04-03T12:12:14.061Z] Platform:      linux
+[debug] [2020-04-03T12:12:14.061Z] Node Version:  v12.13.0
+[debug] [2020-04-03T12:12:14.062Z] Time:          Fri Apr 03 2020 15:12:14 GMT+0300 (GMT+03:00)
+[debug] [2020-04-03T12:12:14.062Z] ----------------------------------------------------------------------
+[debug] [2020-04-03T12:12:14.062Z] 
+[debug] [2020-04-03T12:12:14.068Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2020-04-03T12:12:14.068Z] > authorizing via signed-in user
+[debug] [2020-04-03T12:12:14.068Z] [iam] checking project daudi-4 for permissions ["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]
+[debug] [2020-04-03T12:12:14.070Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2020-04-03T12:12:14.070Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ <request body omitted>
+[debug] [2020-04-03T12:12:19.598Z] <<< HTTP RESPONSE 200
+[debug] [2020-04-03T12:12:19.613Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/daudi-4:testIamPermissions  
+
+[debug] [2020-04-03T12:12:21.595Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Deploying to 'daudi-4'...
+[info] 
+[info] i  deploying functions
+[info] Running command: npm --prefix "$RESOURCE_DIR" run lint
+[info] Running command: npm --prefix "$RESOURCE_DIR" run build
