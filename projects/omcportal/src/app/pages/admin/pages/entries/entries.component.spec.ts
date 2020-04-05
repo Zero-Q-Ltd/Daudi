@@ -1,8 +1,8 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from "@angular/core/testing";
 
-import {EntriesComponent} from './entries.component';
+import {EntriesComponent} from "./entries.component";
 
-describe('BatchesComponent', () => {
+describe("BatchesComponent", () => {
   let component: EntriesComponent;
   let fixture: ComponentFixture<EntriesComponent>;
 
@@ -19,7 +19,7 @@ describe('BatchesComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

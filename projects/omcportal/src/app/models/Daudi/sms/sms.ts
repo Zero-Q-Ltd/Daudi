@@ -1,11 +1,11 @@
-import {MyTimestamp} from '../../firestore/firestoreTypes';
-import {Contact} from '../customer/Contact';
+import {MyTimestamp} from "../../firestore/firestoreTypes";
+import {Contact} from "../customer/Contact";
 
 export interface SMS {
   Id: string;
   type: {
-    origin: 'custom' | 'system' | 'bulk',
-    reason: 'ordermoved' | 'truckmoved' | string
+    origin: "custom" | "system" | "bulk",
+    reason: "ordermoved" | "truckmoved" | string
   };
   company: {
     QbId: string,

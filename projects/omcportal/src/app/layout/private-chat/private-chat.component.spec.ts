@@ -1,8 +1,8 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from "@angular/core/testing";
 
-import {PrivateChatComponent} from './private-chat.component';
+import {PrivateChatComponent} from "./private-chat.component";
 
-describe('PrivateChatComponent', () => {
+describe("PrivateChatComponent", () => {
   let component: PrivateChatComponent;
   let fixture: ComponentFixture<PrivateChatComponent>;
 
@@ -19,7 +19,7 @@ describe('PrivateChatComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

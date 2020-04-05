@@ -1,5 +1,5 @@
-import {Contact} from '../customer/Contact';
-import {FuelType} from '../fuel/FuelType';
+import {Contact} from "../customer/Contact";
+import {FuelType} from "../fuel/FuelType";
 
 export interface OrderContactForm extends Contact {
   kraPin: string;

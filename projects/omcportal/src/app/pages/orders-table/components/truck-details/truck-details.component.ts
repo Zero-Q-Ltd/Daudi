@@ -1,33 +1,33 @@
-import { Component, EventEmitter, OnDestroy, OnInit } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/firestore';
-import { MatDialog } from '@angular/material/dialog';
-import { ComponentCommunicationService } from 'app/services/component-communication.service';
-import { CoreService } from 'app/services/core/core.service';
-import { OrdersService } from 'app/services/orders.service';
-import * as moment from 'moment';
-import { Options } from 'ng5-slider';
-import { ReplaySubject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
-import { ConfirmDialogComponent } from '../../../../components/confirm-dialog/confirm-dialog.component';
-import { Order } from '../../../../models/Daudi/order/Order';
-import { NotificationService } from '../../../../shared/services/notification.service';
-import { EntryAssignComponent } from '../entry-assign/entry-assign.component';
-import { TooltipPosition } from '@angular/material/tooltip';
+import { Component, EventEmitter, OnDestroy, OnInit } from "@angular/core";
+import { AngularFirestore } from "@angular/fire/firestore";
+import { MatDialog } from "@angular/material/dialog";
+import { TooltipPosition } from "@angular/material/tooltip";
 import { MyTimestamp } from "app/models/firestore/firestoreTypes";
+import { ComponentCommunicationService } from "app/services/component-communication.service";
+import { CoreService } from "app/services/core/core.service";
+import { OrdersService } from "app/services/orders.service";
+import * as moment from "moment";
+import { Options } from "ng5-slider";
+import { ReplaySubject } from "rxjs";
+import { takeUntil } from "rxjs/operators";
+import { ConfirmDialogComponent } from "../../../../components/confirm-dialog/confirm-dialog.component";
+import { Order } from "../../../../models/Daudi/order/Order";
+import { NotificationService } from "../../../../shared/services/notification.service";
+import { EntryAssignComponent } from "../entry-assign/entry-assign.component";
 
 @Component({
-  selector: 'truck-details',
-  templateUrl: './truck-details.component.html',
-  styleUrls: ['./truck-details.component.scss']
+  selector: "truck-details",
+  templateUrl: "./truck-details.component.html",
+  styleUrls: ["./truck-details.component.scss"]
 })
 export class TruckDetailsComponent implements OnInit, OnDestroy {
   order: Order;
-  position: TooltipPosition = 'above';
+  position: TooltipPosition = "above";
 
   dialogProperties: object = {};
-  position1: TooltipPosition = 'before';
-  position2: TooltipPosition = 'after';
-  position3: TooltipPosition = 'below';
+  position1: TooltipPosition = "before";
+  position2: TooltipPosition = "after";
+  position3: TooltipPosition = "below";
   accuracycolors = {
     1: {
       percentage: 0
@@ -52,19 +52,19 @@ export class TruckDetailsComponent implements OnInit, OnDestroy {
       // console.log(scale, value);
       switch (scale) {
         case 5:
-          return '#FF003C';
+          return "#FF003C";
         case 4:
-          return '#FF8A00';
+          return "#FF8A00";
         case 3:
-          return '#FABE28';
+          return "#FABE28";
         case 2:
-          return '#c1ba2e';
+          return "#c1ba2e";
         case 1:
-          return '#b9e615';
+          return "#b9e615";
         case 0:
-          return '#2bb418';
+          return "#2bb418";
         default:
-          return '#FF003C';
+          return "#FF003C";
 
       }
     },
@@ -73,19 +73,19 @@ export class TruckDetailsComponent implements OnInit, OnDestroy {
       // console.log(scale, value);
       switch (scale) {
         case 5:
-          return '#FF003C';
+          return "#FF003C";
         case 4:
-          return '#FF8A00';
+          return "#FF8A00";
         case 3:
-          return '#FABE28';
+          return "#FABE28";
         case 2:
-          return '#c1ba2e';
+          return "#c1ba2e";
         case 1:
-          return '#b9e615';
+          return "#b9e615";
         case 0:
-          return '#2bb418';
+          return "#2bb418";
         default:
-          return '#FF003C';
+          return "#FF003C";
       }
     }
   };
@@ -130,8 +130,8 @@ export class TruckDetailsComponent implements OnInit, OnDestroy {
     const difference = moment(stop.toDate()).diff(moment(start.toDate()));
     const timediff = moment.duration(difference);
     // console.log(timediff.hours(), timediff.minutes());
-    const totalhours = moment.duration(timediff).hours() > 9 ? moment.duration(timediff).hours() : '0' + moment.duration(timediff).hours();
-    const totalmins = moment.duration(timediff).minutes() > 9 ? moment.duration(timediff).minutes() : '0' + moment.duration(timediff).minutes();
+    const totalhours = moment.duration(timediff).hours() > 9 ? moment.duration(timediff).hours() : "0" + moment.duration(timediff).hours();
+    const totalmins = moment.duration(timediff).minutes() > 9 ? moment.duration(timediff).minutes() : "0" + moment.duration(timediff).minutes();
     return `${totalhours}:${totalmins}:00`;
   }
 
@@ -141,7 +141,6 @@ export class TruckDetailsComponent implements OnInit, OnDestroy {
     }
     return time.toDate() < moment().toDate();
   }
-
 
   resolvetime(MyTimestamp) {
     if (MyTimestamp) {
@@ -183,9 +182,9 @@ export class TruckDetailsComponent implements OnInit, OnDestroy {
 
   approveTruck() {
     const dialogRef = this.dialog.open(EntryAssignComponent, {
-      role: 'dialog',
+      role: "dialog",
       data: this.order.Id,
-      width: '80%'
+      width: "80%"
     });
 
   }
@@ -193,8 +192,8 @@ export class TruckDetailsComponent implements OnInit, OnDestroy {
   deleteTruck() {
     const dialogRef = this.dialog.open(ConfirmDialogComponent,
       {
-        role: 'dialog',
-        data: 'DELETE THIS TRUCK? \n THIS CANNOT BE REVERSED!!'
+        role: "dialog",
+        data: "DELETE THIS TRUCK? \n THIS CANNOT BE REVERSED!!"
       });
     dialogRef.afterClosed().pipe(takeUntil(this.comopnentDestroyed)).subscribe(result => {
       if (result) {
@@ -202,9 +201,9 @@ export class TruckDetailsComponent implements OnInit, OnDestroy {
         this.order.loaded = false;
         this.orderservice.updateorder(this.order.Id, this.core.currentOmc.value.Id, this.order).then(() => {
           this.notification.notify({
-            body: 'Truck deleted',
-            title: 'Deleted',
-            alert_type: 'warning',
+            body: "Truck deleted",
+            title: "Deleted",
+            alert_type: "warning",
             duration: 2000
           });
         });
@@ -220,17 +219,17 @@ export class TruckDetailsComponent implements OnInit, OnDestroy {
   resetTruck() {
     if (this.order.truck.hasBeenReset) {
       this.notification.notify({
-        body: 'This truck has already been reset once ',
-        title: 'Operation forbidden',
-        alert_type: 'error',
+        body: "This truck has already been reset once ",
+        title: "Operation forbidden",
+        alert_type: "error",
         duration: 2000
       });
       return;
     }
     const dialogRef = this.dialog.open(ConfirmDialogComponent,
       {
-        role: 'dialog',
-        data: 'RESET THIS TRUCK? \n This will allow modifications to be done to the Truck Details on the App!!'
+        role: "dialog",
+        data: "RESET THIS TRUCK? \n This will allow modifications to be done to the Truck Details on the App!!"
       });
     dialogRef.afterClosed().pipe(takeUntil(this.comopnentDestroyed)).subscribe(result => {
       if (result) {
@@ -248,9 +247,9 @@ export class TruckDetailsComponent implements OnInit, OnDestroy {
         this.order.truck.hasBeenReset = true;
         this.orderservice.updateorder(this.order.Id, this.core.currentOmc.value.Id, this.order).then(() => {
           this.notification.notify({
-            body: 'Truck reset',
-            alert_type: 'success',
-            title: 'Success',
+            body: "Truck reset",
+            alert_type: "success",
+            title: "Success",
             duration: 2000
           });
         });

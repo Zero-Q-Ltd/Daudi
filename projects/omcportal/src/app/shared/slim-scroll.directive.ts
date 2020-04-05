@@ -1,9 +1,9 @@
-import {AfterViewInit, Directive, ElementRef, Input} from '@angular/core';
-import * as $ from 'jquery';
-import 'jquery-slimscroll';
+import {AfterViewInit, Directive, ElementRef, Input} from "@angular/core";
+import * as $ from "jquery";
+import "jquery-slimscroll";
 
 @Directive({
-  selector: '[mySlimScroll]'
+  selector: "[mySlimScroll]"
 })
 export class SlimScrollDirective implements AfterViewInit {
   el: ElementRef;
@@ -17,7 +17,7 @@ export class SlimScrollDirective implements AfterViewInit {
     const $el = $(this.el.nativeElement);
 
     ($el).slimScroll({
-      height: this.scrollHeight || '100%'
+      height: this.scrollHeight || "100%"
     });
   }
 }

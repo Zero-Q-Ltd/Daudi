@@ -1,7 +1,7 @@
-import { MyGeoPoint, MyTimestamp } from '../../firestore/firestoreTypes';
-import { deepCopy } from '../../utils/deepCopy';
-import { emptymetadata, Metadata } from '../universal/Metadata';
-import { DepotCreator } from './DepotCreator';
+import { MyGeoPoint } from "../../firestore/firestoreTypes";
+import { deepCopy } from "../../utils/deepCopy";
+import { emptymetadata, Metadata } from "../universal/Metadata";
+import { DepotCreator } from "./DepotCreator";
 
 export interface Depot {
   Id: string;
@@ -50,5 +50,3 @@ export const emptydepot: Depot = {
    */
   Location: new MyGeoPoint(-1.3088567, 36.7752539)
 };
-
-

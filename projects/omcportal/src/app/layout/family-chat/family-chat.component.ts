@@ -1,9 +1,9 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit} from "@angular/core";
 
 @Component({
-  selector: 'family-chat',
-  templateUrl: './family-chat.component.html',
-  styleUrls: ['./family-chat.component.scss']
+  selector: "family-chat",
+  templateUrl: "./family-chat.component.html",
+  styleUrls: ["./family-chat.component.scss"]
 })
 export class FamilyChatComponent implements OnInit {
 

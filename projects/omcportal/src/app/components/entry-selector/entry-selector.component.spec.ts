@@ -1,8 +1,8 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from "@angular/core/testing";
 
-import {EntrySelectorComponent} from './entry-selector.component';
+import {EntrySelectorComponent} from "./entry-selector.component";
 
-describe('EntrySelectorComponent', () => {
+describe("EntrySelectorComponent", () => {
   let component: EntrySelectorComponent;
   let fixture: ComponentFixture<EntrySelectorComponent>;
 
@@ -19,7 +19,7 @@ describe('EntrySelectorComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

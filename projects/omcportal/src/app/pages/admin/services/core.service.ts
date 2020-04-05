@@ -1,14 +1,14 @@
-import {Injectable} from '@angular/core';
-import {AngularFireFunctions} from '@angular/fire/functions';
-import {CoreService} from 'app/services/core/core.service';
-import {take} from 'rxjs/operators';
-import {CompanySync} from '../../../models/Cloud/CompanySync';
-import {SyncRequest} from '../../../models/Cloud/Sync';
-import {MyTimestamp} from '../../../models/firestore/firestoreTypes';
-import {QbTypes} from '../../../models/QbTypes';
+import {Injectable} from "@angular/core";
+import {AngularFireFunctions} from "@angular/fire/functions";
+import {CoreService} from "app/services/core/core.service";
+import {take} from "rxjs/operators";
+import {CompanySync} from "../../../models/Cloud/CompanySync";
+import {SyncRequest} from "../../../models/Cloud/Sync";
+import {MyTimestamp} from "../../../models/firestore/firestoreTypes";
+import {QbTypes} from "../../../models/QbTypes";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root"
 })
 export class CoreAdminService {
   subscriptions: Map<string, () => void> = new Map<string, () => void>();
@@ -31,7 +31,7 @@ export class CoreAdminService {
       sync: req
     };
 
-    return this.functions.httpsCallable('requestsync')(syncobject)
+    return this.functions.httpsCallable("requestsync")(syncobject)
       .pipe(take(1))
       .toPromise();
 

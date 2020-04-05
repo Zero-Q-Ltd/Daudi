@@ -1,7 +1,8 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { ConfirmDialogComponent } from "app/components/confirm-dialog/confirm-dialog.component";
-import { AdminConfigService } from "app/services/core/admin-config.service";
+import { MyGeoPoint } from "app/models/firestore/firestoreTypes";
+import { CompanyConfigService } from "app/services/core/company-config.service";
 import { CoreService } from "app/services/core/core.service";
 import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
@@ -9,8 +10,6 @@ import { emptyomc, OMC } from "../../../../models/Daudi/omc/OMC";
 import { deepCopy } from "../../../../models/utils/deepCopy";
 import { NotificationService } from "../../../../shared/services/notification.service";
 import { CommunicationService } from "../../communication.service";
-import { CompanyConfigService } from "app/services/core/company-config.service";
-import { MyGeoPoint } from "app/models/firestore/firestoreTypes";
 
 @Component({
   selector: "app-company",

@@ -1,11 +1,11 @@
-import {AfterViewInit, Directive, ElementRef, OnDestroy} from '@angular/core';
-import {Event as RouterEvent, NavigationCancel, NavigationEnd, NavigationError, NavigationStart, Router} from '@angular/router';
-import * as $ from 'jquery';
-import {Subscription} from 'rxjs';
-import {LayoutService} from './layout.service';
+import {AfterViewInit, Directive, ElementRef, OnDestroy} from "@angular/core";
+import {Event as RouterEvent, NavigationCancel, NavigationEnd, NavigationError, NavigationStart, Router} from "@angular/router";
+import * as $ from "jquery";
+import {Subscription} from "rxjs";
+import {LayoutService} from "./layout.service";
 
 @Directive({
-  selector: '[myPreloader]'
+  selector: "[myPreloader]"
 })
 
 export class PreloaderDirective implements AfterViewInit, OnDestroy {
@@ -28,13 +28,13 @@ export class PreloaderDirective implements AfterViewInit, OnDestroy {
 
   active() {
     if (this.$el) {
-      this.$el.removeClass('hide').addClass('active');
+      this.$el.removeClass("hide").addClass("active");
     }
   }
 
   hide() {
     if (this.$el) {
-      this.$el.addClass('hide').removeClass('active');
+      this.$el.addClass("hide").removeClass("active");
     }
   }
 
@@ -59,11 +59,11 @@ export class PreloaderDirective implements AfterViewInit, OnDestroy {
   //
   updatePreloader(state) {
     // console.log('change state')
-    if (state === 'active') {
+    if (state === "active") {
       this.active();
     }
 
-    if (state === 'hide') {
+    if (state === "hide") {
       this.hide();
     }
   }

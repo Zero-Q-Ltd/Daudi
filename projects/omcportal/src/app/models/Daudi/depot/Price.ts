@@ -1,6 +1,6 @@
-import { deepCopy } from '../../utils/deepCopy';
-import { AssociatedUser, EmptyAssociatedUser } from '../admin/AssociatedUser';
-import { FuelType } from '../fuel/FuelType';
+import { deepCopy } from "../../utils/deepCopy";
+import { AssociatedUser, EmptyAssociatedUser } from "../admin/AssociatedUser";
+import { FuelType } from "../fuel/FuelType";
 
 export interface Price {
   Id: string;

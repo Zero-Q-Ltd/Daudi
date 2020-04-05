@@ -1,12 +1,12 @@
-import {RouterModule, Routes} from '@angular/router';
+import {RouterModule, Routes} from "@angular/router";
 
-import {LayoutComponent} from './layout.component';
+import {LayoutComponent} from "./layout.component";
 // import { DashboardComponent } from '../dashboard/dashboard.component';
 // import { AuthGuard } from '../../guards/auth.guard'; //service
 
 const routes: Routes = [
   {
-    path: 'app',
+    path: "app",
     component: LayoutComponent,
     // canActivate: [UsersGuard],
 

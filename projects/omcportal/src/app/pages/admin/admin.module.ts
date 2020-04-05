@@ -1,6 +1,7 @@
 import { AgmCoreModule } from "@agm/core";
 import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
+import { MatSidenavModule } from "@angular/material/sidenav";
 import { SharedModule } from "app/shared/shared.module";
 import { AdminRoutingModule } from "./admin-routing.module";
 import { AdminComponent } from "./admin.component";
@@ -19,7 +20,6 @@ import { PaymentsComponent } from "./pages/payments/payments.component";
 import { SmsLogsComponent } from "./pages/sms-logs/sms-logs.component";
 import { UserLevelsComponent } from "./pages/user-levels/user-levels.component";
 import { UserManagementComponent } from "./pages/user-management/user-management.component";
-import { MatSidenavModule } from '@angular/material/sidenav';
 
 @NgModule({
   declarations: [

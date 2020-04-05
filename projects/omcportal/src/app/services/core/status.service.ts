@@ -1,11 +1,11 @@
-import {Injectable} from '@angular/core';
-import {AngularFireDatabase} from '@angular/fire/database';
-import {BehaviorSubject} from 'rxjs';
-import {take} from 'rxjs/operators';
-import {AdminService} from './admin.service';
+import {Injectable} from "@angular/core";
+import {AngularFireDatabase} from "@angular/fire/database";
+import {BehaviorSubject} from "rxjs";
+import {take} from "rxjs/operators";
+import {AdminService} from "./admin.service";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root"
 })
 /**
  * This combines rtdb and cloud functions to simulate online offline status
@@ -27,14 +27,14 @@ export class StatusService {
       /**
        * Keep the online status active
        */
-      const userStatusDatabaseRef = this.rtdb.database.ref('/admin/' + admindata.Id);
+      const userStatusDatabaseRef = this.rtdb.database.ref("/admin/" + admindata.Id);
       const isOfflineForDatabase = {
         online: false
       };
       const isOnlineForDatabase = {
         online: true
       };
-      this.rtdb.database.ref('.info/connected').on('value', result => {
+      this.rtdb.database.ref(".info/connected").on("value", result => {
         if (result.val() === false) {
           userStatusDatabaseRef.onDisconnect().set(isOfflineForDatabase);
           this.connectionStatus.next(false);

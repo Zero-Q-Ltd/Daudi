@@ -13,24 +13,20 @@ import {
   OnInit,
   ViewChild
 } from "@angular/core";
-import { AngularFireFunctions } from "@angular/fire/functions";
 import { MatPaginator } from "@angular/material/paginator";
 import { MatSort } from "@angular/material/sort";
 import { MatTableDataSource } from "@angular/material/table";
+import { AdminConfig, emptyConfig } from "app/models/Daudi/omc/AdminConfig";
+import { toArray } from "app/models/utils/SnapshotUtils";
+import { CoreAdminService } from "app/pages/admin/services/core.service";
 import { AdminService } from "app/services/core/admin.service";
 import { CoreService } from "app/services/core/core.service";
 import * as moment from "moment";
 import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
-import { SyncRequest } from "../../../../models/Cloud/Sync";
 import { Admin, emptyadmin } from "../../../../models/Daudi/admin/Admin";
 import { Depot } from "../../../../models/Daudi/depot/Depot";
-import { emptyomc, OMC } from "../../../../models/Daudi/omc/OMC";
-import { MyTimestamp } from "../../../../models/firestore/firestoreTypes";
 import { NotificationService } from "../../../../shared/services/notification.service";
-import { AdminConfig, emptyConfig } from "app/models/Daudi/omc/AdminConfig";
-import { toArray } from "app/models/utils/SnapshotUtils";
-import { CoreAdminService } from "app/pages/admin/services/core.service";
 
 @Component({
   selector: "user-management",

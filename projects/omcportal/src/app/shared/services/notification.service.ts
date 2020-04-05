@@ -1,12 +1,12 @@
-import { Injectable } from '@angular/core';
-import { Howl } from 'howler';
-import { Subject } from 'rxjs';
-import { Alert } from '../../models/Daudi/notification/Alert';
-import { NotificationComponent } from '../components/notification/notification.component';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { Injectable } from "@angular/core";
+import { MatSnackBar } from "@angular/material/snack-bar";
+import { Howl } from "howler";
+import { Subject } from "rxjs";
+import { Alert } from "../../models/Daudi/notification/Alert";
+import { NotificationComponent } from "../components/notification/notification.component";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root"
 })
 export class NotificationService {
   private notificationSubject = new Subject<Alert>();
@@ -25,55 +25,55 @@ export class NotificationService {
       this.snackBar.openFromComponent(NotificationComponent, {
         duration: alert.duration ? alert.duration : 2000,
         data: alert,
-        panelClass: ['blue-snackbar']
+        panelClass: ["blue-snackbar"]
       });
     });
   }
 
   private static getsrc(alert: Alert) {
     switch (alert.alert_type) {
-      case 'cash':
+      case "cash":
         return {
-          icon: 'attach_money',
-          soundsrc: '../../../assets/sounds/cash.ogg'
+          icon: "attach_money",
+          soundsrc: "../../../assets/sounds/cash.ogg"
         };
-      case 'notify':
+      case "notify":
         return {
-          icon: 'info',
-          soundsrc: '../../../assets/sounds/drip.ogg'
+          icon: "info",
+          soundsrc: "../../../assets/sounds/drip.ogg"
         };
-      case 'success':
+      case "success":
         return {
-          icon: 'done_outline',
-          soundsrc: '../../../assets/sounds/drums.ogg'
+          icon: "done_outline",
+          soundsrc: "../../../assets/sounds/drums.ogg"
         };
-      case 'msgnew':
+      case "msgnew":
         return {
-          icon: 'chat',
-          soundsrc: '../../../assets/sounds/msgnew.ogg'
+          icon: "chat",
+          soundsrc: "../../../assets/sounds/msgnew.ogg"
         };
-      case 'error':
+      case "error":
         return {
-          icon: 'error',
-          soundsrc: '../../../assets/sounds/sonar.ogg'
+          icon: "error",
+          soundsrc: "../../../assets/sounds/sonar.ogg"
         };
-      case 'alert':
+      case "alert":
         return {
-          icon: '',
-          soundsrc: '../../../assets/sounds/notify.mp3'
+          icon: "",
+          soundsrc: "../../../assets/sounds/notify.mp3"
         };
-      case 'warning':
+      case "warning":
         return {
-          icon: 'warning',
-          soundsrc: '../../../assets/sounds/glass.ogg'
+          icon: "warning",
+          soundsrc: "../../../assets/sounds/glass.ogg"
         };
       /**
        * TODO : Look for a better audio
        */
-      case 'unprocessedpayment':
+      case "unprocessedpayment":
         return {
-          icon: 'warning',
-          soundsrc: '../../../assets/sounds/cash.ogg'
+          icon: "warning",
+          soundsrc: "../../../assets/sounds/cash.ogg"
         };
 
     }

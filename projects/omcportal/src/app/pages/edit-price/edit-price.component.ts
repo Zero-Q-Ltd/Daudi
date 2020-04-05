@@ -3,6 +3,7 @@ import { AngularFirestore } from "@angular/fire/firestore";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { MatDialog } from "@angular/material/dialog";
 import { MatTableDataSource } from "@angular/material/table";
+import { TooltipPosition } from "@angular/material/tooltip";
 import { ConfirmDialogComponent } from "app/components/confirm-dialog/confirm-dialog.component";
 import { newStock, Stock } from "app/models/Daudi/omc/Stock";
 import { TaxPrice } from "app/models/Daudi/price/TaxPrice";
@@ -25,7 +26,6 @@ import { FuelNamesArray, FuelType } from "../../models/Daudi/fuel/FuelType";
 import { OMC } from "../../models/Daudi/omc/OMC";
 import { AvgPrice } from "../../models/Daudi/price/AvgPrice";
 import { NotificationService } from "../../shared/services/notification.service";
-import { TooltipPosition } from "@angular/material/tooltip";
 
 @Component({
   selector: "edit-price",

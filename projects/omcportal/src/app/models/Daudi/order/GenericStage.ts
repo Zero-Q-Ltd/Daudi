@@ -1,6 +1,6 @@
-import { deepCopy } from '../../utils/deepCopy';
-import { AssociatedUser, EmptyAssociatedUser } from '../admin/AssociatedUser';
-import { Expiry } from './truck/Truck';
+import { deepCopy } from "../../utils/deepCopy";
+import { AssociatedUser, EmptyAssociatedUser } from "../admin/AssociatedUser";
+import { Expiry } from "./truck/Truck";
 
 /**
  * @description Base model for every Stage movement carried out via the web-App

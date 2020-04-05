@@ -7,11 +7,12 @@ import {
   trigger
 } from "@angular/animations";
 import { Component, OnDestroy, OnInit, ViewChild } from "@angular/core";
-import { AngularFirestore } from "@angular/fire/firestore";
+import { AngularFireStorage } from "@angular/fire/storage";
 import { MatDialog } from "@angular/material/dialog";
 import { MatPaginator } from "@angular/material/paginator";
 import { MatSort } from "@angular/material/sort";
 import { MatTableDataSource } from "@angular/material/table";
+import { TooltipPosition } from "@angular/material/tooltip";
 import { ActivatedRoute, Router } from "@angular/router";
 import { ColumnsCustomizerComponent } from "app/components/columns-customizer/columns-customizer.component";
 import { ConfirmDialogComponent } from "app/components/confirm-dialog/confirm-dialog.component";
@@ -24,15 +25,11 @@ import { CoreService } from "app/services/core/core.service";
 import { ExcelService } from "app/services/excel-service.service";
 import { OrdersService } from "app/services/orders.service";
 import { ReplaySubject } from "rxjs";
-import { switchMap, takeUntil, take } from "rxjs/operators";
+import { switchMap, takeUntil } from "rxjs/operators";
 import { EmptyGenericStage } from "../../models/Daudi/order/GenericStage";
 import { Order } from "../../models/Daudi/order/Order";
 import { Truck } from "../../models/Daudi/order/truck/Truck";
-import { SMS } from "../../models/Daudi/sms/sms";
-import { MyTimestamp } from "../../models/firestore/firestoreTypes";
 import { NotificationService } from "../../shared/services/notification.service";
-import { TooltipPosition } from "@angular/material/tooltip";
-import { AngularFireStorage } from "@angular/fire/storage";
 
 const EXCEL_TYPE =
   "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
@@ -112,7 +109,7 @@ export class OrdersTableComponent implements OnInit, OnDestroy {
   @ViewChild(MatSort) sort: MatSort;
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
   typedValue: string;
-  albums: Array<any> = [];
+  albums: any[] = [];
 
   constructor(
     private route: ActivatedRoute,

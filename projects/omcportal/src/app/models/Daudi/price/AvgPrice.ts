@@ -1,4 +1,4 @@
-import { Price, emptyprice } from '../depot/Price';
+import { emptyprice, Price } from "../depot/Price";
 
 export interface AvgPrice extends Price {
   omcId: string;

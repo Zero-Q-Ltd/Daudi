@@ -1,5 +1,5 @@
-import {deepCopy} from '../../utils/deepCopy';
-import {AssociatedUser, EmptyAssociatedUser} from './AssociatedUser';
+import {deepCopy} from "../../utils/deepCopy";
+import {AssociatedUser, EmptyAssociatedUser} from "./AssociatedUser";
 
 export interface Admin {
   Active: boolean;
@@ -54,7 +54,7 @@ export interface Admin {
       CountrySubDivisionCode: string,
       PostalCode: string
     },
-    gender: 'Male' | 'Female'
+    gender: "Male" | "Female"
     dob: string,
     bio: string,
     phone: string,

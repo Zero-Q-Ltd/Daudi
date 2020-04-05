@@ -1,8 +1,8 @@
-import {Pipe, PipeTransform} from '@angular/core';
-import {CoreService} from 'app/services/core/core.service';
+import {Pipe, PipeTransform} from "@angular/core";
+import {CoreService} from "app/services/core/core.service";
 
 @Pipe({
-  name: 'getomc'
+  name: "getomc"
 })
 export class GetomcPipe implements PipeTransform {
 
@@ -18,7 +18,7 @@ export class GetomcPipe implements PipeTransform {
         return admin.Id === omcId;
       })[0].name;
     } else {
-      return '';
+      return "";
     }
   }
 

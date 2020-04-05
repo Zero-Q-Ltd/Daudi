@@ -1,7 +1,7 @@
-import {Pipe, PipeTransform} from '@angular/core';
+import {Pipe, PipeTransform} from "@angular/core";
 
 @Pipe({
-  name: 'maptoArray'
+  name: "maptoArray"
 })
 export class MaptoArrayPipe implements PipeTransform {
 
@@ -17,7 +17,7 @@ export class MaptoArrayPipe implements PipeTransform {
 }
 
 @Pipe({
-  name: 'formatOrders',
+  name: "formatOrders",
   pure: false
 })
 export class FormatOrdersPipe implements PipeTransform {

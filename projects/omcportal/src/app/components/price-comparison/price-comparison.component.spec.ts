@@ -1,8 +1,8 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from "@angular/core/testing";
 
-import {PriceComparisonComponent} from './price-comparison.component';
+import {PriceComparisonComponent} from "./price-comparison.component";
 
-describe('PriceComparisonComponent', () => {
+describe("PriceComparisonComponent", () => {
   let component: PriceComparisonComponent;
   let fixture: ComponentFixture<PriceComparisonComponent>;
 
@@ -19,7 +19,7 @@ describe('PriceComparisonComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

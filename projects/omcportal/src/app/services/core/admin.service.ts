@@ -4,7 +4,6 @@ import { AngularFirestore } from "@angular/fire/firestore";
 import { Router } from "@angular/router";
 import { Admin, emptyadmin } from "app/models/Daudi/admin/Admin";
 import { AssociatedUser } from "app/models/Daudi/admin/AssociatedUser";
-import { MyTimestamp } from "app/models/firestore/firestoreTypes";
 import * as moment from "moment";
 import { ReplaySubject } from "rxjs";
 

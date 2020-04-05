@@ -1,7 +1,7 @@
-import {AfterViewInit, Directive, ElementRef} from '@angular/core';
-import * as $ from 'jquery';
+import {AfterViewInit, Directive, ElementRef} from "@angular/core";
+import * as $ from "jquery";
 
-@Directive({selector: '[myAppendSubmenuIcon]'})
+@Directive({selector: "[myAppendSubmenuIcon]"})
 
 export class AppendSubmenuIconDirective implements AfterViewInit {
   el: ElementRef;
@@ -13,6 +13,6 @@ export class AppendSubmenuIconDirective implements AfterViewInit {
   ngAfterViewInit() {
     const $el = $(this.el.nativeElement);
 
-    $el.find('.prepend-icon').prepend('<i class="material-icons">keyboard_arrow_right</i>');
+    $el.find(".prepend-icon").prepend("<i class=\"material-icons\">keyboard_arrow_right</i>");
   }
 }

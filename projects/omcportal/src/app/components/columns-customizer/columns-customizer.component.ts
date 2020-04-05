@@ -1,8 +1,11 @@
-import { FlatTreeControl } from '@angular/cdk/tree';
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
-import { Observable, of as observableOf, ReplaySubject } from 'rxjs';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { FlatTreeControl } from "@angular/cdk/tree";
+import { Component, Inject, OnDestroy, OnInit } from "@angular/core";
+import { MAT_DIALOG_DATA } from "@angular/material/dialog";
+import {
+  MatTreeFlatDataSource,
+  MatTreeFlattener,
+} from "@angular/material/tree";
+import { Observable, of as observableOf, ReplaySubject } from "rxjs";
 
 export class ColNode {
   children: ColNode[];
@@ -17,15 +20,14 @@ export class ColFlatNode {
     public expandable: boolean,
     public nodename: string,
     public level: number,
-    public nodevalue: any) {
-  }
+    public nodevalue: any
+  ) {}
 }
 
 @Component({
-  selector: 'app-columns-customizer',
-  templateUrl: './columns-customizer.component.html',
-  styleUrls: ['./columns-customizer.component.scss']
-
+  selector: "app-columns-customizer",
+  templateUrl: "./columns-customizer.component.html",
+  styleUrls: ["./columns-customizer.component.scss"],
 })
 export class ColumnsCustomizerComponent implements OnInit, OnDestroy {
   columnheaders;
@@ -35,16 +37,29 @@ export class ColumnsCustomizerComponent implements OnInit, OnDestroy {
   treeFlattener: MatTreeFlattener<ColNode, ColFlatNode>;
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
 
-  constructor(@Inject(MAT_DIALOG_DATA) public columns: Object) {
+  constructor(@Inject(MAT_DIALOG_DATA) public columns: object) {
     this.columnheaders = Object.keys(this.columns);
-    this.treeFlattener = new MatTreeFlattener(this.transformer, this._getLevel,
-      this._isExpandable, this._getChildren);
+    this.treeFlattener = new MatTreeFlattener(
+      this.transformer,
+      this._getLevel,
+      this._isExpandable,
+      this._getChildren
+    );
 
     this.columnheaders.forEach((header, index) => {
-      this.treeControl[header] = new FlatTreeControl<ColFlatNode>(this._getLevel, this._isExpandable);
-      this.treebuild[header] = new MatTreeFlatDataSource(this.treeControl[header], this.treeFlattener);
+      this.treeControl[header] = new FlatTreeControl<ColFlatNode>(
+        this._getLevel,
+        this._isExpandable
+      );
+      this.treebuild[header] = new MatTreeFlatDataSource(
+        this.treeControl[header],
+        this.treeFlattener
+      );
       this.treebuild[header].selected = false;
-      this.treebuild[header].data = this.buildObjectTree(JSON.parse(JSON.stringify(this.columns[header])), 0);
+      this.treebuild[header].data = this.buildObjectTree(
+        JSON.parse(JSON.stringify(this.columns[header])),
+        0
+      );
     });
   }
 
@@ -54,7 +69,7 @@ export class ColumnsCustomizerComponent implements OnInit, OnDestroy {
   }
 
   buildObjectTree(obj: { [key: string]: any }, level: number): ColNode[] {
-    if (!obj || typeof obj !== 'object') {
+    if (!obj || typeof obj !== "object") {
       return [];
     } else {
       return Object.keys(obj).reduce<ColNode[]>((accumulator, key) => {
@@ -64,7 +79,7 @@ export class ColumnsCustomizerComponent implements OnInit, OnDestroy {
         node.selected = false;
 
         if (value != null) {
-          if (typeof value === 'object') {
+          if (typeof value === "object") {
             node.children = this.buildObjectTree(value, level + 1);
           } else {
             node.nodevalue = value;
@@ -94,17 +109,12 @@ export class ColumnsCustomizerComponent implements OnInit, OnDestroy {
   checkRootNodeSelection(node: ColFlatNode, header): void {
     const nodeSelected = this.treeControl[header].selected;
     const descendants = this.treeControl[header].getDescendants(node);
-    const descAllSelected = descendants.every(child =>
-      child.selected
-    );
+    const descAllSelected = descendants.every((child) => child.selected);
     if (nodeSelected && !descAllSelected) {
       this.treeControl[header].selected = !this.treeControl[header].selected;
-
     } else if (!nodeSelected && descAllSelected) {
-
     }
     this.treeControl[header].selected = !this.treeControl[header].selected;
-
   }
 
   /* Get the parent node of a node */
@@ -130,27 +140,29 @@ export class ColumnsCustomizerComponent implements OnInit, OnDestroy {
 
   descendantsAllSelected(node: ColFlatNode, header): boolean {
     const descendants = this.treeControl[header].getDescendants(node);
-    const descAllSelected = descendants.every(child =>
-      child.selected
-    );
+    const descAllSelected = descendants.every((child) => child.selected);
     return descAllSelected;
   }
 
   /** Whether part of the descendants are selected */
   descendantsPartiallySelected(node: ColFlatNode, header): boolean {
     const descendants = this.treeControl[header].getDescendants(node);
-    const result = descendants.some(child => child.selected);
+    const result = descendants.some((child) => child.selected);
     return result && !this.descendantsAllSelected(node, header);
   }
 
   transformer = (node: ColNode, level: number) => {
-    return new ColFlatNode(!!node.children, node.nodename, level, node.nodevalue);
+    return new ColFlatNode(
+      !!node.children,
+      node.nodename,
+      level,
+      node.nodevalue
+    );
   };
 
   hasChild = (_: number, _nodeData: ColFlatNode) => _nodeData.expandable;
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   showresult() {
     console.log(this.treebuild);
@@ -160,6 +172,6 @@ export class ColumnsCustomizerComponent implements OnInit, OnDestroy {
 
   private _isExpandable = (node: ColFlatNode) => node.expandable;
 
-  private _getChildren = (node: ColNode): Observable<ColNode[]> => observableOf(node.children);
-
+  private _getChildren = (node: ColNode): Observable<ColNode[]> =>
+    observableOf(node.children);
 }

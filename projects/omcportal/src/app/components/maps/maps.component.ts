@@ -1,15 +1,15 @@
-import { MapsAPILoader } from '@agm/core';
-import { Component, ElementRef, Inject, NgZone, OnInit, Optional, ViewChild } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import { MyGeoPoint } from '../../models/firestore/firestoreTypes';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MapsAPILoader } from "@agm/core";
+import { Component, ElementRef, Inject, NgZone, OnInit, Optional, ViewChild } from "@angular/core";
+import { FormControl } from "@angular/forms";
+import { MAT_DIALOG_DATA } from "@angular/material/dialog";
+import { MyGeoPoint } from "../../models/firestore/firestoreTypes";
 
 // import * as maps from 'googlemaps';
 
 @Component({
-  selector: 'app-maps',
-  templateUrl: './maps.component.html',
-  styleUrls: ['./maps.component.scss']
+  selector: "app-maps",
+  templateUrl: "./maps.component.html",
+  styleUrls: ["./maps.component.scss"]
 })
 export class MapsComponent implements OnInit {
 
@@ -19,21 +19,21 @@ export class MapsComponent implements OnInit {
   public zoom: number;
   public draggable: boolean;
 
-  @ViewChild('search', { static: true })
+  @ViewChild("search", { static: true })
   public searchElementRef: ElementRef;
   points: marker[] = [
     {
       location: new MyGeoPoint(-1.305308, 36.872919),
-      label: 'Oilcom'
+      label: "Oilcom"
     },
     {
       location: new MyGeoPoint(-4.058972, 39.671766),
-      label: 'Oilcom'
+      label: "Oilcom"
     }
   ];
   clickedlocation: marker = {
     location: null,
-    label: ''
+    label: ""
   };
   // initial center position for the map
   lat = -1.287666;
@@ -148,7 +148,7 @@ export class MapsComponent implements OnInit {
   }
 
   private setCurrentPosition() {
-    if ('geolocation' in navigator) {
+    if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition((position) => {
         this.latitude = position.coords.latitude;
         this.longitude = position.coords.longitude;

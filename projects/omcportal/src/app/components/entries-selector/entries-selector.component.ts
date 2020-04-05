@@ -1,9 +1,12 @@
 import { Component, Inject, OnDestroy, OnInit } from "@angular/core";
 import { AngularFirestore } from "@angular/fire/firestore";
+import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { AdminConfigService } from "app/services/core/admin-config.service";
 import { AdminService } from "app/services/core/admin.service";
+import { CoreService } from "app/services/core/core.service";
 import { StocksService } from "app/services/core/stocks.service";
 import { EntriesService } from "app/services/entries.service";
+import { OrdersService } from "app/services/orders.service";
 import * as moment from "moment";
 import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
@@ -14,11 +17,7 @@ import { FuelNamesArray, FuelType } from "../../models/Daudi/fuel/FuelType";
 import { newStock, Stock } from "../../models/Daudi/omc/Stock";
 import { GenericTruckStage } from "../../models/Daudi/order/GenericStage";
 import { emptyorder, Order } from "../../models/Daudi/order/Order";
-import { MyTimestamp } from "../../models/firestore/firestoreTypes";
 import { NotificationService } from "../../shared/services/notification.service";
-import { CoreService } from 'app/services/core/core.service';
-import { OrdersService } from 'app/services/orders.service';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 interface EntryContent {
   id: string;

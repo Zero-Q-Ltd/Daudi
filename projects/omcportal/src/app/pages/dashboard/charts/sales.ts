@@ -1,20 +1,20 @@
-import {EChartOption} from 'echarts';
-import {CHARTCONFIG} from './charts.config';
+import {EChartOption} from "echarts";
+import {CHARTCONFIG} from "./charts.config";
 
 export let saleStats: EChartOption = {
   toolbox: {
     show: true,
-    left: 'left',
+    left: "left",
     feature: {
       // dataZoom: { show: true },
-      dataView: {show: true, readOnly: false, title: '   Raw Data', lang: ['Raw Data', 'Close', null]},
+      dataView: {show: true, readOnly: false, title: "   Raw Data", lang: ["Raw Data", "Close", null]},
       magicType: {
         show: true,
-        type: ['line', 'stack', 'tiled'],
-        title: {line: 'Line', stack: 'stack', tiled: 'tiles'}
+        type: ["line", "stack", "tiled"],
+        title: {line: "Line", stack: "stack", tiled: "tiles"}
       },
-      restore: {show: true, title: 'Refresh'},
-      saveAsImage: {show: true, title: 'Save Image'}
+      restore: {show: true, title: "Refresh"},
+      saveAsImage: {show: true, title: "Save Image"}
     }
   },
   legend: {
@@ -24,7 +24,7 @@ export let saleStats: EChartOption = {
     textStyle: {
       color: CHARTCONFIG.textColor
     },
-    data: ['Trend', 'PMS', 'AGO', 'IK']
+    data: ["Trend", "PMS", "AGO", "IK"]
   },
   grid: {
     // x: 60,
@@ -33,15 +33,15 @@ export let saleStats: EChartOption = {
   },
   tooltip: {
     show: true,
-    trigger: 'axis',
+    trigger: "axis",
     axisPointer: {
-      type: 'shadow',
+      type: "shadow",
     },
     textStyle: {}
   },
   xAxis: [
     {
-      type: 'category',
+      type: "category",
       axisLine: {
         show: true,
       },
@@ -62,9 +62,9 @@ export let saleStats: EChartOption = {
   ],
   yAxis: [
     {
-      type: 'value',
-      name: '* 1000',
-      nameLocation: 'end',
+      type: "value",
+      name: "* 1000",
+      nameLocation: "end",
       axisLabel: {
         color: CHARTCONFIG.textColor,
         formatter: (qty) => qty / 1000,
@@ -79,13 +79,13 @@ export let saleStats: EChartOption = {
   ],
   dataZoom: [
     {
-      type: 'inside',
+      type: "inside",
       start: 50,
       end: 100
     },
     {
       show: true,
-      type: 'slider',
+      type: "slider",
 
       start: 50,
       end: 100
@@ -93,8 +93,8 @@ export let saleStats: EChartOption = {
   ],
   series: [
     {
-      name: 'Trend',
-      type: 'line',
+      name: "Trend",
+      type: "line",
       // lineStyle: {
       //   normal: {
       //     color: CHARTCONFIG.gray
@@ -113,9 +113,9 @@ export let saleStats: EChartOption = {
 
     {
       animation: true,
-      name: 'PMS',
-      type: 'bar',
-      stack: 'traffic',
+      name: "PMS",
+      type: "bar",
+      stack: "traffic",
       itemStyle: {
         normal: {
           color: CHARTCONFIG.pms, // '#8BC34A', // Light Green 500
@@ -125,7 +125,7 @@ export let saleStats: EChartOption = {
           // color: CHARTCONFIG.success
         }
       },
-      barCategoryGap: '60%',
+      barCategoryGap: "60%",
       data: [],
 
       // data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -134,9 +134,9 @@ export let saleStats: EChartOption = {
     },
     {
       animation: true,
-      name: 'AGO',
-      type: 'bar',
-      stack: 'traffic',
+      name: "AGO",
+      type: "bar",
+      stack: "traffic",
       smooth: true,
       itemStyle: {
         normal: {
@@ -147,17 +147,17 @@ export let saleStats: EChartOption = {
           // color: CHARTCONFIG.primary
         }
       },
-      barCategoryGap: '60%',
+      barCategoryGap: "60%",
       data: [],
-      symbol: 'none',
+      symbol: "none",
       legendHoverLink: false,
       z: 2
     },
     {
       animation: true,
-      name: 'IK',
-      type: 'bar',
-      stack: 'traffic',
+      name: "IK",
+      type: "bar",
+      stack: "traffic",
       smooth: true,
       itemStyle: {
         normal: {
@@ -168,9 +168,9 @@ export let saleStats: EChartOption = {
           // color: CHARTCONFIG.info
         }
       },
-      barCategoryGap: '60%',
+      barCategoryGap: "60%",
       data: [],
-      symbol: 'none',
+      symbol: "none",
       legendHoverLink: false,
       z: 2
     }

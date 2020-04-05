@@ -1,6 +1,6 @@
 export type OrderAction =
-  | 'created'
-  | 'deleted'
-  | 'paid'
-  | 'voided'
-  | 'completed';
+  | "created"
+  | "deleted"
+  | "paid"
+  | "voided"
+  | "completed";

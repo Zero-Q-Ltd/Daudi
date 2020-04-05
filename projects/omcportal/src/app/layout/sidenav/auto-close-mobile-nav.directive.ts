@@ -1,10 +1,10 @@
-import {Directive, ElementRef, OnInit} from '@angular/core';
-import {NavigationEnd, Router} from '@angular/router';
-import * as $ from 'jquery';
-import {APPCONFIG} from '../../config';
+import {Directive, ElementRef, OnInit} from "@angular/core";
+import {NavigationEnd, Router} from "@angular/router";
+import * as $ from "jquery";
+import {APPCONFIG} from "../../config";
 
 // Mobile only: automatically close sidebar on route change.
-@Directive({selector: '[myAutoCloseMobileNav]'})
+@Directive({selector: "[myAutoCloseMobileNav]"})
 
 export class AutoCloseMobileNavDirective implements OnInit {
   el: ElementRef;
@@ -16,14 +16,14 @@ export class AutoCloseMobileNavDirective implements OnInit {
   }
 
   ngOnInit() {
-    const $body = $('#body');
+    const $body = $("#body");
 
     if (APPCONFIG.AutoCloseMobileNav) {
       this.router.events.subscribe((event) => {
         if (event instanceof NavigationEnd) {
           setTimeout(() => {
             // console.log('NavigationEnd:', event);
-            $body.removeClass('sidebar-mobile-open');
+            $body.removeClass("sidebar-mobile-open");
           }, 0);
         }
       });

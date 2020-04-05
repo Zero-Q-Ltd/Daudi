@@ -7,12 +7,12 @@ import {
   trigger
 } from "@angular/animations";
 import { Component, OnDestroy, OnInit, ViewChild } from "@angular/core";
+import { MatPaginator } from "@angular/material/paginator";
 import { MatTableDataSource } from "@angular/material/table";
+import { CoreService } from "app/services/core/core.service";
 import { SmsService } from "app/services/sms.service";
 import { ReplaySubject } from "rxjs";
 import { emptysms, SMS } from "../../../../models/Daudi/sms/sms";
-import { MatPaginator } from "@angular/material/paginator";
-import { CoreService } from "app/services/core/core.service";
 
 @Component({
   selector: "sms-logs",

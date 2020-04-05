@@ -1,8 +1,8 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from "@angular/core/testing";
 
-import {ColumnsCustomizerComponent} from './columns-customizer.component';
+import {ColumnsCustomizerComponent} from "./columns-customizer.component";
 
-describe('ColumnsCustomizerComponent', () => {
+describe("ColumnsCustomizerComponent", () => {
   let component: ColumnsCustomizerComponent;
   let fixture: ComponentFixture<ColumnsCustomizerComponent>;
 
@@ -19,7 +19,7 @@ describe('ColumnsCustomizerComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

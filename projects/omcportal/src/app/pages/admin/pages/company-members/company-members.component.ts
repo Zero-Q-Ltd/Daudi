@@ -1,15 +1,15 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Component, Inject, OnInit } from "@angular/core";
+import { MatDialog, MAT_DIALOG_DATA } from "@angular/material/dialog";
 
 @Component({
-  selector: 'company-members',
-  templateUrl: './company-members.component.html',
-  styleUrls: ['./company-members.component.scss']
+  selector: "company-members",
+  templateUrl: "./company-members.component.html",
+  styleUrls: ["./company-members.component.scss"]
 })
 export class CompanyMembersComponent implements OnInit {
   members: any = [];
   family: any = [];
-  position = 'above'; //for tooltip
+  position = "above"; // for tooltip
 
   constructor(@Inject(MAT_DIALOG_DATA) private companyId: string, private dialog: MatDialog) {
     // console.log(companyId);
@@ -38,16 +38,16 @@ export class CompanyMembersComponent implements OnInit {
     if (image) {
       return image;
     } else {
-      return '/assets/images/EmkayLogoBMP.svg';
+      return "/assets/images/EmkayLogoBMP.svg";
     }
   }
 
   getStatus(status) {
     // console.log(image)
     if (status) {
-      return 'Approved';
+      return "Approved";
     } else {
-      return 'Revoked!';
+      return "Revoked!";
     }
   }
 

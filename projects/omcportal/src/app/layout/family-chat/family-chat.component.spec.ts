@@ -1,8 +1,8 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from "@angular/core/testing";
 
-import {FamilyChatComponent} from './family-chat.component';
+import {FamilyChatComponent} from "./family-chat.component";
 
-describe('FamilyChatComponent', () => {
+describe("FamilyChatComponent", () => {
   let component: FamilyChatComponent;
   let fixture: ComponentFixture<FamilyChatComponent>;
 
@@ -19,7 +19,7 @@ describe('FamilyChatComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

@@ -1,12 +1,12 @@
-import {Injectable} from '@angular/core';
-import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '@angular/router';
-import {combineLatest, Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
-import {Admin} from '../models/Daudi/admin/Admin';
-import {RouteData} from '../models/Daudi/navigation/RouteData';
-import {AdminService} from '../services/core/admin.service';
-import {CoreService} from '../services/core/core.service';
-import {NotificationService} from '../shared/services/notification.service';
+import {Injectable} from "@angular/core";
+import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from "@angular/router";
+import {combineLatest, Observable} from "rxjs";
+import {map} from "rxjs/operators";
+import {Admin} from "../models/Daudi/admin/Admin";
+import {RouteData} from "../models/Daudi/navigation/RouteData";
+import {AdminService} from "../services/core/admin.service";
+import {CoreService} from "../services/core/core.service";
+import {NotificationService} from "../shared/services/notification.service";
 
 @Injectable()
 export class UsersGuard implements CanActivate {
@@ -40,12 +40,12 @@ export class UsersGuard implements CanActivate {
         if (userdata) {
           return true;
         } else {
-          this.router.navigate(['/login']);
+          this.router.navigate(["/login"]);
           this.notification.notify({
-            body: 'You are not authenticated to view this page',
+            body: "You are not authenticated to view this page",
             duration: 3000,
-            alert_type: 'warning',
-            title: 'Warning'
+            alert_type: "warning",
+            title: "Warning"
           });
           return false;
         }

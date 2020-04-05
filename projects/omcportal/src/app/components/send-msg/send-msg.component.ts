@@ -1,12 +1,12 @@
 import { Component, Inject, OnInit } from "@angular/core";
 import { AngularFirestore } from "@angular/fire/firestore";
-import { MAT_DIALOG_DATA, MatDialog } from "@angular/material/dialog";
+import { MatDialog, MAT_DIALOG_DATA } from "@angular/material/dialog";
+import { DaudiCustomer } from "app/models/Daudi/customer/Customer";
+import { CustomerDetail } from "app/models/Daudi/customer/CustomerDetail";
 import { CoreService } from "app/services/core/core.service";
 import { SmsService } from "app/services/sms.service";
 import { emptysms, SMS } from "../../models/Daudi/sms/sms";
 import { NotificationService } from "../../shared/services/notification.service";
-import { DaudiCustomer } from "app/models/Daudi/customer/Customer";
-import { CustomerDetail } from "app/models/Daudi/customer/CustomerDetail";
 
 @Component({
   selector: "send-msg",

@@ -11,7 +11,7 @@ export interface OMC {
   Id: string;
   description: string;
   status: boolean;
-  contactperson: Array<ContactPerson>;
+  contactperson: ContactPerson[];
   logourl: string;
   metadata: Metadata;
 }

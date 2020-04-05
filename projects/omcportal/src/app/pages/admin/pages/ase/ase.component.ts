@@ -1,17 +1,17 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { newStock, Stock } from 'app/models/Daudi/omc/Stock';
-import { AseService } from 'app/services/ase.service';
-import { CoreService } from 'app/services/core/core.service';
-import { ReplaySubject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
-import { ASE, newAse } from '../../../../models/Daudi/fuel/ASE';
-import { FuelNamesArray, FuelType } from '../../../../models/Daudi/fuel/FuelType';
-import { NotificationService } from '../../../../shared/services/notification.service';
-import { CoreAdminService } from '../../services/core.service';
-import { TransferComponent } from './dialogs/transfer/transfer.component';
-import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatDialog } from '@angular/material/dialog';
+import { Component, OnInit, ViewChild } from "@angular/core";
+import { MatDialog } from "@angular/material/dialog";
+import { MatPaginator } from "@angular/material/paginator";
+import { MatTableDataSource } from "@angular/material/table";
+import { newStock, Stock } from "app/models/Daudi/omc/Stock";
+import { AseService } from "app/services/ase.service";
+import { CoreService } from "app/services/core/core.service";
+import { ReplaySubject } from "rxjs";
+import { takeUntil } from "rxjs/operators";
+import { ASE, newAse } from "../../../../models/Daudi/fuel/ASE";
+import { FuelNamesArray, FuelType } from "../../../../models/Daudi/fuel/FuelType";
+import { NotificationService } from "../../../../shared/services/notification.service";
+import { CoreAdminService } from "../../services/core.service";
+import { TransferComponent } from "./dialogs/transfer/transfer.component";
 
 @Component({
     selector: "app-ase",
@@ -76,7 +76,7 @@ export class AseComponent implements OnInit {
                     let queryvalue = this.aseService.ASECollection(this.core.currentOmc.value.Id)
                         // .where("active", "==", true)
                         .where("fuelType", "==", fueltype)
-                        .orderBy('active', 'desc')
+                        .orderBy("active", "desc")
                     /**
                      * Filter by depot if its a privtae depot
                      */

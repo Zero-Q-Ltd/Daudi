@@ -1,8 +1,8 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from "@angular/core/testing";
 
-import {EntriesSelectorComponent} from './entries-selector.component';
+import {EntriesSelectorComponent} from "./entries-selector.component";
 
-describe('BatchesSelectorComponent', () => {
+describe("BatchesSelectorComponent", () => {
   let component: EntriesSelectorComponent;
   let fixture: ComponentFixture<EntriesSelectorComponent>;
 
@@ -19,7 +19,7 @@ describe('BatchesSelectorComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

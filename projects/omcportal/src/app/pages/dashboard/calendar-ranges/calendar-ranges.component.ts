@@ -1,17 +1,17 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
-import { Subject } from 'rxjs';
+import { ChangeDetectorRef, Component } from "@angular/core";
+import { Subject } from "rxjs";
 
 @Component({
-  selector: 'app-calendar-ranges',
-  templateUrl: './calendar-ranges.component.html',
-  styleUrls: ['./calendar-ranges.component.scss']
+  selector: "app-calendar-ranges",
+  templateUrl: "./calendar-ranges.component.html",
+  styleUrls: ["./calendar-ranges.component.scss"]
 })
 
 export class CalendarRangesComponent<Date> {
-  public ranges: Array<{ key: string, label: string; }> = [
-    { key: 'last3Months', label: 'Last 3 Months (Default)' },
-    { key: 'last6Months', label: 'Last 6 Months' },
-    { key: 'thisYear', label: 'last 1 Year' },
+  public ranges: { key: string, label: string; }[] = [
+    { key: "last3Months", label: "Last 3 Months (Default)" },
+    { key: "last6Months", label: "Last 6 Months" },
+    { key: "thisYear", label: "last 1 Year" },
   ];
   private destroyed = new Subject<void>();
 

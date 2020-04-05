@@ -1,12 +1,12 @@
-import {Injectable} from '@angular/core';
-import {AngularFirestore} from '@angular/fire/firestore';
-import {AngularFireFunctions} from '@angular/fire/functions';
-import {OrderCreate} from 'app/models/Cloud/OrderCreate';
-import {Order} from 'app/models/Daudi/order/Order';
-import {BehaviorSubject} from 'rxjs';
+import {Injectable} from "@angular/core";
+import {AngularFirestore} from "@angular/fire/firestore";
+import {AngularFireFunctions} from "@angular/fire/functions";
+import {OrderCreate} from "app/models/Cloud/OrderCreate";
+import {Order} from "app/models/Daudi/order/Order";
+import {BehaviorSubject} from "rxjs";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root"
 })
 export class OrdersService {
 
@@ -27,7 +27,7 @@ export class OrdersService {
     orderCteate.order.Id = this.db.createId();
     this.queuedorders.value.push(orderCteate.order.Id);
     // console.log(orderCteate);
-    return this.functions.httpsCallable('createEstimate')(orderCteate).toPromise().then(value => {
+    return this.functions.httpsCallable("createEstimate")(orderCteate).toPromise().then(value => {
       /**
        * delete the orderid after the operation is complete
        */
@@ -43,7 +43,7 @@ export class OrdersService {
       if (index > -1) {
         this.queuedorders.value.splice(index, 1);
       }
-      console.error('error creating order', reason);
+      console.error("error creating order", reason);
       /***
        * error creating order
        */
@@ -53,7 +53,7 @@ export class OrdersService {
 
   approveOrder(orderCteate: OrderCreate): Promise<any> {
     // console.log(orderCteate);
-    return this.functions.httpsCallable('createInvoice')(orderCteate).toPromise().then(value => {
+    return this.functions.httpsCallable("createInvoice")(orderCteate).toPromise().then(value => {
       /**
        * delete the orderid after the operation is complete
        */
@@ -69,7 +69,7 @@ export class OrdersService {
       if (index > -1) {
         this.queuedorders.value.splice(index, 1);
       }
-      console.log('error creating order', reason);
+      console.log("error creating order", reason);
       /***
        * error creating order
        */
@@ -89,9 +89,9 @@ export class OrdersService {
   }
 
   ordersCollection(omcId: string) {
-    return this.db.firestore.collection('omc')
+    return this.db.firestore.collection("omc")
       .doc(omcId)
-      .collection('orders');
+      .collection("orders");
   }
 
 }

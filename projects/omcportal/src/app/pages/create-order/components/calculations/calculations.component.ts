@@ -1,21 +1,20 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
-import { Validators, FormGroup, FormControl } from '@angular/forms';
-import { CoreService } from 'app/services/core/core.service';
-import { ReplaySubject } from 'rxjs';
-import { skipWhile, takeUntil } from 'rxjs/operators';
-import { AdminConfig, emptyConfig } from '../../../../models/Daudi/omc/AdminConfig';
-import { newStock, Stock } from '../../../../models/Daudi/omc/Stock';
-import { Depot, emptydepot } from './../../../../models/Daudi/depot/Depot';
-import { DepotConfig, emptyDepotConfig } from './../../../../models/Daudi/depot/DepotConfig';
-import { Calculations, FuelCalculation } from './../../../../models/Daudi/forms/Calculations';
-import { FuelNamesArray, FuelType } from './../../../../models/Daudi/fuel/FuelType';
-import { Order } from './../../../../models/Daudi/order/Order';
-import { NotificationService } from './../../../../shared/services/notification.service';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from "@angular/core";
+import { FormControl, FormGroup, Validators } from "@angular/forms";
+import { CoreService } from "app/services/core/core.service";
+import { ReplaySubject } from "rxjs";
+import { skipWhile, takeUntil } from "rxjs/operators";
+import { AdminConfig, emptyConfig } from "../../../../models/Daudi/omc/AdminConfig";
+import { newStock, Stock } from "../../../../models/Daudi/omc/Stock";
+import { Depot, emptydepot } from "./../../../../models/Daudi/depot/Depot";
+import { DepotConfig, emptyDepotConfig } from "./../../../../models/Daudi/depot/DepotConfig";
+import { FuelNamesArray, FuelType } from "./../../../../models/Daudi/fuel/FuelType";
+import { Order } from "./../../../../models/Daudi/order/Order";
+import { NotificationService } from "./../../../../shared/services/notification.service";
 
 @Component({
-  selector: 'app-calculations',
-  templateUrl: './calculations.component.html',
-  styleUrls: ['./calculations.component.scss']
+  selector: "app-calculations",
+  templateUrl: "./calculations.component.html",
+  styleUrls: ["./calculations.component.scss"]
 })
 export class CalculationsComponent implements OnInit, OnChanges {
   @Input() initData: Order;
@@ -79,12 +78,12 @@ export class CalculationsComponent implements OnInit, OnChanges {
             value.ik.price >= this.initData.fuel.ik.priceconfig.minsp)
         ) {
           this.fueltypesArray.forEach(fueltype => {
-            console.log('prices and quantity valid');
+            console.log("prices and quantity valid");
             /**
              * Clear error that might exist on other fields
              */
-            this.calculationsForm.get([fueltype, 'qty']).setErrors(null);
-            this.calculationsForm.get([fueltype, 'price']).setErrors(null);
+            this.calculationsForm.get([fueltype, "qty"]).setErrors(null);
+            this.calculationsForm.get([fueltype, "price"]).setErrors(null);
             /**
              * Make sure to convert input value otherwise it will default to string
              */
@@ -143,9 +142,9 @@ export class CalculationsComponent implements OnInit, OnChanges {
       } else {
         tempPrice = this.initData.fuel[fueltype].priceconfig.minsp;
         this.notificationService.notify({
-          alert_type: 'notify',
+          alert_type: "notify",
           duration: 20000,
-          title: 'Invalid Prices',
+          title: "Invalid Prices",
           body: `The current selling price for ${fueltype} is lower than the Min selling price, hence the Min selling price has been used`
         });
       }
@@ -156,16 +155,16 @@ export class CalculationsComponent implements OnInit, OnChanges {
       this.initData.fuel[fueltype].priceconfig.minsp = this.activedepot.config.price[fueltype].minPrice;
       this.initData.fuel[fueltype].priceconfig.nonTax = this.stock.taxExempt[fueltype].amount;
 
-      this.calculationsForm.get([fueltype, 'price']).setValidators(Validators.min(this.activedepot.config.price[fueltype].minPrice));
+      this.calculationsForm.get([fueltype, "price"]).setValidators(Validators.min(this.activedepot.config.price[fueltype].minPrice));
 
       /**
        * DOnt overwrite value for order approval
        */
       if (this.newOrder) {
-        this.calculationsForm.get([fueltype, 'price']).setValue(tempPrice, { emitEvent: false });
+        this.calculationsForm.get([fueltype, "price"]).setValue(tempPrice, { emitEvent: false });
       } else {
-        this.calculationsForm.get([fueltype, 'price']).setValue(this.initData.fuel[fueltype].priceconfig.price, { emitEvent: false });
-        this.calculationsForm.get([fueltype, 'qty']).setValue(this.initData.fuel[fueltype].qty, { emitEvent: false });
+        this.calculationsForm.get([fueltype, "price"]).setValue(this.initData.fuel[fueltype].priceconfig.price, { emitEvent: false });
+        this.calculationsForm.get([fueltype, "qty"]).setValue(this.initData.fuel[fueltype].qty, { emitEvent: false });
       }
       /**
        * update calculations as well
@@ -182,10 +181,10 @@ export class CalculationsComponent implements OnInit, OnChanges {
   determinediscount() {
     if ((this.initData.fuel.pms.priceconfig.difference + this.initData.fuel.ago.priceconfig.difference
       + this.initData.fuel.ik.priceconfig.difference) > 0) {
-      return 'Upmark ' + Number(this.initData.fuel.pms.priceconfig.difference +
+      return "Upmark " + Number(this.initData.fuel.pms.priceconfig.difference +
         this.initData.fuel.ago.priceconfig.difference + this.initData.fuel.ik.priceconfig.difference);
     } else {
-      return 'Discount ' + Math.abs(Number(this.initData.fuel.pms.priceconfig.difference +
+      return "Discount " + Math.abs(Number(this.initData.fuel.pms.priceconfig.difference +
         this.initData.fuel.ago.priceconfig.difference + this.initData.fuel.ik.priceconfig.difference));
     }
   }

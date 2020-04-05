@@ -1,10 +1,10 @@
-import {Component, OnInit} from '@angular/core';
-import {OmcService} from 'app/services/core/omc.service';
+import {Component, OnInit} from "@angular/core";
+import {OmcService} from "app/services/core/omc.service";
 
 @Component({
-  selector: 'app-omc-management',
-  templateUrl: './omc-management.component.html',
-  styleUrls: ['./omc-management.component.scss']
+  selector: "app-omc-management",
+  templateUrl: "./omc-management.component.html",
+  styleUrls: ["./omc-management.component.scss"]
 })
 export class OmcManagementComponent implements OnInit {
 
