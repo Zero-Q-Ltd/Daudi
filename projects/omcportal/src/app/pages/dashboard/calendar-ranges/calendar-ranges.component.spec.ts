@@ -1,8 +1,8 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from "@angular/core/testing";
 
-import {CalendarRangesComponent} from './calendar-ranges.component';
+import {CalendarRangesComponent} from "./calendar-ranges.component";
 
-describe('CalendarRangesComponent', () => {
+describe("CalendarRangesComponent", () => {
   let component: CalendarRangesComponent;
   let fixture: ComponentFixture<CalendarRangesComponent>;
 
@@ -19,7 +19,7 @@ describe('CalendarRangesComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

@@ -136,8 +136,8 @@ export class CoreService {
   }
   /**
    * Fetches stock based on whenther it's a private or KPC depot
-   * @param depotId 
-   * @param private Whether 
+   * @param depotId
+   * @param private Whether
    */
   getStocks() {
     this.loaders.stock.next(true);

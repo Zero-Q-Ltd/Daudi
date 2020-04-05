@@ -8,6 +8,15 @@ import {
   ViewChild
 } from "@angular/core";
 import { AngularFireFunctions } from "@angular/fire/functions";
+import {
+  MatDialog,
+  MatDialogRef,
+  MAT_DIALOG_DATA
+} from "@angular/material/dialog";
+import { MatPaginator } from "@angular/material/paginator";
+import { MatSnackBar } from "@angular/material/snack-bar";
+import { MatSort } from "@angular/material/sort";
+import { MatTableDataSource } from "@angular/material/table";
 import { SendMsgComponent } from "app/components/send-msg/send-msg.component";
 import { AdminService } from "app/services/core/admin.service";
 import { CoreService } from "app/services/core/core.service";
@@ -15,20 +24,9 @@ import { CustomerService } from "app/services/customers.service";
 import { ReplaySubject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { DaudiCustomer } from "../../../../models/Daudi/customer/Customer";
-import { SMS } from "../../../../models/Daudi/sms/sms";
-import { MyTimestamp } from "../../../../models/firestore/firestoreTypes";
 import { NotificationService } from "../../../../shared/services/notification.service";
 import { CoreAdminService } from "../../services/core.service";
 import { CompanyMembersComponent } from "../company-members/company-members.component";
-import { MatTableDataSource } from "@angular/material/table";
-import { MatPaginator } from "@angular/material/paginator";
-import { MatSort } from "@angular/material/sort";
-import { MatSnackBar } from "@angular/material/snack-bar";
-import {
-  MatDialog,
-  MatDialogRef,
-  MAT_DIALOG_DATA
-} from "@angular/material/dialog";
 
 @Component({
   selector: "customer-management",

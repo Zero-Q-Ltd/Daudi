@@ -1,4 +1,4 @@
-import {AssociatedUser} from '../admin/AssociatedUser';
+import {AssociatedUser} from "../admin/AssociatedUser";
 
 export interface DepotPrice {
   price: number;

@@ -1,4 +1,4 @@
-import {DaudiMeta} from '../universal/Meta';
+import {DaudiMeta} from "../universal/Meta";
 
 export interface DepotCreator extends DaudiMeta {
   /**

@@ -1,5 +1,5 @@
-import { deepCopy } from '../../utils/deepCopy';
-import { AssociatedUser, EmptyAssociatedUser } from '../admin/AssociatedUser';
+import { deepCopy } from "../../utils/deepCopy";
+import { AssociatedUser, EmptyAssociatedUser } from "../admin/AssociatedUser";
 
 export interface TaxExempt {
   amount: number;

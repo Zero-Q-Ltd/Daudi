@@ -1,8 +1,8 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from "@angular/core/testing";
 
-import {OmcManagementComponent} from './omc-management.component';
+import {OmcManagementComponent} from "./omc-management.component";
 
-describe('OmcManagementComponent', () => {
+describe("OmcManagementComponent", () => {
   let component: OmcManagementComponent;
   let fixture: ComponentFixture<OmcManagementComponent>;
 
@@ -19,7 +19,7 @@ describe('OmcManagementComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

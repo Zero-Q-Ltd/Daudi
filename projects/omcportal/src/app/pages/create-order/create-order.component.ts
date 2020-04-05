@@ -1,4 +1,6 @@
 import { Component, OnDestroy } from "@angular/core";
+import { MatDialog } from "@angular/material/dialog";
+import { TooltipPosition } from "@angular/material/tooltip";
 import { ActivatedRoute, Router } from "@angular/router";
 import { MapsComponent } from "app/components/maps/maps.component";
 import { AdminService } from "app/services/core/admin.service";
@@ -20,8 +22,6 @@ import { AdminConfig, emptyConfig } from "../../models/Daudi/omc/AdminConfig";
 import { emptyorder, Order } from "../../models/Daudi/order/Order";
 import { NotificationService } from "../../shared/services/notification.service";
 import { ConfirmDepotComponent } from "./components/confirm-depot/confirm-depot.component";
-import { MatDialog } from "@angular/material/dialog";
-import { TooltipPosition } from "@angular/material/tooltip";
 
 @Component({
   selector: "create-order",
@@ -118,7 +118,7 @@ export class CreateOrderComponent implements OnDestroy {
           .onSnapshot(ordersnapshot => {
             if (ordersnapshot.exists) {
               this.temporder = ordersnapshot.data() as Order;
-              //make default values for Invoice on
+              // make default values for Invoice on
               this.temporder.notifications.email = true;
               this.temporder.notifications.sms = true;
               if (this.temporder.stage !== 1) {

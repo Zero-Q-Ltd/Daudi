@@ -1,5 +1,5 @@
-import {MyGeoPoint} from '../../firestore/firestoreTypes';
-import {Metadata} from '../universal/Metadata';
+import {MyGeoPoint} from "../../firestore/firestoreTypes";
+import {Metadata} from "../universal/Metadata";
 
 /**
  * Every depot is tied to an exit location that determines the Hospitality amount

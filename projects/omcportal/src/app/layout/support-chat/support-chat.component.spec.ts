@@ -1,8 +1,8 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from "@angular/core/testing";
 
-import {SupportChatComponent} from './support-chat.component';
+import {SupportChatComponent} from "./support-chat.component";
 
-describe('SupportChatComponent', () => {
+describe("SupportChatComponent", () => {
   let component: SupportChatComponent;
   let fixture: ComponentFixture<SupportChatComponent>;
 
@@ -19,7 +19,7 @@ describe('SupportChatComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

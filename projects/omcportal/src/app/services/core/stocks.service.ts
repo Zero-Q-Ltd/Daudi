@@ -11,9 +11,9 @@ export class StocksService {
   }
   /**
    * Returns the stock doc, depending on whether it's a private depot
-   * @param omcId 
-   * @param depotId 
-   * @param Private 
+   * @param omcId
+   * @param depotId
+   * @param Private
    */
   stockDoc(omcId: string, depotId: string, privateDepot: boolean) {
     if (privateDepot) {
@@ -25,7 +25,7 @@ export class StocksService {
       return this.db.firestore.collection("omc")
         .doc(omcId)
         .collection("stock")
-        .doc('kpc');
+        .doc("kpc");
     }
 
   }

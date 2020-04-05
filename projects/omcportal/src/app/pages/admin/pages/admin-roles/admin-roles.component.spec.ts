@@ -1,8 +1,8 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from "@angular/core/testing";
 
-import {AdminRolesComponent} from './admin-roles.component';
+import {AdminRolesComponent} from "./admin-roles.component";
 
-describe('AdminRolesComponent', () => {
+describe("AdminRolesComponent", () => {
   let component: AdminRolesComponent;
   let fixture: ComponentFixture<AdminRolesComponent>;
 
@@ -19,7 +19,7 @@ describe('AdminRolesComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

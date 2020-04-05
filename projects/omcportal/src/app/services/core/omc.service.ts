@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/firestore';
+import { Injectable } from "@angular/core";
+import { AngularFirestore } from "@angular/fire/firestore";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root"
 })
 export class OmcService {
 
@@ -11,12 +11,12 @@ export class OmcService {
   }
 
   omcCollection() {
-    return this.db.firestore.collection('omc');
+    return this.db.firestore.collection("omc");
   }
 
   omcStockCollection(imcId: string) {
-    return this.db.firestore.collection('omc')
-      .doc('values')
-      .collection('stock');
+    return this.db.firestore.collection("omc")
+      .doc("values")
+      .collection("stock");
   }
 }

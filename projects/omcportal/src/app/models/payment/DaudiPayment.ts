@@ -36,16 +36,15 @@ export interface DaudiPayment {
 }
 export enum paymentStatus {
     "empty company",
-    'unprocessed',
-    'complete',
-    'error',
-    'Processing' = 48
+    "unprocessed",
+    "complete",
+    "error",
+    "Processing" = 48
 }
 
 export enum PaymentErrorCodes {
     "Error Consolidating with Quickbooks"
 }
-
 
 export function emptyPayment(): DaudiPayment {
     return {

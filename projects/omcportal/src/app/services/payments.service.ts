@@ -1,12 +1,12 @@
-import { Injectable } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/firestore';
-import { BehaviorSubject } from 'rxjs';
-import { AdminConfigService } from './core/admin-config.service';
-import { DepotService } from './core/depot.service';
-import { DaudiPayment } from 'app/models/payment/DaudiPayment';
+import { Injectable } from "@angular/core";
+import { AngularFirestore } from "@angular/fire/firestore";
+import { DaudiPayment } from "app/models/payment/DaudiPayment";
+import { BehaviorSubject } from "rxjs";
+import { AdminConfigService } from "./core/admin-config.service";
+import { DepotService } from "./core/depot.service";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root"
 })
 export class PaymentsService {
 
@@ -17,7 +17,6 @@ export class PaymentsService {
    */
   subscriptions: Map<string, any> = new Map<string, any>();
 
-
   constructor(
     private db: AngularFirestore,
     private config: AdminConfigService,
@@ -25,11 +24,10 @@ export class PaymentsService {
 
   }
 
-
   paymentsCollection(omcId: string) {
-    return this.db.firestore.collection('omc')
+    return this.db.firestore.collection("omc")
       .doc(omcId)
-      .collection('payments')
+      .collection("payments")
   }
   paymentsDoc(omcId: string, paymentId: string) {
     return this.paymentsCollection(omcId)

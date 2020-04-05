@@ -1,10 +1,10 @@
 import { Component, OnInit } from "@angular/core";
+import { MatDialogRef } from "@angular/material/dialog";
 import { DaudiPayment, emptyPayment } from "app/models/payment/DaudiPayment";
 import { paymentStatus } from "app/models/payment/DaudiPayment";
+import { AdminService } from "app/services/core/admin.service";
 import { CoreService } from "app/services/core/core.service";
 import { PaymentsService } from "app/services/payments.service";
-import { AdminService } from "app/services/core/admin.service";
-import { MatDialogRef } from "@angular/material/dialog";
 import { NotificationService } from "app/shared/services/notification.service";
 
 @Component({

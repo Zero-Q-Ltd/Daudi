@@ -6,7 +6,7 @@ import {
   OnInit,
   Output
 } from "@angular/core";
-import { Validators, FormGroup, FormControl, FormBuilder } from "@angular/forms";
+import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
 import { CoreService } from "app/services/core/core.service";
 import { CustomerService } from "app/services/customers.service";
 import { isEqual } from "lodash";
@@ -14,7 +14,6 @@ import { ReplaySubject, Subject } from "rxjs";
 import { delay, takeUntil } from "rxjs/operators";
 import { CustomerDetail } from "../../../../models/Daudi/customer/CustomerDetail";
 import { DaudiCustomer } from "./../../../../models/Daudi/customer/Customer";
-import { OrderContactForm } from "./../../../../models/Daudi/forms/CreateOrder";
 import { Order } from "./../../../../models/Daudi/order/Order";
 
 @Component({

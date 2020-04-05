@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
-(function() {
-  "use strict";
+;(function () {
+  'use strict'
 
   /**
    * Class constructor for Spinner MDL component.
@@ -27,12 +27,12 @@
    * @constructor
    */
   var MaterialSpinner = function MaterialSpinner(element) {
-    this.element_ = element;
+    this.element_ = element
 
     // Initialize instance.
-    this.init();
-  };
-  window["MaterialSpinner"] = MaterialSpinner;
+    this.init()
+  }
+  window['MaterialSpinner'] = MaterialSpinner
 
   /**
    * Store constants in one place so they can be updated easily.
@@ -41,8 +41,8 @@
    * @private
    */
   MaterialSpinner.prototype.Constant_ = {
-    MDL_SPINNER_LAYER_COUNT: 4
-  };
+    MDL_SPINNER_LAYER_COUNT: 4,
+  }
 
   /**
    * Store strings for class names defined by this component that are used in
@@ -53,13 +53,13 @@
    * @private
    */
   MaterialSpinner.prototype.CssClasses_ = {
-    MDL_SPINNER_LAYER: "mdl-spinner__layer",
-    MDL_SPINNER_CIRCLE_CLIPPER: "mdl-spinner__circle-clipper",
-    MDL_SPINNER_CIRCLE: "mdl-spinner__circle",
-    MDL_SPINNER_GAP_PATCH: "mdl-spinner__gap-patch",
-    MDL_SPINNER_LEFT: "mdl-spinner__left",
-    MDL_SPINNER_RIGHT: "mdl-spinner__right"
-  };
+    MDL_SPINNER_LAYER: 'mdl-spinner__layer',
+    MDL_SPINNER_CIRCLE_CLIPPER: 'mdl-spinner__circle-clipper',
+    MDL_SPINNER_CIRCLE: 'mdl-spinner__circle',
+    MDL_SPINNER_GAP_PATCH: 'mdl-spinner__gap-patch',
+    MDL_SPINNER_LEFT: 'mdl-spinner__left',
+    MDL_SPINNER_RIGHT: 'mdl-spinner__right',
+  }
 
   /**
    * Auxiliary method to create a spinner layer.
@@ -67,38 +67,38 @@
    * @param {number} index Index of the layer to be created.
    * @public
    */
-  MaterialSpinner.prototype.createLayer = function(index) {
-    var layer = document.createElement("div");
-    layer.classList.add(this.CssClasses_.MDL_SPINNER_LAYER);
-    layer.classList.add(this.CssClasses_.MDL_SPINNER_LAYER + "-" + index);
+  MaterialSpinner.prototype.createLayer = function (index) {
+    var layer = document.createElement('div')
+    layer.classList.add(this.CssClasses_.MDL_SPINNER_LAYER)
+    layer.classList.add(this.CssClasses_.MDL_SPINNER_LAYER + '-' + index)
 
-    var leftClipper = document.createElement("div");
-    leftClipper.classList.add(this.CssClasses_.MDL_SPINNER_CIRCLE_CLIPPER);
-    leftClipper.classList.add(this.CssClasses_.MDL_SPINNER_LEFT);
+    var leftClipper = document.createElement('div')
+    leftClipper.classList.add(this.CssClasses_.MDL_SPINNER_CIRCLE_CLIPPER)
+    leftClipper.classList.add(this.CssClasses_.MDL_SPINNER_LEFT)
 
-    var gapPatch = document.createElement("div");
-    gapPatch.classList.add(this.CssClasses_.MDL_SPINNER_GAP_PATCH);
+    var gapPatch = document.createElement('div')
+    gapPatch.classList.add(this.CssClasses_.MDL_SPINNER_GAP_PATCH)
 
-    var rightClipper = document.createElement("div");
-    rightClipper.classList.add(this.CssClasses_.MDL_SPINNER_CIRCLE_CLIPPER);
-    rightClipper.classList.add(this.CssClasses_.MDL_SPINNER_RIGHT);
+    var rightClipper = document.createElement('div')
+    rightClipper.classList.add(this.CssClasses_.MDL_SPINNER_CIRCLE_CLIPPER)
+    rightClipper.classList.add(this.CssClasses_.MDL_SPINNER_RIGHT)
 
-    var circleOwners = [leftClipper, gapPatch, rightClipper];
+    var circleOwners = [leftClipper, gapPatch, rightClipper]
 
     for (var i = 0; i < circleOwners.length; i++) {
-      var circle = document.createElement("div");
-      circle.classList.add(this.CssClasses_.MDL_SPINNER_CIRCLE);
-      circleOwners[i].appendChild(circle);
+      var circle = document.createElement('div')
+      circle.classList.add(this.CssClasses_.MDL_SPINNER_CIRCLE)
+      circleOwners[i].appendChild(circle)
     }
 
-    layer.appendChild(leftClipper);
-    layer.appendChild(gapPatch);
-    layer.appendChild(rightClipper);
+    layer.appendChild(leftClipper)
+    layer.appendChild(gapPatch)
+    layer.appendChild(rightClipper)
 
-    this.element_.appendChild(layer);
-  };
-  MaterialSpinner.prototype["createLayer"] =
-    MaterialSpinner.prototype.createLayer;
+    this.element_.appendChild(layer)
+  }
+  MaterialSpinner.prototype['createLayer'] =
+    MaterialSpinner.prototype.createLayer
 
   /**
    * Stops the spinner animation.
@@ -106,10 +106,10 @@
    *
    * @public
    */
-  MaterialSpinner.prototype.stop = function() {
-    this.element_.classList.remove("is-active");
-  };
-  MaterialSpinner.prototype["stop"] = MaterialSpinner.prototype.stop;
+  MaterialSpinner.prototype.stop = function () {
+    this.element_.classList.remove('is-active')
+  }
+  MaterialSpinner.prototype['stop'] = MaterialSpinner.prototype.stop
 
   /**
    * Starts the spinner animation.
@@ -118,30 +118,30 @@
    *
    * @public
    */
-  MaterialSpinner.prototype.start = function() {
-    this.element_.classList.add("is-active");
-  };
-  MaterialSpinner.prototype["start"] = MaterialSpinner.prototype.start;
+  MaterialSpinner.prototype.start = function () {
+    this.element_.classList.add('is-active')
+  }
+  MaterialSpinner.prototype['start'] = MaterialSpinner.prototype.start
 
   /**
    * Initialize element.
    */
-  MaterialSpinner.prototype.init = function() {
+  MaterialSpinner.prototype.init = function () {
     if (this.element_) {
       for (var i = 1; i <= this.Constant_.MDL_SPINNER_LAYER_COUNT; i++) {
-        this.createLayer(i);
+        this.createLayer(i)
       }
 
-      this.element_.classList.add("is-upgraded");
+      this.element_.classList.add('is-upgraded')
     }
-  };
+  }
 
   // The component registers itself. It can assume componentHandler is available
   // in the global scope.
   componentHandler.register({
     constructor: MaterialSpinner,
-    classAsString: "MaterialSpinner",
-    cssClass: "mdl-js-spinner",
-    widget: true
-  });
-})();
+    classAsString: 'MaterialSpinner',
+    cssClass: 'mdl-js-spinner',
+    widget: true,
+  })
+})()

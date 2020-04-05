@@ -1,33 +1,33 @@
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
-import { ReplaySubject } from 'rxjs';
-import { FuelNamesArray, FuelType } from '../../../../models/Daudi/fuel/FuelType';
-import { EmptyGenericTruckStage } from '../../../../models/Daudi/order/GenericStage';
-import { Order } from '../../../../models/Daudi/order/Order';
-import { deepCopy } from '../../../../models/utils/deepCopy';
-import { AdminService } from '../../../../services/core/admin.service';
-import { DepotService } from '../../../../services/core/depot.service';
-import { OrdersService } from '../../../../services/orders.service';
-import { NotificationService } from '../../../../shared/services/notification.service';
-import { OrderDetailsComponent } from '../order-details/order-details.component';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { TooltipPosition } from '@angular/material/tooltip';
+import { Component, Inject, OnDestroy, OnInit } from "@angular/core";
+import { FormControl, Validators } from "@angular/forms";
+import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
+import { TooltipPosition } from "@angular/material/tooltip";
+import { ReplaySubject } from "rxjs";
+import { FuelNamesArray, FuelType } from "../../../../models/Daudi/fuel/FuelType";
+import { EmptyGenericTruckStage } from "../../../../models/Daudi/order/GenericStage";
+import { Order } from "../../../../models/Daudi/order/Order";
+import { deepCopy } from "../../../../models/utils/deepCopy";
+import { AdminService } from "../../../../services/core/admin.service";
+import { DepotService } from "../../../../services/core/depot.service";
+import { OrdersService } from "../../../../services/orders.service";
+import { NotificationService } from "../../../../shared/services/notification.service";
+import { OrderDetailsComponent } from "../order-details/order-details.component";
 
 @Component({
-  selector: 'compartments',
-  templateUrl: './compartments.component.html',
-  styleUrls: ['./compartments.component.scss']
+  selector: "compartments",
+  templateUrl: "./compartments.component.html",
+  styleUrls: ["./compartments.component.scss"]
 })
 export class CompartmentsComponent implements OnInit, OnDestroy {
-  position: TooltipPosition = 'left';
-  position2: TooltipPosition = 'above';
+  position: TooltipPosition = "left";
+  position2: TooltipPosition = "above";
   saving = false;
   // @Input() order: Order;
-  mask = [/^[kK]+$/i, /^[a-zA-Z]+$/i, /^[a-zA-Z]+$/i, ' ', /\d/, /\d/, /\d/, /^[a-zA-Z]+$/i];
+  mask = [/^[kK]+$/i, /^[a-zA-Z]+$/i, /^[a-zA-Z]+$/i, " ", /\d/, /\d/, /\d/, /^[a-zA-Z]+$/i];
   fueltypesArray = FuelNamesArray;
-  nameControl: FormControl = new FormControl('', [Validators.required]);
-  IdControl: FormControl = new FormControl('', [Validators.required]);
-  plateControl: FormControl = new FormControl('', [Validators.required, Validators.pattern(this.mask[0])]);
+  nameControl: FormControl = new FormControl("", [Validators.required]);
+  IdControl: FormControl = new FormControl("", [Validators.required]);
+  plateControl: FormControl = new FormControl("", [Validators.required, Validators.pattern(this.mask[0])]);
 
   /**
    * this keeps a local copy of all the subscriptions within this service
@@ -111,10 +111,10 @@ export class CompartmentsComponent implements OnInit, OnDestroy {
       if (Number(this.order.fuel[fueltype].qty) !== this.temporaryQuantities[fueltype]) {
         errorcheck = true;
         this.notification.notify({
-          alert_type: 'error',
+          alert_type: "error",
           duration: 2000,
-          title: 'Error',
-          icon: 'invert_colors_off',
+          title: "Error",
+          icon: "invert_colors_off",
           body: `Invalid ${fueltype} Total Amount`
         });
       }
@@ -124,10 +124,10 @@ export class CompartmentsComponent implements OnInit, OnDestroy {
      */
     if (!this.order.truck.driverdetail.name || this.order.truck.driverdetail.name.length < 4) {
       this.notification.notify({
-        alert_type: 'error',
+        alert_type: "error",
         duration: 2000,
-        title: 'Error',
-        icon: 'invert_colors_off',
+        title: "Error",
+        icon: "invert_colors_off",
         body: `Driver name required`
       });
       errorcheck = true;

@@ -6,6 +6,7 @@ import { AngularFireDatabase } from "@angular/fire/database";
 import { AngularFirestoreModule } from "@angular/fire/firestore";
 import { AngularFireFunctionsModule } from "@angular/fire/functions";
 import { AngularFireMessagingModule } from "@angular/fire/messaging";
+import { AngularFireStorageModule, BUCKET } from "@angular/fire/storage";
 import { FlexLayoutModule } from "@angular/flex-layout";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
@@ -67,7 +68,6 @@ import { OrdersService } from "./services/orders.service";
 import { PricesService } from "./services/prices.service";
 import { NotificationComponent } from "./shared/components/notification/notification.component";
 import { SharedModule } from "./shared/shared.module";
-import { AngularFireStorageModule, BUCKET } from "@angular/fire/storage";
 
 const firebaseConfig = {
   apiKey: "AIzaSyD6abjtAtMf2kK7YEtgpyKqT_EPkHqjYXo",

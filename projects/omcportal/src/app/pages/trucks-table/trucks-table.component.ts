@@ -21,9 +21,7 @@ import * as moment from "moment";
 import { ReplaySubject } from "rxjs";
 import { map, switchMap, takeUntil } from "rxjs/operators";
 import { Order } from "../../models/Daudi/order/Order";
-import { emptytruck, Truck } from "../../models/Daudi/order/truck/Truck";
-import { SMS } from "../../models/Daudi/sms/sms";
-import { MyTimestamp } from "../../models/firestore/firestoreTypes";
+import { emptytruck } from "../../models/Daudi/order/truck/Truck";
 
 @Component({
   selector: "trucks-table",

@@ -1,9 +1,8 @@
-import { Injectable } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/firestore';
-import { FuelType } from 'app/models/Daudi/fuel/FuelType';
+import { Injectable } from "@angular/core";
+import { AngularFirestore } from "@angular/fire/firestore";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root"
 })
 export class AseService {
 
@@ -12,11 +11,10 @@ export class AseService {
   }
 
   ASECollection(omcId: string) {
-    return this.db.firestore.collection('omc')
+    return this.db.firestore.collection("omc")
       .doc(omcId)
-      .collection('ases');
+      .collection("ases");
   }
-
 
   updateASE(omcId: string, ASEId: string) {
     return this.ASECollection(omcId)

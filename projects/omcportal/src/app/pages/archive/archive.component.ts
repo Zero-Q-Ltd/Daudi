@@ -1,18 +1,18 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import { ReplaySubject } from 'rxjs';
-import { emptyorder } from '../../models/Daudi/order/Order';
-import { emptytruck } from '../../models/Daudi/order/truck/Truck';
-import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { Component, OnDestroy, OnInit } from "@angular/core";
+import { FormControl } from "@angular/forms";
+import { MatDialog } from "@angular/material/dialog";
+import { MatSnackBar } from "@angular/material/snack-bar";
+import { ReplaySubject } from "rxjs";
+import { emptyorder } from "../../models/Daudi/order/Order";
+import { emptytruck } from "../../models/Daudi/order/truck/Truck";
 
 @Component({
-  selector: 'app-archive',
-  templateUrl: './archive.component.html',
-  styleUrls: ['./archive.component.scss']
+  selector: "app-archive",
+  templateUrl: "./archive.component.html",
+  styleUrls: ["./archive.component.scss"]
 })
 export class ArchiveComponent implements OnInit, OnDestroy {
-  position = 'above';
+  position = "above";
 
   minDate = new Date(2017, 8, 26);
   maxDate = new Date();

@@ -1,8 +1,8 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from "@angular/core/testing";
 
-import {TransferComponent} from './transfer.component';
+import {TransferComponent} from "./transfer.component";
 
-describe('TransferComponent', () => {
+describe("TransferComponent", () => {
   let component: TransferComponent;
   let fixture: ComponentFixture<TransferComponent>;
 
@@ -19,7 +19,7 @@ describe('TransferComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

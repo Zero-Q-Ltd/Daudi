@@ -1,17 +1,17 @@
-import {Component, OnDestroy} from '@angular/core';
-import {Depot, emptydepot} from 'app/models/Daudi/depot/Depot';
-import {OrderStageIds} from 'app/models/Daudi/order/OrderStages';
-import {TruckStageNames} from 'app/models/Daudi/order/truck/TruckStages';
-import {CoreService} from 'app/services/core/core.service';
-import {DepotService} from 'app/services/core/depot.service';
-import {OrdersService} from 'app/services/orders.service';
-import {ReplaySubject} from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
+import {Component, OnDestroy} from "@angular/core";
+import {Depot, emptydepot} from "app/models/Daudi/depot/Depot";
+import {OrderStageIds} from "app/models/Daudi/order/OrderStages";
+import {TruckStageNames} from "app/models/Daudi/order/truck/TruckStages";
+import {CoreService} from "app/services/core/core.service";
+import {DepotService} from "app/services/core/depot.service";
+import {OrdersService} from "app/services/orders.service";
+import {ReplaySubject} from "rxjs";
+import {takeUntil} from "rxjs/operators";
 
 @Component({
-  selector: 'my-app-sidenav-menu',
+  selector: "my-app-sidenav-menu",
   styles: [],
-  templateUrl: './sidenav-menu.component.html'
+  templateUrl: "./sidenav-menu.component.html"
 })
 
 export class AppSidenavMenuComponent implements OnDestroy {

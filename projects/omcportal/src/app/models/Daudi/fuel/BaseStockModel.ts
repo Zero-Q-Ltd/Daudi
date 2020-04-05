@@ -1,14 +1,13 @@
-import {deepCopy} from '../../../models/utils/deepCopy';
-import {MyTimestamp} from '../../firestore/firestoreTypes';
-import {FuelType} from './FuelType';
-import {EmptyStockQty, StockQty} from './StockQty';
+import { deepCopy } from "../../../models/utils/deepCopy";
+import { FuelType } from "./FuelType";
+import { EmptyStockQty, StockQty } from "./StockQty";
 
 export interface BaseStockModel {
   Amount: number;
-  date: MyTimestamp;
+  date: Date;
   depot: {
-    name: string
-    Id: string
+    name: string;
+    Id: string;
   };
   qty: StockQty;
   fuelType: FuelType;
@@ -25,8 +24,8 @@ export const EmptyBaseStockModel: BaseStockModel = {
   qty: deepCopy<StockQty>(EmptyStockQty),
   depot: {
     name: null,
-    Id: null
+    Id: null,
   },
   active: false,
-  date: new MyTimestamp(0, 0)
+  date: new Date(),
 };

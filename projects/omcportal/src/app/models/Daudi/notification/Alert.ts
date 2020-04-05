@@ -3,5 +3,5 @@ export interface Alert {
   title: string;
   body: string;
   icon?: string;
-  alert_type?: 'warning' | 'error' | 'notify' | 'msgnew' | 'success' | 'alert' | 'cash' | 'unprocessedpayment';
+  alert_type?: "warning" | "error" | "notify" | "msgnew" | "success" | "alert" | "cash" | "unprocessedpayment";
 }

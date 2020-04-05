@@ -1,9 +1,9 @@
-import {Contact} from './Contact';
+import {Contact} from "./Contact";
 
 export interface CustomerDetail {
   name: string;
   Id: string;
-  contact: Array<Contact>;
+  contact: Contact[];
   krapin: string;
   QbId: string;
 }

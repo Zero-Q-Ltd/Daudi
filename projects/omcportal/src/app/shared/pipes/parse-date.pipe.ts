@@ -1,8 +1,8 @@
-import { Pipe, PipeTransform } from '@angular/core';
-import { firestore } from 'firebase';
+import { Pipe, PipeTransform } from "@angular/core";
+import { firestore } from "firebase";
 
 @Pipe({
-  name: 'parseDate'
+  name: "parseDate"
 })
 export class ParseDatePipe implements PipeTransform {
 

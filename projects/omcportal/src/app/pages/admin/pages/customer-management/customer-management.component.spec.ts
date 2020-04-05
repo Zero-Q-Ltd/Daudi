@@ -1,8 +1,8 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from "@angular/core/testing";
 
-import {CustomerManagementComponent} from './customer-management.component';
+import {CustomerManagementComponent} from "./customer-management.component";
 
-describe('CompanyManagementComponent', () => {
+describe("CompanyManagementComponent", () => {
   let component: CustomerManagementComponent;
   let fixture: ComponentFixture<CustomerManagementComponent>;
 
@@ -19,7 +19,7 @@ describe('CompanyManagementComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

@@ -1,8 +1,8 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from "@angular/core/testing";
 
-import {AdminLevelsComponent} from './admin-levels.component';
+import {AdminLevelsComponent} from "./admin-levels.component";
 
-describe('AdminLevelsComponent', () => {
+describe("AdminLevelsComponent", () => {
   let component: AdminLevelsComponent;
   let fixture: ComponentFixture<AdminLevelsComponent>;
 
@@ -19,7 +19,7 @@ describe('AdminLevelsComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

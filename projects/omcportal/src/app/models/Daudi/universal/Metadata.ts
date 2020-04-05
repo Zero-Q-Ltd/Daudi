@@ -1,5 +1,5 @@
-import {deepCopy} from '../../utils/deepCopy';
-import {DaudiMeta, emptyMeta} from './Meta';
+import {deepCopy} from "../../utils/deepCopy";
+import {DaudiMeta, emptyMeta} from "./Meta";
 
 export interface Metadata {
   /**

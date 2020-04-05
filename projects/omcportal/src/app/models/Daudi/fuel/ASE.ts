@@ -1,8 +1,5 @@
-import { deepCopy } from "../../../models/utils/deepCopy";
-import { MyTimestamp } from "../../firestore/firestoreTypes";
 import { BaseStockModel } from "./BaseStockModel";
 import { QbRef } from "./QbRef";
-import { EmptyStockQty, StockQty } from "./StockQty";
 
 export interface ASE extends Omit<BaseStockModel, "qty"> {
   ase: QbRef;
@@ -17,16 +14,16 @@ export function newAse(): ASE {
       Amount: null,
       ase: {
         QbId: null,
-        qty: 0
+        qty: 0,
       },
       price: 0,
       qty: 0,
       depot: {
         name: null,
-        Id: null
+        Id: null,
       },
       active: false,
-      date: new MyTimestamp(0, 0)
-    }
+      date: new Date(),
+    },
   };
 }

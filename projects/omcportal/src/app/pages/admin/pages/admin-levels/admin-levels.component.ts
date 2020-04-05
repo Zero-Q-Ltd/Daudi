@@ -1,8 +1,7 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
-import { Validators, FormGroup, FormBuilder, FormArray } from "@angular/forms";
+import { FormArray, FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { MatDialog } from "@angular/material/dialog";
 import { ConfirmDialogComponent } from "app/components/confirm-dialog/confirm-dialog.component";
-import { AdminLevel } from "app/models/Daudi/admin/AdminLevel";
 import { AdminType, NewAdminType } from "app/models/Daudi/admin/AdminType";
 import { AdminConfig } from "app/models/Daudi/omc/AdminConfig";
 import { emptyomc, OMC } from "app/models/Daudi/omc/OMC";

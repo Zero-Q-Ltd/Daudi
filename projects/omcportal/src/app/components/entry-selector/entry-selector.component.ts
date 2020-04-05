@@ -1,34 +1,34 @@
-import { SelectionModel } from '@angular/cdk/collections';
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
-import { EmptyEntryDraw, EntryDraw, Entry } from 'app/models/Daudi/fuel/Entry';
-import { FuelType } from 'app/models/Daudi/fuel/FuelType';
-import { CoreService } from 'app/services/core/core.service';
-import { ReplaySubject } from 'rxjs';
-import { delay, takeUntil } from 'rxjs/operators';
-import { MatTableDataSource } from '@angular/material/table';
+import { SelectionModel } from "@angular/cdk/collections";
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from "@angular/core";
+import { FormControl, Validators } from "@angular/forms";
+import { MatTableDataSource } from "@angular/material/table";
+import { EmptyEntryDraw, Entry, EntryDraw } from "app/models/Daudi/fuel/Entry";
+import { FuelType } from "app/models/Daudi/fuel/FuelType";
+import { CoreService } from "app/services/core/core.service";
+import { ReplaySubject } from "rxjs";
+import { delay, takeUntil } from "rxjs/operators";
 
 @Component({
-  selector: 'app-entry-selector',
-  templateUrl: './entry-selector.component.html',
-  styleUrls: ['./entry-selector.component.scss']
+  selector: "app-entry-selector",
+  templateUrl: "./entry-selector.component.html",
+  styleUrls: ["./entry-selector.component.scss"]
 })
 export class EntrySelectorComponent implements OnInit, OnDestroy, OnChanges {
 
   entries: MatTableDataSource<Entry & EntryDraw> = new MatTableDataSource<Entry & EntryDraw>([]);
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
   displayedColumns: string[] = [
-    'select',
-    'id',
-    'date',
-    'entry',
-    'totalqty',
-    'loadedqty',
-    'availableqty',
-    'transferqty',
-    'remainqty',
-    'status'];
-  footerColumns = ['Error', 'Total', 'TotalValue', 'Okay'];
+    "select",
+    "id",
+    "date",
+    "entry",
+    "totalqty",
+    "loadedqty",
+    "availableqty",
+    "transferqty",
+    "remainqty",
+    "status"];
+  footerColumns = ["Error", "Total", "TotalValue", "Okay"];
   selection = new SelectionModel<Entry & EntryDraw>(true, [], true);
   drwanQtyControls: FormControl[] = [];
 
@@ -46,9 +46,9 @@ export class EntrySelectorComponent implements OnInit, OnDestroy, OnChanges {
   /** The label for the checkbox on the passed row */
   checkboxLabel(row?: Entry & EntryDraw): string {
     if (!row) {
-      return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
+      return `${this.isAllSelected() ? "select" : "deselect"} all`;
     }
-    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.entry.name}`;
+    return `${this.selection.isSelected(row) ? "deselect" : "select"} row ${row.entry.name}`;
   }
 
   /** Whether the number of selected elements matches the total number of rows. */
@@ -148,7 +148,7 @@ export class EntrySelectorComponent implements OnInit, OnDestroy, OnChanges {
           /**
            * Allow only numbers to be entered
            */
-          Validators.pattern('^[1-9]\\d*$')]);
+          Validators.pattern("^[1-9]\\d*$")]);
 
         this.drwanQtyControls[index].valueChanges.subscribe(() => {
           this.calculateTotals();

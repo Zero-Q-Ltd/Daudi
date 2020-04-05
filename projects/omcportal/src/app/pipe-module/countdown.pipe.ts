@@ -1,7 +1,7 @@
-import {Pipe, PipeTransform} from '@angular/core';
+import {Pipe, PipeTransform} from "@angular/core";
 
 @Pipe({
-  name: 'countdown'
+  name: "countdown"
 })
 export class CountdownPipe implements PipeTransform {
 
