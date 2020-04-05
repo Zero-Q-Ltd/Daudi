@@ -1,5 +1,13 @@
 import { MapsAPILoader } from "@agm/core";
-import { Component, ElementRef, Inject, NgZone, OnInit, Optional, ViewChild } from "@angular/core";
+import {
+  Component,
+  ElementRef,
+  Inject,
+  NgZone,
+  OnInit,
+  Optional,
+  ViewChild,
+} from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { MyGeoPoint } from "../../models/firestore/firestoreTypes";
@@ -9,10 +17,9 @@ import { MyGeoPoint } from "../../models/firestore/firestoreTypes";
 @Component({
   selector: "app-maps",
   templateUrl: "./maps.component.html",
-  styleUrls: ["./maps.component.scss"]
+  styleUrls: ["./maps.component.scss"],
 })
 export class MapsComponent implements OnInit {
-
   public latitude: number;
   public longitude: number;
   public searchControl: FormControl;
@@ -24,16 +31,16 @@ export class MapsComponent implements OnInit {
   points: marker[] = [
     {
       location: new MyGeoPoint(-1.305308, 36.872919),
-      label: "Oilcom"
+      label: "Oilcom",
     },
     {
       location: new MyGeoPoint(-4.058972, 39.671766),
-      label: "Oilcom"
-    }
+      label: "Oilcom",
+    },
   ];
   clickedlocation: marker = {
     location: null,
-    label: ""
+    label: "",
   };
   // initial center position for the map
   lat = -1.287666;
@@ -42,12 +49,12 @@ export class MapsComponent implements OnInit {
   // google maps zoom level
   // zoom: number = 7;
 
-  constructor(private mapsAPILoader: MapsAPILoader,
-    private ngZone: NgZone, @Optional() @Inject(MAT_DIALOG_DATA) private data?: object) {
+  constructor(
+    private mapsAPILoader: MapsAPILoader,
+    @Optional() @Inject(MAT_DIALOG_DATA) private data?: object
+  ) {
     // if (data && data.points) {
-
     // }
-
   }
 
   ngOnInit() {
@@ -70,12 +77,10 @@ export class MapsComponent implements OnInit {
       //   this.ngZone.run(() => {
       //     //get the place result
       //     let place: google.maps.places.PlaceResult = autocomplete.getPlace();
-
       //     //verify result
       //     if (place.geometry === undefined || place.geometry === null) {
       //       return;
       //     }
-
       //     //set latitude, longitude and zoom
       //     this.latitude = place.geometry.location.lat();
       //     this.longitude = place.geometry.location.lng();
@@ -135,7 +140,10 @@ export class MapsComponent implements OnInit {
 
   mapClicked(event) {
     // console.log(event)
-    this.clickedlocation.location = new MyGeoPoint(event.coords.lat, event.coords.lng);
+    this.clickedlocation.location = new MyGeoPoint(
+      event.coords.lat,
+      event.coords.lng
+    );
     // console.log(this.clickedlocation)
 
     // Reset the array first

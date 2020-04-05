@@ -75,7 +75,7 @@
         <th>Additions</th>
         <th>Accuracy</th>
         <th>User</th>
-        <th style="text-align: center">Time Taken</th>
+        <th style="text-align: center;">Time Taken</th>
       </tr>
     </thead>
     <tbody>
@@ -174,7 +174,12 @@
         <td>{{ order.truckStageData["2"].user?.name }}</td>
         <td
           rowspan="2"
-          style="vertical-align : middle;text-align:center;font-weight: bold;background-color: lightgray"
+          style="
+            vertical-align: middle;
+            text-align: center;
+            font-weight: bold;
+            background-color: lightgray;
+          "
         >
           <!-- <span *ngIf="order.truck.stage == 4">
             {{timespent(order.truckStageData['2'].user.date, order.truckStageData['4'].user.date)}}

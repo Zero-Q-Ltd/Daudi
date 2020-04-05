@@ -18,7 +18,7 @@ import { EntryAssignComponent } from "../entry-assign/entry-assign.component";
 @Component({
   selector: "truck-details",
   templateUrl: "./truck-details.component.html",
-  styleUrls: ["./truck-details.component.scss"]
+  styleUrls: ["./truck-details.component.scss"],
 })
 export class TruckDetailsComponent implements OnInit, OnDestroy {
   order: Order;
@@ -30,14 +30,14 @@ export class TruckDetailsComponent implements OnInit, OnDestroy {
   position3: TooltipPosition = "below";
   accuracycolors = {
     1: {
-      percentage: 0
+      percentage: 0,
     },
     2: {
-      percentage: 0
+      percentage: 0,
     },
     3: {
-      percentage: 0
-    }
+      percentage: 0,
+    },
   };
   manualRefresh: EventEmitter<void> = new EventEmitter<void>();
   slider: Options = {
@@ -65,7 +65,6 @@ export class TruckDetailsComponent implements OnInit, OnDestroy {
           return "#2bb418";
         default:
           return "#FF003C";
-
       }
     },
     getSelectionBarColor: (value: number): string => {
@@ -87,7 +86,7 @@ export class TruckDetailsComponent implements OnInit, OnDestroy {
         default:
           return "#FF003C";
       }
-    }
+    },
   };
 
   /**
@@ -102,14 +101,16 @@ export class TruckDetailsComponent implements OnInit, OnDestroy {
     private orderservice: OrdersService,
     private dialog: MatDialog,
     private core: CoreService,
-    private componentcommunication: ComponentCommunicationService) {
-    this.componentcommunication.clickedorder.pipe(takeUntil(this.comopnentDestroyed)).subscribe(order => {
-      if (!order) {
-        return;
-      }
-      this.order = order;
-    });
-
+    private componentcommunication: ComponentCommunicationService
+  ) {
+    this.componentcommunication.clickedorder
+      .pipe(takeUntil(this.comopnentDestroyed))
+      .subscribe((order) => {
+        if (!order) {
+          return;
+        }
+        this.order = order;
+      });
   }
 
   ngOnDestroy(): void {
@@ -118,7 +119,7 @@ export class TruckDetailsComponent implements OnInit, OnDestroy {
   }
 
   unsubscribeAll() {
-    this.subscriptions.forEach(value => {
+    this.subscriptions.forEach((value) => {
       value();
     });
   }
@@ -130,8 +131,14 @@ export class TruckDetailsComponent implements OnInit, OnDestroy {
     const difference = moment(stop.toDate()).diff(moment(start.toDate()));
     const timediff = moment.duration(difference);
     // console.log(timediff.hours(), timediff.minutes());
-    const totalhours = moment.duration(timediff).hours() > 9 ? moment.duration(timediff).hours() : "0" + moment.duration(timediff).hours();
-    const totalmins = moment.duration(timediff).minutes() > 9 ? moment.duration(timediff).minutes() : "0" + moment.duration(timediff).minutes();
+    const totalhours =
+      moment.duration(timediff).hours() > 9
+        ? moment.duration(timediff).hours()
+        : "0" + moment.duration(timediff).hours();
+    const totalmins =
+      moment.duration(timediff).minutes() > 9
+        ? moment.duration(timediff).minutes()
+        : "0" + moment.duration(timediff).minutes();
     return `${totalhours}:${totalmins}:00`;
   }
 
@@ -150,7 +157,6 @@ export class TruckDetailsComponent implements OnInit, OnDestroy {
 
   calculatetotaltime(timearray: any[]) {
     // let totaltime: any = '00:00:00';
-
     // timearray.forEach(timeobject => {
     //   totaltime = moment.duration(totaltime).add(timeobject.time);
     // });
@@ -184,32 +190,38 @@ export class TruckDetailsComponent implements OnInit, OnDestroy {
     const dialogRef = this.dialog.open(EntryAssignComponent, {
       role: "dialog",
       data: this.order.Id,
-      width: "80%"
+      width: "80%",
     });
-
   }
 
   deleteTruck() {
-    const dialogRef = this.dialog.open(ConfirmDialogComponent,
-      {
-        role: "dialog",
-        data: "DELETE THIS TRUCK? \n THIS CANNOT BE REVERSED!!"
-      });
-    dialogRef.afterClosed().pipe(takeUntil(this.comopnentDestroyed)).subscribe(result => {
-      if (result) {
-        this.componentcommunication.truckDeleted.next(true);
-        this.order.loaded = false;
-        this.orderservice.updateorder(this.order.Id, this.core.currentOmc.value.Id, this.order).then(() => {
-          this.notification.notify({
-            body: "Truck deleted",
-            title: "Deleted",
-            alert_type: "warning",
-            duration: 2000
-          });
-        });
-      }
-
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      role: "dialog",
+      data: "DELETE THIS TRUCK? \n THIS CANNOT BE REVERSED!!",
     });
+    dialogRef
+      .afterClosed()
+      .pipe(takeUntil(this.comopnentDestroyed))
+      .subscribe((result) => {
+        if (result) {
+          this.componentcommunication.truckDeleted.next(true);
+          this.order.loaded = false;
+          this.orderservice
+            .updateorder(
+              this.order.Id,
+              this.core.currentOmc.value.Id,
+              this.order
+            )
+            .then(() => {
+              this.notification.notify({
+                body: "Truck deleted",
+                title: "Deleted",
+                alert_type: "warning",
+                duration: 2000,
+              });
+            });
+        }
+      });
   }
 
   /**
@@ -222,46 +234,53 @@ export class TruckDetailsComponent implements OnInit, OnDestroy {
         body: "This truck has already been reset once ",
         title: "Operation forbidden",
         alert_type: "error",
-        duration: 2000
+        duration: 2000,
       });
       return;
     }
-    const dialogRef = this.dialog.open(ConfirmDialogComponent,
-      {
-        role: "dialog",
-        data: "RESET THIS TRUCK? \n This will allow modifications to be done to the Truck Details on the App!!"
-      });
-    dialogRef.afterClosed().pipe(takeUntil(this.comopnentDestroyed)).subscribe(result => {
-      if (result) {
-        this.order.printStatus = {
-          LoadingOrder: {
-            status: null,
-            user: null
-          },
-          gatepass: {
-            status: null,
-            user: null
-          },
-        };
-        this.order.truck.stage = 1;
-        this.order.truck.hasBeenReset = true;
-        this.orderservice.updateorder(this.order.Id, this.core.currentOmc.value.Id, this.order).then(() => {
-          this.notification.notify({
-            body: "Truck reset",
-            alert_type: "success",
-            title: "Success",
-            duration: 2000
-          });
-        });
-      }
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      role: "dialog",
+      data:
+        "RESET THIS TRUCK? \n This will allow modifications to be done to the Truck Details on the App!!",
     });
+    dialogRef
+      .afterClosed()
+      .pipe(takeUntil(this.comopnentDestroyed))
+      .subscribe((result) => {
+        if (result) {
+          this.order.printStatus = {
+            LoadingOrder: {
+              status: null,
+              user: null,
+            },
+            gatepass: {
+              status: null,
+              user: null,
+            },
+          };
+          this.order.truck.stage = 1;
+          this.order.truck.hasBeenReset = true;
+          this.orderservice
+            .updateorder(
+              this.order.Id,
+              this.core.currentOmc.value.Id,
+              this.order
+            )
+            .then(() => {
+              this.notification.notify({
+                body: "Truck reset",
+                alert_type: "success",
+                title: "Success",
+                duration: 2000,
+              });
+            });
+        }
+      });
   }
 
   getcolor(stage) {
     return this.accuracycolors[stage];
   }
 
-  ngOnInit() {
-  }
-
+  ngOnInit() {}
 }
