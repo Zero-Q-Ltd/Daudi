@@ -86,8 +86,8 @@ export function syncAdmins(qbo: QuickBooks, omcId: string) {
                      * Update the database and add the user
                      * delete any information that should not be overwritten
                      */
-                    delete qbAdmin.profile;
-                    delete qbAdmin.config;
+                    // delete qbAdmin.profile;
+                    // delete qbAdmin.config;
                     return batchwrite.update(
                       firestore()
                         .collection("admins")
@@ -110,7 +110,7 @@ export function syncAdmins(qbo: QuickBooks, omcId: string) {
 
 function adminExists(adminEmail: string): Admin | null {
   if (
-    allDbAdmins.filter(admin => {
+    allDbAdmins.some(admin => {
       admin.profile.email === adminEmail;
     })
   ) {
