@@ -229,15 +229,6 @@ export class TruckDetailsComponent implements OnInit, OnDestroy {
    * @param truck
    */
   resetTruck() {
-    if (this.order.truck.hasBeenReset) {
-      this.notification.notify({
-        body: "This truck has already been reset once ",
-        title: "Operation forbidden",
-        alert_type: "error",
-        duration: 2000,
-      });
-      return;
-    }
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       role: "dialog",
       data:
@@ -259,7 +250,6 @@ export class TruckDetailsComponent implements OnInit, OnDestroy {
             },
           };
           this.order.truck.stage = 1;
-          this.order.truck.hasBeenReset = true;
           this.orderservice
             .updateorder(
               this.order.Id,
