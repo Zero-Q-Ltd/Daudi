@@ -119,7 +119,7 @@ function adminExists(adminEmail: string): Admin | null {
 function updateAdminFiields(qbAdmin: Admin, dbAdmin: Admin): Admin {
   dbAdmin.profile = qbAdmin.profile;
   dbAdmin.Active = qbAdmin.Active;
-  return qbAdmin;
+  return dbAdmin;
 }
 
 function convertToDaudiadmin(
