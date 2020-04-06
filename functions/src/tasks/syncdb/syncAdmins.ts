@@ -17,17 +17,17 @@ export function syncAdmins(qbo: QuickBooks, omcId: string) {
   /**
    * Limit to 1000 customers for every sync operation
    */
-  return qbo.findEmployees([{ Active: [true, false] }]).then(employees => {
+  return qbo.findEmployees([{ Active: [true, false] }]).then((employees) => {
     const alladmins: Array<Employee> = employees.QueryResponse.Employee;
     const batchwrite = firestore().batch();
 
     return Promise.all(
-      alladmins.map(employee => {
+      alladmins.map((employee) => {
         const qbAdmin = convertToDaudiadmin(employee, omcId, qbo.companyid);
         /**
          * make sure that the admin doesn't exist before creating
          */
-        return getallAdmins().then(admins => {
+        return getallAdmins().then((admins) => {
           allDbAdmins = toArray(emptyadmin, admins);
           /**
            * Update currently existing Admins
@@ -39,9 +39,7 @@ export function syncAdmins(qbo: QuickBooks, omcId: string) {
              * only update some fields
              */
             return batchwrite.update(
-              firestore()
-                .collection("admins")
-                .doc(qbAdmin.Id),
+              firestore().collection("admins").doc(qbAdmin.Id),
               updateAdminFiields(qbAdmin, adminexists)
             );
           } else if (qbAdmin.profile.email) {
@@ -57,9 +55,9 @@ export function syncAdmins(qbo: QuickBooks, omcId: string) {
                 email: qbAdmin.profile.email,
                 emailVerified: false,
                 disabled: false,
-                displayName: qbAdmin.profile.name
+                displayName: qbAdmin.profile.name,
               })
-              .then(result => {
+              .then((result) => {
                 /**
                  * Commit for a batch write to Daudi
                  */
@@ -67,13 +65,11 @@ export function syncAdmins(qbo: QuickBooks, omcId: string) {
                 console.log(result);
                 qbAdmin.profile.uid = result.uid;
                 return batchwrite.set(
-                  firestore()
-                    .collection("admins")
-                    .doc(result.uid),
+                  firestore().collection("admins").doc(result.uid),
                   qbAdmin
                 );
               })
-              .catch(err => {
+              .catch((err) => {
                 console.info("error creating account for");
                 console.info(qbAdmin.profile.email);
                 /**
@@ -81,17 +77,15 @@ export function syncAdmins(qbo: QuickBooks, omcId: string) {
                  */
                 return auth()
                   .getUserByEmail(qbAdmin.profile.email)
-                  .then(user => {
+                  .then((user) => {
                     /**
                      * Update the database and add the user
                      * delete any information that should not be overwritten
                      */
                     // delete qbAdmin.profile;
                     // delete qbAdmin.config;
-                    return batchwrite.update(
-                      firestore()
-                        .collection("admins")
-                        .doc(user.uid),
+                    return batchwrite.set(
+                      firestore().collection("admins").doc(user.uid),
                       qbAdmin
                     );
                   });
@@ -102,7 +96,7 @@ export function syncAdmins(qbo: QuickBooks, omcId: string) {
           }
         });
       })
-    ).then(res => {
+    ).then((res) => {
       return batchwrite.commit();
     });
   });
@@ -110,11 +104,11 @@ export function syncAdmins(qbo: QuickBooks, omcId: string) {
 
 function adminExists(adminEmail: string): Admin | null {
   if (
-    allDbAdmins.some(admin => {
+    allDbAdmins.some((admin) => {
       admin.profile.email === adminEmail;
     })
   ) {
-    return allDbAdmins.filter(admin => {
+    return allDbAdmins.filter((admin) => {
       admin.profile.email === adminEmail;
     })[0];
   } else {
@@ -143,7 +137,7 @@ function convertToDaudiadmin(
             Id: "",
             CountrySubDivisionCode: "",
             Line1: "",
-            PostalCode: ""
+            PostalCode: "",
           },
       bio: null,
       dob: employee.BirthDate ? employee.BirthDate : "",
@@ -156,7 +150,7 @@ function convertToDaudiadmin(
       photoURL: null,
       uid: null,
       name: employee.DisplayName,
-      email: employee.PrimaryEmailAddr ? employee.PrimaryEmailAddr.Address : ""
+      email: employee.PrimaryEmailAddr ? employee.PrimaryEmailAddr.Address : "",
     },
 
     config: {
@@ -164,30 +158,30 @@ function convertToDaudiadmin(
       level: null,
       qbo: {
         QbId: employee.Id,
-        companyid: companyid
+        companyid: companyid,
       },
       approvedby: deepCopy(EmptyAssociatedUser),
       app: {
-        depotid: null
+        depotid: null,
       },
       fcm: {
         subscriptions: {
           payment: null,
-          truck: null
+          truck: null,
         },
         tokens: {
           apk: null,
-          web: null
-        }
+          web: null,
+        },
       },
-      type: null
+      type: null,
     },
     Active: employee.Active,
     Id: employee.EmployeeNumber ? employee.EmployeeNumber : "",
     status: {
       online: false,
-      time: new Date()
-    }
+      time: new Date(),
+    },
   };
   return newadmin;
 }
@@ -195,7 +189,5 @@ function convertToDaudiadmin(
 function getallAdmins() {
   //`settings.fcm.payment.live`, '===', true
   // return firestore().collection('admins').get();
-  return firestore()
-    .collection("admins")
-    .get();
+  return firestore().collection("admins").get();
 }

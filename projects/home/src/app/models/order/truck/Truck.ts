@@ -18,7 +18,6 @@ export interface TruckEntry {
 export interface Truck {
   stage: typeof TruckStages[keyof typeof TruckStages];
   compartmentCount: number;
-  hasBeenReset: boolean;
   driverdetail: {
     name: string;
     id: string;
@@ -33,14 +32,13 @@ export interface Truck {
 export const emptytruck: Truck = {
   stage: null,
   compartmentCount: null,
-  hasBeenReset: false,
   driverdetail: {
     id: null,
     name: null,
-    phone: null
+    phone: null,
   },
   truckdetail: {
-    numberplate: null
+    numberplate: null,
   },
-  compartments: []
+  compartments: [],
 };

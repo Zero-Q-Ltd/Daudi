@@ -1,7 +1,7 @@
-import { MyTimestamp } from '../../../firestore/firestoreTypes';
-import { AssociatedUser } from '../../admin/AssociatedUser';
-import { Compartment } from './Compartment';
-import { TruckStages } from './TruckStages';
+import { MyTimestamp } from "../../../firestore/firestoreTypes";
+import { AssociatedUser } from "../../admin/AssociatedUser";
+import { Compartment } from "./Compartment";
+import { TruckStages } from "./TruckStages";
 
 export interface Expiry {
   timeCreated: Date;
@@ -17,12 +17,11 @@ export interface TruckEntry {
 }
 
 export interface Truck {
-  stage: (typeof TruckStages)[keyof typeof TruckStages];
+  stage: typeof TruckStages[keyof typeof TruckStages];
   compartmentCount: number;
-  hasBeenReset: boolean;
   driverdetail: {
-    name: string,
-    id: string,
+    name: string;
+    id: string;
     phone: string;
   };
   truckdetail: {
@@ -34,14 +33,13 @@ export interface Truck {
 export const emptytruck: Truck = {
   stage: null,
   compartmentCount: null,
-  hasBeenReset: false,
   driverdetail: {
     id: null,
     name: null,
-    phone: null
+    phone: null,
   },
   truckdetail: {
-    numberplate: null
+    numberplate: null,
   },
-  compartments: []
+  compartments: [],
 };
