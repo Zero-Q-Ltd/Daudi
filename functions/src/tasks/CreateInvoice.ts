@@ -18,7 +18,7 @@ export function CreateInvoice(
 ) {
   return qbo
     .createInvoice(new QboOrder(order, config).QboOrder)
-    .then(createResult => {
+    .then((createResult) => {
       /**
        * Only send sn SMS when invoice creation is complete
        */
@@ -31,9 +31,10 @@ export function CreateInvoice(
       return qbo
         .findPayments([
           { field: "CustomerRef", value: order.customer.QbId, operator: "=" },
-          { field: "limit", value: 20 }
+          { field: "limit", value: 20 },
         ])
-        .then(value => {
+        .then((value) => {
+          //Sum up the totals for all the unused payments
           const queriedpayments =
             (value.QueryResponse.Payment as Payment[]) || [];
           const totalUnappliedPayments = queriedpayments.reduce(
@@ -61,7 +62,7 @@ export function CreateInvoice(
             /**
              * serial process each payment so as to avoid concurrecy access errors from qbo
              */
-            queriedpayments.forEach(async payment => {
+            queriedpayments.map(async (payment) => {
               /**
                * Escape early in case this payment has already been fully used
                * This is neccessary because we cannt filter unused payments from qbo
@@ -71,15 +72,15 @@ export function CreateInvoice(
                 /**
                  * make sure we dont overpay
                  */
-                if (unapplied < InvoiceResult.TotalAmt) {
+                if (unapplied <= InvoiceResult.TotalAmt) {
                   payment.Line.push({
                     Amount: payment.UnappliedAmt,
                     LinkedTxn: [
                       {
                         TxnId: InvoiceResult.Id,
-                        TxnType: "Invoice"
-                      }
-                    ]
+                        TxnType: "Invoice",
+                      },
+                    ],
                   });
                   await qbo.updatePayment(payment);
                 } else if (!escapeLoop) {
@@ -91,9 +92,9 @@ export function CreateInvoice(
                     LinkedTxn: [
                       {
                         TxnId: InvoiceResult.Id,
-                        TxnType: "Invoice"
-                      }
-                    ]
+                        TxnType: "Invoice",
+                      },
+                    ],
                   });
                   escapeLoop = true;
                   await qbo.updatePayment(payment);
@@ -107,21 +108,21 @@ export function CreateInvoice(
               user: {
                 adminId: null,
                 date: new Date(),
-                name: "QBO"
-              }
+                name: "QBO",
+              },
             };
 
             return Promise.all([
               ordersms(order, omcId),
               validOrderUpdate(order, omcId),
-              updateOrder(order, omcId)
+              updateOrder(order, omcId),
             ]);
           } else if (totalUnappliedPayments > 0) {
             console.log("Not enough money to pay for invoice!!");
             /**
              * serial process each payment so as to avoid concurrecy access errors from qbo
              */
-            queriedpayments.forEach(async payment => {
+            queriedpayments.forEach(async (payment) => {
               /**
                * Since we're sure the total payments cannot exceed the invoice amount, then we're also sure the unapplied amount cannot, therefore apply
                * every available penny
@@ -132,9 +133,9 @@ export function CreateInvoice(
                   LinkedTxn: [
                     {
                       TxnId: InvoiceResult.Id,
-                      TxnType: "Invoice"
-                    }
-                  ]
+                      TxnType: "Invoice",
+                    },
+                  ],
                 });
               }
               await qbo.updatePayment(payment);
@@ -147,8 +148,8 @@ export function CreateInvoice(
               sendEmail({
                 InvoiceId: InvoiceResult.Id,
                 qbo,
-                allowed: order.notifications.email
-              }) as any
+                allowed: order.notifications.email,
+              }) as any,
             ]);
           } else {
             console.log("Company doesn't have unused payments");
@@ -159,8 +160,8 @@ export function CreateInvoice(
               sendEmail({
                 InvoiceId: InvoiceResult.Id,
                 qbo,
-                allowed: order.notifications.email
-              }) as any
+                allowed: order.notifications.email,
+              }) as any,
             ]);
           }
         });
