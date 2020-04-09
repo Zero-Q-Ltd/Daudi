@@ -3,7 +3,12 @@ import { AssociatedUser, EmptyAssociatedUser } from "../admin/AssociatedUser";
 import { CustomerDetail } from "../customer/CustomerDetail";
 import { FuelType } from "../fuel/FuelType";
 import { OrderFuelConfig } from "./FuelConfig";
-import { EmptyGenericStage, EmptyGenericTruckStage, GenericStage, GenericTruckStage } from "./GenericStage";
+import {
+  EmptyGenericStage,
+  EmptyGenericTruckStage,
+  GenericStage,
+  GenericTruckStage,
+} from "./GenericStage";
 import { OrderStages } from "./OrderStages";
 import { emptytruck, Truck } from "./truck/Truck";
 import { TruckStages } from "./truck/TruckStages";
@@ -12,33 +17,33 @@ export interface Order {
   Id: string; // used to temporarily store the key, used later for looping
   customer: CustomerDetail;
   QbConfig: {
-    InvoiceId: string,
-    InvoiceNumber: string,
-    EstimateId: string,
-    EstimateNumber: string,
+    InvoiceId: string;
+    InvoiceNumber: string;
+    EstimateId: string;
+    EstimateNumber: string;
     /**
      * depots are created in qbo as departments
      * The departments Id's must be referenced
      */
-    departmentId: string,
+    departmentId: string;
   };
-  stage: (typeof OrderStages)[keyof typeof OrderStages];
+  stage: typeof OrderStages[keyof typeof OrderStages];
   origin: string;
   notifications: {
-    sms: boolean,
+    sms: boolean;
     email: boolean;
   };
   config: {
     depot: {
-      name: string,
+      name: string;
       id: string;
     };
   };
   error?: {
-    status: boolean,
-    errorCode: string,
-    origin: string,
-    timestamp: Date,
+    status: boolean;
+    errorCode: string;
+    origin: string;
+    timestamp: Date;
     errorDetail: string;
   };
   deliveryNote: {
@@ -49,7 +54,7 @@ export interface Order {
   frozen: boolean;
   loaded: boolean;
   fuel: {
-    [key in FuelType]: OrderFuelConfig
+    [key in FuelType]: OrderFuelConfig;
   };
   /**
    * Keeps a reference to the payments
@@ -100,7 +105,7 @@ const initorderfuel: OrderFuelConfig = {
     taxableAmnt: 0,
   },
   entries: [],
-  entryIds: []
+  entryIds: [],
 };
 
 export const emptyorder: Order = {
@@ -108,14 +113,14 @@ export const emptyorder: Order = {
   frozen: false,
   deliveryNote: {
     photos: [],
-    value: null
+    value: null,
   },
   customer: {
     contact: [],
     name: null,
     Id: null,
     QbId: null,
-    krapin: null
+    krapin: null,
   },
   paymentDetail: {},
   QbConfig: {
@@ -123,33 +128,33 @@ export const emptyorder: Order = {
     EstimateNumber: null,
     InvoiceNumber: null,
     InvoiceId: null,
-    departmentId: null
+    departmentId: null,
   },
   truck: deepCopy(emptytruck),
   notifications: {
-    sms: null,
-    email: null
+    sms: false,
+    email: false,
   },
   config: {
     depot: {
       id: null,
-      name: null
-    }
+      name: null,
+    },
   },
   printStatus: {
     LoadingOrder: {
       status: null,
-      user: null
+      user: null,
     },
     gatepass: {
       status: null,
-      user: null
+      user: null,
     },
   },
   seals: {
     broken: [],
     range: [],
-    user: deepCopy(EmptyAssociatedUser)
+    user: deepCopy(EmptyAssociatedUser),
   },
   truckStageData: {
     0: deepCopy(EmptyGenericTruckStage),
@@ -171,6 +176,6 @@ export const emptyorder: Order = {
   fuel: {
     pms: deepCopy(initorderfuel),
     ago: deepCopy(initorderfuel),
-    ik: deepCopy(initorderfuel)
-  }
+    ik: deepCopy(initorderfuel),
+  },
 };
