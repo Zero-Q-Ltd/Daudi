@@ -3,6 +3,8 @@
 This is a project the encompasses CRM, accounting and Sales app into one bundle.
 All logic is initiated by loading fuel into quickbooks
 
+
+St
 ![Logic Flow](/documentation/flowchart.png)
 
 How do you load fuel into qbo? Glad you asked.

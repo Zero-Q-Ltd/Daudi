@@ -80,7 +80,7 @@ exports.customerUpdated = functions.firestore
     } else {
       markAsRunning(eventID);
       // A new customer has been updated
-      const customerbefore = snap.before.data();
+      const customerbefore = snap..data();
       if (!customerbefore) {
         return true;
       }
