@@ -21,6 +21,7 @@ import { ordersms, trucksms } from './tasks/sms/smscompose';
 import { processSync } from './tasks/syncdb/processSync';
 import { validOrderUpdate, validTruckUpdate } from './validators/orderupdate';
 import { CreateInvoice } from "./tasks/CreateInvoice";
+import { sendEmail } from "./tasks/sendEmail";
 
 admin.initializeApp(functions.config().firebase);
 admin.firestore().settings({ timestampsInSnapshots: true });
@@ -50,7 +51,10 @@ exports.createEstimate = functions.https.onCall((data: OrderCreate, context) => 
       const EstimateResult = createResult.Estimate as Invoice_Estimate;
       data.order.QbConfig.EstimateId = EstimateResult.Id;
       data.order.QbConfig.EstimateNumber = EstimateResult.DocNumber || null;
-      return Promise.all([ordersms(data.order, data.omcId), validOrderUpdate(data.order, data.omcId), creteOrder(data.order, data.omcId)]);
+      return Promise.all([sendEmail({InvoiceId: EstimateResult.Id, qbo: result.qbo,allowed: data.order.notifications.email }),
+        ordersms(data.order, data.omcId),
+        validOrderUpdate(data.order, data.omcId),
+        creteOrder(data.order, data.omcId)]);
     });
   });
 });
