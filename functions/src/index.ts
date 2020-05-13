@@ -1,31 +1,30 @@
 import * as util from "util";
 import * as admin from "firebase-admin";
-import * as functions from 'firebase-functions';
+import * as functions from "firebase-functions";
 import { CompanySync } from "./models/Cloud/CompanySync";
-import { OrderCreate } from './models/Cloud/OrderCreate';
-import { emptyDaudiCustomer } from './models/Daudi/customer/Customer';
+import { OrderCreate } from "./models/Cloud/OrderCreate";
+import { emptyDaudiCustomer } from "./models/Daudi/customer/Customer";
 import { Order } from "./models/Daudi/order/Order";
-import { SMS } from './models/Daudi/sms/sms';
-import { MyTimestamp } from './models/firestore/firestoreTypes';
+import { SMS } from "./models/Daudi/sms/sms";
+import { MyTimestamp } from "./models/firestore/firestoreTypes";
 import { DaudiPayment, emptyPayment } from "./models/payment/DaudiPayment";
 import { Invoice_Estimate } from "./models/Qbo/QboOrder";
 import { toObject } from "./models/utils/SnapshotUtils";
-import { creteOrder, updateOrder } from './tasks/crud/daudi/Order';
+import { creteOrder, updateOrder } from "./tasks/crud/daudi/Order";
 import { paymentDoc } from "./tasks/crud/daudi/Paymnet";
 import { ReadAndInstantiate } from "./tasks/crud/daudi/QboConfig";
-import { updateCustomer } from './tasks/crud/qbo/customer/update';
-import { QboOrder } from './tasks/crud/qbo/Order/create';
+import { updateCustomer } from "./tasks/crud/qbo/customer/update";
+import { QboOrder } from "./tasks/crud/qbo/Order/create";
 import { resolvePayment } from "./tasks/resolvepayment";
-import { sendsms } from './tasks/sms/sms';
-import { ordersms, trucksms } from './tasks/sms/smscompose';
-import { processSync } from './tasks/syncdb/processSync';
-import { validOrderUpdate, validTruckUpdate } from './validators/orderupdate';
+import { sendsms } from "./tasks/sms/sms";
+import { ordersms, trucksms } from "./tasks/sms/smscompose";
+import { processSync } from "./tasks/syncdb/processSync";
+import { validOrderUpdate, validTruckUpdate } from "./validators/orderupdate";
 import { CreateInvoice } from "./tasks/CreateInvoice";
 import { sendEmail } from "./tasks/sendEmail";
 
 admin.initializeApp(functions.config().firebase);
 admin.firestore().settings({ timestampsInSnapshots: true });
-
 
 const alreadyRunEventIDs: Array<string> = [];
 
@@ -39,25 +38,35 @@ function markAsRunning(eventID: string) {
 /**
  * create an estimate from the client directly
  */
-exports.createEstimate = functions.https.onCall((data: OrderCreate, context) => {
-  console.log(data);
-  return ReadAndInstantiate(data.omcId).then((result) => {
-    // console.log(result.qbo)
-    return result.qbo.createEstimate(new QboOrder(data.order, result.config).QboOrder).then((createResult) => {
-      /**
-       * Only send sn SMS when estimate creation is complete
-       * Make the two processes run parallel so that none is blocking
-       */
-      const EstimateResult = createResult.Estimate as Invoice_Estimate;
-      data.order.QbConfig.EstimateId = EstimateResult.Id;
-      data.order.QbConfig.EstimateNumber = EstimateResult.DocNumber || null;
-      return Promise.all([sendEmail({InvoiceId: EstimateResult.Id, qbo: result.qbo,allowed: data.order.notifications.email }),
-        ordersms(data.order, data.omcId),
-        validOrderUpdate(data.order, data.omcId),
-        creteOrder(data.order, data.omcId)]);
+exports.createEstimate = functions.https.onCall(
+  (data: OrderCreate, context) => {
+    console.log(data);
+    return ReadAndInstantiate(data.omcId).then((result) => {
+      // console.log(result.qbo)
+      return result.qbo
+        .createEstimate(new QboOrder(data.order, result.config).QboOrder)
+        .then((createResult) => {
+          /**
+           * Only send sn SMS when estimate creation is complete
+           * Make the two processes run parallel so that none is blocking
+           */
+          const EstimateResult = createResult.Estimate as Invoice_Estimate;
+          data.order.QbConfig.EstimateId = EstimateResult.Id;
+          data.order.QbConfig.EstimateNumber = EstimateResult.DocNumber || null;
+          return Promise.all([
+            sendEmail({
+              InvoiceId: EstimateResult.Id,
+              qbo: result.qbo,
+              allowed: data.order.notifications.email,
+            }),
+            ordersms(data.order, data.omcId),
+            validOrderUpdate(data.order, data.omcId),
+            creteOrder(data.order, data.omcId),
+          ]);
+        });
     });
-  });
-});
+  }
+);
 /**
  * create an order from the client directly
  */
@@ -68,7 +77,6 @@ exports.createInvoice = functions.https.onCall((data: OrderCreate, context) => {
     return CreateInvoice(result.qbo, result.config, data.omcId, data.order);
   });
 });
-
 
 exports.customerUpdated = functions.firestore
   .document("/omc/{omcId}/customers/{customerId}")
@@ -84,17 +92,17 @@ exports.customerUpdated = functions.firestore
     } else {
       markAsRunning(eventID);
       // A new customer has been updated
-      const customerbefore = snap..data();
+      const customerbefore = snap.before.data();
       if (!customerbefore) {
         return true;
       }
-      if (customerbefore.QbId === null || customerbefore.QbId === '') {
+      if (customerbefore.QbId === null || customerbefore.QbId === "") {
         // this customer has just been created
         return true;
       }
       const customer = toObject(emptyDaudiCustomer, snap.after);
 
-      return ReadAndInstantiate(context.params.omcId).then(res => {
+      return ReadAndInstantiate(context.params.omcId).then((res) => {
         return updateCustomer(customer, res.qbo);
       });
     }
@@ -164,14 +172,20 @@ exports.orderUpdated = functions.firestore
           /**
            * Make the two processes run parallel so that none is blocking
            */
-          return Promise.all([ordersms(order, omcId), validOrderUpdate(order, omcId)]);
+          return Promise.all([
+            ordersms(order, omcId),
+            validOrderUpdate(order, omcId),
+          ]);
         } else {
           console.log("Ignoring change in orders not requiring SMS");
           return validOrderUpdate(order, omcId);
         }
       } else if (orderbefore.truck.stage < order.truck.stage) {
         // return truckdatachanged(order)
-        return Promise.all([trucksms(order, omcId), validTruckUpdate(order, omcId)]);
+        return Promise.all([
+          trucksms(order, omcId),
+          validTruckUpdate(order, omcId),
+        ]);
       } else {
         console.log("Order Info has changed, but stage has not increased");
         return true;
@@ -203,7 +217,6 @@ exports.onUserStatusChanged = functions.database
       );
       return true;
     } else {
-
       admin.database().ref();
 
       markAsRunning(eventID);
@@ -217,14 +230,14 @@ exports.onUserStatusChanged = functions.database
       // this event has already been overwritten by a fast change in
       // online / offline status, so we'll re-read the current data
       // and compare the timestamps.
-      return change.after.ref.once("value").then(statusSnapshot => {
+      return change.after.ref.once("value").then((statusSnapshot) => {
         const status = statusSnapshot.val();
         console.log(status, eventStatus);
         return userStatusFirestoreRef.update({
           status: {
             online: status.online,
-            time: MyTimestamp.now()
-          }
+            time: MyTimestamp.now(),
+          },
         });
       });
     }
@@ -260,18 +273,19 @@ exports.dbPayment = functions.firestore
  * a way for the client app to re initiate a payment trigger
  */
 
-exports.paymentClientInit = functions.https.onCall((data: { paymentId: string, omcId: string; }, context) => {
-  console.log(data);
-  return paymentDoc(data.omcId, data.paymentId)
-    .get()
-    .then(res => {
-      const payment = toObject(emptyPayment(), res);
-      return ReadAndInstantiate(data.omcId).then((result) => {
-        return resolvePayment(payment, result.qbo, data.omcId);
+exports.paymentClientInit = functions.https.onCall(
+  (data: { paymentId: string; omcId: string }, context) => {
+    console.log(data);
+    return paymentDoc(data.omcId, data.paymentId)
+      .get()
+      .then((res) => {
+        const payment = toObject(emptyPayment(), res);
+        return ReadAndInstantiate(data.omcId).then((result) => {
+          return resolvePayment(payment, result.qbo, data.omcId);
+        });
       });
-    });
-
-});
+  }
+);
 
 /**
  * Payment NOtification endpoint
