@@ -1,3 +1,23 @@
-<p>
-  COMING SOON....
-</p>
+<div>
+  <mat-form-field>
+    <mat-label>Select the search criteria</mat-label>
+    <mat-select [(value)]="selectedCriteria">
+      <mat-option *ngFor="let option of searchCriteria" [value]="option.id">
+        {{option.name}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <button mat-fab aria-label="Search" (click)='search()'>
+    <mat-icon>search</mat-icon>
+  </button>
+  <div [ngSwitch]="selectedCriteria">
+    <div *ngSwitchCase="0">
+      <mat-form-field>
+        <input matInput placeholder="Choose a date" [satDatepicker]="picker" [value]="date">
+        <sat-datepicker #picker [rangeMode]="true"></sat-datepicker>
+        <sat-datepicker-toggle matSuffix [for]="picker"></sat-datepicker-toggle>
+      </mat-form-field>
+    </div>
+    <div *ngSwitchCase="1">Coming Soon</div>
+  </div>
+</div>

@@ -74,7 +74,7 @@ export function CreateInvoice(
                 /**
                  * make sure we dont overpay
                  */
-                if (unapplied < InvoiceResult.TotalAmt) {
+                if (unapplied <= InvoiceResult.TotalAmt) {
                   payment.Line.push({
                     Amount: payment.UnappliedAmt,
                     LinkedTxn: [

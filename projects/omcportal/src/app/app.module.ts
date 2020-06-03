@@ -68,6 +68,8 @@ import { OrdersService } from "./services/orders.service";
 import { PricesService } from "./services/prices.service";
 import { NotificationComponent } from "./shared/components/notification/notification.component";
 import { SharedModule } from "./shared/shared.module";
+import { SatDatepickerModule, SatNativeDateModule } from 'saturn-datepicker';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 
 const firebaseConfig = {
   apiKey: "AIzaSyD6abjtAtMf2kK7YEtgpyKqT_EPkHqjYXo",
@@ -103,8 +105,9 @@ const firebaseConfig = {
       apiKey: "AIzaSyD73FGSNb0x-4dXOTksPjtl4RwowhzYqSs",
       libraries: ["places"]
     }),
-    // SatDatepickerModule,
-    // SatNativeDateModule,
+    SatDatepickerModule,
+    SatNativeDateModule,
+    MatDatepickerModule,
     SharedModule
   ],
   declarations: [
@@ -195,4 +198,4 @@ const firebaseConfig = {
     EntryAssignComponent
   ]
 })
-export class AppModule {}
+export class AppModule { }

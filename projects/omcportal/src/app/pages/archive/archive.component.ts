@@ -23,10 +23,13 @@ export class ArchiveComponent implements OnInit, OnDestroy {
   dataobject = {};
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
 
+  searchCriteria: Array<{ id: number, name: string }> = [{ name: 'Date', id: 0 }, { name: 'Customer', id: 1 }]
+  selectedCriteria: number
+
+  // selectedDates:
   constructor(
     private dialog: MatDialog,
     private snackBar: MatSnackBar) {
-    this.changedatamodel(0);
   }
 
   initvalues() {
@@ -44,21 +47,16 @@ export class ArchiveComponent implements OnInit, OnDestroy {
 
   }
 
-  changedatamodel(index: number) {
-    switch (index) {
-      case 0:
-        this.dataobject = { ...emptyorder };
-        this.initvalues();
-        break;
-      case 1:
-        this.dataobject = { ...emptytruck };
-        this.initvalues();
-        break;
-    }
-  }
 
   search() {
+    switch (this.selectedCriteria) {
+      case 0:
 
+        break;
+
+      default:
+        break;
+    }
   }
 
 }
