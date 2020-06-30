@@ -70,6 +70,7 @@ import { NotificationComponent } from "./shared/components/notification/notifica
 import { SharedModule } from "./shared/shared.module";
 import { SatDatepickerModule, SatNativeDateModule } from 'saturn-datepicker';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { ResultsTableComponent } from './pages/archive/results-table/results-table.component';
 
 const firebaseConfig = {
   apiKey: "AIzaSyD6abjtAtMf2kK7YEtgpyKqT_EPkHqjYXo",
@@ -165,7 +166,8 @@ const firebaseConfig = {
     PriceComparisonComponent,
     TransferComponent,
     EntrySelectorComponent,
-    EntryAssignComponent
+    EntryAssignComponent,
+    ResultsTableComponent
   ],
   providers: [
     AngularFireAuth,
@@ -180,7 +182,7 @@ const firebaseConfig = {
     { provide: BUCKET, useValue: "daudi-4.appspot.com" }
   ],
   bootstrap: [AppComponent],
-  exports: [PipeModuleModule, SharedModule, EntrySelectorComponent],
+  exports: [PipeModuleModule, SharedModule, EntrySelectorComponent, ResultsTableComponent],
   entryComponents: [
     NotificationComponent,
     ConfirmDialogComponent,

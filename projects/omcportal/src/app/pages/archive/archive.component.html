@@ -12,12 +12,19 @@
   </button>
   <div [ngSwitch]="selectedCriteria">
     <div *ngSwitchCase="0">
+      <mat-slide-toggle [(ngModel)]="searchRange">Search Range</mat-slide-toggle>
       <mat-form-field>
-        <input matInput placeholder="Choose a date" [satDatepicker]="picker" [value]="date">
-        <sat-datepicker #picker [rangeMode]="true"></sat-datepicker>
+        <input matInput placeholder="Choose a date" [satDatepicker]="picker" formControlName="date">
+        <sat-datepicker #picker [rangeMode]="searchRange"></sat-datepicker>
         <sat-datepicker-toggle matSuffix [for]="picker"></sat-datepicker-toggle>
       </mat-form-field>
     </div>
     <div *ngSwitchCase="1">Coming Soon</div>
+    <div>
+      <div *ngIf="loadingordders" class="loading-shade">
+        <mat-spinner></mat-spinner>
+        <app-results-table></app-results-table>
+      </div>
+    </div>
   </div>
 </div>
