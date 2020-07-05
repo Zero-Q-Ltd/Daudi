@@ -5,6 +5,8 @@ import { MatSnackBar } from "@angular/material/snack-bar";
 import { ReplaySubject } from "rxjs";
 import { emptyorder } from "../../models/Daudi/order/Order";
 import { emptytruck } from "../../models/Daudi/order/truck/Truck";
+import { CoreService } from 'app/services/core/core.service';
+import { OrdersService } from 'app/services/orders.service';
 interface SatDatepickerRangeValue<D> {
   begin: D | null;
   end: D | null;
@@ -30,13 +32,15 @@ export class ArchiveComponent implements OnInit, OnDestroy {
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
 
   searchCriteria: Array<{ id: number, name: string }> = [{ name: 'Date', id: 0 }, { name: 'Customer', id: 1 }, { name: 'Batch#', id: 2 }]
-  selectedCriteria: number
+  selectedCriteria: number = 0
   loadingordders = true;
 
   // selectedDates:
   constructor(
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
+    private core: CoreService,
+    private ordersService: OrdersService,
     fb: FormBuilder) {
     this.dateForm = fb.group({
       date: [{ begin: new Date(2018, 7, 5), end: new Date(2018, 7, 25) }]
@@ -62,7 +66,12 @@ export class ArchiveComponent implements OnInit, OnDestroy {
   search() {
     switch (this.selectedCriteria) {
       case 0:
-
+        let start = this.dateForm.controls["date.begin"]
+        let stop = this.dateForm.controls["date.end"]
+        console.log(start, stop)
+        this.ordersService.searchDate(start, stop, this.core.omcId).get().then(val => {
+          console.log(val)
+        })
         break;
 
       default:
