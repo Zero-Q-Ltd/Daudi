@@ -1,39 +1,5 @@
 @import "./../../admin";
-
-.table thead th {
-  background-color: $mk-primary;
-  border-color: $mk-primary;
-  color: $mk-white;
-  vertical-align: middle;
-  text-align: center;
-}
-
-.color-black {
-  color: $mk-black;
-}
-
-.table th,
-.table td {
-  padding: 0.75rem;
-  vertical-align: middle;
-  text-align: center;
-  border-top: 1px solid rgba($mk-black, 0.1);
-}
-
-.container-fluid {
-  // padding-top: 60px;
-}
-
-.btn-blue {
-  display: block;
-  left: 0;
-  top: 0;
-  width: 100%;
-  background-color: $mk-primary;
-  color: $mk-white;
-  font-weight: bold;
-  // border-radius: .0;
-}
+@import "./../orders-table/orders-table.component.scss";
 
 .tree-invisible {
   display: none;
