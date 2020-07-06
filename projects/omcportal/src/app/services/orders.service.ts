@@ -1,9 +1,9 @@
-import {Injectable} from "@angular/core";
-import {AngularFirestore} from "@angular/fire/firestore";
-import {AngularFireFunctions} from "@angular/fire/functions";
-import {OrderCreate} from "app/models/Cloud/OrderCreate";
-import {Order} from "app/models/Daudi/order/Order";
-import {BehaviorSubject} from "rxjs";
+import { Injectable } from "@angular/core";
+import { AngularFirestore } from "@angular/fire/firestore";
+import { AngularFireFunctions } from "@angular/fire/functions";
+import { OrderCreate } from "app/models/Cloud/OrderCreate";
+import { Order } from "app/models/Daudi/order/Order";
+import { BehaviorSubject } from "rxjs";
 
 @Injectable({
   providedIn: "root"
@@ -86,6 +86,15 @@ export class OrdersService {
   getOrder(orderid: string, omcId: string) {
     return this.ordersCollection(omcId)
       .doc(orderid);
+  }
+  searchDate(start: any, end: any, omcId: string) {
+    return this.ordersCollection(omcId)
+      .where("orderStageData.1.date", ">=", start)
+      .where("orderStageData.1.date", "<=", end)
+      .where("stage", ">", 3)
+  }
+  searchOrders(paramName: string, value: string, omcId: string) {
+    return this.ordersCollection(omcId)
   }
 
   ordersCollection(omcId: string) {

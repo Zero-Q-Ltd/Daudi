@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { Order } from 'app/models/Daudi/order/Order';
 import { MatDialog } from '@angular/material/dialog';
@@ -18,7 +18,8 @@ import { Truck } from 'app/models/Daudi/order/truck/Truck';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ResultsTableComponent implements OnInit {
-  ordersdataSource = new MatTableDataSource<Order>();
+  @Input() order: Order[]
+  ordersdataSource = new MatTableDataSource<Order>(this.order);
   typedValue: string;
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
   expandedElement = null;
