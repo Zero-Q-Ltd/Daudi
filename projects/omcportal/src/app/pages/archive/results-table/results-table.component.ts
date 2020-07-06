@@ -39,6 +39,7 @@ export class ResultsTableComponent implements OnInit {
   clickedtruck: Truck;
   stage = 1
   albums: any[] = [];
+  loadingordders = true;
 
   constructor(
     private dialog: MatDialog,

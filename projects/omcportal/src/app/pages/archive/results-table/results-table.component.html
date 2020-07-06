@@ -1,7 +1,10 @@
-<section class="container-fluid">
+<section class="container-fluid archive-page">
     <mat-card>
       <mat-card-content>
         <div class="loading-container">
+          <div *ngIf="loadingordders" class="loading-shade">
+            <mat-spinner></mat-spinner>
+          </div>
           <div class="ot-header">
             <mat-form-field appearance="legacy">
               <input
