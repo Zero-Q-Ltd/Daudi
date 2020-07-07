@@ -1,273 +1,195 @@
 <section class="container-fluid archive-page">
-    <mat-card>
-      <mat-card-content>
-        <div class="loading-container">
-          <div *ngIf="loadingordders" class="loading-shade">
-            <mat-spinner></mat-spinner>
-          </div>
-          <div class="ot-header">
-            <mat-form-field appearance="legacy">
-              <input
-                (keyup)="filterorders(typedValue)"
-                [(ngModel)]="typedValue"
-                matInput
-                placeholder="Filter"
-              />
-            </mat-form-field>
-          </div>
-          <div class="ot-container">
-            <table
-              [dataSource]="ordersdataSource"
-              class=""
-              mat-table
-              matSort
-              multiTemplateDataRows
-            >
-              <!-- ID Column -->
-              <ng-container matColumnDef="Id">
-                <th *matHeaderCellDef mat-header-cell mat-sort-header>
-                  <div [ngSwitch]="stage">
-                    <div *ngSwitchCase="1">Estimate ID</div>
-                    <div *ngSwitchDefault>Invoice ID</div>
+  <mat-card>
+    <mat-card-content>
+      <div class="loading-container">
+        <div *ngIf="loadingordders" class="loading-shade">
+          <mat-spinner></mat-spinner>
+        </div>
+        <div class="ot-header">
+          <mat-form-field appearance="legacy">
+            <input (keyup)="filterorders(typedValue)" [(ngModel)]="typedValue" matInput placeholder="Filter" />
+          </mat-form-field>
+        </div>
+        <div class="ot-container">
+          <table [dataSource]="ordersdataSource" class="" mat-table matSort multiTemplateDataRows>
+            <!-- ID Column -->
+            <ng-container matColumnDef="Id">
+              <th *matHeaderCellDef mat-header-cell mat-sort-header>
+                <div [ngSwitch]="stage">
+                  <div *ngSwitchCase="1">Estimate ID</div>
+                  <div *ngSwitchDefault>Invoice ID</div>
+                </div>
+              </th>
+              <td *matCellDef="let order" mat-cell>
+                <div [ngSwitch]="stage">
+                  <div *ngSwitchCase="1">
+                    {{ order.QbConfig.EstimateNumber }}
                   </div>
-                </th>
-                <td *matCellDef="let order" mat-cell>
-                  <div [ngSwitch]="stage">
-                    <div *ngSwitchCase="1">
-                      {{ order.QbConfig.EstimateNumber }}
-                    </div>
-                    <div *ngSwitchDefault>{{ order.QbConfig.InvoiceNumber }}</div>
-                  </div>
-                </td>
-              </ng-container>
-              <!-- Company Column -->
-              <ng-container matColumnDef="Company">
-                <th *matHeaderCellDef mat-header-cell mat-sort-header>
-                  COMPANY NAME
-                </th>
-                <td *matCellDef="let order" mat-cell>
-                  <small>{{ order.customer.QbId }}</small>
-                  | {{ order.customer.name }}
-                </td>
-              </ng-container>
-              <!-- Contact Column -->
-              <ng-container matColumnDef="Contact">
-                <th *matHeaderCellDef mat-header-cell mat-sort-header>Contact</th>
-                <td *matCellDef="let order" mat-cell>
-                  {{ order.customer.contact[0].name }}
-                </td>
-              </ng-container>
-              <!-- Phone Column -->
-              <ng-container matColumnDef="Phone">
-                <th *matHeaderCellDef mat-header-cell mat-sort-header>Phone</th>
-                <td *matCellDef="let order" mat-cell>
-                  <button
-                    (click)="sendSMS(order)"
-                    class="btn btn-outline-primary"
-                  >
-                    {{ order.customer.contact[0].phone }}
-                  </button>
-                </td>
-              </ng-container>
-              <!-- Time Column -->
-              <ng-container matColumnDef="Time">
-                <th *matHeaderCellDef mat-header-cell mat-sort-header>
-                  Time Created
-                </th>
-                <td *matCellDef="let order" mat-cell>
-                  {{
+                  <div *ngSwitchDefault>{{ order.QbConfig.InvoiceNumber }}</div>
+                </div>
+              </td>
+            </ng-container>
+            <!-- Company Column -->
+            <ng-container matColumnDef="Company">
+              <th *matHeaderCellDef mat-header-cell mat-sort-header>
+                COMPANY NAME
+              </th>
+              <td *matCellDef="let order" mat-cell>
+                <small>{{ order.customer.QbId }}</small>
+                | {{ order.customer.name }}
+              </td>
+            </ng-container>
+            <!-- Contact Column -->
+            <ng-container matColumnDef="Contact">
+              <th *matHeaderCellDef mat-header-cell mat-sort-header>Contact</th>
+              <td *matCellDef="let order" mat-cell>
+                {{ order.customer.contact[0].name }}
+              </td>
+            </ng-container>
+            <!-- Phone Column -->
+            <ng-container matColumnDef="Phone">
+              <th *matHeaderCellDef mat-header-cell mat-sort-header>Phone</th>
+              <td *matCellDef="let order" mat-cell>
+                <button (click)="sendSMS(order)" class="btn btn-outline-primary">
+                  {{ order.customer.contact[0].phone }}
+                </button>
+              </td>
+            </ng-container>
+            <!-- Time Column -->
+            <ng-container matColumnDef="Time">
+              <th *matHeaderCellDef mat-header-cell mat-sort-header>
+                Time Created
+              </th>
+              <td *matCellDef="let order" mat-cell>
+                {{
                     order.orderStageData["1"]?.user?.date?.toDate()
                       | date: "short"
                   }}
-                </td>
-              </ng-container>
-              <!-- Time Column -->
-              <ng-container matColumnDef="Time Approved">
-                <th *matHeaderCellDef mat-header-cell mat-sort-header>
-                  Time Approved
-                </th>
-                <td *matCellDef="let order" mat-cell>
-                  {{
+              </td>
+            </ng-container>
+            <!-- Time Column -->
+            <ng-container matColumnDef="Time Approved">
+              <th *matHeaderCellDef mat-header-cell mat-sort-header>
+                Time Approved
+              </th>
+              <td *matCellDef="let order" mat-cell>
+                {{
                     order.truckStageData["1"]?.user?.date?.toDate()
                       | date: "short"
                   }}
-                </td>
-              </ng-container>
-              <ng-container matColumnDef="User">
-                <th *matHeaderCellDef mat-header-cell mat-sort-header>User</th>
-                <td *matCellDef="let order" mat-cell>
-                  {{ order.orderStageData["1"]?.user?.name }}
-                </td>
-              </ng-container>
-              <!-- PMS Column -->
-              <ng-container matColumnDef="PMS">
-                <th *matHeaderCellDef mat-header-cell mat-sort-header>
-                  <mat-icon
-                    class="nav-icon nav-dot material-icons color-pms"
-                    matPrefix
-                    matTooltip="PMS"
-                    >local_gas_station
-                  </mat-icon>
-                </th>
-                <td *matCellDef="let order" mat-cell>
-                  {{ order.fuel.pms.qty }}
-                  <small *ngIf="order.fuel.pms.qty > 0"
-                    >@<span
-                      [ngClass]="{
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="User">
+              <th *matHeaderCellDef mat-header-cell mat-sort-header>User</th>
+              <td *matCellDef="let order" mat-cell>
+                {{ order.orderStageData["1"]?.user?.name }}
+              </td>
+            </ng-container>
+            <!-- PMS Column -->
+            <ng-container matColumnDef="PMS">
+              <th *matHeaderCellDef mat-header-cell mat-sort-header>
+                <mat-icon class="nav-icon nav-dot material-icons color-pms" matPrefix matTooltip="PMS">local_gas_station
+                </mat-icon>
+              </th>
+              <td *matCellDef="let order" mat-cell>
+                {{ order.fuel.pms.qty }}
+                <small *ngIf="order.fuel.pms.qty > 0">@<span [ngClass]="{
                         'color-danger':
                           order.fuel.pms.priceconfig.price <
                           order.fuel.pms.priceconfig.retailprice
-                      }"
-                      >{{ order.fuel.pms.priceconfig.price }}</span
-                    >
-                  </small>
-                </td>
-              </ng-container>
-              <!-- AGO Column -->
-              <ng-container matColumnDef="AGO">
-                <th *matHeaderCellDef mat-header-cell mat-sort-header>
-                  <mat-icon
-                    class="nav-icon nav-dot material-icons color-ago"
-                    matPrefix
-                    matTooltip="AGO"
-                    >local_gas_station
-                  </mat-icon>
-                </th>
-                <td *matCellDef="let order" mat-cell>
-                  {{ order.fuel.ago.qty }}
-                  <small *ngIf="order.fuel.ago.qty > 0"
-                    >@<span
-                      [ngClass]="{
+                      }">{{ order.fuel.pms.priceconfig.price }}</span>
+                </small>
+              </td>
+            </ng-container>
+            <!-- AGO Column -->
+            <ng-container matColumnDef="AGO">
+              <th *matHeaderCellDef mat-header-cell mat-sort-header>
+                <mat-icon class="nav-icon nav-dot material-icons color-ago" matPrefix matTooltip="AGO">local_gas_station
+                </mat-icon>
+              </th>
+              <td *matCellDef="let order" mat-cell>
+                {{ order.fuel.ago.qty }}
+                <small *ngIf="order.fuel.ago.qty > 0">@<span [ngClass]="{
                         'color-danger':
                           order.fuel.ago.priceconfig.price <
                           order.fuel.ago.priceconfig.retailprice
-                      }"
-                      >{{ order.fuel.ago.priceconfig.price }}</span
-                    >
-                  </small>
-                </td>
-              </ng-container>
-              <!-- IK Column -->
-              <ng-container matColumnDef="IK">
-                <th *matHeaderCellDef mat-header-cell mat-sort-header>
-                  <mat-icon
-                    class="nav-icon nav-dot material-icons color-ik"
-                    matPrefix
-                    matTooltip="IK"
-                    >local_gas_station
-                  </mat-icon>
-                </th>
-                <td *matCellDef="let order" mat-cell>
-                  {{ order.fuel.ik.qty }}
-                  <small *ngIf="order.fuel.ik.qty > 0"
-                    >@<span
-                      [ngClass]="{
+                      }">{{ order.fuel.ago.priceconfig.price }}</span>
+                </small>
+              </td>
+            </ng-container>
+            <!-- IK Column -->
+            <ng-container matColumnDef="IK">
+              <th *matHeaderCellDef mat-header-cell mat-sort-header>
+                <mat-icon class="nav-icon nav-dot material-icons color-ik" matPrefix matTooltip="IK">local_gas_station
+                </mat-icon>
+              </th>
+              <td *matCellDef="let order" mat-cell>
+                {{ order.fuel.ik.qty }}
+                <small *ngIf="order.fuel.ik.qty > 0">@<span [ngClass]="{
                         'color-danger':
                           order.fuel.ik.priceconfig.price <
                           order.fuel.ik.priceconfig.retailprice
-                      }"
-                      >{{ order.fuel.ik.priceconfig.price }}</span
-                    >
-                  </small>
-                </td>
-              </ng-container>
-              <!-- Total Column -->
-              <ng-container matColumnDef="Total">
-                <th *matHeaderCellDef mat-header-cell mat-sort-header>Total</th>
-                <td *matCellDef="let order" mat-cell>
-                  {{
+                      }">{{ order.fuel.ik.priceconfig.price }}</span>
+                </small>
+              </td>
+            </ng-container>
+            <!-- Total Column -->
+            <ng-container matColumnDef="Total">
+              <th *matHeaderCellDef mat-header-cell mat-sort-header>Total</th>
+              <td *matCellDef="let order" mat-cell>
+                {{
                     order.fuel.pms.priceconfig.total +
                       order.fuel.ago.priceconfig.total +
                       order.fuel.ik.priceconfig.total | number
                   }}
-                </td>
-              </ng-container>
-              <ng-container matColumnDef="Frozen">
-                <th *matHeaderCellDef mat-header-cell mat-sort-header>Frozen</th>
-                <td *matCellDef="let order" mat-cell>
-                  <mat-slide-toggle
-                    (toggleChange)="freezeOrder(order)"
-                    (click)="$event.stopPropagation()"
-                    [(ngModel)]="order.frozen"
-                    [disabled]="order.stage != 4"
-                    matTooltip="{{
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="Frozen">
+              <th *matHeaderCellDef mat-header-cell mat-sort-header>Frozen</th>
+              <td *matCellDef="let order" mat-cell>
+                <mat-slide-toggle (toggleChange)="freezeOrder(order)" (click)="$event.stopPropagation()"
+                  [(ngModel)]="order.frozen" [disabled]="order.stage != 4" matTooltip="{{
                       order.stage != 4
                         ? 'You can only freeze an order after truck approval'
                         : ''
-                    }}"
-                  >
-                  </mat-slide-toggle>
-                </td>
-              </ng-container>
-              <!-- Status Column -->
-            
-              <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
-              <ng-container matColumnDef="expandedDetail">
-                <td
-                  *matCellDef="let order"
-                  [attr.colspan]="ordercolumns.length"
-                  mat-cell
-                >
-                  <mat-card
-                    *ngIf="expandedElement"
-                    [@detailExpand]="
+                    }}">
+                </mat-slide-toggle>
+              </td>
+            </ng-container>
+            <!-- Status Column -->
+
+            <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
+            <ng-container matColumnDef="expandedDetail">
+              <td *matCellDef="let order" [attr.colspan]="ordercolumns.length" mat-cell>
+                <mat-card *ngIf="expandedElement" [@detailExpand]="
                       order == expandedElement ? 'expanded' : 'collapsed'
-                    "
-                    class="element-detail"
-                  >
-                    <truck-details style="width: 100%"></truck-details>
-                    <br />
-                    <a
-                      *ngFor="let image of albums"
-                      [href]="image.thumb"
-                      data-lightbox="image-1"
-                      data-title="My caption"
-                      >DOWNLOAD IMAGE</a
-                    >
-                  </mat-card>
-                </td>
-              </ng-container>
-  
-              <tr
-                *matHeaderRowDef="ordercolumns; sticky: true"
-                mat-header-row
-              ></tr>
-              <tr
-                (click)="clickedorder(order)"
-                *matRowDef="let order; columns: ordercolumns"
-                [@flyIn]
-                [class.expanded-row]="expandedElement === order"
-                class="element-row"
-                mat-row
-              ></tr>
-              <tr
-                *matRowDef="let row; columns: ['expandedDetail']"
-                class="detail-row"
-                mat-row
-              ></tr>
-            </table>
-  
-            <div class="row">
-              <div class="col-md-2">
-                <mat-icon
-                  (click)="exportAsExcelFile()"
-                  class="save-icon"
-                  title="Export as EXCEL"
-                >
-                  cloud_download
-                </mat-icon>
-              </div>
-              <div class="col-md-10">
-                <mat-paginator
-                  [pageSizeOptions]="[5, 10, 20]"
-                  [pageSize]="10"
-                  showFirstLastButtons
-                ></mat-paginator>
-              </div>
+                    " class="element-detail">
+                  <truck-details style="width: 100%" [order]="expandedElement"></truck-details>
+                  <br />
+                  <a *ngFor="let image of albums" [href]="image.thumb" data-lightbox="image-1"
+                    data-title="My caption">DOWNLOAD IMAGE</a>
+                </mat-card>
+              </td>
+            </ng-container>
+
+            <tr *matHeaderRowDef="ordercolumns; sticky: true" mat-header-row></tr>
+            <tr (click)="clickedorder(order)" *matRowDef="let order; columns: ordercolumns" [@flyIn]
+              [class.expanded-row]="expandedElement === order" class="element-row" mat-row></tr>
+            <tr *matRowDef="let row; columns: ['expandedDetail']" class="detail-row" mat-row></tr>
+          </table>
+
+          <div class="row">
+            <div class="col-md-2">
+              <mat-icon (click)="exportAsExcelFile()" class="save-icon" title="Export as EXCEL">
+                cloud_download
+              </mat-icon>
+            </div>
+            <div class="col-md-10">
+              <mat-paginator [pageSizeOptions]="[5, 10, 20]" [pageSize]="10" showFirstLastButtons></mat-paginator>
             </div>
           </div>
         </div>
-      </mat-card-content>
-    </mat-card>
-  </section>
-  
+      </div>
+    </mat-card-content>
+  </mat-card>
+</section>

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnDestroy, OnInit } from "@angular/core";
+import { Component, EventEmitter, OnDestroy, OnInit, Input } from "@angular/core";
 import { AngularFirestore } from "@angular/fire/firestore";
 import { MatDialog } from "@angular/material/dialog";
 import { TooltipPosition } from "@angular/material/tooltip";
@@ -21,7 +21,7 @@ import { EntryAssignComponent } from "../entry-assign/entry-assign.component";
   styleUrls: ["./truck-details.component.scss"],
 })
 export class TruckDetailsComponent implements OnInit, OnDestroy {
-  order: Order;
+  @Input() order: Order;
   position: TooltipPosition = "above";
 
   dialogProperties: object = {};
@@ -272,5 +272,5 @@ export class TruckDetailsComponent implements OnInit, OnDestroy {
     return this.accuracycolors[stage];
   }
 
-  ngOnInit() {}
+  ngOnInit() { }
 }

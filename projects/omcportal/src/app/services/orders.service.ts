@@ -89,9 +89,17 @@ export class OrdersService {
   }
   searchDate(start: any, end: any, omcId: string) {
     return this.ordersCollection(omcId)
-      .where("orderStageData.1.date", ">=", start)
-      .where("orderStageData.1.date", "<=", end)
-      .where("stage", ">", 3)
+      .where("orderStageData.3.user.date", ">=", start)
+      .where("orderStageData.3.user.date", "<=", end)
+      .where("loaded", "==", true)
+
+  }
+  searchEntry(start: any, end: any, omcId: string) {
+    return this.ordersCollection(omcId)
+      .where("orderStageData.3.user.date", ">=", start)
+      .where("orderStageData.3.user.date", "<=", end)
+      .where("loaded", "==", true)
+
   }
   searchOrders(paramName: string, value: string, omcId: string) {
     return this.ordersCollection(omcId)

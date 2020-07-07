@@ -2,7 +2,7 @@
   <mat-card>
     <mat-card-content class="ot-header">
       <div class="row">
-        <div class="col-md-11">
+        <div class="col-md-2">
           <mat-form-field>
             <mat-label>Select the search criteria</mat-label>
             <mat-select [(value)]="selectedCriteria">
@@ -12,6 +12,43 @@
             </mat-select>
           </mat-form-field>
         </div>
+
+        <div class="col-md-3" [ngSwitch]="selectedCriteria">
+          <div *ngSwitchCase="0">
+            <div>
+              <mat-slide-toggle [(ngModel)]="searchRange">Range</mat-slide-toggle>
+            </div>
+            <div>
+              <mat-form-field [formGroup]="dateForm">
+                <input matInput placeholder="Choose a date" [satDatepicker]="picker" formControlName="date">
+                <sat-datepicker #picker orderPeriodLabel="month" [rangeMode]="searchRange"
+                  [selectFirstDateOnClose]="true"></sat-datepicker>
+                <sat-datepicker-toggle matSuffix [for]="picker"></sat-datepicker-toggle>
+              </mat-form-field>
+            </div>
+          </div>
+          <div *ngSwitchCase="1">
+
+            <mat-form-field class="full-width">
+              <input [matAutocomplete]="auto" aria-label="Company Name" [formControl]="companyName" matInput
+                placeholder="Company name" type="text">
+              <!-- <mat-hint *ngIf="companyInfo.newcompany">
+            <strong>A NEW COMPANY BY THIS NAME WILL BE CREATED</strong>
+        </mat-hint> -->
+              <mat-icon matPrefix> account_balance</mat-icon>
+              <span matPrefix> &nbsp; </span>
+              <mat-autocomplete #auto="matAutocomplete">
+                <mat-option (onSelectionChange)="companyselect(option)" *ngFor="let option of filteredCompanies | async"
+                  [value]="option.name">
+                  {{option.name}}
+                </mat-option>
+              </mat-autocomplete>
+              <mat-spinner *ngIf='loadingcustomers' [diameter]="19" matSuffix></mat-spinner>
+            </mat-form-field>
+          </div>
+          <div *ngSwitchCase="2">Coming Soon</div>
+        </div>
+
         <div class="col-md-1">
           <button mat-fab aria-label="Search" (click)='search()'>
             <mat-icon>search</mat-icon>
@@ -19,22 +56,7 @@
         </div>
       </div>
 
-      <div [ngSwitch]="selectedCriteria">
-        <div *ngSwitchCase="0" class="row">
-          <div class="col-md-1">
-            <mat-slide-toggle [(ngModel)]="searchRange">Range</mat-slide-toggle>
-          </div>
-          <div class="col-md-11">
-            <mat-form-field [formGroup]="dateForm">
-              <input matInput placeholder="Choose a date" [satDatepicker]="picker" formControlName="date">
-              <sat-datepicker #picker [rangeMode]="searchRange"></sat-datepicker>
-              <sat-datepicker-toggle matSuffix [for]="picker"></sat-datepicker-toggle>
-            </mat-form-field>
-          </div>
-        </div>
-        <div *ngSwitchCase="1">Coming Soon</div>
-      </div>
     </mat-card-content>
   </mat-card>
 </div>
-<app-results-table></app-results-table>
+<app-results-table [loadingordders]="loadingordders" [orders]="fetchedOrders"></app-results-table>

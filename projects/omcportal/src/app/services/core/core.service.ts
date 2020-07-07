@@ -220,6 +220,11 @@ export class CoreService {
     this.subscriptions.set("allcustomers", this.customerService.customerCollection(this.omcId)
       .onSnapshot(data => {
         this.loaders.customers.next(false);
+        data.docs.map(d => {
+          return {
+            ...emptyDaudiCustomer, ...d.data(), ...{ Id: d.id },
+          };
+        });
         this.customers.next(toArray(emptyDaudiCustomer, data));
       }));
   }
