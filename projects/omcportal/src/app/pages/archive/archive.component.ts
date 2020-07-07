@@ -10,6 +10,7 @@ import { OrdersService } from 'app/services/orders.service';
 import { toArray } from 'app/models/utils/SnapshotUtils';
 import { DaudiCustomer } from 'app/models/Daudi/customer/Customer';
 import { values } from 'lodash';
+import { FuelType } from 'app/models/Daudi/fuel/FuelType';
 
 interface SatDatepickerRangeValue<D> {
   begin: D | null;
@@ -43,7 +44,8 @@ export class ArchiveComponent implements OnInit, OnDestroy {
   filteredCompanies: Subject<DaudiCustomer[]> = new Subject();
   loadingcustomers = false;
   companyName = new FormControl("", [Validators.required])
-
+  batch = new FormControl("", [Validators.required])
+  fuelType: FuelType = FuelType.pms
   // selectedDates:
   constructor(
     private dialog: MatDialog,
@@ -96,8 +98,26 @@ export class ArchiveComponent implements OnInit, OnDestroy {
           console.error(e)
         })
         break;
+      case 1:
+        this.ordersService.searchCompany(this.companyName.value, this.core.omcId).get().then(data => {
+          this.loadingordders = false
+          this.fetchedOrders = toArray(emptyorder, data)
+        }).catch(e => {
+          this.loadingordders = false
+
+          console.error(e)
+        })
+        break;
 
       default:
+
+        this.ordersService.searchEntry(start, stop, this.core.omcId).get().then(data => {
+          this.loadingordders = false
+          this.fetchedOrders = toArray(emptyorder, data)
+        }).catch(e => {
+          this.loadingordders = false
+          console.error(e)
+        })
         break;
     }
   }

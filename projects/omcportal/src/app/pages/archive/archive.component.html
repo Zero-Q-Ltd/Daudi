@@ -44,7 +44,24 @@
               <mat-spinner *ngIf='loadingcustomers' [diameter]="19" matSuffix></mat-spinner>
             </mat-form-field>
           </div>
-          <div *ngSwitchCase="2">Coming Soon</div>
+          <div *ngSwitchCase="2">
+            <div class="row">
+              <div>
+                <mat-button-toggle-group name="FUELTYPE" aria-label="Fuel Type">
+                  <mat-button-toggle value="PMS">PMS</mat-button-toggle>
+                  <mat-button-toggle value="AGO">AGO</mat-button-toggle>
+                  <mat-button-toggle value="IK">IK</mat-button-toggle>
+                </mat-button-toggle-group>
+              </div>
+              <div>
+                <mat-form-field class="example-full-width">
+                  <mat-label>Batch #</mat-label>
+                  <input aria-label="BATCH NUMBER" [formControl]="batch" matInput placeholder="BATCH #" type="text">
+                </mat-form-field>
+              </div>
+
+            </div>
+          </div>
         </div>
 
         <div class="col-md-1">

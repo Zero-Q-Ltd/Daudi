@@ -37,6 +37,7 @@ import { Ng5SliderModule } from "ng5-slider";
 import { NgxEchartsModule } from "ngx-echarts";
 import { ParseDatePipe } from "./pipes/parse-date.pipe";
 import { SlimScrollDirective } from "./slim-scroll.directive";
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 @NgModule({
   imports: [
@@ -80,7 +81,8 @@ import { SlimScrollDirective } from "./slim-scroll.directive";
     MatChipsModule,
     MatInputModule,
     MatSelectModule,
-    NgxEchartsModule
+    NgxEchartsModule,
+    MatButtonToggleModule
   ],
   exports: [
     CommonModule,
@@ -124,9 +126,10 @@ import { SlimScrollDirective } from "./slim-scroll.directive";
     MatInputModule,
     MatSelectModule,
     NgxEchartsModule,
-    ParseDatePipe
+    ParseDatePipe,
+    MatButtonToggleModule
   ],
   providers: [ParseDatePipe],
   declarations: [SlimScrollDirective, ParseDatePipe]
 })
-export class SharedModule {}
+export class SharedModule { }
