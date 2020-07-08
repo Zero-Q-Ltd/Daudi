@@ -1,10 +1,11 @@
-import {MyGeoPoint} from "../../firestore/firestoreTypes";
-import {AssociatedUser} from "../admin/AssociatedUser";
-import {CustomerDetail} from "./CustomerDetail";
+import { MyGeoPoint } from "../../firestore/firestoreTypes";
+import { AssociatedUser } from "../admin/AssociatedUser";
+import { CustomerDetail } from "./CustomerDetail";
+import { firestore } from 'firebase';
 
 export interface DaudiCustomer extends CustomerDetail {
   Active: boolean;
-  location: MyGeoPoint;
+  location: firestore.GeoPoint;
   kraverified: {
     status: boolean
     user: AssociatedUser,
@@ -21,7 +22,7 @@ export const emptyDaudiCustomer: DaudiCustomer = {
   /**
    * make default location Somewhere in nbi
    */
-  location: new MyGeoPoint(-1.3088567, 36.7752539),
+  location: new firestore.GeoPoint(-1.3088567, 36.7752539),
   krapin: null,
   kraverified: {
     status: null,

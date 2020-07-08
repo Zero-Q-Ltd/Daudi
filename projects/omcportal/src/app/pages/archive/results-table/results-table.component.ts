@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, Input, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { Order } from 'app/models/Daudi/order/Order';
 import { MatDialog } from '@angular/material/dialog';
@@ -10,19 +10,66 @@ import { OrdersService } from 'app/services/orders.service';
 import { NotificationService } from 'app/shared/services/notification.service';
 import { CoreService } from 'app/services/core/core.service';
 import { Truck } from 'app/models/Daudi/order/truck/Truck';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { trigger, state, style, transition, sequence, animate } from '@angular/animations';
+import { ExcelService } from 'app/services/excel-service.service';
 
 @Component({
   selector: 'app-results-table',
   templateUrl: './results-table.component.html',
   styleUrls: ['./results-table.component.scss'],
+  animations: [
+    trigger("flyIn", [
+      state("in", style({ transform: "translateX(0)" })),
+      transition("void => *", [
+        style({
+          height: "*",
+          opacity: "0",
+          transform: "translateX(-550px)",
+          "box-shadow": "none"
+        }),
+        sequence([
+          animate(
+            ".20s ease",
+            style({
+              height: "*",
+              opacity: ".2",
+              transform: "translateX(0)",
+              "box-shadow": "none"
+            })
+          ),
+          animate(
+            ".15s ease",
+            style({ height: "*", opacity: 1, transform: "translateX(0)" })
+          )
+        ])
+      ])
+    ]),
+    trigger("detailExpand", [
+      state(
+        "collapsed",
+        style({ height: "0px", minHeight: "0", display: "none" })
+      ),
+      state("expanded", style({ height: "*" })),
+      transition(
+        "expanded <=> collapsed",
+        animate("225ms cubic-bezier(0.4, 0.0, 0.2, 1)")
+      )
+    ])
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ResultsTableComponent implements OnInit {
-  @Input() order: Order[]
-  ordersdataSource = new MatTableDataSource<Order>(this.order);
+  @Input() orders: Order[]
+  @Input() loadingordders: Boolean;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
+
+  ordersdataSource = new MatTableDataSource<Order>();
   typedValue: string;
   comopnentDestroyed: ReplaySubject<boolean> = new ReplaySubject<boolean>();
-  expandedElement = null;
+  expandedElement: Order = null;
   ordercolumns = [
     "Id",
     "Company",
@@ -39,17 +86,20 @@ export class ResultsTableComponent implements OnInit {
   clickedtruck: Truck;
   stage = 1
   albums: any[] = [];
-  loadingordders = true;
 
   constructor(
     private dialog: MatDialog,
     private orderservice: OrdersService,
     private notification: NotificationService,
     private core: CoreService,
+    private excelService: ExcelService,
 
   ) { }
 
   ngOnInit(): void {
+  }
+  ngOnChanges(changes: any) {
+    this.ordersdataSource.data = this.orders
   }
 
   filterorders(filterValue: string) {
@@ -110,7 +160,7 @@ export class ResultsTableComponent implements OnInit {
     //     );
     //   }
     // });
-    // this.excelService.exportAsExcelFile(this.ordersdataSource.data, 'Orders');
+    this.excelService.exportAsExcelFile(this.ordersdataSource.data, 'Orders');
   }
   clickedorder(order: Order) {
     /**

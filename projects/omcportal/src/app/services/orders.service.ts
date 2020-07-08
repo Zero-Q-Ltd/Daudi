@@ -4,6 +4,7 @@ import { AngularFireFunctions } from "@angular/fire/functions";
 import { OrderCreate } from "app/models/Cloud/OrderCreate";
 import { Order } from "app/models/Daudi/order/Order";
 import { BehaviorSubject } from "rxjs";
+import { FuelType } from 'app/models/Daudi/fuel/FuelType';
 
 @Injectable({
   providedIn: "root"
@@ -89,9 +90,27 @@ export class OrdersService {
   }
   searchDate(start: any, end: any, omcId: string) {
     return this.ordersCollection(omcId)
-      .where("orderStageData.1.date", ">=", start)
-      .where("orderStageData.1.date", "<=", end)
-      .where("stage", ">", 3)
+      .where("orderStageData.3.user.date", ">=", start)
+      .where("orderStageData.3.user.date", "<=", end)
+      .where("loaded", "==", true)
+
+  }
+  searchEntry(entry: string, fueltype: FuelType, omcId: string) {
+    entry = entry.toUpperCase()
+    return this.ordersCollection(omcId)
+      .orderBy("fueltype." + fueltype + ".entries.entryIds")
+      .startAt(entry)
+      .endAt(entry + "\uf8ff")
+
+  }
+
+  searchCompany(name: string, omcId: string) {
+    name = name.toUpperCase()
+    return this.ordersCollection(omcId)
+      .orderBy("customer.name")
+      .startAt(name)
+      .endAt(name + "\uf8ff")
+
   }
   searchOrders(paramName: string, value: string, omcId: string) {
     return this.ordersCollection(omcId)

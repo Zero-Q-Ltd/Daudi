@@ -169,20 +169,20 @@ export class OrdersTableComponent implements OnInit, OnDestroy {
    * TODO  Finish up
    */
   exportAsExcelFile(): void {
-    const dialogRef = this.dialog.open(ColumnsCustomizerComponent, {
-      data: this.ordersdataSource.data[0],
-      role: "dialog",
-      width: "70%"
-    });
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.excelService.exportAsExcelFile(
-          this.ordersdataSource.data,
-          "Orders"
-        );
-      }
-    });
-    // this.excelService.exportAsExcelFile(this.ordersdataSource.data, 'Orders');
+    // const dialogRef = this.dialog.open(ColumnsCustomizerComponent, {
+    //   data: this.ordersdataSource.data[0],
+    //   role: "dialog",
+    //   width: "70%"
+    // });
+    // dialogRef.afterClosed().subscribe(result => {
+    //   if (result) {
+    //     this.excelService.exportAsExcelFile(
+    //       this.ordersdataSource.data,
+    //       "Orders"
+    //     );
+    //   }
+    // });
+    this.excelService.exportAsExcelFile(this.ordersdataSource.data, 'Orders');
   }
 
   isauthenticated(level) {
@@ -235,7 +235,7 @@ export class OrdersTableComponent implements OnInit, OnDestroy {
       return;
     }
     this.expandedElement = order;
-    this.componentcommunication.clickedorder.next(order);
+    // this.componentcommunication.clickedorder.next(order);
     if (!order.deliveryNote?.photos) {
       this.albums = [];
       return;
@@ -264,7 +264,7 @@ export class OrdersTableComponent implements OnInit, OnDestroy {
     this.componentcommunication.clickedorder.next(null);
   }
 
-  ngOnInit() {}
+  ngOnInit() { }
 
   ngAfterViewInit() {
     this.ordersdataSource.sort = this.sort;
